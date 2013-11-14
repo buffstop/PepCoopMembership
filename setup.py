@@ -30,6 +30,7 @@ requires = [
 # "pip install transifex-client"
 test_requirements = [
     'webtest',
+    'selenium',
     'nose',
     'coverage',
     'slate',  # pdf to text helper
