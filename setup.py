@@ -8,7 +8,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
-    'pyramid<1.5',
+    'pyramid<1.5a',
     'SQLAlchemy',
     'transaction',
     'pyramid_tm',
@@ -16,7 +16,7 @@ requires = [
     'pyramid_beaker',
     'pyramid_mailer',
     'zope.sqlalchemy',
-    'deform<2.0',
+    'deform<2.0a',
     'cryptacular',
     'pycountry',  # replacing 'webhelpers',
     'fdfgen',
