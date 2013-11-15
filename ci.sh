@@ -11,6 +11,8 @@ env/bin/pip install --upgrade pip
 # set it up
 # this will take a little while and install all necessary dependencies.
 env/bin/python setup.py develop
+# delete the old database
+rm c3sMembership.db
 # populate the database
 env/bin/initialize_c3sMembership_db development.ini
 # prepare for tests
