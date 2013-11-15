@@ -35,9 +35,10 @@ def main(global_config, **settings):
     config.set_request_factory(RequestWithUserAttribute)
 
     config.include('pyramid_mailer')
+    #config.include('pyramid_chameleon')  # for pyramid 1.5a... for later
     config.add_translation_dirs(
         'colander:locale/',
-        'deform:locale/',
+        'deform:locale/',  # copy deform.po and .mo to locale/de/LC_MESSAGES/
         'c3smembership:locale/')
     config.add_static_view('static',
                            'c3smembership:static', cache_max_age=3600)
