@@ -277,16 +277,11 @@ msgid "choose the type of membership."
 msgstr ""
 
 #: c3smembership/views.py:620
-msgid ""
-"NORMAL member. Normal members have to be natural persons who register at "
-"least three works with C3S they created themselves. This applies to "
-"composers, lyricists and remixers. They get a vote."
+msgid "NORMAL member. Normal members have to be natural persons who register at least three works with C3S they created themselves. This applies to composers, lyricists and remixers. They get a vote."
 msgstr ""
 
 #: c3smembership/views.py:626
-msgid ""
-"INVESTING member. Investing members can be natural persons or legal bodies "
-"that do not register works with C3S. They do not get a vote, but may counsel."
+msgid "INVESTING member. Investing members can be natural persons or legal bodies that do not register works with C3S. They do not get a vote, but may counsel."
 msgstr ""
 
 #: c3smembership/views.py:649
@@ -298,9 +293,7 @@ msgid "If so, which one(s)? (comma separated)"
 msgstr ""
 
 #: c3smembership/views.py:659
-msgid ""
-"Please tell us which collecting societies you are a member of. If more than "
-"one, please separate them by comma(s)."
+msgid "Please tell us which collecting societies you are a member of. If more than one, please separate them by comma(s)."
 msgstr ""
 
 #: c3smembership/views.py:674
@@ -308,9 +301,7 @@ msgid "You must confirm to have access to the C3S SCE statute"
 msgstr ""
 
 #: c3smembership/views.py:680
-msgid ""
-"An electronic copy of the statute of the C3S SCE was provided to me. (see "
-"link below)"
+msgid "An electronic copy of the statute of the C3S SCE was provided to me. (see link below)"
 msgstr ""
 
 #: c3smembership/views.py:683
