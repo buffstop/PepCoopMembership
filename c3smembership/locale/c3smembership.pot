@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-10-30 10:34+0100\n"
+"POT-Creation-Date: 2013-11-15 04:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,26 +27,26 @@ msgstr ""
 msgid "password"
 msgstr ""
 
-#: c3smembership/accountants_views.py:98 c3smembership/accountants_views.py:335
+#: c3smembership/accountants_views.py:98 c3smembership/accountants_views.py:364
 #: c3smembership/views.py:742
 msgid "Submit"
 msgstr ""
 
-#: c3smembership/accountants_views.py:99 c3smembership/accountants_views.py:336
+#: c3smembership/accountants_views.py:99 c3smembership/accountants_views.py:365
 #: c3smembership/views.py:743
 msgid "Reset"
 msgstr ""
 
-#: c3smembership/accountants_views.py:115 c3smembership/accountants_views.py:356
+#: c3smembership/accountants_views.py:115 c3smembership/accountants_views.py:385
 #: c3smembership/views.py:778
 msgid "Please note: There were errors, please check the form below."
 msgstr ""
 
-#: c3smembership/accountants_views.py:324
+#: c3smembership/accountants_views.py:353
 msgid "Have we received a good signature?"
 msgstr ""
 
-#: c3smembership/accountants_views.py:328
+#: c3smembership/accountants_views.py:357
 msgid "Have we received payment for the shares?"
 msgstr ""
 
@@ -278,14 +278,14 @@ msgstr ""
 
 #: c3smembership/views.py:620
 msgid ""
-"normal member. Normal members have to be natural persons who register at "
+"NORMAL member. Normal members have to be natural persons who register at "
 "least three works with C3S they created themselves. This applies to "
 "composers, lyricists and remixers. They get a vote."
 msgstr ""
 
 #: c3smembership/views.py:626
 msgid ""
-"investing member. Investing members can be natural persons or legal bodies "
+"INVESTING member. Investing members can be natural persons or legal bodies "
 "that do not register works with C3S. They do not get a vote, but may counsel."
 msgstr ""
 
@@ -308,7 +308,9 @@ msgid "You must confirm to have access to the C3S SCE statute"
 msgstr ""
 
 #: c3smembership/views.py:680
-msgid "I got to read an electronic copy of the C3S SCE statute"
+msgid ""
+"An electronic copy of the statute of the C3S SCE was provided to me. (see "
+"link below)"
 msgstr ""
 
 #: c3smembership/views.py:683
@@ -345,7 +347,7 @@ msgstr ""
 
 #. Default: Membership Application for Cultural Commons Collecting Society (C3S
 #. SCE)
-#: c3smembership/templates/base.pt:7
+#: c3smembership/templates/base.pt:7 c3smembership/templates/dashboard.pt:7
 msgid "membership-form-title"
 msgstr ""
 
@@ -373,80 +375,6 @@ msgstr ""
 #. Default: C3S: confirm your email address and load your PDF
 #: c3smembership/templates/check-mail.pt:22
 msgid "check-email-paragraph-check-email-subject"
-msgstr ""
-
-#. Default: Data Protection Declaration
-#: c3smembership/templates/disclaimer.pt:9
-msgid "disclaimer-title"
-msgstr ""
-
-#. Default: We will use the data you have provided in the Declaration of Intent to
-#. join the Cultural Commons Collecting Society (C3S) in order to ask you whether
-#. you really want to become a member. If not, your declaration will be deleted. It
-#. will also be deleted if you have second thoughts and notify us in writing that
-#. you wish to withdraw your declaration.
-#: c3smembership/templates/disclaimer.pt:18
-msgid "disclaimer-v2-paragraph-1"
-msgstr ""
-
-#. Default: In order to prevent falsifications, we will ask you not only for your
-#. name, but also for your e-mail and date of birth. Of course we will only use
-#. your data for the founding process of the C3S and will neither pass them on to
-#. third parties, nor use them for other purposes, or publish them. They will be
-#. stored in Germany by the registered association OpenMusicContest.org as
-#. representative of the C3S foundation initiative, according to the requirements
-#. of the Federal Data Protection Act.
-#: c3smembership/templates/disclaimer.pt:21
-msgid "disclaimer-v2-paragraph-2"
-msgstr ""
-
-#. Default: By sending an e-mail to
-#: c3smembership/templates/disclaimer.pt:24
-msgid "disclaimer-paragraph-3-part1"
-msgstr ""
-
-#. Default: you may order your data to be deleted at any time, and without giving
-#. reasons. Upon request to the same address, you may also ask for information
-#. about the data we have stored about you. However, a deletion of your data will
-#. have the result that we can not get in touch with you, should you wish to join
-#. the collecting society.
-#: c3smembership/templates/disclaimer.pt:30
-msgid "disclaimer-paragraph-3-part2"
-msgstr ""
-
-#. Default: The Cultural Commons Collecting Society is a project of:
-#: c3smembership/templates/disclaimer.pt:33
-msgid "disclaimer-paragraph-4"
-msgstr ""
-
-#. Default: Authorised to represent:
-#: c3smembership/templates/disclaimer.pt:44
-msgid "disclaimer-paragraph-5"
-msgstr ""
-
-#. Default: imprint of the OpenMusicContest.org e.V.
-#: c3smembership/templates/disclaimer.pt:56
-msgid "OMC-imprint-link-title"
-msgstr ""
-
-#. Default: See the ${OMC-imprint-link-title} for more information.
-#: c3smembership/templates/disclaimer.pt:55
-msgid "disclaimer-paragraph-6"
-msgstr ""
-
-#. Default: C3S SCE Membership: FAQ
-#: c3smembership/templates/faq.pt:9
-msgid "faq-title"
-msgstr ""
-
-#. Default: Fill me
-#: c3smembership/templates/faq.pt:18
-msgid "faq-headline-1"
-msgstr ""
-
-#. Default: Fill me
-#: c3smembership/templates/faq.pt:19
-msgid "faq-paragraph-1"
 msgstr ""
 
 #. Default: Join the Cultural Commons Collecting Society (C3S)
@@ -485,48 +413,33 @@ msgstr ""
 
 #. Default: The C3S SCE Statute
 #: c3smembership/templates/join.pt:69
-msgid "join-form-statute-title"
+msgid "join-form-statute"
 msgstr ""
 
-#. Default: The Cultural Commons Manifesto
-#: c3smembership/templates/manifesto.pt:9
-msgid "manifesto-title"
+#. Default: (german)
+#: c3smembership/templates/join.pt:70
+msgid "join-form-statute-linktitle-de"
 msgstr ""
 
-#. Default: Art is communication. There is no freedom of expression without freedom
-#. of art. Communication is learning by doing, ever evolving, reacting on others,
-#. re-using the same expressions and re-combining them into new meaning,
-#. re-expressing the same meaning in new ways, paraphrasing what was understood.
-#. And so is art.
-#: c3smembership/templates/manifesto.pt:18
-msgid "manifesto-v1-paragraph-1"
+#. Default: (english)
+#: c3smembership/templates/join.pt:73
+msgid "join-form-statute-linktitle-en"
 msgstr ""
 
-#. Default: Art, as an expression of human culture, eventually cannot be restricted
-#. or limited, because each restriction and limitation calls to artists to overturn
-#. it, each taboo begs to be broken, in a picture, in a song, in a dance, in
-#. software code, maybe in silence. The only restrictions and limitations which can
-#. prevail are those we agree upon ourselves, through honest and open discourse. In
-#. other words, communication.
-#: c3smembership/templates/manifesto.pt:21
-msgid "manifesto-v1-paragraph-2"
+#: c3smembership/templates/join.pt:68
+msgid "<dynamic element> ${join-form-statute-title-de} ${join-form-statute-title-en}"
 msgstr ""
 
-#. Default: Reflection and inspiration
-#: c3smembership/templates/manifesto.pt:24
-msgid "manifesto-v1-headline-1"
+#. Default: Disclaimer (Data Protection)
+#: c3smembership/templates/join.pt:78
+msgid "join-form-disclaimer-title"
 msgstr ""
 
-#. Default: Art is neither good nor bad in itself, as all evaluation is subject to
-#. its time, cultural customs, historic context and individual ethics, to name but
-#. a few. It is perhaps not even a piece of work itself, but an event happening
-#. inside of each individual that is confronted with it, experiences it, thinks
-#. about it or completely rejects it. Art is what it does to us; the reflection and
-#. inspiration it invites us to. Reflection and inspiration are neither good nor
-#. bad in themselves. They are simply a neccessity to make it through life. And so
-#. is art.
-#: c3smembership/templates/manifesto.pt:25
-msgid "manifesto-v1-paragraph-3"
+#. Default: We will store and use the information you provide for administrative
+#. purposes and in order to protect your rights as an artist. Responsible
+#. authority: C3S SCE i.G. Am Straussenkreuz 11, 40229 Düsseldorf.
+#: c3smembership/templates/join.pt:81
+msgid "join-form-disclaimer-paragraph"
 msgstr ""
 
 #. Default: C3S SCE Statute

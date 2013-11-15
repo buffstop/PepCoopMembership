@@ -3,92 +3,92 @@
       xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal">
-<head>
-  <title i18n:translate="membership-form-title">Membership Application for Cultural Commons Collecting Society (C3S SCE)</title>
-  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-  <meta name="keywords" content="Membership Application to join C3S SCE" />
-  <meta name="description" content="" />
-  <link rel="shortcut icon" href="${request.static_url('c3smembership:static/favicon.ico')}" />
-  <link rel="stylesheet" href="${request.static_url('c3smembership:static/pylons.css')}" type="text/css" media="screen" charset="utf-8" />
-  <tal:block metal:define-slot="deform-js-css"></tal:block>
-  <!--[if lte IE 6]>
-  <link rel="stylesheet" href="${request.static_url('c3smembership:static/ie6.css')}"
-	type="text/css" media="screen" charset="utf-8" />
-  <![endif]-->
-</head>
-<body>
-  <div id="wrap">
-    <div id="main">
-      <h1>Dashboard</h1>
-
-      <p>Number of data sets: ${_number_of_datasets}</p>
-      <p>
-        <a href="${request.route_url('dashboard', number=previous)}">&lt;previous</a>
-        <a href="${request.route_url('dashboard', number=next)}">next&gt;</a>
-      </p>
-      <table border="1" cellpadding="10" width="90%">
-	<tr>
-          <td>id</td>
-          <td>firstname</td>
-          <td>lastname</td>
-          <td>email</td>
-          <td>email<br />confirmed?</td>
-          <td>signature<br />received?</td>
-          <td>payment<br />received?</td>
-          <td># shares</td>
-          <td>edit</td>
-          <td>delete</td>
-        </tr>
-	<tr tal:repeat="member members">
-	  <td><a href="/detail/${member.id}">${member.id}</a></td>
-	  <td>${member.firstname}</td>
-	  <td>${member.lastname}</td>
-	  <td><a href="mailto:${member.email}">${member.email}</a></td>
-	  <td>${member.email_is_confirmed}</td>
-	  <td>
-            <div tal:condition="not member.signature_received">
-              <a href="${request.route_url('switch_sig', memberid=member.id)}">
-                <img src="${request.static_url('c3smembership:static/flash_red.gif')}" width="20px" height="20px" />
-              </a>
-            </div>
-            <div tal:condition="member.signature_received">
-              <a href="${request.route_url('switch_sig', memberid=member.id)}">
-                <img src="${request.static_url('c3smembership:static/green.png')}" width="20px" height="20px" />
-              </a>
-            </div>
-          </td>
-	  <td>
-            <div tal:condition="not member.payment_received">
-              <a href="${request.route_url('switch_pay', memberid=member.id)}">
-                <img src="${request.static_url('c3smembership:static/flash_red.gif')}" width="20px" height="20px" />
-              </a>
-            </div>
-            <div tal:condition="member.payment_received">
-              <a href="${request.route_url('switch_pay', memberid=member.id)}">
-                <img src="${request.static_url('c3smembership:static/green.png')}" width="20px" height="20px" />
-              </a>
-            </div>
-          </td>
-	  <td>${member.num_shares}</td>
-	  <td><a href="/detail/${member.id}">edit</a></td>
-	  <td><a href="/delete/${member.id}">delete</a></td>
-	</tr>
-      </table>
-      <p>
-        <a href="${request.route_url('dashboard', number=previous)}">&lt;previous</a>
-        <a href="${request.route_url('dashboard', number=next)}">next&gt;</a>
-      </p>
-      <p>Showing (up to) ${num_display} at a time. Change to
-        <form action="${request.route_url('dashboard', number=0)}" method="post">
-          <input name="num_to_show" type="text"
-                 size="3" maxlength="3"
-                 value="${num_display}">
-        </form>
-      </p>
-      <p>
-        Please <a href="${request.route_url('logout')}">log out</a>
-        when you are done.
-      </p>
-
+  <head>
+    <title i18n:translate="membership-form-title">Membership Application for Cultural Commons Collecting Society (C3S SCE)</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <meta name="keywords" content="Membership Application to join C3S SCE" />
+    <meta name="description" content="" />
+    <link rel="shortcut icon" href="${request.static_url('c3smembership:static/favicon.ico')}" />
+    <link rel="stylesheet" href="${request.static_url('c3smembership:static/pylons.css')}" type="text/css" media="screen" charset="utf-8" />
+    <tal:block metal:define-slot="deform-js-css"></tal:block>
+    <!--[if lte IE 6]>
+        <link rel="stylesheet" href="${request.static_url('c3smembership:static/ie6.css')}"
+	      type="text/css" media="screen" charset="utf-8" />
+        <![endif]-->
+  </head>
+  <body>
+    <div id="wrap">
+      <div id="main">
+        <h1>Dashboard</h1>  
+        <p>Number of data sets: ${_number_of_datasets}</p>
+        <p>
+          <a href="${request.route_url('dashboard', number=previous)}">&lt;previous</a>
+          <a href="${request.route_url('dashboard', number=next)}">next&gt;</a>
+        </p>
+        <table border="1" cellpadding="10" width="90%">
+	  <tr>
+            <td>id</td>
+            <td>firstname</td>
+            <td>lastname</td>
+            <td>email</td>
+            <td>email<br />confirmed?</td>
+            <td>signature<br />received?</td>
+            <td>payment<br />received?</td>
+            <td># shares</td>
+            <td>edit</td>
+            <td>delete</td>
+          </tr>
+	  <tr tal:repeat="member members">
+	    <td><a href="/detail/${member.id}">${member.id}</a></td>
+	    <td>${member.firstname}</td>
+	    <td>${member.lastname}</td>
+	    <td><a href="mailto:${member.email}">${member.email}</a></td>
+	    <td>${member.email_is_confirmed}</td>
+	    <td>
+              <div tal:condition="not member.signature_received">
+                <a href="${request.route_url('switch_sig', memberid=member.id)}">
+                  <img src="${request.static_url('c3smembership:static/flash_red.gif')}" width="20px" height="20px" />
+                </a>
+              </div>
+              <div tal:condition="member.signature_received">
+                <a href="${request.route_url('switch_sig', memberid=member.id)}">
+                  <img src="${request.static_url('c3smembership:static/green.png')}" width="20px" height="20px" />
+                </a>
+              </div>
+            </td>
+	    <td>
+              <div tal:condition="not member.payment_received">
+                <a href="${request.route_url('switch_pay', memberid=member.id)}">
+                  <img src="${request.static_url('c3smembership:static/flash_red.gif')}" width="20px" height="20px" />
+                </a>
+              </div>
+              <div tal:condition="member.payment_received">
+                <a href="${request.route_url('switch_pay', memberid=member.id)}">
+                  <img src="${request.static_url('c3smembership:static/green.png')}" width="20px" height="20px" />
+                </a>
+              </div>
+            </td>
+	    <td>${member.num_shares}</td>
+	    <td><a href="/detail/${member.id}">edit</a></td>
+	    <td><a href="/delete/${member.id}">delete</a></td>
+	  </tr>
+        </table>
+        <p>
+          <a href="${request.route_url('dashboard', number=previous)}">&lt;previous</a>
+          <a href="${request.route_url('dashboard', number=next)}">next&gt;</a>
+        </p>
+        <p>Showing (up to) ${num_display} at a time. Change to
+          <form action="${request.route_url('dashboard', number=0)}" method="post">
+            <input name="num_to_show" type="text"
+                   size="3" maxlength="3"
+                   value="${num_display}"/>
+          </form>
+        </p>
+        <p>
+          Please <a href="${request.route_url('logout')}">log out</a>
+          when you are done.
+        </p>
+      </div>
     </div>
+  </body>
 </html>
