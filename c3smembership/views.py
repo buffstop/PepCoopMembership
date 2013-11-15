@@ -617,13 +617,13 @@ def join_c3s(request):
             widget=deform.widget.RadioChoiceWidget(
                 values=(
                     (u'normal',
-                     _(u'normal member. '
+                     _(u'NORMAL member. '
                        'Normal members have to be natural persons '
                        'who register at least three works with C3S '
                        'they created themselves. This applies to composers, '
                        'lyricists and remixers. They get a vote.')),
                     (u'investing',
-                     _(u'investing member. '
+                     _(u'INVESTING member. '
                        'Investing members can be natural persons or legal '
                        'bodies that do not register works with C3S. '
                        'They do not get a vote, but may counsel.'))
@@ -678,8 +678,8 @@ def join_c3s(request):
             #colander.String(),
             colander.Bool(true_val=u'yes'),
             title=_(
-                u'I got to read an electronic copy of the '
-                u'C3S SCE statute'),
+                u'An electronic copy of the statute of the '
+                u'C3S SCE was provided to me. (see link below)'),
             description=_(
                 u'You must confirm to have access to the statute.'),
             #widget=deform.widget.CheckboxChoiceWidget(
@@ -696,7 +696,7 @@ def join_c3s(request):
         the number of shares a member wants to hold
 
         this involves a slider widget: added to deforms widgets.
-        see README.slider.rst
+        see README.Slider.rst
         """
         num_shares = colander.SchemaNode(
             colander.Integer(),
