@@ -7,7 +7,7 @@
 # create a virtualenv, preferrably with the python 2.7 variant:
 virtualenv env
 # update setuptools if neccessary
-env/bin/pip install --upgrade setuptools pip
+env/bin/pip install --upgrade pip
 # set it up
 # this will take a little while and install all necessary dependencies.
 env/bin/python setup.py develop
@@ -16,8 +16,8 @@ env/bin/initialize_c3sMembership_db development.ini
 # prepare for tests
 env/bin/pip install nose coverage pep8 pylint pyflakes
 # customized TextInputSliderWidget needs to be copied in place
-cp  deform/widget.py env/lib/python2.7/site-packages/deform-0.9.8-py2.7.egg/deform/widget.py
-cp  deform/slider.pt env/lib/python2.7/site-packages/deform-0.9.8-py2.7.egg/deform/templates/slider.pt
+cp  deform/widget.py env/lib/python2.7/site-packages/deform-0.9.9-py2.7.egg/deform/widget.py
+cp  deform/slider.pt env/lib/python2.7/site-packages/deform-0.9.9-py2.7.egg/deform/templates/slider.pt
 # run the tests
 env/bin/nosetests c3smembership/   --with-coverage --cover-html --with-xunit
 # this is how you can run individial tests:
