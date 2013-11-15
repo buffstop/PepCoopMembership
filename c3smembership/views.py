@@ -618,15 +618,15 @@ def join_c3s(request):
                 values=(
                     (u'normal',
                      _(u'NORMAL member. '
-                       'Normal members have to be natural persons '
-                       'who register at least three works with C3S '
-                       'they created themselves. This applies to composers, '
-                       'lyricists and remixers. They get a vote.')),
+                       u'Normal members have to be natural persons '
+                       u'who register at least three works with C3S '
+                       u'they created themselves. This applies to composers, '
+                       u'lyricists and remixers. They get a vote.')),
                     (u'investing',
                      _(u'INVESTING member. '
-                       'Investing members can be natural persons or legal '
-                       'bodies that do not register works with C3S. '
-                       'They do not get a vote, but may counsel.'))
+                       u'Investing members can be natural persons or legal '
+                       u'bodies that do not register works with C3S. '
+                       u'They do not get a vote, but may counsel.'))
                 ),
             )
         )

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-11-15 04:08+0100\n"
+"POT-Creation-Date: 2013-11-15 09:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -277,11 +277,16 @@ msgid "choose the type of membership."
 msgstr ""
 
 #: c3smembership/views.py:620
-msgid "NORMAL member. Normal members have to be natural persons who register at least three works with C3S they created themselves. This applies to composers, lyricists and remixers. They get a vote."
+msgid ""
+"NORMAL member. Normal members have to be natural persons who register at "
+"least three works with C3S they created themselves. This applies to "
+"composers, lyricists and remixers. They get a vote."
 msgstr ""
 
 #: c3smembership/views.py:626
-msgid "INVESTING member. Investing members can be natural persons or legal bodies that do not register works with C3S. They do not get a vote, but may counsel."
+msgid ""
+"INVESTING member. Investing members can be natural persons or legal bodies "
+"that do not register works with C3S. They do not get a vote, but may counsel."
 msgstr ""
 
 #: c3smembership/views.py:649
@@ -293,7 +298,9 @@ msgid "If so, which one(s)? (comma separated)"
 msgstr ""
 
 #: c3smembership/views.py:659
-msgid "Please tell us which collecting societies you are a member of. If more than one, please separate them by comma(s)."
+msgid ""
+"Please tell us which collecting societies you are a member of. If more than "
+"one, please separate them by comma(s)."
 msgstr ""
 
 #: c3smembership/views.py:674
@@ -301,7 +308,9 @@ msgid "You must confirm to have access to the C3S SCE statute"
 msgstr ""
 
 #: c3smembership/views.py:680
-msgid "An electronic copy of the statute of the C3S SCE was provided to me. (see link below)"
+msgid ""
+"An electronic copy of the statute of the C3S SCE was provided to me. (see "
+"link below)"
 msgstr ""
 
 #: c3smembership/views.py:683
@@ -413,23 +422,19 @@ msgid "join-form-statute-linktitle-de"
 msgstr ""
 
 #. Default: (english)
-#: c3smembership/templates/join.pt:73
+#: c3smembership/templates/join.pt:72
 msgid "join-form-statute-linktitle-en"
 msgstr ""
 
-#: c3smembership/templates/join.pt:68
-msgid "<dynamic element> ${join-form-statute-title-de} ${join-form-statute-title-en}"
-msgstr ""
-
 #. Default: Disclaimer (Data Protection)
-#: c3smembership/templates/join.pt:78
+#: c3smembership/templates/join.pt:76
 msgid "join-form-disclaimer-title"
 msgstr ""
 
 #. Default: We will store and use the information you provide for administrative
 #. purposes and in order to protect your rights as an artist. Responsible
 #. authority: C3S SCE i.G. Am Straussenkreuz 11, 40229 Düsseldorf.
-#: c3smembership/templates/join.pt:81
+#: c3smembership/templates/join.pt:79
 msgid "join-form-disclaimer-paragraph"
 msgstr ""
 

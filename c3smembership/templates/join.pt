@@ -65,13 +65,11 @@ $(document).ready(function(){
 	 i18n:name="join-form-manifesto-title"
 	 i18n:translate="join-form-manifesto-title">The Cultural Commons Manifesto</a>
     </p>
-    <p i18n:translate="" class="infoIndent">
+    <p class="infoIndent">
       <span i18n:translate="join-form-statute">The C3S SCE Statute</span>
       <a href="http://www.c3s.cc/legal/C3S_de_v1.0.pdf" target="_blank"
-	 i18n:name="join-form-statute-title-de"
 	 i18n:translate="join-form-statute-linktitle-de">(german)</a>
       <a href="http://www.c3s.cc/legal/C3S_en_v1.0.pdf" target="_blank"
-	 i18n:name="join-form-statute-title-en"
 	 i18n:translate="join-form-statute-linktitle-en">(english)</a>
     </p>
 
