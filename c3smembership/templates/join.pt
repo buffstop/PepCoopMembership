@@ -66,18 +66,23 @@ $(document).ready(function(){
 	 i18n:translate="join-form-manifesto-title">The Cultural Commons Manifesto</a>
     </p>
     <p i18n:translate="" class="infoIndent">
+      <span i18n:translate="join-form-statute">The C3S SCE Statute</span>
       <a href="http://www.c3s.cc/legal/C3S_de_v1.0.pdf" target="_blank"
-	 i18n:name="join-form-statute-title"
-	 i18n:translate="join-form-statute-title">The C3S SCE Statute</a>
+	 i18n:name="join-form-statute-title-de"
+	 i18n:translate="join-form-statute-linktitle-de">(german)</a>
+      <a href="http://www.c3s.cc/legal/C3S_en_v1.0.pdf" target="_blank"
+	 i18n:name="join-form-statute-title-en"
+	 i18n:translate="join-form-statute-linktitle-en">(english)</a>
     </p>
-    <!--
+
     <p i18n:translate="join-form-disclaimer-title" class="infoIndent">
       Disclaimer (Data Protection)
     </p>
-    <p>
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+    <p i18n:translate="join-form-disclaimer-paragraph">
+      We will store and use the information you provide for administrative purposes
+      and in order to protect your rights as an artist.
+      Responsible authority: C3S SCE i.G. Am Straussenkreuz 11, 40229 Düsseldorf.
     </p>
-    -->
     <!-- p i18n:translate="" class="infoIndent" -->
       <!-- a href="/faq" target="_blank"
 	 i18n:name="join-form-faq-title"
