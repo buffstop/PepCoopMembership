@@ -144,6 +144,9 @@ def show_success_pdf(request):
     Given there is valid information in the session
     this view sends an encrypted mail to C3S staff with the users data set
     and returns a PDF for the user.
+
+    It is called after visiting the verification URL/page/view in
+    def success_verify_email below.
     """
     #check if user has used form or 'guessed' this URL
     if ('appstruct' in request.session):
@@ -252,6 +255,9 @@ def success_verify_email(request):
     It extracts both email and verification code from the URL.
     It will ask for a password
     and checks if there is a match in the database.
+
+    If the password matches, and all is correct,
+    the view shows a download link and further info.
     """
     #dbsession = DBSession()
     #print('#'*80)
@@ -319,6 +325,7 @@ def success_verify_email(request):
                 'firstname': member.firstname,
                 'lastname': member.lastname,
                 'email': member.email,
+                'email_confirm_code': member.email_confirm_code,
                 'address1': member.address1,
                 'address2': member.address2,
                 'postcode': member.postcode,
@@ -344,6 +351,7 @@ def success_verify_email(request):
             return {
                 'firstname': member.firstname,
                 'lastname': member.lastname,
+                'code': member.email_confirm_code,
                 'correct': True,
                 'namepart': PdfFileNamePart,
                 'result_msg': _("Success. Load your PDF!")
@@ -502,7 +510,7 @@ def join_c3s(request):
             colander.String(),
             validator=colander.Length(min=5, max=100),
             widget=deform.widget.PasswordWidget(size=20),
-            title=_(u"Password"),
+            title=_(u"Password (to protect access to your data)"),
             description=_("We need a password to protect your data. After "
                           "verifying your email you will have to enter it."),
             oid="password",
@@ -612,20 +620,21 @@ def join_c3s(request):
 
         membership_type = colander.SchemaNode(
             colander.String(),
-            title=_(u'I want to become a ... (choose membership type)'),
+            title=_(u'I want to become a ... (choose membership type, see C3S SCE statute sec. 4)'),
             description=_(u'choose the type of membership.'),
             widget=deform.widget.RadioChoiceWidget(
                 values=(
                     (u'normal',
-                     _(u'NORMAL member. '
-                       u'Normal members have to be natural persons '
+                     _(u'FULL member. '
+                       u'Full members have to be natural persons '
                        u'who register at least three works with C3S '
                        u'they created themselves. This applies to composers, '
                        u'lyricists and remixers. They get a vote.')),
                     (u'investing',
                      _(u'INVESTING member. '
-                       u'Investing members can be natural persons or legal '
-                       u'bodies that do not register works with C3S. '
+                       u'Investing members can be natural or legal '
+                       u'entities or private companies '
+                       u'that do not register works with C3S. '
                        u'They do not get a vote, but may counsel.'))
                 ),
             )
@@ -679,7 +688,7 @@ def join_c3s(request):
             colander.Bool(true_val=u'yes'),
             title=_(
                 u'An electronic copy of the statute of the '
-                u'C3S SCE was provided to me. (see link below)'),
+                u'C3S SCE has been made available to me. (see link below)'),
             description=_(
                 u'You must confirm to have access to the statute.'),
             #widget=deform.widget.CheckboxChoiceWidget(
@@ -701,7 +710,7 @@ def join_c3s(request):
         num_shares = colander.SchemaNode(
             colander.Integer(),
             title=_(u"I want to buy the following number "
-                    u"of Shares (50€ each, up to 3000€)"),
+                    u"of Shares (50€ each, up to 3000€, see C3S statute sec. 5)"),
             description=_(
                 u'You can choose any amount of shares between 1 and 60.'),
             default="1",
