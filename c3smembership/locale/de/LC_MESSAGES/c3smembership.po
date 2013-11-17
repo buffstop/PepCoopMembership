@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2013-11-17 06:08+0100\n"
-"PO-Revision-Date: 2013-11-17 13:48+0100\n"
+"PO-Revision-Date: 2013-11-17 13:59+0100\n"
 "Last-Translator: Christoph Scheid <christoph.scheid@c3s.cc>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -230,7 +230,7 @@ msgstr "Nachname"
 
 #: c3smembership/views.py:506 c3smembership/templates/success.pt:27
 msgid "Email"
-msgstr "Email"
+msgstr "E-Mail"
 
 #: c3smembership/views.py:514
 msgid "Password (to protect access to your data)"
