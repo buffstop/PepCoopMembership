@@ -392,8 +392,8 @@ msgstr ""
 msgid "join-form-title"
 msgstr ""
 
-#. Default: Application for Membership of the 'Cultural Commons Collecting Society
-#. SCE' (C3S SCE)
+#. Default: Application for Membership of the Cultural Commons Collecting Society
+#. SCE mit beschränkter Haftung (with limited liabilities) (C3S SCE)
 #: c3smembership/templates/join.pt:33
 msgid "join-form-headline"
 msgstr ""

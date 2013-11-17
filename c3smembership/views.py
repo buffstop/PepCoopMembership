@@ -626,17 +626,9 @@ def join_c3s(request):
             widget=deform.widget.RadioChoiceWidget(
                 values=(
                     (u'normal',
-                     _(u'FULL member. '
-                       u'Full members have to be natural persons '
-                       u'who register at least three works with C3S '
-                       u'they created themselves. This applies to composers, '
-                       u'lyricists and remixers. They get a vote.')),
+                     _(u'FULL member. Full members have to be natural persons who register at least three works with C3S they created themselves. This applies to composers, lyricists and remixers. They get a vote.')),
                     (u'investing',
-                     _(u'INVESTING member. '
-                       u'Investing members can be natural or legal '
-                       u'entities or private companies '
-                       u'that do not register works with C3S. '
-                       u'They do not get a vote, but may counsel.'))
+                     _(u'INVESTING member. Investing members can be natural or legal entities or private companies that do not register works with C3S. They do not get a vote, but may counsel.'))
                 ),
             )
         )

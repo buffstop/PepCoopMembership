@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2013-11-17 04:09+0100\n"
-"PO-Revision-Date: 2013-11-17 04:21+0100\n"
+"PO-Revision-Date: 2013-11-17 05:47+0100\n"
 "Last-Translator: Christoph Scheid <christoph.scheid@c3s.cc>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -425,14 +425,14 @@ msgstr "C3S: Email-Adresse bestätigen und Formular abrufen"
 msgid "join-form-title"
 msgstr "Werde Mitglied in der Cultural Commons Collecting Society"
 
-#. Default: Application for Membership of the 'Cultural Commons Collecting
+#. Default: Application for Membership of the Cultural Commons Collecting
 #. Society
-#. SCE' (C3S SCE)
+#. SCE mit beschränkter Haftung (with limited liabilities) (C3S SCE)
 #: c3smembership/templates/join.pt:33
 msgid "join-form-headline"
 msgstr ""
-"Mitgliedschaftsantrag für die Cultural Commons Collecting Society mbH i.G. "
-"(C3S SCE)"
+"Mitgliedschaftsantrag für die Cultural Commons Collecting Society SCE mit "
+"beschränkter Haftung (C3S SCE)"
 
 #. Default: Please fill out the form. Later, you need to check your email for a
 #. verification code.

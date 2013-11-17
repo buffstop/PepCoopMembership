@@ -30,7 +30,7 @@
       <a href="/?de"><img src="static/images/de.png" title="Deutsch"
 				   alt="auf deutsche Sprache umschalten" /></a>
     </div>
-    <h2 i18n:translate="join-form-headline" class="deform">Application for Membership of the 'Cultural Commons Collecting Society SCE' (C3S SCE)</h2>
+    <h2 i18n:translate="join-form-headline" class="deform">Application for Membership of the Cultural Commons Collecting Society SCE mit beschränkter Haftung (with limited liabilities) (C3S SCE)</h2>
     <p i18n:translate="join-form-fill-verify-print-send">
       Please fill out the form. Later, you need to check your email for a verification code.
     </p>
