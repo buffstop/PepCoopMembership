@@ -457,23 +457,24 @@ def join_c3s(request):
         ('GR', _(u'Greece')),
         ('HU', _(u'Hungary')),
         ('HR', _(u'Croatia')),
-        ('IL', _(u'Israel')),
         ('IE', _(u'Ireland')),
+        ('IS', _(u'Iceland')),
         ('IT', _(u'Italy')),
         ('LT', _(u'Lithuania')),
+        ('LI', _(u'Liechtenstein')),
         ('LV', _(u'Latvia')),
         ('LU', _(u'Luxembourg')),
         ('MT', _(u'Malta')),
         ('NL', _(u'Netherlands')),
+        ('NO', _(u'Norway')),
         ('PL', _(u'Poland')),
         ('PT', _(u'Portugal')),
         ('SK', _(u'Slovakia')),
         ('SI', _(u'Slovenia')),
         ('SE', _(u'Sweden')),
         ('XX', _(u'other'))
-        ]
-
-   # set default of Country select widget according to locale
+    ]
+    # set default of Country select widget according to locale
     LOCALE_COUNTRY_MAPPING = {
         'de': 'DE',
         #'da': 'DK',
