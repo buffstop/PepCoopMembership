@@ -30,9 +30,9 @@ def generate_pdf(appstruct):
     import os
     here = os.path.dirname(__file__)
     declaration_pdf_de = os.path.join(
-        here, "../pdftk/C3S-SCE-AFM-v04-20131114-de.pdf")
+        here, "../pdftk/C3S-SCE-AFM-v05-20131116-de.pdf")
     declaration_pdf_en = os.path.join(
-        here, "../pdftk/C3S-SCE-AFM-v04-20131114-en.pdf")
+        here, "../pdftk/C3S-SCE-AFM-v05-20131116-en.pdf")
 
     # check for _LOCALE_, decide which language to use
     #print(appstruct['_LOCALE_'])
@@ -70,6 +70,17 @@ def generate_pdf(appstruct):
     #print("generate_pdf: type of date of birth: %s") % type(dob)
     #print("generate_pdf: date of birth: %s") % dob
 
+    # membership_type
+    # FieldType: Button
+    # FieldName: MembershipType
+    # FieldFlags: 49152
+    # FieldValue: 2
+    # FieldJustification: Left
+    # FieldStateOption: 1
+    # FieldStateOption: 2
+    # FieldStateOption: Off
+    print("the membership type: %s" % appstruct['membership_type'])
+
 # here we gather all information from the supplied data to prepare pdf-filling
 
     from datetime import datetime
@@ -83,6 +94,7 @@ def generate_pdf(appstruct):
         ('town', appstruct['city']),
         ('email', appstruct['email']),
         ('country', appstruct['country']),
+        ('MembershipType', '1' if appstruct['membership_type'] == u'normal' else '2'),
         ('numshares', str(appstruct['num_shares'])),
 #        ('composer',
 #         'Yes' if appstruct['activity'].issuperset(['composer']) else 'Off'),
@@ -105,7 +117,9 @@ def generate_pdf(appstruct):
 #        ('investMmbr', '1' if appstruct['invest_member'] == u'yes' else '2'),
         ('dateofbirth', dob),
         ('submitted', dos),
-        ('generated', str(datetime.now()))
+        ('generated', str(datetime.now())),
+        ('code', appstruct['email_confirm_code']),
+        ('code2', appstruct['email_confirm_code']),  # for page 2
     ]
 
 # generate fdf string
@@ -176,12 +190,14 @@ def generate_csv(appstruct):
         appstruct['firstname'],  # #    # firstname
         appstruct['lastname'],  # #    # surname
         appstruct['email'],  # #   # email
+        appstruct['email_confirm_code'],
         appstruct['address1'],
         appstruct['address2'],
         appstruct['postcode'],
         appstruct['city'],
         appstruct['country'],  # # # country
-        'j' if appstruct['membership_type'] == 'investing' else 'n',
+        'investing' if appstruct[
+            'membership_type'] == 'investing' else 'normal',
         #appstruct['opt_URL'],
         #appstruct['opt_band'],
         appstruct['date_of_birth'],
@@ -191,7 +207,7 @@ def generate_csv(appstruct):
         #'j' if 'remixer' in appstruct['activity'] else 'n',
         #'j' if 'dj' in appstruct['activity'] else 'n',
         'j' if appstruct['member_of_colsoc'] == 'yes' else 'n',
-        appstruct['name_of_colsoc'],
+        appstruct['name_of_colsoc'].replace(',', '|'),
         appstruct['num_shares'],
         #'j' if appstruct['noticed_dataProtection'] == 'yes' else 'n',
     )
@@ -243,6 +259,7 @@ first name:                     %s
 last name:                      %s
 date of birth:                  %s
 email:                          %s
+email confirmation code:        %s
 street/no                       %s
 address cont'd                  %s
 postcode:                       %s
@@ -259,6 +276,7 @@ that's it.. bye!""" % (
         appstruct['lastname'],
         appstruct['date_of_birth'],  # .strftime("%d.%m.%Y")),  # XXX
         appstruct['email'],
+        appstruct['email_confirm_code'],
         appstruct['address1'],
         appstruct['address2'],
         appstruct['postcode'],
