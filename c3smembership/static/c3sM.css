@@ -83,7 +83,10 @@ a {text-decoration: underline;}
     margin-top:20px;
     color:#4dbd38;
     font-weight:bold;}
-.greenButton {
+.greenButton,
+#deformsubmit,
+#deformreset
+{
     color:#4dbd38;
     padding: 10px;
     border-color:#4dbd38;
