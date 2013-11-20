@@ -21,6 +21,14 @@
       <div id="main">
         <h1>Dashboard</h1>  
         <p>Number of data sets: ${_number_of_datasets}</p>
+        <p>Find entry by confirmation code:
+          <form action="${request.route_url('dashboard', number=0)}" method="post">
+            <input name="code_to_show" type="text"
+                   size="10" maxlength="10"
+                   value=""/>
+          </form>
+        </p>
+
         <p>
           <a href="${request.route_url('dashboard', number=previous)}">&lt;previous</a>
           <a href="${request.route_url('dashboard', number=next)}">next&gt;</a>
@@ -28,6 +36,7 @@
         <table border="1" cellpadding="10" width="90%">
 	  <tr>
             <td>id</td>
+            <td>code</td>
             <td>firstname</td>
             <td>lastname</td>
             <td>email</td>
@@ -40,6 +49,7 @@
           </tr>
 	  <tr tal:repeat="member members">
 	    <td><a href="/detail/${member.id}">${member.id}</a></td>
+	    <td><a href="/detail/${member.id}">${member.email_confirm_code}</a></td>
 	    <td>${member.firstname}</td>
 	    <td>${member.lastname}</td>
 	    <td><a href="mailto:${member.email}">${member.email}</a></td>

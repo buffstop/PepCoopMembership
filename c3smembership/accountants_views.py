@@ -164,6 +164,25 @@ def accountants_desk(request):
     #    _page_to_show = 0
     #print("_page_to_show: %s" % _page_to_show)
 
+    # check for input from "find dataset by confirm code" form
+    if 'code_to_show' in request.POST:
+        #print("found code_to_show in POST")
+        try:
+            _code = request.POST['code_to_show']
+            #print(_code)
+            _entry = C3sMember.get_by_code(_code)
+            #print(_entry)
+
+            return HTTPFound(
+                location=request.route_url(
+                    'detail',
+                    memberid=_entry.id)
+            )
+        except:
+            # choose default
+            #print("barf!")
+            pass
+
     # how many to display on one page?
     """
     num_display determines how many items are to be shown on one page

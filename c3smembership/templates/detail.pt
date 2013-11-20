@@ -17,6 +17,10 @@
 
       <table border="1" cellpadding="10" width="90%">
 	<tr>
+          <td>code</td>
+	  <td>${member.email_confirm_code}</td>
+        </tr>
+	<tr>
           <td>firstname</td>
 	  <td>${member.firstname}</td>
         </tr>
