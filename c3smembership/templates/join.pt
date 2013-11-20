@@ -62,15 +62,15 @@ $(document).ready(function(){
 
     <h2 i18n:translate="join-form-headline-fine-print" class="deform">The Fine Print</h2>
     <p i18n:translate="" class="infoIndent">
-      <a href="https://blog.c3s.cc/en-manifesto/" target="_blank"
+      <a href="https://www.c3s.cc/en-manifesto/" target="_blank"
 	 i18n:name="join-form-manifesto-title"
 	 i18n:translate="join-form-manifesto-title">The Cultural Commons Manifesto</a>
     </p>
     <p class="infoIndent">
       <span i18n:translate="join-form-statute">The C3S SCE Statute</span>
-      <a href="http://www.c3s.cc/legal/C3S_de_v1.0.pdf" target="_blank"
+      <a href="http://archive.c3s.cc/legal/C3S_de_v1.0.pdf" target="_blank"
 	 i18n:translate="join-form-statute-linktitle-de">(german)</a>
-      <a href="http://www.c3s.cc/legal/C3S_en_v1.0.pdf" target="_blank"
+      <a href="http://archive.c3s.cc/legal/C3S_en_v1.0.pdf" target="_blank"
 	 i18n:translate="join-form-statute-linktitle-en">(english)</a>
     </p>
 

@@ -194,7 +194,7 @@ def success_check_email(request):
             _(u"please use this link to verify your email address "
               "and download your personalised PDF:"),
             u"""
- https://pretest.c3s.cc/verify/""",
+ https://yes.c3s.cc/verify/""",
             appstruct['person']['email'], '/',
             appstruct['email_confirm_code'], '''
 
