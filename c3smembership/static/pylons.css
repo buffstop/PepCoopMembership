@@ -8,6 +8,8 @@ blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
 ins{text-decoration:none;}
 del{text-decoration:line-through;}
 table{border-collapse:collapse;border-spacing:0;}
+tr:nth-child(odd){background:#cdc;}
+tr:nth-child(even){background:#fff;}
 sub{vertical-align:sub;font-size:smaller;line-height:normal;}
 sup{vertical-align:super;font-size:smaller;line-height:normal;}
 ul,menu,dir{display:block;list-style-type:disc;margin:1em 0;padding-left:40px;}
