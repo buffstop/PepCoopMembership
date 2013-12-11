@@ -37,6 +37,15 @@
     <p i18n:translate="join-form-answer-all">
       All questions marked with an asterisk must be answered.
     </p>
+    <p>
+      <span i18n:translate="join-form-nonhumans-p">
+        Membership for private companies and institutions can be applied for using the following link:
+      </span>
+      <a href="http://archive.c3s.cc/legal/beitritt-koerperschaft.pdf"
+         i18n:translate="join-form-nonhumans-linktext">
+        Membership for Companies and Institutions
+      </a>
+    </p>
     <div id="form" tal:content="structure form"/>
     <p><script type="text/javascript">
 $(document).ready(function(){
