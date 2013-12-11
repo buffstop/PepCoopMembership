@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-11-17 06:08+0100\n"
-"PO-Revision-Date: 2013-11-17 13:59+0100\n"
+"POT-Creation-Date: 2013-12-11 10:35+0100\n"
+"PO-Revision-Date: 2013-12-11 10:37+0100\n"
 "Last-Translator: Christoph Scheid <christoph.scheid@c3s.cc>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -30,25 +30,25 @@ msgid "password"
 msgstr "Passwort"
 
 #: c3smembership/accountants_views.py:98
-#: c3smembership/accountants_views.py:364 c3smembership/views.py:749
+#: c3smembership/accountants_views.py:383 c3smembership/views.py:744
 msgid "Submit"
 msgstr "Absenden"
 
 #: c3smembership/accountants_views.py:99
-#: c3smembership/accountants_views.py:365 c3smembership/views.py:750
+#: c3smembership/accountants_views.py:384 c3smembership/views.py:745
 msgid "Reset"
 msgstr "Löschen"
 
 #: c3smembership/accountants_views.py:115
-#: c3smembership/accountants_views.py:385 c3smembership/views.py:785
+#: c3smembership/accountants_views.py:404 c3smembership/views.py:780
 msgid "Please note: There were errors, please check the form below."
 msgstr "Bitte beachten: Es gab Fehler. Bitte Eingaben unten korrigieren."
 
-#: c3smembership/accountants_views.py:353
+#: c3smembership/accountants_views.py:372
 msgid "Have we received a good signature?"
 msgstr "Ist ein unterschriebenes Formular eingegangen?"
 
-#: c3smembership/accountants_views.py:357
+#: c3smembership/accountants_views.py:376
 msgid "Have we received payment for the shares?"
 msgstr "Gab es einen Geldeingang in Höhe der Anteile?"
 
@@ -276,7 +276,7 @@ msgstr "${val} liegt vor dem frühesten Datum ${min}"
 msgid "${val} is later than latest date ${max}"
 msgstr "${val} liegt nach dem spätesten Datum ${max}"
 
-#: c3smembership/views.py:593 c3smembership/views.py:698
+#: c3smembership/views.py:593 c3smembership/views.py:693
 msgid "Yes"
 msgstr "Ja"
 
@@ -284,33 +284,16 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-#: c3smembership/views.py:622
-msgid "investing"
-msgstr "investierendes"
-
-#: c3smembership/views.py:623
-msgid "normal"
-msgstr "ordentliches"
-
 #: c3smembership/views.py:624
-msgid "no"
-msgstr "nein"
-
-#: c3smembership/views.py:625
-#| msgid "Yes"
-msgid "yes"
-msgstr "Ja"
-
-#: c3smembership/views.py:629
 msgid ""
 "I want to become a ... (choose membership type, see C3S SCE statute sec. 4)"
 msgstr "Ich möchte ... (Art der Mitgliedschaft auswählen, siehe Satzung §4)"
 
-#: c3smembership/views.py:630
+#: c3smembership/views.py:625
 msgid "choose the type of membership."
 msgstr "Wähle die Art der Mitgliedschaft."
 
-#: c3smembership/views.py:634
+#: c3smembership/views.py:629
 msgid ""
 "FULL member. Full members have to be natural persons who register at least "
 "three works with C3S they created themselves. This applies to composers, "
@@ -321,7 +304,7 @@ msgstr ""
 "Wahrnehmung bei der C3S registrieren. Dies trifft z.B. auf Komponist_innen, "
 "Liedtexter_innen oder Remixer_innen zu. Sie erhalten volles Stimmrecht."
 
-#: c3smembership/views.py:636
+#: c3smembership/views.py:631
 msgid ""
 "INVESTING member. Investing members can be natural or legal entities or "
 "private companies that do not register works with C3S. They do not get a "
@@ -333,16 +316,16 @@ msgstr ""
 "Rechtsnachfolger von  Urheber_innen zu. Sie erhalten kein Stimmrecht, können "
 "aber beraten."
 
-#: c3smembership/views.py:656
+#: c3smembership/views.py:651
 msgid "Currently, I am a member of (at least) one other collecting society."
 msgstr ""
 "Ich bin derzeit Mitglied (mindestens) einer anderen Verwertungsgesellschaft."
 
-#: c3smembership/views.py:665
+#: c3smembership/views.py:660
 msgid "If so, which one(s)? (comma separated)"
 msgstr "Falls ja, welche? Mehrere Nennungen bitte durch Komma getrennt"
 
-#: c3smembership/views.py:666
+#: c3smembership/views.py:661
 msgid ""
 "Please tell us which collecting societies you are a member of. If more than "
 "one, please separate them by comma(s)."
@@ -350,13 +333,13 @@ msgstr ""
 "Bitte nenne uns die Verwertungsgesellschaft(en), in denen du Mitglied bist. "
 "Mehrere Nennungen bitte durch Komma getrennt"
 
-#: c3smembership/views.py:681
+#: c3smembership/views.py:676
 msgid "You must confirm to have access to the C3S SCE statute"
 msgstr ""
 "Du musst bestätigen, die Satzung der C3S SCE in elektronischer Form zur "
 "Verfügung gestellt bekommen zu haben. (Link zun Download siehe unten)"
 
-#: c3smembership/views.py:687
+#: c3smembership/views.py:682
 msgid ""
 "An electronic copy of the statute of the C3S SCE has been made available to "
 "me. (see link below)"
@@ -364,11 +347,11 @@ msgstr ""
 "Die Satzung ist mir in elektronischer Form zur Verfügung gestellt worden. "
 "(siehe Link unten)"
 
-#: c3smembership/views.py:690
+#: c3smembership/views.py:685
 msgid "You must confirm to have access to the statute."
 msgstr "Du musst bestätigen, Zugriff auf die Satzung gehabt zu haben."
 
-#: c3smembership/views.py:710
+#: c3smembership/views.py:705
 msgid ""
 "I want to buy the following number of Shares (50€ each, up to 3000€, see C3S "
 "statute sec. 5)"
@@ -376,27 +359,27 @@ msgstr ""
 "Ich erwerbe die folgende Anzahl Anteile (50€ pro Anteil, höchstens 3000€; "
 "Satzung §5)"
 
-#: c3smembership/views.py:712
+#: c3smembership/views.py:707
 msgid "You can choose any amount of shares between 1 and 60."
 msgstr "Du kannst eine Anzahl von Anteilen zwischen 1 und 60 auswählen."
 
-#: c3smembership/views.py:720
+#: c3smembership/views.py:715
 msgid "You need at least one share of 50 Euro."
 msgstr "Du brauchst mindestens einen Anteil zu 50 Euro."
 
-#: c3smembership/views.py:721
+#: c3smembership/views.py:716
 msgid "You may choose 60 shares at most. (3000 Euro)"
 msgstr "Du darfst höchstens 60 Anteile auswählen (3000€)."
 
-#: c3smembership/views.py:733 c3smembership/templates/success.pt:23
+#: c3smembership/views.py:728 c3smembership/templates/success.pt:23
 msgid "Personal Data"
 msgstr "Persönliche Angaben"
 
-#: c3smembership/views.py:738 c3smembership/templates/success.pt:35
+#: c3smembership/views.py:733 c3smembership/templates/success.pt:35
 msgid "Membership Requirements"
 msgstr "Vorraussetzungen der Mitgliedschaft"
 
-#: c3smembership/views.py:741 c3smembership/templates/success.pt:43
+#: c3smembership/views.py:736 c3smembership/templates/success.pt:43
 msgid "Shares"
 msgstr "Genossenschaftsanteile"
 
@@ -466,33 +449,49 @@ msgstr ""
 "Alle Felder, die mit einem roten Stern markiert sind, müssen beantwortet "
 "werden."
 
+#. Default: Membership for private companies and institutions can be applied
+#. for
+#. using the following link:
+#: c3smembership/templates/join.pt:41
+#| msgid "join-form-answer-all"
+msgid "join-form-nonhumans-p"
+msgstr ""
+"Die Mitgliedschaft für Unternehmen und Verbände kann über den folgenden Link "
+"beantragt werden:"
+
+#. Default: Membership for Companies and Institutions
+#: c3smembership/templates/join.pt:44
+#| msgid "join-form-headline"
+msgid "join-form-nonhumans-linktext"
+msgstr "Mitgliedschaftsantrag für Unternehmen und Vereine"
+
 #. Default: The Fine Print
-#: c3smembership/templates/join.pt:63
+#: c3smembership/templates/join.pt:72
 msgid "join-form-headline-fine-print"
 msgstr "Das Kleingedruckte"
 
 #. Default: The Cultural Commons Manifesto
-#: c3smembership/templates/join.pt:65
+#: c3smembership/templates/join.pt:74
 msgid "join-form-manifesto-title"
 msgstr "Das Cultual Commons Manifesto"
 
 #. Default: The C3S SCE Statute
-#: c3smembership/templates/join.pt:70
+#: c3smembership/templates/join.pt:79
 msgid "join-form-statute"
 msgstr "Die Satzung der C3S SCE"
 
 #. Default: (german)
-#: c3smembership/templates/join.pt:71
+#: c3smembership/templates/join.pt:80
 msgid "join-form-statute-linktitle-de"
 msgstr "(deutsch)"
 
 #. Default: (english)
-#: c3smembership/templates/join.pt:73
+#: c3smembership/templates/join.pt:82
 msgid "join-form-statute-linktitle-en"
 msgstr "(englisch)"
 
 #. Default: Disclaimer (Data Protection)
-#: c3smembership/templates/join.pt:77
+#: c3smembership/templates/join.pt:86
 msgid "join-form-disclaimer-title"
 msgstr "Hinweis gem. § 4 BDSG"
 
@@ -500,7 +499,7 @@ msgstr "Hinweis gem. § 4 BDSG"
 #. administrative
 #. purposes and in order to protect your rights as an artist. Responsible
 #. authority: C3S SCE i.G. Am Straussenkreuz 11, 40229 Düsseldorf.
-#: c3smembership/templates/join.pt:80
+#: c3smembership/templates/join.pt:89
 msgid "join-form-disclaimer-paragraph"
 msgstr ""
 "Wir verarbeiten und nutzen Ihre personenbezogenen Daten für Zwecke der "
@@ -657,3 +656,12 @@ msgstr "Diese und weitere Informationen findest Du auf Seite 2 des PDF."
 
 #~ msgid "Password"
 #~ msgstr "Passwort"
+
+#~ msgid "investing"
+#~ msgstr "investierendes"
+
+#~ msgid "normal"
+#~ msgstr "ordentliches"
+
+#~ msgid "no"
+#~ msgstr "nein"

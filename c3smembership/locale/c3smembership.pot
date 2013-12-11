@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-11-17 04:09+0100\n"
+"POT-Creation-Date: 2013-12-11 10:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,26 +27,26 @@ msgstr ""
 msgid "password"
 msgstr ""
 
-#: c3smembership/accountants_views.py:98 c3smembership/accountants_views.py:364
+#: c3smembership/accountants_views.py:98 c3smembership/accountants_views.py:383
 #: c3smembership/views.py:744
 msgid "Submit"
 msgstr ""
 
-#: c3smembership/accountants_views.py:99 c3smembership/accountants_views.py:365
+#: c3smembership/accountants_views.py:99 c3smembership/accountants_views.py:384
 #: c3smembership/views.py:745
 msgid "Reset"
 msgstr ""
 
-#: c3smembership/accountants_views.py:115 c3smembership/accountants_views.py:385
+#: c3smembership/accountants_views.py:115 c3smembership/accountants_views.py:404
 #: c3smembership/views.py:780
 msgid "Please note: There were errors, please check the form below."
 msgstr ""
 
-#: c3smembership/accountants_views.py:353
+#: c3smembership/accountants_views.py:372
 msgid "Have we received a good signature?"
 msgstr ""
 
-#: c3smembership/accountants_views.py:357
+#: c3smembership/accountants_views.py:376
 msgid "Have we received payment for the shares?"
 msgstr ""
 
@@ -285,13 +285,15 @@ msgid "choose the type of membership."
 msgstr ""
 
 #: c3smembership/views.py:629
-msgid "FULL member. Full members have to be natural persons who register at least "
+msgid ""
+"FULL member. Full members have to be natural persons who register at least "
 "three works with C3S they created themselves. This applies to composers, "
 "lyricists and remixers. They get a vote."
 msgstr ""
 
 #: c3smembership/views.py:631
-msgid "INVESTING member. Investing members can be natural or legal entities or "
+msgid ""
+"INVESTING member. Investing members can be natural or legal entities or "
 "private companies that do not register works with C3S. They do not get a "
 "vote, but may counsel."
 msgstr ""
@@ -305,7 +307,8 @@ msgid "If so, which one(s)? (comma separated)"
 msgstr ""
 
 #: c3smembership/views.py:661
-msgid "Please tell us which collecting societies you are a member of. If more than "
+msgid ""
+"Please tell us which collecting societies you are a member of. If more than "
 "one, please separate them by comma(s)."
 msgstr ""
 
@@ -409,40 +412,51 @@ msgstr ""
 msgid "join-form-answer-all"
 msgstr ""
 
+#. Default: Membership for private companies and institutions can be applied for
+#. using the following link:
+#: c3smembership/templates/join.pt:41
+msgid "join-form-nonhumans-p"
+msgstr ""
+
+#. Default: Membership for Companies and Institutions
+#: c3smembership/templates/join.pt:44
+msgid "join-form-nonhumans-linktext"
+msgstr ""
+
 #. Default: The Fine Print
-#: c3smembership/templates/join.pt:63
+#: c3smembership/templates/join.pt:72
 msgid "join-form-headline-fine-print"
 msgstr ""
 
 #. Default: The Cultural Commons Manifesto
-#: c3smembership/templates/join.pt:65
+#: c3smembership/templates/join.pt:74
 msgid "join-form-manifesto-title"
 msgstr ""
 
 #. Default: The C3S SCE Statute
-#: c3smembership/templates/join.pt:70
+#: c3smembership/templates/join.pt:79
 msgid "join-form-statute"
 msgstr ""
 
 #. Default: (german)
-#: c3smembership/templates/join.pt:71
+#: c3smembership/templates/join.pt:80
 msgid "join-form-statute-linktitle-de"
 msgstr ""
 
 #. Default: (english)
-#: c3smembership/templates/join.pt:73
+#: c3smembership/templates/join.pt:82
 msgid "join-form-statute-linktitle-en"
 msgstr ""
 
 #. Default: Disclaimer (Data Protection)
-#: c3smembership/templates/join.pt:77
+#: c3smembership/templates/join.pt:86
 msgid "join-form-disclaimer-title"
 msgstr ""
 
 #. Default: We will store and use the information you provide for administrative
 #. purposes and in order to protect your rights as an artist. Responsible
 #. authority: C3S SCE i.G. Am Straussenkreuz 11, 40229 Düsseldorf.
-#: c3smembership/templates/join.pt:80
+#: c3smembership/templates/join.pt:89
 msgid "join-form-disclaimer-paragraph"
 msgstr ""
 
