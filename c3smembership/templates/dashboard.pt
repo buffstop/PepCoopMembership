@@ -41,6 +41,7 @@
             <td>lastname</td>
             <td>email</td>
             <td>email<br />confirmed?</td>
+            <td>recreate<br />PDF</td>
             <td>signature<br />received?</td>
             <td>payment<br />received?</td>
             <td># shares</td>
@@ -54,6 +55,7 @@
 	    <td>${member.lastname}</td>
 	    <td><a href="mailto:${member.email}">${member.email}</a></td>
 	    <td>${member.email_is_confirmed}</td>
+	    <td><a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf">PDF</a></td>
 	    <td>
               <div tal:condition="not member.signature_received">
                 <a href="${request.route_url('switch_sig', memberid=member.id)}">

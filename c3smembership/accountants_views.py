@@ -4,7 +4,7 @@ from c3smembership.models import (
     C3sMember,
     C3sStaff,
 )
-
+from c3smembership.utils import generate_pdf
 from pkg_resources import resource_filename
 import colander
 import deform
@@ -457,3 +457,36 @@ def logout_view(request):
     headers = forget(request)
     return HTTPFound(location=route_url('login', request),
                      headers=headers)
+
+
+@view_config(permission='manage',
+             route_name='regenerate_pdf')
+def regenerate_pdf(request):
+    """
+    staffers can regenerate a users pdf
+    """
+    _code = request.matchdict['code']
+    _member = C3sMember.get_by_code(_code)
+
+    if _member is None:  # that memberid did not produce good results
+        return HTTPFound(  # back to base
+            request.route_url('dashboard',
+                              number=0,))
+    _appstruct = {
+        'firstname': _member.firstname,
+        'lastname': _member.lastname,
+        'address1': _member.address1,
+        'address2': _member.address2,
+        'postcode': _member.postcode,
+        'city': _member.city,
+        'email': _member.email,
+        'email_confirm_code': _member.email_confirm_code,
+        'country': _member.country,
+        '_LOCALE_': _member.locale,
+        'membership_type': _member.membership_type,
+        'num_shares': _member.num_shares,
+        'date_of_birth': _member.date_of_birth,
+        'date_of_submission': _member.date_of_submission,
+    }
+
+    return generate_pdf(_appstruct)

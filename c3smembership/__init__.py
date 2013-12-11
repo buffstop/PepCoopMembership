@@ -64,6 +64,7 @@ def main(global_config, **settings):
     config.add_route('dashboard', '/dashboard/{number}')
     config.add_route('detail', '/detail/{memberid}')
     config.add_route('switch_sig', '/switch_sig/{memberid}')
+    config.add_route('regenerate_pdf', '/re_C3S_SCE_AFM_{code}.pdf')
     config.add_route('switch_pay', '/switch_pay/{memberid}')
     config.add_route('delete_entry', '/delete/{memberid}')
     config.add_route('login', '/login')

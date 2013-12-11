@@ -79,7 +79,7 @@ def generate_pdf(appstruct):
     # FieldStateOption: 1
     # FieldStateOption: 2
     # FieldStateOption: Off
-    print("the membership type: %s" % appstruct['membership_type'])
+    #print("the membership type: %s" % appstruct['membership_type'])
 
 # here we gather all information from the supplied data to prepare pdf-filling
 
