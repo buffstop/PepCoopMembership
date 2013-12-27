@@ -57,6 +57,10 @@
 	  <td>${member.country}</td>
         </tr>
 	<tr>
+          <td>locale</td>
+	  <td>${member.locale}</td>
+        </tr>
+	<tr>
           <td>date_of_birth</td>
 	  <td>${member.date_of_birth}</td>
         </tr>
@@ -79,8 +83,23 @@
 	<tr>
           <td>signature received?</td><td>${member.signature_received or "No"}</td>
         </tr>
+	<tr tal:condition="member.signature_received">
+          <td>signature reception date</td><td>${member.signature_received_date}</td>
+        </tr>
+	<tr>
+          <td>signature confirmed?</td><td>${member.signature_confirmed or "No"}</td>
+        </tr>
+	<tr tal:condition="member.signature_confirmed">
+          <td>signature reception date</td><td>${member.signature_confirmed_date}</td>
+        </tr>
 	<tr>
           <td>payment received?</td><td>${member.payment_received or "No"}</td>
+        </tr>
+	<tr tal:condition="member.payment_received">
+          <td>payment reception date</td><td>${member.payment_received_date}</td>
+        </tr>
+	<tr tal:condition="member.payment_confirmed">
+          <td>payment reception date</td><td>${member.payment_confirmed_date}</td>
         </tr>
 	<tr>
           <td># shares</td>

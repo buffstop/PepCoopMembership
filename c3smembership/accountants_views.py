@@ -5,6 +5,10 @@ from c3smembership.models import (
     C3sStaff,
 )
 from c3smembership.utils import generate_pdf
+from c3smembership.mail_utils import (
+    make_signature_confirmation_emailbody,
+    make_payment_confirmation_emailbody
+)
 from pkg_resources import resource_filename
 import colander
 import deform
@@ -21,6 +25,8 @@ from pyramid.security import (
     forget,
     authenticated_userid,
 )
+from pyramid_mailer import get_mailer
+from pyramid_mailer.message import Message
 from pyramid.url import route_url
 from translationstring import TranslationStringFactory
 
@@ -490,3 +496,55 @@ def regenerate_pdf(request):
     }
 
     return generate_pdf(_appstruct)
+
+
+@view_config(permission='manage',
+             route_name='mail_sig_confirmation')
+def mail_signature_confirmation(request):
+    """
+    send a mail to membership applicant
+    informing her about reception of signature
+    """
+    _id = request.matchdict['memberid']
+    _member = C3sMember.get_by_id(_id)
+
+    message = Message(
+        subject=_('[C3S AFM] We have received your signature. Thanks!'),
+        sender='yes@c3s.cc',
+        recipients=[_member.email],
+        body=make_signature_confirmation_emailbody(_member)
+    )
+    #print(message.body)
+    mailer = get_mailer(request)
+    mailer.send(message)
+    _member.signature_confirmed = True
+    _member.signature_confirmed_date = datetime.now()
+    return HTTPFound(request.route_url('dashboard',
+                                       number=request.cookies['on_page'])
+                     )
+
+
+@view_config(permission='manage',
+             route_name='mail_pay_confirmation')
+def mail_payment_confirmation(request):
+    """
+    send a mail to membership applicant
+    informing her about reception of payment
+    """
+    _id = request.matchdict['memberid']
+    _member = C3sMember.get_by_id(_id)
+
+    message = Message(
+        subject=_('[C3S AFM] We have received your payment. Thanks!'),
+        sender='yes@c3s.cc',
+        recipients=[_member.email],
+        body=make_payment_confirmation_emailbody(_member)
+    )
+    #print(message.body)
+    mailer = get_mailer(request)
+    mailer.send(message)
+    _member.payment_confirmed = True
+    _member.payment_confirmed_date = datetime.now()
+    return HTTPFound(request.route_url('dashboard',
+                                       number=request.cookies['on_page'])
+                     )

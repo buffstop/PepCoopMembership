@@ -42,8 +42,10 @@
             <td>email</td>
             <td>email<br />confirmed?</td>
             <td>recreate<br />PDF</td>
-            <td>signature<br />received?</td>
-            <td>payment<br />received?</td>
+            <td>sig.<br />rec'd?</td>
+            <td>send sig.<br />conf. email</td>
+            <td>paym.<br />rec'd?</td>
+            <td>send paym.<br />conf. email</td>
             <td># shares</td>
             <td>edit</td>
             <td>delete</td>
@@ -58,26 +60,50 @@
 	    <td><a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf">PDF</a></td>
 	    <td>
               <div tal:condition="not member.signature_received">
-                <a href="${request.route_url('switch_sig', memberid=member.id)}">
+                <a href="${request.route_url('switch_sig', memberid=member.id)}"
+                   title="no signature received as of now. click to toggle...">
                   <img src="${request.static_url('c3smembership:static/flash_red.gif')}" width="20px" height="20px" />
                 </a>
               </div>
               <div tal:condition="member.signature_received">
-                <a href="${request.route_url('switch_sig', memberid=member.id)}">
+                <a href="${request.route_url('switch_sig', memberid=member.id)}"
+                   title="signature received at ${member.signature_received_date}. click to unset...">
                   <img src="${request.static_url('c3smembership:static/green.png')}" width="20px" height="20px" />
                 </a>
               </div>
             </td>
 	    <td>
+              <div tal:condition="not member.signature_confirmed">
+                <a href="${request.route_url('mail_sig_confirmation',
+                         memberid=member.id)}">Mail!</a>
+              </div>
+              <div tal:condition="member.signature_confirmed">
+                <a href="#"
+                   title="${member.signature_confirmed_date}">ok</a>
+              </div>
+            </td>
+	    <td>
               <div tal:condition="not member.payment_received">
-                <a href="${request.route_url('switch_pay', memberid=member.id)}">
+                <a href="${request.route_url('switch_pay', memberid=member.id)}"
+                   title="no payment received as of now. click to toggle...">
                   <img src="${request.static_url('c3smembership:static/flash_red.gif')}" width="20px" height="20px" />
                 </a>
               </div>
               <div tal:condition="member.payment_received">
-                <a href="${request.route_url('switch_pay', memberid=member.id)}">
+                <a href="${request.route_url('switch_pay', memberid=member.id)}"
+                   title="payment received at ${member.payment_received_date}. click to change: we have NOT received payment!">
                   <img src="${request.static_url('c3smembership:static/green.png')}" width="20px" height="20px" />
                 </a>
+              </div>
+            </td>
+	    <td>
+              <div tal:condition="not member.payment_confirmed">
+                <a href="${request.route_url('mail_pay_confirmation',
+                         memberid=member.id)}">Mail!</a>
+              </div>
+              <div tal:condition="member.payment_confirmed">
+                <a href="#"
+                   title="${member.payment_confirmed_date}">ok</a>
               </div>
             </td>
 	    <td>${member.num_shares}</td>

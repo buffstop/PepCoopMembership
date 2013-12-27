@@ -172,8 +172,14 @@ class C3sMember(Base):
     signature_received = Column(Boolean, default=False)
     signature_received_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    signature_confirmed = Column(Boolean, default=False)
+    signature_confirmed_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
     payment_received = Column(Boolean, default=False)
     payment_received_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
+    payment_confirmed = Column(Boolean, default=False)
+    payment_confirmed_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
     accountant_comment = Column(Unicode(255))
     membership_type = Column(Unicode(255))
