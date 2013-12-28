@@ -57,7 +57,8 @@
 	    <td>${member.lastname}</td>
 	    <td><a href="mailto:${member.email}">${member.email}</a></td>
 	    <td>${member.email_is_confirmed}</td>
-	    <td><a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf">PDF</a></td>
+	    <td><a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf"
+		   target="_pdf_download">PDF</a></td>
 	    <td>
               <div tal:condition="not member.signature_received">
                 <a href="${request.route_url('switch_sig', memberid=member.id)}"
@@ -73,12 +74,15 @@
               </div>
             </td>
 	    <td>
-              <div tal:condition="not member.signature_confirmed">
-                <a href="${request.route_url('mail_sig_confirmation',
-                         memberid=member.id)}">Mail!</a>
-              </div>
+	      <div tal:condition="member.signature_received">
+		<div tal:condition="not member.signature_confirmed">
+                  <a href="${request.route_url('mail_sig_confirmation',
+                           memberid=member.id)}">Mail!</a>
+		</div>
+	      </div>
               <div tal:condition="member.signature_confirmed">
-                <a href="#"
+                <a href="${request.route_url('mail_sig_confirmation',
+                         memberid=member.id)}"
                    title="${member.signature_confirmed_date}">ok</a>
               </div>
             </td>
@@ -97,12 +101,15 @@
               </div>
             </td>
 	    <td>
-              <div tal:condition="not member.payment_confirmed">
-                <a href="${request.route_url('mail_pay_confirmation',
-                         memberid=member.id)}">Mail!</a>
-              </div>
+	      <div tal:condition="member.payment_received">
+		<div tal:condition="not member.payment_confirmed">
+                  <a href="${request.route_url('mail_pay_confirmation',
+                           memberid=member.id)}">Mail!</a>
+		</div>
+	      </div>
               <div tal:condition="member.payment_confirmed">
-                <a href="#"
+                <a href="${request.route_url('mail_pay_confirmation',
+                         memberid=member.id)}"
                    title="${member.payment_confirmed_date}">ok</a>
               </div>
             </td>
