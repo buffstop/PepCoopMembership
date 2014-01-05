@@ -30,7 +30,7 @@ from pyramid.httpexceptions import HTTPFound
     #forget,
     #authenticated_userid,
 #)
-from pyramid.url import route_url
+#from pyramid.url import route_url
 from translationstring import TranslationStringFactory
 
 deform_templates = resource_filename('deform', 'templates')
