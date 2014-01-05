@@ -30,9 +30,9 @@ def generate_pdf(appstruct):
     import os
     here = os.path.dirname(__file__)
     declaration_pdf_de = os.path.join(
-        here, "../pdftk/C3S-SCE-AFM-v05-20131116-de.pdf")
+        here, "../pdftk/C3S-SCE-AFM-v06-20140105-de.pdf")
     declaration_pdf_en = os.path.join(
-        here, "../pdftk/C3S-SCE-AFM-v05-20131116-en.pdf")
+        here, "../pdftk/C3S-SCE-AFM-v06-20140105-en.pdf")
 
     # check for _LOCALE_, decide which language to use
     #print(appstruct['_LOCALE_'])
@@ -81,6 +81,10 @@ def generate_pdf(appstruct):
     # FieldStateOption: Off
     #print("the membership type: %s" % appstruct['membership_type'])
 
+    # calculate the amount to be transferred
+    #print("the amount: %s" % (appstruct['num_shares'] * 50))
+    amount = str(appstruct['num_shares'] * 50)
+
 # here we gather all information from the supplied data to prepare pdf-filling
 
     from datetime import datetime
@@ -120,6 +124,7 @@ def generate_pdf(appstruct):
         ('generated', str(datetime.now())),
         ('code', appstruct['email_confirm_code']),
         ('code2', appstruct['email_confirm_code']),  # for page 2
+        ('amount', amount),  # for page 2
     ]
 
 # generate fdf string
