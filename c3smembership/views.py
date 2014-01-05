@@ -273,6 +273,7 @@ def success_verify_email(request):
     if 'submit' in request.POST:
         #print("the form was submitted")
         request.session.pop_flash('message_above_form')
+        request.session.pop_flash('message_above_login')
         # check for password ! ! !
         if 'password' in request.POST:
             _passwd = request.POST['password']
@@ -303,7 +304,7 @@ def success_verify_email(request):
             correct = False
             request.session.flash(
                 _(u'Wrong Password!'),
-                'message_above_form')
+                'message_above_login')
         #print("member: %s" % member)
         #print("passwd correct? %s" % correct)
         # check if info from DB makes sense
@@ -360,7 +361,7 @@ def success_verify_email(request):
     # just display the form
     request.session.flash(
         _(u"Please enter your password."),
-        'message_above_form',
+        'message_above_login',
         allow_duplicate=False
     )
     return {
