@@ -175,9 +175,10 @@ def accountants_desk(request):
         #print("found code_to_show in POST")
         try:
             _code = request.POST['code_to_show']
-            #print(_code)
+            log.info(
+                "%s searched for code %s" % (
+                    authenticated_userid(request), _code))
             _entry = C3sMember.get_by_code(_code)
-            #print(_entry)
 
             return HTTPFound(
                 location=request.route_url(
@@ -494,7 +495,9 @@ def regenerate_pdf(request):
         'date_of_birth': _member.date_of_birth,
         'date_of_submission': _member.date_of_submission,
     }
-
+    log.info(
+        "%s regenerated the PDF for code %s" % (
+            authenticated_userid(request), _code))
     return generate_pdf(_appstruct)
 
 
