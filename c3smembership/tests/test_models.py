@@ -1,50 +1,61 @@
 # -*- coding: utf-8  -*-
+import os
 import unittest
+import transaction
 #from pyramid.config import Configurator
-#from pyramid import testing
+from pyramid import testing
 from datetime import date
+from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
-
+from c3smembership.models import (
+    DBSession,
+    Base,
+    C3sMember
+)
 DEBUG = False
-
-
-def _initTestingDB():
-    from sqlalchemy import create_engine
-    from c3smembership.models import DBSession
-    from c3smembership.models import Base
-    #from c3smembership.models import initialize_sql
-    from c3smembership.scripts.initialize_db import init
-    #import pdb
-    #pdb.set_trace()
-    init()
-    #engine = create_engine('sqlite:///:memory:')
-    ##session = initialize_sql(create_engine('sqlite:///:memory:'))
-    #DBSession.configure(bind=engine)
-    #Base.metadata.bind = engine
-    #Base.metadata.create_all(engine)
-    return DBSession
 
 
 class C3sMembershipModelTests(unittest.TestCase):
     def setUp(self):
+        self.config = testing.setUp()
+        self.config.include('pyramid_mailer.testing')
         try:
-            #self.session.remove()
-            self.session.close()
-            print("C3sMembershipModelTests.setUp: removed DB session")
+            DBSession.remove()
+            print("removing old DBSession ===================================")
         except:
-            pass
-        self.session = _initTestingDB()
-#        self.session.remove()
-#        print "setUp(): type(self.session): " + str(type(self.session))
-#        print "setUp(): dir(self.session): " + str(dir(self.session))
+            print("no DBSession to remove ===================================")
+        engine = create_engine('sqlite:///test_models.db')
+        self.session = DBSession
+        DBSession.configure(bind=engine)  # XXX does influence self.session!?!
+        Base.metadata.create_all(engine)
+        with transaction.manager:
+            member1 = C3sMember(  # german
+                firstname=u'SomeFirstnäme',
+                lastname=u'SomeLastnäme',
+                email=u'some@shri.de',
+                address1=u"addr one",
+                address2=u"addr two",
+                postcode=u"12345",
+                city=u"Footown Mäh",
+                country=u"Foocountry",
+                locale=u"DE",
+                date_of_birth=date.today(),
+                email_is_confirmed=False,
+                email_confirm_code=u'ABCDEFGFOO',
+                password=u'arandompassword',
+                date_of_submission=date.today(),
+                membership_type=u'normal',
+                member_of_colsoc=True,
+                name_of_colsoc=u"GEMA",
+                num_shares=u'23',
+            )
+            DBSession.add(member1)
+            DBSession.flush()
 
     def tearDown(self):
-        #print dir(self.session)
-        #import pdb
-        #pdb.set_trace()
         self.session.close()
         self.session.remove()
-        #pass
+        os.remove('test_models.db')
 
     def _getTargetClass(self):
         from c3smembership.models import C3sMember
@@ -212,16 +223,13 @@ class C3sMembershipModelTests(unittest.TestCase):
         self.assertEqual(None, result2)
 
     def test_check_for_existing_confirm_code(self):
-        try:
-            instance = self._makeOne()
-            self.session.add(instance)
-        except IntegrityError:
-            pass
+        instance = self._makeOne()
+        self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
 
         result1 = myMembershipSigneeClass.check_for_existing_confirm_code(
             u'ABCDEFGHIK')
-        #print result1  # True
+        print result1  # True
         self.assertEqual(result1, True)
         result2 = myMembershipSigneeClass.check_for_existing_confirm_code(
             u'ABCDEFGHIK0000000000')
@@ -238,4 +246,5 @@ class C3sMembershipModelTests(unittest.TestCase):
         result1 = myMembershipSigneeClass.member_listing(
             myMembershipSigneeClass.id.desc())
         self.failUnless(result1[0].firstname == u"SomeFirstnäme")
-        self.failUnless(result1[1].firstname == u"SomeFirstname")
+        self.failUnless(result1[1].firstname == u"SomeFirstnäme")
+        self.failUnless(result1[2].firstname == u"SomeFirstname")

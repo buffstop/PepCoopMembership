@@ -89,7 +89,7 @@ class TestViews(unittest.TestCase):
             'C3S: confirm your email address and load your PDF')
         #self.assertEqual(mailer.outbox[0]., "hello world")
 
-        verif_link = "https://pretest.c3s.cc/verify/bar@shri.de/12345678"
+        verif_link = "https://yes.c3s.cc/verify/bar@shri.de/12345678"
         self.assertTrue("hello foo bar !" in mailer.outbox[0].body)
         self.assertTrue(verif_link in mailer.outbox[0].body)
 
@@ -121,7 +121,7 @@ class TestViews(unittest.TestCase):
         request.matchdict['code'] = '12345678'
         result = success_verify_email(request)
         self.assertEqual(
-            request.session.peek_flash('message_above_form'),
+            request.session.peek_flash('message_above_login'),
             [u'Please enter your password.'])
         self.assertEqual(result['result_msg'], 'something went wrong.')
         self.assertEqual(result['firstname'], '')

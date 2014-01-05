@@ -1,5 +1,5 @@
 import unittest
-import subprocess
+#import subprocess
 
 from c3smembership import scripts # just to trigger coverage
 #from c3smembership.scripts.initialize_db import init_50

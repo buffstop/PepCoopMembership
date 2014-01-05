@@ -2,17 +2,19 @@
 # -*- coding: utf-8 -*-
 # http://docs.pylonsproject.org/projects/pyramid/dev/narr/testing.html
 #                                            #creating-functional-tests
+import os
 import unittest
 from pyramid import testing
-from c3smembership.models import DBSession
-
-
-def _initTestingDB():
-    """
-    set up a database to run tests against
-    """
-    session = DBSession
-    return session
+from c3smembership.models import (
+    DBSession,
+    Base,
+    C3sMember,
+    C3sStaff,
+    Group,
+)
+from sqlalchemy import engine_from_config
+import transaction
+from datetime import date
 
 
 class AccountantsFunctionalTests(unittest.TestCase):
@@ -24,37 +26,84 @@ class AccountantsFunctionalTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         self.config.include('pyramid_mailer.testing')
-        DBSession.remove()
-        self.session = _initTestingDB()
+        try:
+            DBSession.close()
+            DBSession.remove()
+            #print "closed and removed DBSession"
+        except:
+            pass
+            #print "no session to close"
+        try:
+            os.remove('test_webtest_accountants.db')
+            #print "deleted old test database"
+        except:
+            pass
+            #print "never mind"
+       # self.session = DBSession()
         my_settings = {
-            'sqlalchemy.url': 'sqlite:///c3sMembership.db',  # the database
+            'sqlalchemy.url': 'sqlite:///test_webtest_accountants.db',
             'available_languages': 'da de en es fr',
             'c3smembership.dashboard_number': '30'}
-        #my_other_settings = {'sqlalchemy.url': 'sqlite:///test.db',
-        #                     'available_languages': 'da de en es fr'}
-                        # mock, not even used!?
-        #from sqlalchemy import engine_from_config
-        #engine = engine_from_config(my_settings)
-        # DBSession = _initTestingDB()
-#        from c3smembership.scripts.initialize_db import main
-#        main(['', 'development.ini'])
+        engine = engine_from_config(my_settings)
+        DBSession.configure(bind=engine)
+        Base.metadata.create_all(engine)
+        with transaction.manager:
+            member1 = C3sMember(  # german
+                firstname=u'SomeFirstnäme',
+                lastname=u'SomeLastnäme',
+                email=u'some@shri.de',
+                address1=u"addr one",
+                address2=u"addr two",
+                postcode=u"12345",
+                city=u"Footown Mäh",
+                country=u"Foocountry",
+                locale=u"DE",
+                date_of_birth=date.today(),
+                email_is_confirmed=False,
+                email_confirm_code=u'ABCDEFGFOO',
+                password=u'arandompassword',
+                date_of_submission=date.today(),
+                membership_type=u'normal',
+                member_of_colsoc=True,
+                name_of_colsoc=u"GEMA",
+                num_shares=u'23',
+            )
+            DBSession.add(member1)
+            DBSession.flush()
+        with transaction.manager:
+                # a group for accountants/staff
+            accountants_group = Group(name=u"staff")
+            try:
+                DBSession.add(accountants_group)
+                DBSession.flush()
+                print("adding group staff")
+            except:
+                print("could not add group staff.")
+                # pass
+            # staff personnel
+            staffer1 = C3sStaff(
+                login=u"rut",
+                password=u"berries",
+                email=u"noreply@c3s.cc",
+            )
+            staffer1.groups = [accountants_group]
+            try:
+                DBSession.add(accountants_group)
+                DBSession.add(staffer1)
+                DBSession.flush()
+            except:
+                print("it borked! (rut)")
+                # pass
+
         from c3smembership import main
-        #try:
         app = main({}, **my_settings)
-        #except:
-        #    app = main({}, **my_other_settings)
-        #    pass
         from webtest import TestApp
         self.testapp = TestApp(app)
 
     def tearDown(self):
-        # maybe I need to check and remove globals here,
-        # so the other tests are not compromised
-        #del engine
-#        from c3smembership.models import DBSession
-#        DBSession.close()
-#        DBSession.remove()
+        DBSession.close()
         DBSession.remove()
+        os.remove('test_webtest_accountants.db')
         testing.tearDown()
 
     def test_login_and_dashboard(self):
@@ -125,11 +174,11 @@ class AccountantsFunctionalTests(unittest.TestCase):
             '<p>Number of data sets:' in res6b.body)
         #
         # change the number oof items to show
-        form = res6b.form
+        form = res6b.forms[1]
         form['num_to_show'] = "42"  # post a number: OK
         resX = form.submit('submit', status=200)
 
-        form = resX.form
+        form = resX.forms[1]
         form['num_to_show'] = "mooo"  # post a string: no good
         resY = form.submit('submit', status=200)
 
@@ -207,6 +256,100 @@ class AccountantsFunctionalTests(unittest.TestCase):
         self.failUnless('login' in res10.body)
         # def test_detail_wrong_id(self):
 
+    def test_dashboard_search_code(self):
+        """
+        load the dashboard and search for confirmation code
+        """
+        #
+        # login
+        #
+        res = self.testapp.get('/login', status=200)
+        self.failUnless('login' in res.body)
+        # try valid user, valid password
+        form = res.form
+        form['login'] = 'rut'
+        form['password'] = 'berries'
+        res2 = form.submit('submit', status=302)
+        #
+        # being logged in ...
+        res3 = res2.follow()
+        self.failUnless('Dashboard' in res3.body)
+
+        """
+        we fill the confirmation code search form with a valid code,
+        submit the form
+        and check results
+        """
+        # try invalid code
+        form = res3.forms[0]
+        form['code_to_show'] = 'foo'
+        res = form.submit()
+        self.failUnless('Dashboard' in res.body)
+        # now use existing code
+        form = res.forms[0]
+        form['code_to_show'] = 'ABCDEFGFOO'
+        res = form.submit()
+        self.failIf('Dashboard' in res.body)
+
+    def test_dashboard_regenerate_pdf(self):
+        """
+        load the dashboard and regenerate a PDF
+        """
+        #
+        # login
+        #
+        res = self.testapp.get('/login', status=200)
+        self.failUnless('login' in res.body)
+        # try valid user, valid password
+        form = res.form
+        form['login'] = 'rut'
+        form['password'] = 'berries'
+        res2 = form.submit('submit', status=302)
+        #
+        # being logged in ...
+        res3 = res2.follow()
+        self.failUnless('Dashboard' in res3.body)
+
+        """
+        try to load a users PDF
+        check size
+        """
+        # try invalid code
+        pdf = self.testapp.get('/re_C3S_SCE_AFM_WRONGCODE.pdf')
+        self.failUnless('The resource was found at' in pdf.body)
+        pdf = self.testapp.get('/re_C3S_SCE_AFM_ABCDEFGFOO.pdf')
+        # now use existing code
+        self.failUnless(80000 < len(pdf.body) < 150000)  # check pdf size
+
+    def test_dashboard_mail_signature_confirmation(self):
+        """
+        load the dashboard and send out confirmation mails
+        """
+        #
+        # login
+        #
+        res = self.testapp.get('/login', status=200)
+        self.failUnless('login' in res.body)
+        # try valid user, valid password
+        form = res.form
+        form['login'] = 'rut'
+        form['password'] = 'berries'
+        res2 = form.submit('submit', status=302)
+        #
+        # being logged in ...
+        res3 = res2.follow()
+        self.failUnless('Dashboard' in res3.body)
+
+        """
+        try to send out the signature confirmation email
+        """
+        # try invalid code
+        pdf = self.testapp.get('/re_C3S_SCE_AFM_WRONGCODE.pdf')
+        self.failUnless('The resource was found at' in pdf.body)
+        pdf = self.testapp.get('/re_C3S_SCE_AFM_ABCDEFGFOO.pdf')
+        # now use existing code
+        self.failUnless(80000 < len(pdf.body) < 150000)  # check pdf size
+
 
 class FunctionalTests(unittest.TestCase):
     """
@@ -217,38 +360,63 @@ class FunctionalTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         self.config.include('pyramid_mailer.testing')
-        DBSession.remove()
-        self.session = _initTestingDB()
-        my_settings = {'sqlalchemy.url': 'sqlite:///c3sMembership.db',
-                       'available_languages': 'da de en es fr',
-                       'c3smembership.mailaddr': 'c@c3s.cc'}
-        #my_other_settings = {'sqlalchemy.url': 'sqlite:///test.db',
-        #                     'available_languages': 'da de en es fr'}
-                        # mock, not even used!?
-        #from sqlalchemy import engine_from_config
-        #engine = engine_from_config(my_settings)
-        from c3smembership.scripts.initialize_db import init
-        init()
+        try:
+            DBSession.close()
+            DBSession.remove()
+            print("removed old DBSession ===================================")
+        except:
+            print("no DBSession to remove ===================================")
+        try:
+            os.remove('test_webtest_functional.db')
+            #print "deleted old test database"
+        except:
+            pass
+            #print "never mind"
+
+        my_settings = {
+            'sqlalchemy.url': 'sqlite:///test_webtest_functional.db',
+            'available_languages': 'da de en es fr',
+            'c3smembership.mailaddr': 'c@c3s.cc'}
+        engine = engine_from_config(my_settings)
+        DBSession.configure(bind=engine)
+        self.session = DBSession  # ()
+
+        Base.metadata.create_all(engine)
+        # dummy database entries for testing
+        with transaction.manager:
+            member1 = C3sMember(  # german
+                firstname=u'SomeFirstnäme',
+                lastname=u'SomeLastnäme',
+                email=u'some@shri.de',
+                address1=u"addr one",
+                address2=u"addr two",
+                postcode=u"12345",
+                city=u"Footown Mäh",
+                country=u"Foocountry",
+                locale=u"DE",
+                date_of_birth=date.today(),
+                email_is_confirmed=False,
+                email_confirm_code=u'ABCDEFGFOO',
+                password=u'arandompassword',
+                date_of_submission=date.today(),
+                membership_type=u'normal',
+                member_of_colsoc=True,
+                name_of_colsoc=u"GEMA",
+                num_shares=u'23',
+            )
+            DBSession.add(member1)
+            DBSession.flush()
 
         from c3smembership import main
-        #try:
         app = main({}, **my_settings)
-        #except:
-        #    app = main({}, **my_other_settings)
-        #    pass
+
         from webtest import TestApp
         self.testapp = TestApp(app)
 
     def tearDown(self):
-        # maybe I need to check and remove globals here,
-        # so the other tests are not compromised
-        #del engine
-        from c3smembership.models import DBSession
-        #DBSession.remove()
-        DBSession.close()
-        #TODO: delete database
-        DBSession.remove()
-        #import pdb; pdb.set_trace()
+        self.session.close()
+        self.session.remove()
+        os.remove('test_webtest_functional.db')
 
     def test_base_template(self):
         """load the front page, check string exists"""
@@ -432,15 +600,17 @@ class FunctionalTests(unittest.TestCase):
 
     def test_verify_email_en_w_good_code(self):
         """
-        check english string exists"""
+        """
         res = self.testapp.reset()
-        res = self.testapp.get('/verify/foo@shri.de/ABCDEFGHIJ', status=200)
+        res = self.testapp.get('/verify/some@shri.de/ABCDEFGFOO', status=200)
         self.failUnless(
             'Password' in res.body)
         form = res.form
-        form['password'] = 'berries'
+        form['password'] = 'arandompassword'
         res2 = form.submit('submit')
-        self.failUnless('C3S_SCE_AFM_Firstn_meLastname.pdf' in res2.body)
+        # print res2.body
+        self.failUnless(
+            'C3S_SCE_AFM_SomeFirstn_meSomeLastn_me.pdf' in res2.body)
 #        import pdb
 #        pdb.set_trace()
             #'Your Email has been confirmed, Firstnäme Lastname!' in res.body)
@@ -660,22 +830,27 @@ class FunctionalTests(unittest.TestCase):
 
     def test_email_confirmation(self):
         """
-        test email confirmation
+        test email confirmation form and PDF download
+        with a known login/dataset
         """
         res = self.testapp.reset()
-        res = self.testapp.get('/verify/foo@shri.de/ABCDEFGHIJ', status=200)
+        res = self.testapp.get('/verify/some@shri.de/ABCDEFGFOO', status=200)
         # print(res.body)
         form = res.form
-        form['password'] = 'berries'
+        form['password'] = 'arandompassword'
         res2 = form.submit('submit')
         #print res2.body
         self.failUnless("Load your PDF..." in res2.body)
+        self.failUnless(
+            "/C3S_SCE_AFM_SomeFirstn_meSomeLastn_me.pdf" in res2.body)
+        # load the PDF, check size
         res3 = self.testapp.get(
-            '/C3S_SCE_AFM_ThefirstnameThelastname.pdf',
+            '/C3S_SCE_AFM_SomeFirstn_meSomeLastn_me.pdf',
             status=200
         )
-        #print("length of result: %s") % len(res2.body)
-        self.failUnless(80000 < len(res3.body) < 100000)  # check pdf size
+        #print("length of result: %s") % len(res3.body)
+        #print("body result: %s") % (res3.body)  # ouch, PDF content!
+        self.failUnless(80000 < len(res3.body) < 150000)  # check pdf size
 
     def test_email_confirmation_wrong_mail(self):
         """
@@ -686,6 +861,7 @@ class FunctionalTests(unittest.TestCase):
             '/verify/NOTEXISTS@shri.de/ABCDEFGHIJ', status=200)
         #print(res.body)
         self.failUnless("Please enter your password." in res.body)
+        # XXX this test shows nothing interesting
 
     def test_email_confirmation_wrong_code(self):
         """

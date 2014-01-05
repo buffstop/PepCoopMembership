@@ -30,9 +30,9 @@ class JoinFormTests(unittest.TestCase):
         self.driver.quit()
         call(['env/bin/pserve', 'development.ini', 'stop'])
 
-    def test_form_submission(self):
+    def test_form_submission_de(self):
         from c3smembership.views import join_c3s  # trigger coverage
-        self.driver.get("http://0.0.0.0:6543")
+        self.driver.get("http://0.0.0.0:6543/?de")
         #self.driver.maximize_window()
         inputElement = self.driver.find_element_by_name("firstname")
         inputElement.send_keys("Christoph")
@@ -50,7 +50,7 @@ class JoinFormTests(unittest.TestCase):
         time.sleep(0.1)
         self.driver.find_element_by_name('city').send_keys('townish')
         time.sleep(0.1)
-        self.driver.find_element_by_name('country').send_keys('GB')
+        self.driver.find_element_by_name('country').send_keys('Gro')
         time.sleep(0.1)
         self.driver.find_element_by_name('year').send_keys(Keys.CONTROL, "a")
         self.driver.find_element_by_name('year').send_keys('1998')
@@ -75,38 +75,13 @@ class JoinFormTests(unittest.TestCase):
 
         self.driver.find_element_by_name('submit').click()
 
-        #def is_text_present(text):
-        #    return text in self.driver.page_source
-
-        #self.assertTrue(is_text_present('Invalid date'))
-
-        #self.driver.find_element_by_name('submit').click()
-
-#        import pdb
-#        pdb.set_trace()
-        #WebDriverWait(self.driver, 10).until(EC.title_contains("funktioniert"))
         self.failUnless('Email anfordern' in self.driver.page_source)
-
-        #import pdb
-        #pdb.set_trace()
 
         # TODO: check contents of success page XXX
         self.assertTrue('Christoph' in self.driver.page_source)
         self.assertTrue('Scheid' in self.driver.page_source)
         self.assertTrue('Was nun passieren muss: Kontrolliere die Angaben '
                         'unten,' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
-        #self.assertTrue('' in self.driver.page_source)
 
         # TODO: check case colsoc = no views.py 765-767
 
