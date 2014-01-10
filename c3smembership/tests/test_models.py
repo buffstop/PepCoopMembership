@@ -21,9 +21,10 @@ class C3sMembershipModelTests(unittest.TestCase):
         self.config.include('pyramid_mailer.testing')
         try:
             DBSession.remove()
-            print("removing old DBSession ===================================")
+            #print("removing old DBSession ===================================")
         except:
-            print("no DBSession to remove ===================================")
+            #print("no DBSession to remove ===================================")
+            pass
         engine = create_engine('sqlite:///test_models.db')
         self.session = DBSession
         DBSession.configure(bind=engine)  # XXX does influence self.session!?!

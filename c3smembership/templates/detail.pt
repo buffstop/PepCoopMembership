@@ -65,10 +65,6 @@
 	  <td>${member.date_of_birth}</td>
         </tr>
 	<tr>
-          <td>date_of_submission</td>
-	  <td>${member.date_of_submission}</td>
-        </tr>
-	<tr>
           <td>membership type</td>
 	  <td>${member.membership_type}</td>
         </tr>
@@ -81,6 +77,10 @@
 	  <td>${member.name_of_colsoc}</td>
         </tr>
 	<tr>
+          <td>date_of_submission</td>
+	  <td>${member.date_of_submission}</td>
+        </tr>
+	<tr>
           <td>signature received?</td><td>${member.signature_received or "No"}</td>
         </tr>
 	<tr tal:condition="member.signature_received">
@@ -90,7 +90,7 @@
           <td>signature confirmed?</td><td>${member.signature_confirmed or "No"}</td>
         </tr>
 	<tr tal:condition="member.signature_confirmed">
-          <td>signature reception date</td><td>${member.signature_confirmed_date}</td>
+          <td>signature confirmation date</td><td>${member.signature_confirmed_date}</td>
         </tr>
 	<tr>
           <td>payment received?</td><td>${member.payment_received or "No"}</td>
@@ -98,8 +98,11 @@
 	<tr tal:condition="member.payment_received">
           <td>payment reception date</td><td>${member.payment_received_date}</td>
         </tr>
+	<tr>
+          <td>payment confirmed?</td><td>${member.payment_confirmed or "No"}</td>
+        </tr>
 	<tr tal:condition="member.payment_confirmed">
-          <td>payment reception date</td><td>${member.payment_confirmed_date}</td>
+          <td>payment confirmation date</td><td>${member.payment_confirmed_date}</td>
         </tr>
 	<tr>
           <td># shares</td>
