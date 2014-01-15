@@ -12,6 +12,13 @@ from subprocess import call
 # maybe check https://pypi.python.org/pypi/z3c.webdriver
 
 
+class SeleniumTestBase(unittest.TestCase):
+    def setUp(self):
+        call(['env/bin/pserve', 'development.ini', 'start'])
+        time.sleep(3)
+        self.driver = webdriver.Firefox()  # PhantomJS()
+
+
 class JoinFormTests(unittest.TestCase):
     """
     test the join form using selenium (make a browser do things)
@@ -22,9 +29,7 @@ class JoinFormTests(unittest.TestCase):
     http://selenium.googlecode.com/svn/trunk/docs/api/py/index.html
     """
     def setUp(self):
-        call(['env/bin/pserve', 'development.ini', 'start'])
-        time.sleep(3)
-        self.driver = webdriver.Firefox()  # PhantomJS()
+        super(JoinFormTests, self).setUp()
 
     def tearDown(self):
         self.driver.quit()
@@ -164,9 +169,7 @@ class JoinFormTests(unittest.TestCase):
 class EmailVerificationTests(unittest.TestCase):
 
     def setUp(self):
-        call(['env/bin/pserve', 'development.ini', 'start'])
-        time.sleep(5)
-        self.driver = webdriver.Firefox()  # PhantomJS()
+        super(EmailVerificationTests, self).setUp()
 
     def tearDown(self):
         self.driver.quit()
@@ -210,3 +213,17 @@ class EmailVerificationTests(unittest.TestCase):
 
 #    def test_foo(self):
 #        pass
+
+class DashboardPageObject(object):
+    def __init__(self):
+        pass
+        #ToDo: write page object
+
+
+class OrderByTests(unittest.TestCase):
+    def setUp(self):
+        super(OrderByTests, self).setUp()
+        self.driver.get('')
+
+    def test(self):
+        url = "http://0.0.0.0:6543/dashboard/0/id/asc"

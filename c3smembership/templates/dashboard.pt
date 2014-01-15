@@ -10,10 +10,11 @@
     <meta name="description" content="" />
     <link rel="shortcut icon" href="${request.static_url('c3smembership:static/favicon.ico')}" />
     <link rel="stylesheet" href="${request.static_url('c3smembership:static/pylons.css')}" type="text/css" media="screen" charset="utf-8" />
+    <link rel="stylesheet" href="${request.static_url('c3smembership:static/c3s.css')}" type="text/css" media="screen" charset="utf-8" />
     <tal:block metal:define-slot="deform-js-css"></tal:block>
     <!--[if lte IE 6]>
         <link rel="stylesheet" href="${request.static_url('c3smembership:static/ie6.css')}"
-	      type="text/css" media="screen" charset="utf-8" />
+          type="text/css" media="screen" charset="utf-8" />
         <![endif]-->
   </head>
   <body>
@@ -22,7 +23,7 @@
         <h1>Dashboard</h1>  
         <p>Number of data sets: ${_number_of_datasets}</p>
         <p>Find entry by confirmation code:
-          <form action="${request.route_url('dashboard', number=0)}" method="post">
+          <form action="${request.route_url('dashboard', number=0, orderby=orderby, order=order)}" method="post">
             <input name="code_to_show" type="text"
                    size="10" maxlength="10"
                    value=""/>
@@ -30,15 +31,27 @@
         </p>
 
         <p>
-          <a href="${request.route_url('dashboard', number=previous)}">&lt;previous</a>
-          <a href="${request.route_url('dashboard', number=next)}">next&gt;</a>
+          <a href="${request.route_url('dashboard', number=previous, orderby=orderby, order=order)}">&lt;previous</a>
+          <a href="${request.route_url('dashboard', number=next, orderby=orderby, order=order)}">next&gt;</a>
         </p>
         <table border="1" cellpadding="10" width="90%">
-	  <tr>
-            <td>id</td>
+      <tr>
+            <td>
+                id <br />
+                <a href="${request.route_url('dashboard', number=current, orderby='id', order='asc')}">asc</a>
+                <a href="${request.route_url('dashboard', number=current, orderby='id', order='desc')}">desc</a>
+            </td>
             <td>code</td>
-            <td>firstname</td>
-            <td>lastname</td>
+            <td>
+                firstname <br />
+                <a href="${request.route_url('dashboard', number=current, orderby='firstname', order='asc')}">asc</a>
+                <a href="${request.route_url('dashboard', number=current, orderby='firstname', order='desc')}">desc</a>
+            </td>
+            <td>
+                lastname <br />
+                <a href="${request.route_url('dashboard', number=current, orderby='lastname', order='asc')}">asc</a>
+                <a href="${request.route_url('dashboard', number=current, orderby='lastname', order='desc')}">desc</a>
+            </td>
             <td>email</td>
             <td>email<br />confirmed?</td>
             <td>recreate<br />PDF</td>
@@ -50,16 +63,16 @@
             <td>edit</td>
             <td>delete</td>
           </tr>
-	  <tr tal:repeat="member members">
-	    <td><a href="/detail/${member.id}">${member.id}</a></td>
-	    <td><a href="/detail/${member.id}">${member.email_confirm_code}</a></td>
-	    <td>${member.firstname}</td>
-	    <td>${member.lastname}</td>
-	    <td><a href="mailto:${member.email}">${member.email}</a></td>
-	    <td>${member.email_is_confirmed}</td>
-	    <td><a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf"
-		   target="_pdf_download">PDF</a></td>
-	    <td>
+      <tr tal:repeat="member members">
+        <td><a href="/detail/${member.id}">${member.id}</a></td>
+        <td><a href="/detail/${member.id}">${member.email_confirm_code}</a></td>
+        <td>${member.firstname}</td>
+        <td>${member.lastname}</td>
+        <td><a href="mailto:${member.email}">${member.email}</a></td>
+        <td>${member.email_is_confirmed}</td>
+        <td><a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf"
+           target="_pdf_download">PDF</a></td>
+        <td>
               <div tal:condition="not member.signature_received">
                 <a href="${request.route_url('switch_sig', memberid=member.id)}"
                    title="no signature received as of now. click to toggle...">
@@ -73,20 +86,20 @@
                 </a>
               </div>
             </td>
-	    <td>
-	      <div tal:condition="member.signature_received">
-		<div tal:condition="not member.signature_confirmed">
+        <td>
+          <div tal:condition="member.signature_received">
+        <div tal:condition="not member.signature_confirmed">
                   <a href="${request.route_url('mail_sig_confirmation',
                            memberid=member.id)}">Mail!</a>
-		</div>
-	      </div>
+        </div>
+          </div>
               <div tal:condition="member.signature_confirmed">
                 <a href="${request.route_url('mail_sig_confirmation',
                          memberid=member.id)}"
                    title="${member.signature_confirmed_date}">ok</a>
               </div>
             </td>
-	    <td>
+        <td>
               <div tal:condition="not member.payment_received">
                 <a href="${request.route_url('switch_pay', memberid=member.id)}"
                    title="no payment received as of now. click to toggle...">
@@ -100,30 +113,30 @@
                 </a>
               </div>
             </td>
-	    <td>
-	      <div tal:condition="member.payment_received">
-		<div tal:condition="not member.payment_confirmed">
+        <td>
+          <div tal:condition="member.payment_received">
+        <div tal:condition="not member.payment_confirmed">
                   <a href="${request.route_url('mail_pay_confirmation',
                            memberid=member.id)}">Mail!</a>
-		</div>
-	      </div>
+        </div>
+          </div>
               <div tal:condition="member.payment_confirmed">
                 <a href="${request.route_url('mail_pay_confirmation',
                          memberid=member.id)}"
                    title="${member.payment_confirmed_date}">ok</a>
               </div>
             </td>
-	    <td>${member.num_shares}</td>
-	    <td><a href="/detail/${member.id}">edit</a></td>
-	    <td><a href="/delete/${member.id}">delete</a></td>
-	  </tr>
+        <td>${member.num_shares}</td>
+        <td><a href="/detail/${member.id}">edit</a></td>
+        <td><a href="/delete/${member.id}">delete</a></td>
+      </tr>
         </table>
         <p>
-          <a href="${request.route_url('dashboard', number=previous)}">&lt;previous</a>
-          <a href="${request.route_url('dashboard', number=next)}">next&gt;</a>
+          <a href="${request.route_url('dashboard', number=previous, orderby='', order='')}">&lt;previous</a>
+          <a href="${request.route_url('dashboard', number=next, orderby='', order='')}">next&gt;</a>
         </p>
         <p>Showing (up to) ${num_display} at a time. Change to
-          <form action="${request.route_url('dashboard', number=0)}" method="post">
+          <form action="${request.route_url('dashboard', number=0, orderby='', order='')}" method="post">
             <input name="num_to_show" type="text"
                    size="3" maxlength="3"
                    value="${num_display}"/>
