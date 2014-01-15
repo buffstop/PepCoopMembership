@@ -25,9 +25,10 @@ class TestUtilities(unittest.TestCase):
         try:
             DBSession.close()
             DBSession.remove()
-            print("removing old DBSession ===================================")
+            #print("removing old DBSession ===================================")
         except:
-            print("no DBSession to remove ===================================")
+            #print("no DBSession to remove ===================================")
+            pass
         from sqlalchemy import create_engine
         engine = create_engine('sqlite:///test_utils.db')
         DBSession.configure(bind=engine)

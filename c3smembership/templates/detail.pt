@@ -10,100 +10,103 @@
       <p>
         Please <a href="${request.route_url('logout')}">log out</a>
         when you are done.
-        Or go <a href="${request.route_url('dashboard_only')}">back to dashboard</a>.
+        Or go <a href="${request.route_url('dashboard', number=0)}">back to dashboard</a>.
       </p>
 
       <h1>Details for Member Application #${member.id}</h1>
 
       <table border="1" cellpadding="10" width="90%">
-    <tr>
+	<tr>
           <td>code</td>
-      <td>${member.email_confirm_code}</td>
+	  <td>${member.email_confirm_code}</td>
         </tr>
-    <tr>
+	<tr>
           <td>firstname</td>
-      <td>${member.firstname}</td>
+	  <td>${member.firstname}</td>
         </tr>
-    <tr>
+	<tr>
           <td>lastname</td>
-      <td>${member.lastname}</td>
+	  <td>${member.lastname}</td>
         </tr>
-    <tr>
+	<tr>
           <td>email</td>
-      <td><a href="mailto:${member.email}">${member.email}</a></td>
+	  <td><a href="mailto:${member.email}">${member.email}</a></td>
         </tr>
-    <tr>
+	<tr>
           <td>email confirmed?</td>
-      <td>${member.email_is_confirmed}</td>
+	  <td>${member.email_is_confirmed}</td>
         </tr>
-    <tr>
+	<tr>
           <td>address1</td>
-      <td>${member.address1}</td>
+	  <td>${member.address1}</td>
         </tr>
-    <tr>
+	<tr>
           <td>address2</td>
-      <td>${member.address2}</td>
+	  <td>${member.address2}</td>
         </tr>
-    <tr>
+	<tr>
           <td>postcode</td>
-      <td>${member.postcode}</td>
+	  <td>${member.postcode}</td>
         </tr>
-    <tr>
+	<tr>
           <td>city</td>
-      <td>${member.city}</td>
+	  <td>${member.city}</td>
         </tr>
-    <tr>
+	<tr>
           <td>country</td>
-      <td>${member.country}</td>
+	  <td>${member.country}</td>
         </tr>
-    <tr>
+	<tr>
           <td>locale</td>
-      <td>${member.locale}</td>
+	  <td>${member.locale}</td>
         </tr>
-    <tr>
+	<tr>
           <td>date_of_birth</td>
-      <td>${member.date_of_birth}</td>
+	  <td>${member.date_of_birth}</td>
         </tr>
-    <tr>
-          <td>date_of_submission</td>
-      <td>${member.date_of_submission}</td>
-        </tr>
-    <tr>
+	<tr>
           <td>membership type</td>
-      <td>${member.membership_type}</td>
+	  <td>${member.membership_type}</td>
         </tr>
-    <tr>
+	<tr>
           <td>member_of_colsoc</td>
-      <td>${member.member_of_colsoc}</td>
+	  <td>${member.member_of_colsoc}</td>
         </tr>
-    <tr>
+	<tr>
           <td>name_of_colsoc</td>
-      <td>${member.name_of_colsoc}</td>
+	  <td>${member.name_of_colsoc}</td>
         </tr>
-    <tr>
+	<tr>
+          <td>date_of_submission</td>
+	  <td>${member.date_of_submission}</td>
+        </tr>
+	<tr>
           <td>signature received?</td><td>${member.signature_received or "No"}</td>
         </tr>
-    <tr tal:condition="member.signature_received">
+	<tr tal:condition="member.signature_received">
           <td>signature reception date</td><td>${member.signature_received_date}</td>
         </tr>
-    <tr>
+	<tr>
           <td>signature confirmed?</td><td>${member.signature_confirmed or "No"}</td>
         </tr>
-    <tr tal:condition="member.signature_confirmed">
-          <td>signature reception date</td><td>${member.signature_confirmed_date}</td>
+	<tr tal:condition="member.signature_confirmed">
+          <td>signature confirmation date</td><td>${member.signature_confirmed_date}</td>
         </tr>
-    <tr>
+	<tr>
           <td>payment received?</td><td>${member.payment_received or "No"}</td>
         </tr>
-    <tr tal:condition="member.payment_received">
+	<tr tal:condition="member.payment_received">
           <td>payment reception date</td><td>${member.payment_received_date}</td>
         </tr>
-    <tr tal:condition="member.payment_confirmed">
-          <td>payment reception date</td><td>${member.payment_confirmed_date}</td>
+	<tr>
+          <td>payment confirmed?</td><td>${member.payment_confirmed or "No"}</td>
         </tr>
-    <tr>
+	<tr tal:condition="member.payment_confirmed">
+          <td>payment confirmation date</td><td>${member.payment_confirmed_date}</td>
+        </tr>
+	<tr>
           <td># shares</td>
-      <td>${member.num_shares}</td>
+	  <td>${member.num_shares}</td>
         </tr>
       </table>
 

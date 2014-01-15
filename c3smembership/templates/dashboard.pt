@@ -21,7 +21,10 @@
     <div id="wrap">
       <div id="main">
         <h1>Dashboard</h1>  
-        <p>Number of data sets: ${_number_of_datasets}</p>
+        <p>Number of data sets: ${_number_of_datasets} |
+          <a href="${request.route_url('export_all')}">Export All (.csv)</a> |
+          <a href="${request.route_url('import_all')}">Import (./import.csv)</a> |
+        </p>
         <p>Find entry by confirmation code:
           <form action="${request.route_url('dashboard', number=0, orderby=orderby, order=order)}" method="post">
             <input name="code_to_show" type="text"

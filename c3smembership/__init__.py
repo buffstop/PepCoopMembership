@@ -47,7 +47,8 @@ def main(global_config, **settings):
                           'pyramid.events.BeforeRender')
     config.add_subscriber('c3smembership.subscribers.add_locale_to_cookie',
                           'pyramid.events.NewRequest')
-
+    config.add_renderer(name='csv',
+                        factory='c3smembership.renderers.CSVRenderer')
     # home is /, the membership application form
     config.add_route('join', '/')
     # info pages
@@ -72,6 +73,8 @@ def main(global_config, **settings):
     config.add_route('mail_pay_confirmation', '/mail_pay_conf/{memberid}')
     config.add_route('delete_entry', '/delete/{memberid}')
     config.add_route('login', '/login')
+    config.add_route('export_all', '/export_all')
+    config.add_route('import_all', '/import_all')
     config.add_route('logout', '/logout')
     config.scan()
     return config.make_wsgi_app()

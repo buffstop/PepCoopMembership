@@ -363,9 +363,10 @@ class FunctionalTests(unittest.TestCase):
         try:
             DBSession.close()
             DBSession.remove()
-            print("removed old DBSession ===================================")
+            #print("removed old DBSession ===================================")
         except:
-            print("no DBSession to remove ===================================")
+            #print("no DBSession to remove ==================================")
+            pass
         try:
             os.remove('test_webtest_functional.db')
             #print "deleted old test database"
