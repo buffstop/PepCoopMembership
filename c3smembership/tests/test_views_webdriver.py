@@ -19,7 +19,7 @@ class SeleniumTestBase(unittest.TestCase):
         self.driver = webdriver.Firefox()  # PhantomJS()
 
 
-class JoinFormTests(unittest.TestCase):
+class JoinFormTests(SeleniumTestBase):
     """
     test the join form using selenium (make a browser do things)
     see
@@ -166,7 +166,7 @@ class JoinFormTests(unittest.TestCase):
         #self.assertTrue(u'tigen und Formular abrufen.' in page)
 
 
-class EmailVerificationTests(unittest.TestCase):
+class EmailVerificationTests(SeleniumTestBase):
 
     def setUp(self):
         super(EmailVerificationTests, self).setUp()
@@ -220,7 +220,7 @@ class DashboardPageObject(object):
         #ToDo: write page object
 
 
-class OrderByTests(unittest.TestCase):
+class OrderByTests(SeleniumTestBase):
     def setUp(self):
         super(OrderByTests, self).setUp()
         self.driver.get('')

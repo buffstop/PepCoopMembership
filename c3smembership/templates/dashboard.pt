@@ -135,11 +135,11 @@
       </tr>
         </table>
         <p>
-          <a href="${request.route_url('dashboard', number=previous, orderby='', order='')}">&lt;previous</a>
-          <a href="${request.route_url('dashboard', number=next, orderby='', order='')}">next&gt;</a>
+          <a href="${request.route_url('dashboard', number=previous, orderby=orderby, order=order)}">&lt;previous</a>
+          <a href="${request.route_url('dashboard', number=next, orderby=orderby, order=order)}">next&gt;</a>
         </p>
         <p>Showing (up to) ${num_display} at a time. Change to
-          <form action="${request.route_url('dashboard', number=0, orderby='', order='')}" method="post">
+          <form action="${request.route_url('dashboard', number=0, orderby=orderby, order=order)}" method="post">
             <input name="num_to_show" type="text"
                    size="3" maxlength="3"
                    value="${num_display}"/>

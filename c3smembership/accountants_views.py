@@ -353,8 +353,7 @@ def import_db(request):
 
     print("done with all import steps, successful or not!")
     return HTTPFound(
-        request.route_url('dashboard',
-                          number=0,))
+        request.route_url('dashboard_only'))
                 # _codes.append(row[13])
                 # print("the codes: %s" % str(_codes))
 
@@ -374,7 +373,7 @@ def export_db(request):
     export the database to a CSV file
     """
     datasets = C3sMember.member_listing(
-        C3sMember.id.desc(), how_many=C3sMember.get_number())
+        "id", how_many=C3sMember.get_number(), order='asc')
     header = ['firstname', 'lastname', 'email',
               'password', 'last_password_change',
               'address1', 'address2', 'postcode', 'city', 'country',
@@ -426,7 +425,6 @@ def accountants_desk(request):
         _order_by = request.matchdict['orderby']
         _order = request.matchdict['order']
     except:
-        print("Default Values")
         _page_to_show = 0
         _order_by = 'id'
         _order = 'asc'
@@ -467,8 +465,6 @@ def accountants_desk(request):
         #print("setting default")
         num_display = request.registry.settings[
             'c3smembership.dashboard_number']
-
-    # ToDo: sortierung im cookie speichern
 
     """
     base_offset helps us to minimize impact on the database
@@ -817,10 +813,28 @@ def mail_payment_confirmation(request):
 
 @view_config(permission='manage', route_name='dashboard_only')
 def dashboard_only(request):
-    return HTTPFound(request.route_url('dashboard_numberonly', number=0))
+    if 'on_page' in request.cookies:
+        try:
+            _number = int(request.cookies['on_page'])
+        except ValueError:
+            _number = 0
+    else:
+        _number = 0
+    return HTTPFound(request.route_url('dashboard_numberonly', number=_number))
 
 
 @view_config(permission='manage', route_name='dashboard_numberonly')
 def dashboard_numberonly(request):
-    number = int(request.matchdict['number'])
-    return HTTPFound(request.route_url('dashboard',number=number, orderby='id', order='asc'))
+    try:
+        number = int(request.matchdict['number'])
+    except ValueError:
+        number = 0
+    if 'orderby' in request.cookies:
+        _order_by = request.cookies['orderby']
+    else:
+        _order_by = 'id'
+    if 'order' in request.cookies:
+        _order = request.cookies['order']
+    else:
+        _order = 'asc'
+    return HTTPFound(request.route_url('dashboard', number=number, orderby=_order_by, order=_order))

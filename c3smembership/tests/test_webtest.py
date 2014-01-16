@@ -135,6 +135,8 @@ class AccountantsFunctionalTests(unittest.TestCase):
         #
         # being logged in ...
         res4 = res3.follow()
+        res4 = res4.follow()
+        res4 = res4.follow()
         #print(res4.body)
         self.failUnless(
             'Dashboard' in res4.body)
@@ -143,37 +145,43 @@ class AccountantsFunctionalTests(unittest.TestCase):
         res5 = self.testapp.get('/login', status=302)
         # so yes: that was a redirect
         res6 = res5.follow()
+        res6 = res6.follow()
+        res6 = res6.follow()
         #print(res4.body)
         self.failUnless(
             'Dashboard' in res6.body)
         # choose number of applications shown
         res6a = self.testapp.get(
             '/dashboard/0',
-            status=200,
+            status=302,
             extra_environ={
                 'num_display': '30',
             }
         )
+        res6a = res6a.follow()
+
         #print('res6a:')
         #print res6a
         self.failUnless('<h1>Dashboard</h1>' in res6a.body)
         res6a = self.testapp.get(
-            '/dashboard/1', status=200,
+            '/dashboard/1', status=302,
         )
+        res6a = res6a.follow()
         #print('res6a:')
         #print res6a
         self.failUnless('<h1>Dashboard</h1>' in res6a.body)
         # try an invalid page number
         res6b = self.testapp.get(
             '/dashboard/foo',
-            status=200,
+            status=302,
         )
+        res6b = res6b.follow()
         #print('res6b:')
         #print res6b.body
         self.failUnless(
             '<p>Number of data sets:' in res6b.body)
         #
-        # change the number oof items to show
+        # change the number of items to show
         form = res6b.forms[1]
         form['num_to_show'] = "42"  # post a number: OK
         resX = form.submit('submit', status=200)
@@ -188,6 +196,8 @@ class AccountantsFunctionalTests(unittest.TestCase):
         # now look at some members details with nonexistant id
         res7 = self.testapp.get('/detail/5000', status=302)
         res7a = res7.follow()
+        res7a = res7a.follow()
+        res7a = res7a.follow()
         self.failUnless('Dashboard' in res7a.body)
 
         # now look at some members details
@@ -242,7 +252,9 @@ class AccountantsFunctionalTests(unittest.TestCase):
         #
         ####################################################################
         # delete an entry
-        resDel1 = self.testapp.get('/dashboard/0', status=200)
+        resDel1 = self.testapp.get('/dashboard/0', status=302)
+        resDel1 = resDel1.follow()
+
 #        self.failUnless(
 #            '      <p>Number of data sets: 1</p>' in resDel1.body.splitlines())
         resDel2 = self.testapp.get('/delete/1', status=302)
@@ -273,6 +285,8 @@ class AccountantsFunctionalTests(unittest.TestCase):
         #
         # being logged in ...
         res3 = res2.follow()
+        res3 = res3.follow()
+        res3 = res3.follow()
         self.failUnless('Dashboard' in res3.body)
 
         """
@@ -308,6 +322,8 @@ class AccountantsFunctionalTests(unittest.TestCase):
         #
         # being logged in ...
         res3 = res2.follow()
+        res3 = res3.follow()
+        res3 = res3.follow()
         self.failUnless('Dashboard' in res3.body)
 
         """
@@ -338,6 +354,9 @@ class AccountantsFunctionalTests(unittest.TestCase):
         #
         # being logged in ...
         res3 = res2.follow()
+        res3 = res3.follow()
+        res3 = res3.follow()
+
         self.failUnless('Dashboard' in res3.body)
 
         """
@@ -883,3 +902,4 @@ class FunctionalTests(unittest.TestCase):
 
         res2 = res.follow()
         self.failUnless("Please fill out the form" in res2.body)
+
