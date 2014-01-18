@@ -225,5 +225,8 @@ class OrderByTests(SeleniumTestBase):
         super(OrderByTests, self).setUp()
         self.driver.get('')
 
+    def tearDown(self):
+        self.driver.quit()
+
     def test(self):
         url = "http://0.0.0.0:6543/dashboard/0/id/asc"

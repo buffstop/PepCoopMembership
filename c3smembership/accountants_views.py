@@ -32,12 +32,13 @@ from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.url import route_url
 from translationstring import TranslationStringFactory
-
 from datetime import datetime
 from sqlalchemy.exc import (
     IntegrityError,
     ResourceClosedError,
 )
+import math
+
 deform_templates = resource_filename('deform', 'templates')
 c3smembership_templates = resource_filename('c3smembership', 'templates')
 
@@ -419,12 +420,12 @@ def accountants_desk(request):
     has their signature arrived? how about the payment?
     """
     _number_of_datasets = C3sMember.get_number()
-    try:  # check if
-          # a page number was supplied with the URL
+    try:  # check if page number, orderby and order were supplied with the URL
         _page_to_show = int(request.matchdict['number'])
         _order_by = request.matchdict['orderby']
         _order = request.matchdict['order']
     except:
+        print("Using default values")
         _page_to_show = 0
         _order_by = 'id'
         _order = 'asc'
@@ -450,7 +451,6 @@ def accountants_desk(request):
     num_display determines how many items are to be shown on one page
     """
     if 'num_to_show' in request.POST:
-        #print("found it in POST")
         try:
             _num = int(request.POST['num_to_show'])
             if isinstance(_num, type(1)):
@@ -484,13 +484,20 @@ def accountants_desk(request):
         previous_page = int(_page_to_show) - 1
     else:
         previous_page = int(_page_to_show)
-
+    _last_page = int(math.ceil(_number_of_datasets / int(num_display)))
+    if next_page > _last_page:
+        next_page = _last_page
     # store info about current page in cookie
     request.response.set_cookie('on_page', value=str(_page_to_show))
-    #print("num_display: %s" % num_display)
     request.response.set_cookie('num_display', value=str(num_display))
     request.response.set_cookie('order', value=str(_order))
     request.response.set_cookie('orderby', value=str(_order_by))
+
+
+
+    _message = None
+    if 'message' in request.GET:
+        _message = request.GET['message']
 
     return {'_number_of_datasets': _number_of_datasets,
             'members': _members,
@@ -499,7 +506,11 @@ def accountants_desk(request):
             'previous': previous_page,
             'current': _page_to_show,
             'orderby': _order_by,
-            'order': _order
+            'order': _order,
+            'message': _message,
+            'last_page': _last_page,
+            'is_last_page': _page_to_show == _last_page,
+            'is_first_page': _page_to_show == 0,
             }
 
 
@@ -546,7 +557,6 @@ def delete_entry(request):
     This view lets accountants delete entries (doublettes)
     """
     memberid = request.matchdict['memberid']
-    dashboard_page = request.cookies['on_page']
     _member = C3sMember.get_by_id(memberid)
 
     C3sMember.delete_by_id(_member.id)
@@ -556,10 +566,8 @@ def delete_entry(request):
             request.user.login,
         )
     )
-
     return HTTPFound(
-        request.route_url('dashboard_numberonly',
-                          number=dashboard_page,))
+        request.route_url('dashboard_only',  _query={'message': 'Member with id {0} was deleted.'.format(memberid)}))
 
 
 @view_config(permission='manage',
@@ -820,15 +828,6 @@ def dashboard_only(request):
             _number = 0
     else:
         _number = 0
-    return HTTPFound(request.route_url('dashboard_numberonly', number=_number))
-
-
-@view_config(permission='manage', route_name='dashboard_numberonly')
-def dashboard_numberonly(request):
-    try:
-        number = int(request.matchdict['number'])
-    except ValueError:
-        number = 0
     if 'orderby' in request.cookies:
         _order_by = request.cookies['orderby']
     else:
@@ -837,4 +836,4 @@ def dashboard_numberonly(request):
         _order = request.cookies['order']
     else:
         _order = 'asc'
-    return HTTPFound(request.route_url('dashboard', number=number, orderby=_order_by, order=_order))
+    return HTTPFound(request.route_url('dashboard', number=_number, orderby=_order_by, order=_order, _query=request.GET))

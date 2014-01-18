@@ -130,7 +130,6 @@ class ImportExportTests(unittest.TestCase):
         # being logged in ...
         res3 = res2.follow()
         res3 = res3.follow()
-        res3 = res3.follow()
         print '-#-' * 10
         print res3.body
         self.failUnless(
@@ -251,7 +250,6 @@ class ImportExportTests(unittest.TestCase):
         # being logged in ...
         res3 = res2.follow()
         res3 = res3.follow()
-        res3 = res3.follow()
 
         self.failUnless(
             'Dashboard' in res3.body)
@@ -357,7 +355,6 @@ class ImportExportTests(unittest.TestCase):
         # being logged in ...
         res3 = res2.follow()
         res3 = res3.follow()
-        res3 = res3.follow()
         self.failUnless(
             'Dashboard' in res3.body)
         # delete existing entry
@@ -369,7 +366,6 @@ class ImportExportTests(unittest.TestCase):
         # import CSV
         res2 = self.testapp.get('/import_all', status=302)
         res3 = res2.follow()
-        res3 = res3.follow()
         res3 = res3.follow()
         self.assertTrue('Number of data sets: 2' in res3.body)
         _export = self.testapp.get('/export_all', status=200)
