@@ -4,17 +4,23 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal">
   <head>
-    <title i18n:translate="membership-form-title">Membership Application for Cultural Commons Collecting Society (C3S SCE)</title>
+    <title i18n:translate="membership-form-title">
+      Membership Application for Cultural Commons Collecting Society (C3S SCE)
+    </title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
     <meta name="keywords" content="Membership Application to join C3S SCE" />
     <meta name="description" content="" />
-    <link rel="shortcut icon" href="${request.static_url('c3smembership:static/favicon.ico')}" />
-    <link rel="stylesheet" href="${request.static_url('c3smembership:static/pylons.css')}" type="text/css" media="screen" charset="utf-8" />
-    <link rel="stylesheet" href="${request.static_url('c3smembership:static/c3s.css')}" type="text/css" media="screen" charset="utf-8" />
+    <link rel="shortcut icon"
+          href="${request.static_url('c3smembership:static/favicon.ico')}" />
+    <link rel="stylesheet"
+          href="${request.static_url('c3smembership:static/pylons.css')}"
+          type="text/css" media="screen" charset="utf-8" />
+    <link rel="stylesheet" href="${request.static_url('c3smembership:static/c3s.css')}"
+          type="text/css" media="screen" charset="utf-8" />
     <tal:block metal:define-slot="deform-js-css"></tal:block>
     <!--[if lte IE 6]>
         <link rel="stylesheet" href="${request.static_url('c3smembership:static/ie6.css')}"
-          type="text/css" media="screen" charset="utf-8" />
+              type="text/css" media="screen" charset="utf-8" />
         <![endif]-->
   </head>
   <body>
@@ -27,36 +33,45 @@
           <a href="${request.route_url('import_all')}">Import (./import.csv)</a> |
         </p>
         <div>Find entry by confirmation code:
-          <form action="${request.route_url('dashboard', number=0, orderby=orderby, order=order)}" method="post">
-            <p><input name="code_to_show" type="text"
-                   size="10" maxlength="10"
-                   value=""/>
+          <form action="${request.route_url('dashboard', number=0, orderby=orderby, order=order)}"
+                method="post">
+            <p>
+              <input name="code_to_show" type="text"
+                     size="10" maxlength="10"
+                     value=""/>
             </p>
           </form>
         </div>
-
         <p>
-            Page ${current+1} of ${last_page+1} <br/>
-            <a id="navigate_previous" tal:condition="not is_first_page" href="${request.route_url('dashboard', number=previous, orderby=orderby, order=order)}">&lt;previous</a>
-            <a id="navigate_next" tal:condition="not is_last_page" href="${request.route_url('dashboard', number=next, orderby=orderby, order=order)}">next&gt;</a>
+          Page ${current+1} of ${last_page+1} <br/>
+          <a id="navigate_previous"
+             tal:condition="not is_first_page"
+             href="${request.route_url('dashboard', number=previous, orderby=orderby, order=order)}"
+             >&lt;previous</a>
+          <a id="navigate_next"
+             tal:condition="not is_last_page"
+             href="${request.route_url('dashboard', number=next, orderby=orderby, order=order)}">
+            next&gt;</a>
         </p>
         <table border="1" cellpadding="10" width="90%" id="main_table">
-      <tr>
+          <tr>
             <th>
-                id <br />
-                <a href="${request.route_url('dashboard', number=current, orderby='id', order='asc')}">asc</a>
-                <a href="${request.route_url('dashboard', number=current, orderby='id', order='desc')}">desc</a>
+              id <br />
+              <a href="${request.route_url('dashboard', number=current, orderby='id', order='asc')}">asc</a>
+              <a href="${request.route_url('dashboard', number=current, orderby='id', order='desc')}">desc</a>
             </th>
             <th>code</th>
             <th>
-                firstname <br />
-                <a href="${request.route_url('dashboard', number=current, orderby='firstname', order='asc')}">asc</a>
-                <a href="${request.route_url('dashboard', number=current, orderby='firstname', order='desc')}">desc</a>
+              firstname <br />
+              <a href="${request.route_url('dashboard', number=current, orderby='firstname', order='asc')}"
+                 >asc</a>
+              <a href="${request.route_url('dashboard', number=current, orderby='firstname', order='desc')}"
+                 >desc</a>
             </th>
             <th>
-                lastname <br />
-                <a href="${request.route_url('dashboard', number=current, orderby='lastname', order='asc')}">asc</a>
-                <a href="${request.route_url('dashboard', number=current, orderby='lastname', order='desc')}">desc</a>
+              lastname <br />
+              <a href="${request.route_url('dashboard', number=current, orderby='lastname', order='asc')}">asc</a>
+              <a href="${request.route_url('dashboard', number=current, orderby='lastname', order='desc')}">desc</a>
             </th>
             <th>email</th>
             <th>email<br />confirmed?</th>
@@ -69,84 +84,99 @@
             <th>edit</th>
             <th>delete</th>
           </tr>
-      <tr tal:repeat="member members" tal:attributes="id python: 'member_{0}'.format(member.id)">
-        <td><a href="/detail/${member.id}">${member.id}</a></td>
-        <td><a href="/detail/${member.id}">${member.email_confirm_code}</a></td>
-        <td>${member.firstname}</td>
-        <td>${member.lastname}</td>
-        <td><a href="mailto:${member.email}">${member.email}</a></td>
-        <td>${member.email_is_confirmed}</td>
-        <td><a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf"
-           >PDF</a></td>
-        <td>
+          <tr tal:repeat="member members" tal:attributes="id python: 'member_{0}'.format(member.id)">
+            <td><a href="/detail/${member.id}">${member.id}</a></td>
+            <td><a href="/detail/${member.id}">${member.email_confirm_code}</a></td>
+            <td>${member.firstname}</td>
+            <td>${member.lastname}</td>
+            <td><a href="mailto:${member.email}">${member.email}</a></td>
+            <td>${member.email_is_confirmed}</td>
+            <td>
+              <a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf">
+                PDF
+              </a>
+            </td>
+            <td>
               <div tal:condition="not member.signature_received">
                 <a href="${request.route_url('switch_sig', memberid=member.id)}"
                    title="no signature received as of now. click to toggle...">
-                  <img src="${request.static_url('c3smembership:static/flash_red.gif')}" width="20px" height="20px" alt="red" />
+                  <img src="${request.static_url('c3smembership:static/flash_red.gif')}"
+                       width="20px" height="20px" alt="red" />
                 </a>
               </div>
               <div tal:condition="member.signature_received">
                 <a href="${request.route_url('switch_sig', memberid=member.id)}"
                    title="signature received at ${member.signature_received_date}. click to unset...">
-                  <img src="${request.static_url('c3smembership:static/green.png')}" width="20px" height="20px" alt="green" />
+                  <img src="${request.static_url('c3smembership:static/green.png')}"
+                       width="20px" height="20px" alt="green" />
                 </a>
               </div>
             </td>
-        <td>
-          <div tal:condition="member.signature_received">
-        <div tal:condition="not member.signature_confirmed">
+            <td>
+              <div tal:condition="member.signature_received">
+                <div tal:condition="not member.signature_confirmed">
                   <a href="${request.route_url('mail_sig_confirmation',
                            memberid=member.id)}">Mail!</a>
-        </div>
-          </div>
+                </div>
+              </div>
               <div tal:condition="member.signature_confirmed">
                 <a href="${request.route_url('mail_sig_confirmation',
                          memberid=member.id)}"
                    title="${member.signature_confirmed_date}">ok</a>
               </div>
             </td>
-        <td>
+            <td>
               <div tal:condition="not member.payment_received">
                 <a href="${request.route_url('switch_pay', memberid=member.id)}"
                    title="no payment received as of now. click to toggle...">
-                  <img src="${request.static_url('c3smembership:static/flash_red.gif')}" width="20px" height="20px" alt="red" />
+                  <img src="${request.static_url('c3smembership:static/flash_red.gif')}"
+                       width="20px" height="20px" alt="red" />
                 </a>
               </div>
               <div tal:condition="member.payment_received">
                 <a href="${request.route_url('switch_pay', memberid=member.id)}"
                    title="payment received at ${member.payment_received_date}. click to change: we have NOT received payment!">
-                  <img src="${request.static_url('c3smembership:static/green.png')}" width="20px" height="20px" alt="green"/>
+                  <img src="${request.static_url('c3smembership:static/green.png')}"
+                       width="20px" height="20px" alt="green"/>
                 </a>
               </div>
             </td>
-        <td>
-          <div tal:condition="member.payment_received">
-        <div tal:condition="not member.payment_confirmed">
+            <td>
+              <div tal:condition="member.payment_received">
+                <div tal:condition="not member.payment_confirmed">
                   <a href="${request.route_url('mail_pay_confirmation',
                            memberid=member.id)}">Mail!</a>
-        </div>
-          </div>
+                </div>
+              </div>
               <div tal:condition="member.payment_confirmed">
                 <a href="${request.route_url('mail_pay_confirmation',
                          memberid=member.id)}"
                    title="${member.payment_confirmed_date}">ok</a>
               </div>
             </td>
-        <td>${member.num_shares}</td>
-        <td><a href="/detail/${member.id}">edit</a></td>
-        <td><a href="/delete/${member.id}">delete</a></td>
-      </tr>
+            <td>${member.num_shares}</td>
+            <td><a href="/detail/${member.id}">edit</a></td>
+            <td><a href="/delete/${member.id}">delete</a></td>
+          </tr>
         </table>
         <p>
-            Page ${current+1} of ${last_page+1} <br/>
-            <a tal:condition="not is_first_page" href="${request.route_url('dashboard', number=previous, orderby=orderby, order=order)}">&lt;previous</a>
-            <a tal:condition="not is_last_page" href="${request.route_url('dashboard', number=next, orderby=orderby, order=order)}">next&gt;</a>
+          Page ${current+1} of ${last_page+1} <br/>
+          <a tal:condition="not is_first_page"
+             href="${request.route_url('dashboard', number=previous, orderby=orderby, order=order)}">
+            &lt;previous
+          </a>
+          <a tal:condition="not is_last_page"
+             href="${request.route_url('dashboard', number=next, orderby=orderby, order=order)}">
+            next&gt;
+          </a>
         </p>
         <div>Showing (up to) ${num_display} at a time. Change to
-          <form action="${request.route_url('dashboard', number=0, orderby=orderby, order=order)}" method="post">
-            <p><input name="num_to_show" type="text"
-                   size="3" maxlength="3"
-                   value="${num_display}"/>
+          <form action="${request.route_url('dashboard', number=0, orderby=orderby, order=order)}"
+                method="post">
+            <p>
+              <input name="num_to_show" type="text"
+                     size="3" maxlength="3"
+                     value="${num_display}"/>
             </p>
           </form>
         </div>
