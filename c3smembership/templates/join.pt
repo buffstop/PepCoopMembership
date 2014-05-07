@@ -39,12 +39,15 @@
     </p>
     <p>
       <span i18n:translate="join-form-nonhumans-p">
-        Membership for private companies and institutions can be applied for using the following link:
+        Membership for private companies and institutions can be applied for using the following links:
       </span>
-      <a href="http://archive.c3s.cc/legal/beitritt-koerperschaft.pdf"
-         i18n:translate="join-form-nonhumans-linktext">
+      <span i18n:translate="join-form-nonhumans-linktext">
         Membership for Companies and Institutions
-      </a>
+      </span>
+      <a href="http://archive.c3s.cc/legal/beitritt-koerperschaft.pdf" target="_blank"
+	 i18n:translate="join-form-statute-linktitle-de">(german)</a>
+      <a href="http://archive.c3s.cc/legal/beitritt-koerperschaft_en.pdf" target="_blank"
+	 i18n:translate="join-form-statute-linktitle-en">(english)</a>
     </p>
     <div id="form" tal:content="structure form"/>
     <p><script type="text/javascript">
