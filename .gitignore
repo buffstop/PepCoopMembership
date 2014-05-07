@@ -12,3 +12,6 @@ cover/
 nosetests.xml
 *.idea
 pyramid.pid
+off/
+*.db*
+
