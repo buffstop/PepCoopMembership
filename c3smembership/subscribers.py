@@ -1,12 +1,23 @@
 from pyramid.renderers import get_renderer
 from pyramid.i18n import (
     default_locale_negotiator,
-    )
+)
 
 
 def add_base_template(event):
     base = get_renderer('templates/base.pt').implementation()
     event.update({'base': base})
+
+
+def add_base_bootstrap_template(event):
+    base_bootstrap = get_renderer(
+        'templates/base_bootstrap.pt').implementation()
+    event.update({'base_bootstrap': base_bootstrap})
+
+
+def add_backend_template(event):
+    backend = get_renderer('templates/backend.pt').implementation()
+    event.update({'backend': backend})
 
 BROWSER_LANGUAGES = {  # a dictionary of codes the browsers send
     'da': 'da',  # # # # and the locales we choose for them
@@ -21,7 +32,7 @@ BROWSER_LANGUAGES = {  # a dictionary of codes the browsers send
     'es': 'es',
     'fr': 'fr',
     # ... add new languages here, too!
-    }
+}
 
 
 def add_locale_to_cookie(event):

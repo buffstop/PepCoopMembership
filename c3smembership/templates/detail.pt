@@ -2,11 +2,8 @@
       xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      metal:use-macro="base">
-  <!-- metal : use-macro="loggedinpt" -->
-
-  <tal:block metal:fill-slot="bottom">
-    <div id="main">
+      metal:use-macro="backend">
+  <tal:block metal:fill-slot="middle">
       <p>
         Please <a href="${request.route_url('logout')}">log out</a>
         when you are done.
@@ -14,8 +11,9 @@
       </p>
 
       <h1>Details for Member Application #${member.id}</h1>
-
-      <table border="1" cellpadding="10" width="90%">
+      <a href="${request.route_url('edit', _id=member.id)}" class="btn btn-warning">edit</a>
+      <a href="${request.route_url('delete_entry', memberid=member.id)}" class="btn btn-danger">delete</a>
+      <table class="table table-striped">
 	<tr>
           <td>code</td>
 	  <td>${member.email_confirm_code}</td>
@@ -34,7 +32,7 @@
         </tr>
 	<tr>
           <td>email confirmed?</td>
-	  <td>${member.email_is_confirmed}</td>
+	  <td>${python: u'Yes' if member.email_is_confirmed else u'No.'}</td>
         </tr>
 	<tr>
           <td>address1</td>
@@ -70,7 +68,7 @@
         </tr>
 	<tr>
           <td>member_of_colsoc</td>
-	  <td>${member.member_of_colsoc}</td>
+	  <td>${'Yes' if member.member_of_colsoc else 'No'}</td>
         </tr>
 	<tr>
           <td>name_of_colsoc</td>
@@ -81,22 +79,53 @@
 	  <td>${member.date_of_submission}</td>
         </tr>
 	<tr>
-          <td>signature received?</td><td>${member.signature_received or "No"}</td>
+          <td>signature received?</td>
+          <td>
+            <div tal:condition="not member.signature_received">
+              <div class="btn btn-danger">Nein</div>
+              <a href="${request.route_url('switch_sig', memberid=member.id)}"
+                 class="btn btn-primary">
+                Eingang bestätigen
+              </a>
+            </div>
+            <div tal:condition="member.signature_received">
+              <a href="${request.route_url('switch_sig', memberid=member.id)}"
+                 class="btn btn-success"
+                 title="${member.signature_received_date} (anklicken zum verneinen)">
+                Ja</a>
+            </div>
+          </td>
         </tr>
 	<tr tal:condition="member.signature_received">
           <td>signature reception date</td><td>${member.signature_received_date}</td>
         </tr>
 	<tr>
-          <td>signature confirmed?</td><td>${member.signature_confirmed or "No"}</td>
+          <td>signature confirmed (mail sent)?</td><td>${member.signature_confirmed or "No"}</td>
         </tr>
 	<tr tal:condition="member.signature_confirmed">
           <td>signature confirmation date</td><td>${member.signature_confirmed_date}</td>
         </tr>
 	<tr>
-          <td>payment received?</td><td>${member.payment_received or "No"}</td>
+          <td>payment received?</td>
+          <td>
+            <div tal:condition="not member.payment_received">
+              <div class="btn btn-danger">Nein</div>
+              <a href="${request.route_url('switch_pay', memberid=member.id)}"
+                 class="btn btn-primary">
+                Zahlungseingang bestätigen
+              </a>
+            </div>
+            <div tal:condition="member.payment_received">
+              <a href="${request.route_url('switch_pay', memberid=member.id)}"
+                 class="btn btn-success"
+                 title="${member.payment_received_date} (anklicken zum verneinen)">
+                Ja</a>
+            </div>
+          </td>
         </tr>
 	<tr tal:condition="member.payment_received">
-          <td>payment reception date</td><td>${member.payment_received_date}</td>
+          <td>payment reception date</td>
+          <td>${member.payment_received_date}</td>
         </tr>
 	<tr>
           <td>payment confirmed?</td><td>${member.payment_confirmed or "No"}</td>
@@ -109,15 +138,5 @@
 	  <td>${member.num_shares}</td>
         </tr>
       </table>
-
-      <div id="form" tal:content="structure form"/>
-
-      <p>&nbsp;</p>
-      <p>&nbsp;</p>
-    </div>
-  </tal:block>
-  <tal:block metal:fill-slot="deform-load">
-    <!--! loading deform -->
-    <script type="text/javascript">deform.load()</script>
   </tal:block>
 </html>

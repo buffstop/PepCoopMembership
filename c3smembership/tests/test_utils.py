@@ -30,7 +30,8 @@ class TestUtilities(unittest.TestCase):
             #print("no DBSession to remove ===================================")
             pass
         from sqlalchemy import create_engine
-        engine = create_engine('sqlite:///test_utils.db')
+        #engine = create_engine('sqlite:///test_utils.db')
+        engine = create_engine('sqlite:///:memory:')
         DBSession.configure(bind=engine)
         self.session = DBSession  # ()
 
@@ -66,7 +67,7 @@ class TestUtilities(unittest.TestCase):
         DBSession.close()
         DBSession.remove()
         testing.tearDown()
-        os.remove('test_utils.db')
+        #os.remove('test_utils.db')
 
     def test_generate_pdf_en(self):
         """

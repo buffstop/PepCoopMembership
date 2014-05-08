@@ -14,6 +14,9 @@ from subprocess import call
 
 class SeleniumTestBase(unittest.TestCase):
     def setUp(self):
+        # stop the daemon iff running
+        call(['env/bin/pserve', 'development.ini', 'stop'])
+        # start the app
         call(['env/bin/pserve', 'development.ini', 'start'])
         time.sleep(3)
         self.driver = webdriver.Firefox()  # PhantomJS()
@@ -103,8 +106,10 @@ class JoinFormTests(SeleniumTestBase):
             'firstname').get_attribute('value'), 'Christoph')
         self.assertEqual(self.driver.find_element_by_name(
             'email').get_attribute('value'), 'c@c3s.cc')
-        self.assertEqual(self.driver.find_element_by_name(
-            'password').get_attribute('value'), 'foobar')
+        #self.assertEqual(self.driver.find_element_by_name(
+        #    'password').get_attribute('value'), 'foobar')
+        #print("the password: %s" % self.driver.find_element_by_name(
+        #        'password').get_attribute('value'))
         self.assertEqual(self.driver.find_element_by_name(
             'address1').get_attribute('value'), 'addr one')
         self.assertEqual(self.driver.find_element_by_name(
@@ -140,11 +145,17 @@ class JoinFormTests(SeleniumTestBase):
         # verify we have to theck this again
         self.driver.find_element_by_name('got_statute').click()
         self.driver.find_element_by_id('other_colsoc-1').click()  # No colsoc
+        # enter password
+        self.driver.find_element_by_name('password').send_keys('foobar')
+        time.sleep(0.1)
+
         self.driver.find_element_by_name('submit').click()
         time.sleep(0.1)
         self.assertTrue(
             'Bitte beachten: Es gab fehler' not in self.driver.page_source)
         self.assertTrue('addr two plus' in self.driver.page_source)
+        #print self.driver.page_source
+        #time.sleep(10)
 
         self.driver.find_element_by_name('send_email').click()
         time.sleep(0.1)

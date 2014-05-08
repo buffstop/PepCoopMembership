@@ -44,7 +44,7 @@ we have different use cases:
         so staffers can check out pagination
 """
 
-how_many = 187
+how_many = 17
 
 
 def usage(argv):
@@ -76,7 +76,7 @@ def main(argv=sys.argv):
         try:
             DBSession.add(accountants_group)
             DBSession.flush()
-            print("adding group staff")
+            #print("adding group staff")
         except:
             print("could not add group staff.")
             # pass
@@ -90,7 +90,7 @@ def main(argv=sys.argv):
         staffer1.groups = [accountants_group]
         try:
             DBSession.add(staffer1)
-            print("adding staff rut")
+            #print("adding staff rut")
             DBSession.flush()
         except:
             print("it borked! (rut)")
@@ -105,7 +105,7 @@ def main(argv=sys.argv):
         staffer2.groups = [accountants_group]
         try:
             DBSession.add(staffer2)
-            print("adding staff reel")
+            #print("adding staff reel")
             DBSession.flush()
         except:
             print("it borked! (reel)")
@@ -134,7 +134,7 @@ def main(argv=sys.argv):
         )
         try:
             DBSession.add(member1)
-            print("adding Firstnäme")
+            #print("adding Firstnäme")
         except:
             pass
     # even more members

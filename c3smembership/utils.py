@@ -11,6 +11,52 @@ from pyramid_mailer.message import (
 DEBUG = False
 #DEBUG = True
 
+from translationstring import TranslationStringFactory
+
+_ = TranslationStringFactory('c3smembership')
+
+country_codes = [
+    ('AT', _(u'Austria')),
+    ('BE', _(u'Belgium')),
+    ('BG', _(u'Bulgaria')),
+    ('CH', _(u'Switzerland')),
+    ('CZ', _(u'Czech Republic')),
+    ('DE', _(u'Germany')),
+    ('DK', _(u'Denmark')),
+    ('ES', _(u'Spain')),
+    ('EE', _(u'Estonia')),
+    ('FI', _(u'Finland')),
+    ('FR', _(u'France')),
+    ('GB', _(u'United Kingdom')),
+    ('GR', _(u'Greece')),
+    ('HU', _(u'Hungary')),
+    ('HR', _(u'Croatia')),
+    ('IE', _(u'Ireland')),
+    ('IS', _(u'Iceland')),
+    ('IT', _(u'Italy')),
+    ('LT', _(u'Lithuania')),
+    ('LI', _(u'Liechtenstein')),
+    ('LV', _(u'Latvia')),
+    ('LU', _(u'Luxembourg')),
+    ('MT', _(u'Malta')),
+    ('NL', _(u'Netherlands')),
+    ('NO', _(u'Norway')),
+    ('PL', _(u'Poland')),
+    ('PT', _(u'Portugal')),
+    ('SK', _(u'Slovakia')),
+    ('SI', _(u'Slovenia')),
+    ('SE', _(u'Sweden')),
+    ('XX', _(u'other'))
+]
+
+    #locale_codes = request.registry.settings[
+    #    'available_languages'].split()
+locale_codes = [
+    (u'de', _(u'Deutsch')),
+    (u'en', _(u'Englisch')),
+    (u'fr', _(u'Français')),
+]
+
 
 def generate_pdf(appstruct):
     """
@@ -164,7 +210,7 @@ def generate_pdf(appstruct):
         print("===== pdftk output ======")
         print(pdftk_output)
 
-# return a pdf file
+    # return a pdf file
     from pyramid.response import Response
     response = Response(content_type='application/pdf')
     pdf_file.seek(0)  # rewind to beginning

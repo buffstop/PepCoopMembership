@@ -20,7 +20,7 @@ min-height: 80%;
 /* subheadings: bright green */
 h2.deform {color:#4dbd38;font-weight:bold;padding-top:10px;}
 /* date of birth display with DatePartsWidget: control sizes */
-input#date_of_birth { width:50px!important;}
+/* input#date_of_birth { width:50px!important;} */
 #date_of_birth-month, #date_of_birth-day { width:25px!important;}
 /* form subparts: /fieldset/legend */
 #item-deformField1 > fieldset > legend {color:#4dbd38;font-weight:bold;}

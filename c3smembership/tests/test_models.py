@@ -25,19 +25,18 @@ class C3sMembershipModelTestBase(unittest.TestCase):
         except:
             #print("no DBSession to remove ===================================")
             pass
-        engine = create_engine('sqlite:///test_models.db')
+        #engine = create_engine('sqlite:///test_models.db')
+        engine = create_engine('sqlite:///:memory:')
         self.session = DBSession
         DBSession.configure(bind=engine)  # XXX does influence self.session!?!
         Base.metadata.create_all(engine)
 
-
     def tearDown(self):
         self.session.close()
         self.session.remove()
-        os.remove('test_models.db')
+        #os.remove('test_models.db')
 
     def _getTargetClass(self):
-        from c3smembership.models import C3sMember
         return C3sMember
 
     def _makeOne(self,
@@ -199,7 +198,8 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance_from_DB.date_of_birth, _date_of_birth)
         self.assertEqual(instance_from_DB.email_is_confirmed, False)
         self.assertEqual(instance_from_DB.email_confirm_code, u'ABCDEFGHIK')
-        self.assertEqual(instance_from_DB.date_of_submission, _date_of_submission)
+        self.assertEqual(instance_from_DB.date_of_submission,
+                         _date_of_submission)
         self.assertEqual(instance_from_DB.membership_type, u'normal')
         self.assertEqual(instance_from_DB.member_of_colsoc, True)
         self.assertEqual(instance_from_DB.name_of_colsoc, u'GEMA')
@@ -237,7 +237,7 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
 
         result1 = myMembershipSigneeClass.check_for_existing_confirm_code(
             u'ABCDEFGHIK')
-        print result1  # True
+        #print result1  # True
         self.assertEqual(result1, True)
         result2 = myMembershipSigneeClass.check_for_existing_confirm_code(
             u'ABCDEFGHIK0000000000')
@@ -256,21 +256,38 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.failUnless(result1[1].firstname == u"SomeFirstnäme")
         self.failUnless(result1[2].firstname == u"SomeFirstname")
 
+    def test_member_listing_exception(self):
+        instance = self._makeOne()
+        self.session.add(instance)
+        instance2 = self._makeAnotherOne()
+        self.session.add(instance2)
+        myMembershipSigneeClass = self._getTargetClass()
+
+        #self.assertRaises(myMembershipSigneeClass, member_listing, "foo")
+        with self.assertRaises(Exception):
+            result1 = myMembershipSigneeClass.member_listing("foo")
+        #self.failUnless(result1[0].firstname == u"SomeFirstnäme")
+        #self.failUnless(result1[1].firstname == u"SomeFirstnäme")
+        #self.failUnless(result1[2].firstname == u"SomeFirstname")
+
 
 class TestMemberListing(C3sMembershipModelTestBase):
     def setUp(self):
         super(TestMemberListing, self).setUp()
-        instance = self._makeOne(lastname=u"ABC", firstname=u'xyz', email_confirm_code=u'0987654321')
+        instance = self._makeOne(lastname=u"ABC", firstname=u'xyz',
+                                 email_confirm_code=u'0987654321')
         self.session.add(instance)
-        instance = self._makeAnotherOne(lastname=u"DEF", firstname=u'abc', email_confirm_code=u'19876543210')
+        instance = self._makeAnotherOne(lastname=u"DEF", firstname=u'abc',
+                                        email_confirm_code=u'19876543210')
         self.session.add(instance)
-        instance = self._makeAnotherOne(lastname=u"GHI", firstname=u'def', email_confirm_code=u'098765432101')
+        instance = self._makeAnotherOne(lastname=u"GHI", firstname=u'def',
+                                        email_confirm_code=u'098765432101')
         self.session.add(instance)
         self.session.flush()
         self.class_under_test = self._getTargetClass()
 
     def test_orderByLastname_sortedByLastname(self):
-        print "now test " * 45
+        #print "now test " * 45
         result = self.class_under_test.member_listing(order_by='lastname')
         self.assertIsNotNone(result)
         self.assertIsNotNone(result[0])
@@ -278,25 +295,33 @@ class TestMemberListing(C3sMembershipModelTestBase):
         self.assertEqual("GHI", result[-1].lastname)
 
     def test_orderByLastnameOrderAsc_sortedByLastname(self):
-        result = self.class_under_test.member_listing(order_by='lastname', order="asc")
+        result = self.class_under_test.member_listing(
+            order_by='lastname', order="asc")
         self.assertIsNotNone(result)
         self.assertIsNotNone(result[0])
         self.assertEqual("ABC", result[0].lastname)
         self.assertEqual("GHI", result[-1].lastname)
 
     def test_orderByLastnameOrderDesc_sortedByLastname(self):
-        result = self.class_under_test.member_listing(order_by='lastname', order="desc")
+        result = self.class_under_test.member_listing(
+            order_by='lastname', order="desc")
         self.assertIsNotNone(result)
         self.assertIsNotNone(result[0])
         self.assertEqual("GHI", result[0].lastname)
         self.assertEqual("ABC", result[-1].lastname)
 
     def test_orderByInvalidName_raisesException(self):
-        self.assertRaises(self.class_under_test.member_listing, order_by='unknown', order="desc")
-        self.assertRaises(self.class_under_test.member_listing, order_by=None, order="desc")
-        self.assertRaises(self.class_under_test.member_listing, order_by="", order="desc")
+        self.assertRaises(self.class_under_test.member_listing,
+                          order_by='unknown', order="desc")
+        self.assertRaises(self.class_under_test.member_listing,
+                          order_by=None, order="desc")
+        self.assertRaises(self.class_under_test.member_listing,
+                          order_by="", order="desc")
 
     def test_orderInvalid_raisesException(self):
-        self.assertRaises(self.class_under_test.member_listing, order_by='lastname', order="unknown")
-        self.assertRaises(self.class_under_test.member_listing, order_by='lastname', order="")
-        self.assertRaises(self.class_under_test.member_listing, order_by='lastname', order=None)
+        self.assertRaises(self.class_under_test.member_listing,
+                          order_by='lastname', order="unknown")
+        self.assertRaises(self.class_under_test.member_listing,
+                          order_by='lastname', order="")
+        self.assertRaises(self.class_under_test.member_listing,
+                          order_by='lastname', order=None)

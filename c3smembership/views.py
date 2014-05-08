@@ -12,9 +12,16 @@ from c3smembership.models import (
 from types import NoneType
 from pkg_resources import resource_filename
 import colander
+from datetime import (
+    date,
+    datetime,
+)
 import deform
 from deform import ValidationFailure
-from colander import Invalid
+from colander import (
+    Invalid,
+    Range,
+)
 
 from pyramid.i18n import (
     #TranslationStringFactory,
@@ -386,9 +393,6 @@ def join_c3s(request):
     """
     This is the main form view: Join C3S as member
     """
-    import datetime
-    from colander import Range
-
     #LOGGING = True
 
     #if LOGGING:  # pragma: no cover
@@ -448,39 +452,7 @@ def join_c3s(request):
     if DEBUG:  # pragma: no cover
         print "-- locale_name: " + str(locale_name)
 
-    country_codes = [
-        ('AT', _(u'Austria')),
-        ('BE', _(u'Belgium')),
-        ('BG', _(u'Bulgaria')),
-        ('CH', _(u'Switzerland')),
-        ('CZ', _(u'Czech Republic')),
-        ('DE', _(u'Germany')),
-        ('DK', _(u'Denmark')),
-        ('ES', _(u'Spain')),
-        ('EE', _(u'Estonia')),
-        ('FI', _(u'Finland')),
-        ('FR', _(u'France')),
-        ('GB', _(u'United Kingdom')),
-        ('GR', _(u'Greece')),
-        ('HU', _(u'Hungary')),
-        ('HR', _(u'Croatia')),
-        ('IE', _(u'Ireland')),
-        ('IS', _(u'Iceland')),
-        ('IT', _(u'Italy')),
-        ('LT', _(u'Lithuania')),
-        ('LI', _(u'Liechtenstein')),
-        ('LV', _(u'Latvia')),
-        ('LU', _(u'Luxembourg')),
-        ('MT', _(u'Malta')),
-        ('NL', _(u'Netherlands')),
-        ('NO', _(u'Norway')),
-        ('PL', _(u'Poland')),
-        ('PT', _(u'Portugal')),
-        ('SK', _(u'Slovakia')),
-        ('SI', _(u'Slovenia')),
-        ('SE', _(u'Sweden')),
-        ('XX', _(u'other'))
-    ]
+    from c3smembership.utils import country_codes
     # set default of Country select widget according to locale
     LOCALE_COUNTRY_MAPPING = {
         'de': 'DE',
@@ -564,10 +536,10 @@ def join_c3s(request):
             title=_(u'Date of Birth'),
             #css_class="hasDatePicker",
             widget=deform.widget.DatePartsWidget(),
-            default=datetime.date(2013, 1, 1),
+            default=date(2013, 1, 1),
             validator=Range(
-                min=datetime.date(1913, 1, 1),
-                max=datetime.date(2000, 1, 1),
+                min=date(1913, 1, 1),
+                max=date(2000, 1, 1),
                 min_err=_(u'${val} is earlier than earliest date ${min}'),
                 max_err=_(u'${val} is later than latest date ${max}')
             ),
@@ -808,11 +780,6 @@ def join_c3s(request):
             # create a new one, if the new one already exists in the database
             randomstring = make_random_string()  # pragma: no cover
 
-        from datetime import datetime
-        from sqlalchemy.exc import (
-            InvalidRequestError,
-            IntegrityError
-        )
         # to store the data in the DB, an objet is created
         member = C3sMember(
             firstname=appstruct['person']['firstname'],

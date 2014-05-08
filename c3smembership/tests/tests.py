@@ -79,7 +79,7 @@ class TestViews(unittest.TestCase):
         }
         mailer = get_mailer(request)
         result = success_check_email(request)
-        print result
+        #print result
         self.assertTrue(result['lastname'] is 'bar')
         self.assertTrue(result['firstname'] is 'foo')
 

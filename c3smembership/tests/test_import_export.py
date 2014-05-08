@@ -34,15 +34,16 @@ class ImportExportTests(unittest.TestCase):
         except:
             pass
             #print "no session to close"
-        try:
-            os.remove('test_import.db')
-            #print "deleted old test database"
-        except:
-            pass
-            #print "never mind"
+        #try:
+        #    os.remove('test_import.db')
+        #    #print "deleted old test database"
+        #except:
+        #    pass
+        #    #print "never mind"
        # self.session = DBSession()
         my_settings = {
-            'sqlalchemy.url': 'sqlite:///test_import.db',
+            #'sqlalchemy.url': 'sqlite:///test_import.db',
+            'sqlalchemy.url': 'sqlite:///:memory:',
             'available_languages': 'da de en es fr',
             'c3smembership.dashboard_number': '30'}
         engine = engine_from_config(my_settings)
@@ -78,10 +79,10 @@ class ImportExportTests(unittest.TestCase):
             try:
                 DBSession.add(accountants_group)
                 DBSession.flush()
-                print("adding group staff")
+                #print("adding group staff")
             except:
-                print("could not add group staff.")
-                # pass
+                #print("could not add group staff.")
+                pass
             # staff personnel
             staffer1 = C3sStaff(
                 login=u"rut",
@@ -94,8 +95,8 @@ class ImportExportTests(unittest.TestCase):
                 DBSession.add(staffer1)
                 DBSession.flush()
             except:
-                print("it borked! (rut)")
-                # pass
+                #print("it borked! (rut)")
+                pass
 
         from c3smembership import main
         app = main({}, **my_settings)
@@ -130,8 +131,8 @@ class ImportExportTests(unittest.TestCase):
         # being logged in ...
         res3 = res2.follow()
         res3 = res3.follow()
-        print '-#-' * 10
-        print res3.body
+        #print '-#-' * 10
+        #print res3.body
         self.failUnless(
             'Dashboard' in res3.body)
         # now try authenticated
@@ -245,7 +246,7 @@ class ImportExportTests(unittest.TestCase):
         form['password'] = 'berries'
         res2 = form.submit('submit', status=302)
         #
-        print('-'*30)
+        #print('-'*30)
         #print(res2.body)
         # being logged in ...
         res3 = res2.follow()
@@ -400,7 +401,7 @@ class ImportExportTests(unittest.TestCase):
         _ic = re.sub(r"\r", "", _ic)
         _ec = re.sub(r"\n", "", _export_cleaned)
         _ec = re.sub(r"\r", "", _ec)
-        print("len(_ic): %s, _ic: %s" % (len(_ic), _ic))
-        print("len(_ec): %s, _ec: %s" % (len(_ec), _ec))
+        #print("len(_ic): %s, _ic: %s" % (len(_ic), _ic))
+        #print("len(_ec): %s, _ec: %s" % (len(_ec), _ec))
         self.assertTrue(_ec in _ic)
         self.assertTrue(_ic in _ec)

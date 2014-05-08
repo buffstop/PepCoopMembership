@@ -149,7 +149,9 @@ def accountants_login(request):
                     request=request),
                 headers=headers)
         else:
-            log.info("password check: failed.")
+            log.info("password check: failed for %s." % login)
+    else:
+        request.session.pop('message_above_form')  # remove message fr. session
 
     html = form.render()
     return {'form': html, }
@@ -320,7 +322,7 @@ def import_db(request):
                 row[26], '%Y-%m-%d %H:%M:%S.%f')
 
         import_member.accountant_comment = row[27]
-        print('importing %s now...' % counter)
+        #print('importing %s now...' % counter)
         try:
             dbsession = DBSession
             dbsession.add(import_member)
@@ -329,7 +331,7 @@ def import_db(request):
                 "%s imported dataset %s" % (
                     authenticated_userid(request),
                     import_member.email_confirm_code))
-            print('done with %s!' % counter)
+            #print('done with %s!' % counter)
         except ResourceClosedError, rce:
             # XXX can't catch this exception,
             # because it happens somwhere else, later, deeper !?!
@@ -352,7 +354,7 @@ def import_db(request):
         #    print "passing"
         #    pass
 
-    print("done with all import steps, successful or not!")
+    #print("done with all import steps, successful or not!")
     return HTTPFound(
         request.route_url('dashboard_only'))
                 # _codes.append(row[13])
@@ -411,6 +413,21 @@ def export_db(request):
         'rows': rows}
 
 
+@view_config(renderer='json',
+             permission='manage',
+             route_name='autocomplete_input_values')
+def autocomplete_input_values(request):
+    '''
+    AJAX view/helper function
+    returns the matching set of values for autocomplete/quicksearch
+
+    this function and view expects a parameter 'term' (?term=foo) containing a
+    string to find matching entries (e.g. starting with 'foo') in the database
+    '''
+    text = request.params.get('term', '')
+    return C3sMember.get_matching_codes(text)
+
+
 @view_config(renderer='templates/dashboard.pt',
              permission='manage',
              route_name='dashboard')
@@ -466,6 +483,35 @@ def accountants_desk(request):
         num_display = request.registry.settings[
             'c3smembership.dashboard_number']
 
+    '''
+    we use a form with autocomplete to let staff find entries faster
+    '''
+    #the_codes = C3sMember.get_all_codes()
+    #print("the codes: %s" % the_codes)
+
+    class AutocompleteForm(colander.MappingSchema):
+        code_to_show = colander.SchemaNode(
+            colander.String(),
+            title='Code finden (quicksearch; Groß-/Kleinschreibung beachten!)',
+            #title='',
+            widget=deform.widget.AutocompleteInputWidget(
+                min_length=1,
+                css_class="form-inline",
+                #values=the_codes,  # XXX input matching ones only
+                values=request.route_path(
+                    'autocomplete_input_values',
+                    traverse=('autocomplete_input_values')
+                )
+            )
+        )
+
+    schema = AutocompleteForm()
+    form = deform.Form(
+        schema,
+        css_class="form-inline",
+        buttons=('go!',),
+    )
+    autoformhtml = form.render()
     """
     base_offset helps us to minimize impact on the database
     when querying for results.
@@ -474,7 +520,6 @@ def accountants_desk(request):
     base_offset = int(_page_to_show) * int(num_display)
 
     # get data sets from DB
-
     _members = C3sMember.member_listing(
         _order_by, how_many=num_display, offset=base_offset, order=_order)
 
@@ -493,13 +538,12 @@ def accountants_desk(request):
     request.response.set_cookie('order', value=str(_order))
     request.response.set_cookie('orderby', value=str(_order_by))
 
-
-
     _message = None
     if 'message' in request.GET:
         _message = request.GET['message']
 
-    return {'_number_of_datasets': _number_of_datasets,
+    return {'autoform': autoformhtml,
+            '_number_of_datasets': _number_of_datasets,
             'members': _members,
             'num_display': num_display,
             'next': next_page,
@@ -566,8 +610,14 @@ def delete_entry(request):
             request.user.login,
         )
     )
+    _message = "member.id %s was deleted" % _member.id
+
+    request.session.flash(_message, 'messages')
     return HTTPFound(
-        request.route_url('dashboard_only',  _query={'message': 'Member with id {0} was deleted.'.format(memberid)}))
+        request.route_url(
+            'dashboard_only',
+            _query={'message': 'Member with id {0} was deleted.'.format(
+                    memberid)}))
 
 
 @view_config(permission='manage',
@@ -612,7 +662,7 @@ def member_detail(request):
     """
     logged_in = authenticated_userid(request)
     #log.info("detail view.................................................")
-    print("---- authenticated_userid: " + str(logged_in))
+    #print("---- authenticated_userid: " + str(logged_in))
 
     # this following stanza is overridden by the views permission settings
     #if logged_in is None:  # not authenticated???
@@ -623,7 +673,8 @@ def member_detail(request):
     #    )
 
     memberid = request.matchdict['memberid']
-    #log.info("the id: %s" % memberid)
+    log.info("member details of id %s checked by %s" % (
+            memberid, logged_in))
 
     _member = C3sMember.get_by_id(memberid)
 
@@ -819,6 +870,34 @@ def mail_payment_confirmation(request):
                      )
 
 
+# @view_config(permission='manage',
+#              route_name='mail_pay_confirmation')
+# def mail_passwd_reset(request):
+#     """
+#     send a mail to member to reset her password
+#     """
+#     _id = request.matchdict['memberid']
+#     _member = C3sMember.get_by_id(_id)
+
+#     message = Message(
+#         subject=_('[C3S AFM] Please reset your password!'),
+#         sender='yes@c3s.cc',
+#         recipients=[_member.email],
+#         body=make_password_reset_emailbody(_member)
+#     )
+#     #print(message.body)
+#     mailer = get_mailer(request)
+#     mailer.send(message)
+#     _member.password XXX = True
+#     _member. XXX = datetime.now()
+#     return HTTPFound(request.route_url('dashboard',
+#                                        number=request.cookies['on_page'],
+#                                        order=request.cookies['order'],
+#                                        orderby=request.cookies['orderby'],
+#                                        )
+#                      )
+
+
 @view_config(permission='manage', route_name='dashboard_only')
 def dashboard_only(request):
     if 'on_page' in request.cookies:
@@ -836,4 +915,8 @@ def dashboard_only(request):
         _order = request.cookies['order']
     else:
         _order = 'asc'
-    return HTTPFound(request.route_url('dashboard', number=_number, orderby=_order_by, order=_order, _query=request.GET))
+    return HTTPFound(
+        request.route_url(
+            'dashboard',
+            number=_number, orderby=_order_by,
+            order=_order, _query=request.GET))
