@@ -77,6 +77,7 @@ def main(global_config, **settings):
     config.add_route('staff', '/staff')
     config.add_route('new_member', '/new_member')
     config.add_route('detail', '/detail/{memberid}')
+    config.add_route('edit', '/edit/{_id}')
     config.add_route('switch_sig', '/switch_sig/{memberid}')
     config.add_route('mail_sig_confirmation', '/mail_sig_conf/{memberid}')
     config.add_route('regenerate_pdf', '/re_C3S_SCE_AFM_{code}.pdf')
@@ -86,8 +87,13 @@ def main(global_config, **settings):
     config.add_route('login', '/login')
     config.add_route('export_all', '/export_all')
     config.add_route('import_all', '/import_all')
+    config.add_route('import_with_ids', '/import_with_ids')
     config.add_route('import_founders', '/import_founders')
     config.add_route('import_crowdfunders', '/import_crowdfunders')
     config.add_route('logout', '/logout')
+    # memberships
+    config.add_route('make_member', '/make_member/{afm_id}')
+    config.add_route('membership_listing',
+                     '/memberships/{number}/{orderby}/{order}')
     config.scan()
     return config.make_wsgi_app()
