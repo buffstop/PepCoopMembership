@@ -8,34 +8,34 @@ README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
+    'alembic',  # migrate the database when introducing new fields
+    'Babel',
+    'cryptacular',
+    'deform<2.0a',
+    'fdfgen',
+    'lingua',
+    'pycountry',  # replacing 'webhelpers',
     'pyramid<1.5a',
+    'pyramid_beaker',
+    'pyramid_debugtoolbar',
+    'pyramid_mailer',
+    'pyramid_tm',
+    'python-gnupg',
     'SQLAlchemy',
     'transaction',
-    'pyramid_tm',
-    'pyramid_debugtoolbar',
-    'pyramid_beaker',
-    'pyramid_mailer',
-    'zope.sqlalchemy',
-    'deform<2.0a',
-    'cryptacular',
-    'pycountry',  # replacing 'webhelpers',
-    'fdfgen',
-    'Babel',
-    'lingua',
-    'waitress',
-    'python-gnupg',
     'unicodecsv',
-    'alembic',  # migrate the database when introducing new fields
+    'waitress',
+    'zope.sqlalchemy',
 ]
 # for the translations machinery using transifex you also need to
 # "pip install transifex-client"
 test_requirements = [
-    'webtest',
-    'selenium',
-    'nose',
     'coverage',
-    'slate',  # pdf to text helper
+    'nose',
     'pdfminer',  # and its dependency
+    'selenium',
+    'slate',  # pdf to text helper
+    'webtest',
 ]
 
 if sys.version_info[:3] < (2, 5, 0):
