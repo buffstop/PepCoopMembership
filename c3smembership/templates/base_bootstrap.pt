@@ -33,7 +33,7 @@
         </div>
       </div>
       <div id="middle">
-        <div class="middle align-center">
+        <div class="middle">
           <p class="app-welcome">
 	    <tal:block metal:define-slot="middle"></tal:block>
           </p>
