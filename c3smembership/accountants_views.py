@@ -10,7 +10,11 @@ from c3smembership.models import (
 from c3smembership.utils import generate_pdf
 from c3smembership.mail_utils import (
     make_signature_confirmation_emailbody,
-    make_payment_confirmation_emailbody
+    make_payment_confirmation_emailbody,
+)
+from c3smembership.mail_reminders_util import (
+    make_signature_reminder_emailbody,
+    make_payment_reminder_emailbody,
 )
 from pkg_resources import resource_filename
 import colander
@@ -442,7 +446,7 @@ def accountants_desk(request):
         _order_by = request.matchdict['orderby']
         _order = request.matchdict['order']
     except:
-        print("Using default values")
+        #print("Using default values")
         _page_to_show = 0
         _order_by = 'id'
         _order = 'asc'
@@ -868,6 +872,95 @@ def mail_payment_confirmation(request):
                                        orderby=request.cookies['orderby'],
                                        )
                      )
+
+
+@view_config(permission='manage',
+             route_name='mail_sig_reminder')
+def mail_signature_reminder(request):
+    """
+    send a mail to membership applicant
+    reminding her about lack of signature
+    """
+    _query = request.query_string
+    print "query: {}".format(_query)
+    _id = request.matchdict['memberid']
+    _member = C3sMember.get_by_id(_id)
+    if isinstance(_member, NoneType):
+        request.session.flash(
+            'that member was not found! (id: {})'.format(_id),
+            'messages'
+        )
+        return HTTPFound(
+            request.route_url(
+                'dashboard',
+                number=request.cookies['on_page'],
+                order=request.cookies['order'],
+                orderby=request.cookies['orderby']))
+
+    # first reminder? second?
+    #if ((_member.sent_signature_reminder is None
+    #) or (    ):
+    #_first =
+    message = Message(
+        subject=u"C3S: don't forget to send your form / Bitte Beitrittsformular einsenden",
+        sender='office@c3s.cc',
+        bcc=['office@c3s.cc'],
+        recipients=[_member.email],
+        body=make_signature_reminder_emailbody(_member)
+    )
+    mailer = get_mailer(request)
+    mailer.send(message)
+    #print u"the mail: {}".format(message.body)
+    #import pdb
+    #pdb.set_trace()
+    try:  # if value is int
+        _member.sent_signature_reminder += 1
+    except:  # pragma: no cover
+        # if value was None (after migration of DB schema)
+        _member.sent_signature_reminder = 1
+    _member.sent_signature_reminder_date = datetime.now()
+    return HTTPFound(request.route_url(
+        'dashboard',
+        number=request.cookies['on_page'],
+        order=request.cookies['order'],
+        orderby=request.cookies['orderby']) + '#member_' + str(_member.id)
+    )
+
+
+@view_config(permission='manage',
+             route_name='mail_pay_reminder')
+def mail_payment_reminder(request):
+    """
+    send a mail to membership applicant
+    reminding her about lack of signature
+    """
+    _query = request.query_string
+    print "query: {}".format(_query)
+    _id = request.matchdict['memberid']
+    _member = C3sMember.get_by_id(_id)
+
+    message = Message(
+        subject=u"C3S: don't forget to pay your shares / Bitte Anteile bezahlen",
+        sender='office@c3s.cc',
+        bcc=['office@c3s.cc'],
+        recipients=[_member.email],
+        body=make_payment_reminder_emailbody(_member)
+    )
+    mailer = get_mailer(request)
+    mailer.send(message)
+    try:  # if value is int
+        _member.sent_payment_reminder += 1
+    except:  # pragma: no cover
+        # if value was None (after migration of DB schema)
+        _member.sent_payment_reminder = 1
+    _member.sent_payment_reminder_date = datetime.now()
+    return HTTPFound(request.route_url(
+        'dashboard',
+        number=request.cookies['on_page'],
+        order=request.cookies['order'],
+        orderby=request.cookies['orderby']) + '#member_' + str(_member.id)
+    )
+
 
 
 # @view_config(permission='manage',

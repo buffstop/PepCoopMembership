@@ -166,6 +166,18 @@
               <img src="${request.static_url('c3smembership:static/flash_red.gif')}"
                    width="20px" height="20px" alt="red" />
             </a>
+            <!--! signature not received? send reminder 1 -->
+            <a tal:condition="member.sent_signature_reminder is None or member.sent_signature_reminder == 0"
+               href="${request.route_url('mail_sig_reminder', memberid=member.id)}"
+               title="no signature received as of now. send first reminder...">
+              R1
+            </a>
+            <!--! signature not received? send reminder 2-->
+            <a tal:condition="member.sent_signature_reminder > 0"
+               href="${request.route_url('mail_sig_reminder', memberid=member.id)}"
+               title="reminder ${member.sent_signature_reminder} sent ${member.sent_signature_reminder_date}. send reminder again...">
+              R2
+            </a>
           </div>
           <div tal:condition="member.signature_received"><!--!  signature was received -->
             <a href="${request.route_url('switch_sig', memberid=member.id)}"
@@ -196,6 +208,18 @@
                title="no payment received as of now. click to toggle...">
               <img src="${request.static_url('c3smembership:static/flash_red.gif')}"
                    width="20px" height="20px" alt="red" />
+            </a>
+            <!--! payment not received? send reminder 1 -->
+            <a tal:condition="member.sent_payment_reminder is None or member.sent_payment_reminder == 0"
+               href="${request.route_url('mail_pay_reminder', memberid=member.id)}"
+               title="no payment received as of now. send first reminder...">
+              R1
+            </a>
+            <!--! payment not received? send reminder 2-->
+            <a tal:condition="member.sent_payment_reminder > 0"
+               href="${request.route_url('mail_pay_reminder', memberid=member.id)}"
+               title="reminder ${member.sent_payment_reminder} sent ${member.sent_payment_reminder_date}. send reminder again...">
+              R2
             </a>
           </div>
           <div tal:condition="member.payment_received"><!--!  payment was received -->
