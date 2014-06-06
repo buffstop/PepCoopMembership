@@ -53,8 +53,8 @@
     </p>
     <!--p>
       If you already have some shares and
-      <a href="${request.route_url('shares')}">want more shares</a>
-      please use our <a href="${request.route_url('shares')}">
+      <a href="$ off {request.route_url('shares')}">want more shares</a>
+      please use our <a href="$ off {request.route_url('shares')}">
         form to aquire more shares from C3S SCE</a>.
     </p -->
     <div id="form" tal:content="structure form"/>
