@@ -17,6 +17,7 @@ from c3smembership.mail_reminders_util import (
     make_payment_reminder_emailbody,
 )
 from pkg_resources import resource_filename
+from types import NoneType
 import colander
 import deform
 from deform import ValidationFailure
