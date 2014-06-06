@@ -1,8 +1,8 @@
 # -*- coding: utf-8  -*-
-import transaction
+#import transaction
 #import cryptacular.bcrypt
 from datetime import (
-    date,
+    #date,
     datetime,
 )
 import cryptacular.bcrypt
@@ -16,14 +16,14 @@ from sqlalchemy import (
     DateTime,
     Date,
     Unicode,
-    desc,
-    asc
+    #desc,
+    #asc
 )
-from sqlalchemy.exc import (
-    IntegrityError,
-    OperationalError,
-    InvalidRequestError
-)
+#from sqlalchemy.exc import (
+    #IntegrityError,
+    #OperationalError,
+    #InvalidRequestError
+#)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 from sqlalchemy.orm import (
@@ -212,6 +212,14 @@ class C3sMember(Base):
     payment_confirmed = Column(Boolean, default=False)
     payment_confirmed_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    # reminders
+    sent_signature_reminder = Column(Integer, default=0)
+    sent_signature_reminder_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
+    sent_payment_reminder = Column(Integer, default=0)
+    sent_payment_reminder_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
+    # comment
     accountant_comment = Column(Unicode(255))
     # membership information
     membership_type = Column(Unicode(255))
