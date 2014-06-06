@@ -882,8 +882,6 @@ def mail_signature_reminder(request):
     send a mail to membership applicant
     reminding her about lack of signature
     """
-    _query = request.query_string
-    print "query: {}".format(_query)
     _id = request.matchdict['memberid']
     _member = C3sMember.get_by_id(_id)
     if isinstance(_member, NoneType):
@@ -905,7 +903,7 @@ def mail_signature_reminder(request):
     message = Message(
         subject=u"C3S: don't forget to send your form / Bitte Beitrittsformular einsenden",
         sender='office@c3s.cc',
-        bcc=['office@c3s.cc'],
+        #bcc=[request.registry.settings['reminder_blindcopy']],
         recipients=[_member.email],
         body=make_signature_reminder_emailbody(_member)
     )
@@ -935,15 +933,13 @@ def mail_payment_reminder(request):
     send a mail to membership applicant
     reminding her about lack of signature
     """
-    _query = request.query_string
-    print "query: {}".format(_query)
     _id = request.matchdict['memberid']
     _member = C3sMember.get_by_id(_id)
 
     message = Message(
         subject=u"C3S: don't forget to pay your shares / Bitte Anteile bezahlen",
         sender='office@c3s.cc',
-        bcc=['office@c3s.cc'],
+        #bcc=[request.registry.settings['reminder_blindcopy']],
         recipients=[_member.email],
         body=make_payment_reminder_emailbody(_member)
     )
