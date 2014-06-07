@@ -206,12 +206,12 @@ class AccountantsFunctionalTests(unittest.TestCase):
         )
         res6a = res6a.follow()
 
-        self.failUnless('<h1>Dashboard</h1>' in res6a.body)
+        self.failUnless('<h1>Dashboard' in res6a.body)
         res6a = self.testapp.get(
             '/dashboard/1/id/asc', status=200,
         )
 
-        self.failUnless('<h1>Dashboard</h1>' in res6a.body)
+        self.failUnless('<h1>Dashboard' in res6a.body)
         # try an invalid page number
         res6b = self.testapp.get(
             '/dashboard/foo/bar/baz',
@@ -242,63 +242,40 @@ class AccountantsFunctionalTests(unittest.TestCase):
         # now look at some members details
         res7 = self.testapp.get('/detail/1', status=200)
         self.failUnless('Firstnäme' in res7.body)
-        self.failUnless(
-            "<td>signature received?</td><td>No</td>" in res7.body)
-        self.failUnless(
-            "<td>payment received?</td><td>No</td>" in res7.body)
+        self.failUnless('Eingang bestätigen' in res7.body)
+        self.failUnless('Zahlungseingang bestätigen' in res7.body)
 
-        # form = res7.form
-        # form['signature_received'] = True
-        # form['payment_received'] = True
-        # res8 = form.submit('submit')
-        # #print(res8.body)
-        # self.failUnless(
-        #     "<td>signature received?</td><td>True</td>" in res8.body)
-        # self.failUnless(
-        #     "<td>payment received?</td><td>True</td>" in res8.body)
-        ################################################################
-        # now we change some of the details: switch signature status
-        # via http-request rather than the form
-        resD1 = self.testapp.get('/detail/1', status=200)  # look at details
-        #print resD1.body
-        self.assertTrue(
-            "<td>signature received?</td><td>No</td>" in resD1.body)
-        self.assertTrue(
-            "<td>payment received?</td><td>No</td>" in resD1.body)
-        #
         # switch signature
         resD2a = self.testapp.get('/switch_sig/1', status=302)  # # # # # OFF
         resD2b = resD2a.follow()  # we are taken to the dashboard
         resD2b = self.testapp.get('/detail/1', status=200)
         #print resD2b.body
         self.assertTrue(
-            "<td>signature received?</td><td>True</td>" in resD2b.body)
+            "Eingang bestätigen" not in resD2b.body)
         resD2a = self.testapp.get('/switch_sig/1', status=302)  # # # # # ON
         resD2b = resD2a.follow()  # we are taken to the dashboard
         resD2b = self.testapp.get('/detail/1', status=200)
         self.assertTrue(
-            "<td>signature received?</td><td>No</td>" in resD2b.body)
+            "Eingang bestätigen" in resD2b.body)
         #
         # switch payment
         resD3a = self.testapp.get('/switch_pay/1', status=302)  # # # # OFF
         resD3b = resD3a.follow()  # we are taken to the dashboard
         resD3b = self.testapp.get('/detail/1', status=200)
-        print resD3b.body
         self.assertTrue(
-            "<td>payment received?</td><td>True</td>" in resD3b.body)
+            "Zahlungseingang bestätigen" not in resD3b.body)
         resD3a = self.testapp.get('/switch_pay/1', status=302)  # # # # ON
         resD3b = resD3a.follow()  # we are taken to the dashboard
         resD3b = self.testapp.get('/detail/1', status=200)
         self.assertTrue(
-            "<td>payment received?</td><td>No</td>" in resD3b.body)
+            "Zahlungseingang bestätigen" in resD3b.body)
         #
         ####################################################################
         # delete an entry
-        resDel1 = self.testapp.get('/dashboard/0/id/asc', status=200)
-
-#        self.failUnless(
-#            '      <p>Number of data sets: 1</p>' in resDel1.body.splitlines())
+        _num = C3sMember.get_number()
         resDel2 = self.testapp.get('/delete/1', status=302)
+        _num2 = C3sMember.get_number()
+        self.assertTrue(int(_num2) + 1 == int(_num))
         resDel3 = resDel2.follow()
         resDel3 = resDel3.follow()
         self.failUnless('was deleted' in resDel3.body)
@@ -604,7 +581,7 @@ class FunctionalTests(unittest.TestCase):
         res = self.testapp.get('/', status=200)
         self.failUnless('Cultural Commons Collecting Society' in res.body)
         self.failUnless(
-            'Copyright 2013, C3S SCE' in res.body)
+            'Copyright 2014, C3S SCE' in res.body)
 
     # def test_faq_template(self):
     #     """load the FAQ page, check string exists"""
