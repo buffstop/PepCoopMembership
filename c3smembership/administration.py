@@ -227,3 +227,53 @@ your membership tool''' % (staffer.login,
         'staffers': _staffers,
         'stafferform': stafferform.render(),
     }
+
+
+@view_config(renderer='templates/delete_afms.pt',
+             permission='manage',
+             route_name='delete_afms')
+def delete_afms(request):
+    '''
+    delete a bunch of AfMs in one go
+    '''
+    class DeleteAfMRange(colander.MappingSchema):
+        first = colander.SchemaNode(
+            colander.Integer(),
+            title='first ID to delete'
+        )
+        last = colander.SchemaNode(
+            colander.Integer(),
+            title='last ID to delete'
+        )
+    schema = DeleteAfMRange()
+    delete_range_form = deform.Form(
+        schema,
+        buttons=[deform.Button('delete_them', 'DELETE')]
+    )
+    if 'first' in request.POST:
+        print "form was submitted!"
+        print "first ID to delete: %s" % request.POST['first']
+        controls = request.POST.items()
+        try:
+            appstruct = delete_range_form.validate(controls)
+            #print('validated!')
+            #print appstruct
+            _first = appstruct['first']
+            _last = appstruct['last']
+            assert(_first < _last)
+        except ValidationFailure, e:
+            return {
+                'resetform': e.render()
+            }
+        # delete entries here :-)
+        for i in range(_first, _last+1):
+            #print i
+            try:
+                #_del = C3sMember.delete_by_id(i)
+                C3sMember.delete_by_id(i)
+                #print 'deleted %s' % _del
+            except:
+                print 'id %s didnt exist'
+    return {
+        'delete_form': delete_range_form.render()
+    }
