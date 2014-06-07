@@ -87,6 +87,7 @@ def main(global_config, **settings):
     config.add_route('mail_sig_reminder', '/mail_sig_reminder/{memberid}')
     config.add_route('mail_pay_reminder', '/mail_pay_reminder/{memberid}')
     config.add_route('delete_entry', '/delete/{memberid}')
+    config.add_route('delete_afms', '/delete_afms')
     config.add_route('login', '/login')
     config.add_route('export_all', '/export_all')
     config.add_route('export_yes_emails', '/export_yes_emails')
