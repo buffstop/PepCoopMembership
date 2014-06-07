@@ -17,12 +17,12 @@
     </p>
     <h3>GenossInnen/Mitgliedschaften</h3>
     <p>
-      Anzahl GenossInnen: ${num_memberships}<br />
-      Anzahl natürliche Personen: ${num_ms_nat}<br />
-      Anzahl juristische Personen: ${num_ms_jur}<br />
-      Anzahl normale Mitgliedschaften: ${num_ms_norm}<br />
-      Anzahl invest. Mitgliedschaften: ${num_ms_inves}<br />
-      Anzahl Anteile: ${num_shares}<br />
+      Anzahl GenossInnen: $ off {num_memberships}<br />
+      Anzahl natürliche Personen: $ off {num_ms_nat}<br />
+      Anzahl juristische Personen: $ off {num_ms_jur}<br />
+      Anzahl normale Mitgliedschaften: $ off {num_ms_norm}<br />
+      Anzahl invest. Mitgliedschaften: $ off {num_ms_inves}<br />
+      Anzahl Anteile: $ off {num_shares}<br />
     </p>
     <!-- XXX TODO h5>Auflistung nach PLZ u. Land</h5 --> 
     <h3>Staff</h3>
