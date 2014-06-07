@@ -274,6 +274,7 @@ def delete_afms(request):
                 #print 'deleted %s' % _del
             except:
                 print 'id %s didnt exist'
+        return HTTPFound(request.route_url('dashboard_only'))
     return {
         'delete_form': delete_range_form.render()
     }
