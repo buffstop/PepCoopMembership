@@ -33,6 +33,7 @@ test_requirements = [
     'coverage',
     'nose',
     'pdfminer',  # and its dependency
+    'pyquery',
     'selenium',
     'slate',  # pdf to text helper
     'webtest',
