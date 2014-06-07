@@ -10,7 +10,9 @@ from sqlalchemy.exc import IntegrityError
 from c3smembership.models import (
     DBSession,
     Base,
-    C3sMember
+    C3sMember,
+    Group,
+    C3sStaff
 )
 DEBUG = False
 
@@ -325,3 +327,128 @@ class TestMemberListing(C3sMembershipModelTestBase):
                           order_by='lastname', order="")
         self.assertRaises(self.class_under_test.member_listing,
                           order_by='lastname', order=None)
+
+#class MembershipNumberModelTestBase(C3sMembershipModelTestBase):
+# XXX TODO
+
+
+class GroupTests(unittest.TestCase):
+    """
+    test the groups
+    """
+    def setUp(self):
+        self.config = testing.setUp()
+        self.config.include('pyramid_mailer.testing')
+        try:
+            DBSession.remove()
+        except:
+            pass
+        #engine = create_engine('sqlite:///test_model_groups.db')
+        engine = create_engine('sqlite://')
+        self.session = DBSession
+        self.session.configure(bind=engine)
+        Base.metadata.create_all(engine)
+
+        with transaction.manager:
+            group1 = Group(name=u'staff')
+            DBSession.add(group1)
+            DBSession.flush()
+            self.assertEquals(group1.__str__(), 'group:staff')
+
+    def tearDown(self):
+        self.session.close()
+        self.session.remove()
+        #os.remove('test_model_groups.db')
+
+    def test_group(self):
+        #test_group = Group(name=u'testgroup')
+        #self.session.add(test_group)
+
+        result = Group.get_staffers_group()
+        self.assertEquals(result.__str__(), 'group:staff')
+
+
+class C3sStaffTests(unittest.TestCase):
+    """
+    test the staff and cashiers accounts
+    """
+    def setUp(self):
+        self.config = testing.setUp()
+        self.config.include('pyramid_mailer.testing')
+        try:
+            DBSession.remove()
+        except:
+            pass
+        #engine = create_engine('sqlite:///test_model_staff.db')
+        engine = create_engine('sqlite://')
+        self.session = DBSession
+        self.session.configure(bind=engine)
+        Base.metadata.create_all(engine)
+
+        with transaction.manager:
+            group1 = Group(name=u'staff')
+            group2 = Group(name=u'staff2')
+            DBSession.add(group1, group2)
+            DBSession.flush()
+
+    def tearDown(self):
+        self.session.close()
+        self.session.remove()
+        #os.remove('test_model_staff.db')
+
+    def test_staff(self):
+        staffer1 = C3sStaff(
+            login=u'staffer1',
+            password=u'stafferspassword'
+        )
+        staffer1.group = ['staff']
+        staffer2 = C3sStaff(
+            login=u'staffer2',
+            password=u'staffer2spassword',
+        )
+        staffer2.group = ['staff2']
+
+        self.session.add(staffer1)
+        self.session.add(staffer2)
+        self.session.flush()
+
+        _staffer2_id = staffer2.id
+        _staffer1_id = staffer1.id
+
+        self.assertTrue(staffer2.password is not '')
+
+        #print('by id: %s' % C3sStaff.get_by_id(_staffer1_id))
+        #print('by id: %s' % C3sStaff.get_by_id(_cashier1_id))
+        #print('by login: %s' % C3sStaff.get_by_login(u'staffer1'))
+        #print('by login: %s' % C3sStaff.get_by_login(u'cashier1'))
+        self.assertEqual(
+            C3sStaff.get_by_id(_staffer1_id),
+            C3sStaff.get_by_login(u'staffer1')
+        )
+        self.assertEqual(
+            C3sStaff.get_by_id(_staffer2_id),
+            C3sStaff.get_by_login(u'staffer2')
+        )
+
+        '''test get_all'''
+        res = C3sStaff.get_all()
+        self.assertEqual(len(res), 2)
+
+        '''test delete_by_id'''
+        C3sStaff.delete_by_id(1)
+        res = C3sStaff.get_all()
+        self.assertEqual(len(res), 1)
+
+        '''test check_user_or_None'''
+        res1 = C3sStaff.check_user_or_None(u'staffer2')
+        res2 = C3sStaff.check_user_or_None(u'staffer1')
+        #print res1
+        #print res2
+        self.assertTrue(res1 is not None)
+        self.assertTrue(res2 is None)
+
+        '''test check_password'''
+        #print(C3sStaff.check_password(cashier1, 'cashierspassword'))
+        C3sStaff.check_password(u'staffer2', u'staffer2spassword')
+        #self.assert
+   
