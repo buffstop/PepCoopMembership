@@ -418,6 +418,25 @@ def export_db(request):
         'rows': rows}
 
 
+@view_config(renderer='csv',
+             permission='manage',
+             route_name='export_yes_emails')
+def export_yes_emails(request):
+    """
+    export the database to a CSV file
+    """
+    datasets = C3sMember.member_listing(
+        "id", how_many=C3sMember.get_number(), order='asc')
+    rows = []  # start with empty list
+    for m in datasets:
+        if m.signature_received and m.payment_received:
+            rows.append(
+                (m.firstname + ' ' + m.lastname + ' <' + m.email + '>',))
+    return {
+        'header': ['Vorname Nachname <devnull@c3s.cc>', ],
+        'rows': rows}
+
+
 @view_config(renderer='json',
              permission='manage',
              route_name='autocomplete_input_values')
