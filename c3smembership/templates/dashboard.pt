@@ -24,6 +24,14 @@
                     event.preventDefault();
                 }
             });
+            $(".send-reminder").click(function(event) {
+                member_id = $(this).attr('id').split('-')[2];
+                member_name = $(this).attr('membername');
+                answer = confirm("Are you sure you want to send the reminder email to " + member_name + " (afm id " + member_id + ") ?");
+                if(answer == false) {
+                    event.preventDefault();
+                }
+            });
         });
     </script>
     <!-- /Krissik -->
@@ -169,13 +177,19 @@
             <!--! signature not received? send reminder 1 -->
             <a tal:condition="member.sent_signature_reminder is None or member.sent_signature_reminder == 0"
                href="${request.route_url('mail_sig_reminder', memberid=member.id)}"
-               title="no signature received as of now. send first reminder...">
+               title="no signature received as of now. send first reminder..."
+               class="send-reminder"
+               id="send-reminder-${member.id}"
+               membername="${member.firstname} ${member.lastname}">
               R1
             </a>
             <!--! signature not received? send reminder 2-->
             <a tal:condition="member.sent_signature_reminder > 0"
                href="${request.route_url('mail_sig_reminder', memberid=member.id)}"
-               title="reminder ${member.sent_signature_reminder} sent ${member.sent_signature_reminder_date}. send reminder again...">
+               title="reminder ${member.sent_signature_reminder} sent ${member.sent_signature_reminder_date}. send reminder again..."
+               class="send-reminder"
+               id="send-reminder-${member.id}"
+               membername="${member.firstname} ${member.lastname}">
               R2
             </a>
           </div>
@@ -212,13 +226,19 @@
             <!--! payment not received? send reminder 1 -->
             <a tal:condition="member.sent_payment_reminder is None or member.sent_payment_reminder == 0"
                href="${request.route_url('mail_pay_reminder', memberid=member.id)}"
-               title="no payment received as of now. send first reminder...">
+               title="no payment received as of now. send first reminder..."
+               class="send-reminder"
+               id="send-reminder-${member.id}"
+               membername="${member.firstname} ${member.lastname}">
               R1
             </a>
             <!--! payment not received? send reminder 2-->
             <a tal:condition="member.sent_payment_reminder > 0"
                href="${request.route_url('mail_pay_reminder', memberid=member.id)}"
-               title="reminder ${member.sent_payment_reminder} sent ${member.sent_payment_reminder_date}. send reminder again...">
+               title="reminder ${member.sent_payment_reminder} sent ${member.sent_payment_reminder_date}. send reminder again..."
+               class="send-reminder"
+               id="send-reminder-${member.id}"
+               membername="${member.firstname} ${member.lastname}">
               R2
             </a>
           </div>

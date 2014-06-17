@@ -24,15 +24,15 @@ Heyestraße 194
 Falls Du Deine Beitrittserklärung nicht mehr findest oder andere Fragen
 zum Beitritt hast, melde Dich bitte unter office@c3s.cc.
 
-Wenn Deine Beitrittserklärung eingegangen ist, erhältst Du die
-Mitgliedschaftsbestätigung in Form eines PDFs.
+Wenn Deine Beitrittserklärung eingegangen ist, erhältst Du eine Eingangs-
+bestätigung per E-Mail.
 
 Wir freuen uns darauf, Dich bei der C3S willkommen zu heißen!
 
 Liebe Grüße
 
-Eva
-für das Team der C3S
+
+das Team der C3S
 
 +++++++++++++++
 
@@ -52,15 +52,15 @@ Germany
 In case you can't find your form anymore, or you have more questions on
 joining C3S, please contact us at office@c3s.cc.
 
-When your declaration to join is in our mailbox you will receive a PDF
-confirming your membership.
+When your declaration to join is in our mailbox you will receive a
+confirmation email.
 
 We are looking forward to welcome you at C3S!
 
 All the best
 
-Eva
-for the team of C3S
+
+the team of C3S
     '''.format(
         _input.firstname,
         _input.lastname,
@@ -91,15 +91,15 @@ BIC GENODEF1ETK
 Ethikbank
 
 Falls Du kein Mitglied mehr werden möchtest, melde Dich bitte unter
-office@c3s.cc. Wenn Deine Überweisung eingegangen ist, erhältst Du die
-Mitgliedschaftsbestätigung in Form eines PDFs.
+office@c3s.cc. Wenn Deine Überweisung eingegangen ist, erhältst Du eine
+Eingangsbestätigung per E-Mail.
 
 Wir freuen uns darauf, Dich bei der C3S willkommen zu heißen!
 
 Liebe Grüße
 
-Eva
-für das Team der C3S
+
+das Team der C3S
 
 +++++++++++++++
 
@@ -119,8 +119,7 @@ BIC GENODEF1ETK
 In case you don't want to become a member anymore, or you have more
 questions on joining C3S, please contact us at office@c3s.cc.
 
-When we have received the money we will send you a PDF confirming your
-membership.
+When we have received the money we will send you a confirmation email.
 
 We are looking forward to welcome you at C3S!
 
@@ -131,7 +130,7 @@ for the team of C3S
     '''.format(
         _input.firstname,
         _input.lastname,
-        _input.date_of_submission.strftime("%d. %m. %Y"),
+        _input.date_of_submission.strftime("%d.%m.%Y"),
         int(_input.num_shares) * 50,
         _input.num_shares,
         _input.date_of_submission.strftime("%d %b %Y"),
