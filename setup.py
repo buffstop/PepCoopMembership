@@ -11,12 +11,13 @@ requires = [
     'alembic',  # migrate the database when introducing new fields
     'Babel',
     'cryptacular',
-    'deform<2.0a',
+    'deform',  # should get deform-2.0...
     'fdfgen',
     'lingua',
     'pycountry',  # replacing 'webhelpers',
-    'pyramid<1.5a',
+    'pyramid<1.6a',  # use pyramid 1.5
     'pyramid_beaker',
+    'pyramid_chameleon',  # 'pyramid 1.5 extension'
     'pyramid_debugtoolbar',
     'pyramid_mailer',
     'pyramid_tm',
