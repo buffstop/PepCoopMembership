@@ -322,7 +322,7 @@ def import_db(request):
         try:
             import_member.payment_confirmed_date = datetime.strptime(
                 row[26], '%Y-%m-%d %H:%M:%S')
-        except:
+        except:   # pragma: no cover
             import_member.payment_confirmed_date = datetime.strptime(
                 row[26], '%Y-%m-%d %H:%M:%S.%f')
 
@@ -337,7 +337,7 @@ def import_db(request):
                     authenticated_userid(request),
                     import_member.email_confirm_code))
             #print('done with %s!' % counter)
-        except ResourceClosedError, rce:
+        except ResourceClosedError, rce:  # pragma: no cover
             # XXX can't catch this exception,
             # because it happens somwhere else, later, deeper !?!
             print "transaction was aborted/resource closed"
