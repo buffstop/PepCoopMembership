@@ -2,8 +2,8 @@
       xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n" 
-      metal:use-macro="base"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="base_bootstrap"
       i18n:domain="c3smembership">
   <tal:block metal:fill-slot="deform-js-css">
     <link rel="stylesheet" href="${request.static_url('c3smembership:static/c3sM.css')}" type="text/css" media="screen" charset="utf-8" />
@@ -52,7 +52,7 @@
         <input type="submit"
                name="edit"
                value="Edit Again" i18n:attributes="value"
-               class="greenButton"/>
+               class="btn btn-warning"/>
       </form>
     <p i18n:translate="success-paragraph-all-correct">
       If all information above is correct...
@@ -69,7 +69,7 @@
                name="send_email"
                value="Send Mail"
                i18n:attributes="value"
-               class="greenButton"/>
+               class="btn btn-success"/>
       </form>
     </p>
     <p>

@@ -2,8 +2,8 @@
       xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n" 
-      metal:use-macro="base"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="backend"
       i18n:domain="c3smembership">
   <tal:block metal:fill-slot="deform-js-css">
     <link rel="stylesheet" href="${request.static_url('c3smembership:static/c3sM.css')}" type="text/css" media="screen" charset="utf-8" />
@@ -14,7 +14,7 @@
   <tal:block metal:fill-slot="bottom">
     <h3><span class="deform">${message}</span></h3>
     <p>
-      <a href="${request.route_url('dashboard')}">go back to dashboard</a>
+      <a href="${request.route_url('dashboard_only')}">go back to dashboard</a>
     </p>
     <p>
       &nbsp;
