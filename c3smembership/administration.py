@@ -11,8 +11,10 @@ from c3smembership.models import (
 from c3smembership.gnupg_encrypt import encrypt_with_gnupg
 import colander
 from colander import Range
-#import datetime
-from datetime import date
+from datetime import (
+    datetime,
+    date
+)
 import deform
 from deform import ValidationFailure
 import math
@@ -188,36 +190,56 @@ your membership tool''' % (_staffer.login,
             return {
                 'stafferform': e.render()
             }
-        #try:
-        # create an appstruct for persistence
         # XXX login must be unique!
-        # XXX no password change if _UNCHANGED_
-        staffer = C3sStaff(
-            login=appstruct['login'],
-            password=appstruct['password'],
-            email=u'',
-        )
-        staffer.groups = [Group.get_staffers_group()]
-        #print "about to add user"
-        DBSession.add(staffer)
-        DBSession.flush()
-        print "added staffer"
-        # send mail
-        encrypted = encrypt_with_gnupg('''hi,
+        existing = C3sStaff.get_by_login(appstruct['login'])
+        if existing is not None:
+            #print "that staffer exists!"
+            if u'_UNCHANGED_' in appstruct['password']:
+                pass
+            else:
+                existing.password = appstruct['password']
+                existing.last_password_change = datetime.now()
+            encrypted = encrypt_with_gnupg('''hi,
+the password of %s was changed by %s.
+
+best,
+your membership tool''' % (existing.login,
+                           request.authenticated_userid))
+            message = Message(
+                subject='[C3S Yes] staff password changed.',
+                sender='noreply@c3s.cc',
+                recipients=[
+                    request.registry.settings['c3smembership.mailaddr']],
+                body=encrypted
+            )
+
+        else:  # create new entry
+            staffer = C3sStaff(
+                login=appstruct['login'],
+                password=appstruct['password'],
+                email=u'',
+            )
+            staffer.groups = [Group.get_staffers_group()]
+            #print "about to add user"
+            DBSession.add(staffer)
+            DBSession.flush()
+            print "added staffer"
+            # send mail
+            encrypted = encrypt_with_gnupg('''hi,
 %s was added to the backend by %s.
 
 best,
 your membership tool''' % (staffer.login,
                            request.authenticated_userid))
-        message = Message(
-            subject='[C3S Yes] staff was added.',
-            sender='noreply@c3s.cc',
-            recipients=[
-                request.registry.settings['c3smembership.mailaddr']],
-            body=encrypted
-        )
-        mailer = get_mailer(request)
-        mailer.send(message)
+            message = Message(
+                subject='[C3S Yes] staff was added.',
+                sender='noreply@c3s.cc',
+                recipients=[
+                    request.registry.settings['c3smembership.mailaddr']],
+                body=encrypted
+            )
+            mailer = get_mailer(request)
+            mailer.send(message)
 
         return HTTPFound(
             request.route_url('staff')
