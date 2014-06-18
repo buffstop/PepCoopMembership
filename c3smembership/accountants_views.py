@@ -176,7 +176,7 @@ def import_db(request):
             content.write(f.read())
             content.seek(0)  # rewind to beginning
 
-    except IOError, ioe:
+    except IOError, ioe:  # pragma: no cover
         print ioe
         return {'message': "file not found.",
                 #        'codes': ''
@@ -205,7 +205,7 @@ def import_db(request):
             u'payment_confirmed', u'payment_confirmed_date',  # 25, 26
             u'accountant_comment'  # 27
         ]
-    except AssertionError, ae:
+    except AssertionError, ae:  # pragma: no cover
         print ae
         print "the header of the CSV does not match what we expect"
         return {'message': "header fields mismatch. NOT importing",
@@ -298,14 +298,14 @@ def import_db(request):
         try:
             import_member.signature_received_date = datetime.strptime(
                 row[20], '%Y-%m-%d %H:%M:%S.%f')
-        except:
+        except:  # pragma: no cover
             import_member.signature_received_date = datetime.strptime(
                 row[20], '%Y-%m-%d %H:%M:%S')
         import_member.payment_received = True if (row[21] == 'True') else False
         try:
             import_member.payment_received_date = datetime.strptime(
                 row[22], '%Y-%m-%d %H:%M:%S')
-        except:
+        except:  # pragma: no cover
             import_member.payment_received_date = datetime.strptime(
                 row[22], '%Y-%m-%d %H:%M:%S.%f')
         import_member.signature_confirmed = True if (
@@ -313,7 +313,7 @@ def import_db(request):
         try:
             import_member.signature_confirmed_date = datetime.strptime(
                 row[24], '%Y-%m-%d %H:%M:%S')
-        except:
+        except:  # pragma: no cover
             import_member.signature_confirmed_date = datetime.strptime(
                 row[24], '%Y-%m-%d %H:%M:%S.%f')
 
@@ -879,7 +879,7 @@ def member_detail(request):
 
     memberid = request.matchdict['memberid']
     log.info("member details of id %s checked by %s" % (
-            memberid, logged_in))
+        memberid, logged_in))
 
     _member = C3sMember.get_by_id(memberid)
 
