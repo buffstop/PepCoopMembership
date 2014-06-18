@@ -1027,9 +1027,13 @@ def mail_signature_confirmation(request):
     """
     _id = request.matchdict['memberid']
     _member = C3sMember.get_by_id(_id)
+    if _member.locale == 'de':
+        _subject = u'[C3S AFM] Wir haben Deine Unterschrift erhalten. Dankeschön!'
+    else:
+        _subject = u'[C3S AFM] We have received your signature. Thanks!'
 
     message = Message(
-        subject=_('[C3S AFM] We have received your signature. Thanks!'),
+        subject=_subject,
         sender='yes@c3s.cc',
         recipients=[_member.email],
         body=make_signature_confirmation_emailbody(_member)
@@ -1056,8 +1060,13 @@ def mail_payment_confirmation(request):
     _id = request.matchdict['memberid']
     _member = C3sMember.get_by_id(_id)
 
+    if _member.locale == 'de':
+        _subject = u'[C3S AFM] Wir haben Deine Zahlung erhalten. Dankeschön!'
+    else:
+        _subject = u'[C3S AFM] We have received your payment. Thanks!'
+
     message = Message(
-        subject=_('[C3S AFM] We have received your payment. Thanks!'),
+        subject=_subject,
         sender='yes@c3s.cc',
         recipients=[_member.email],
         body=make_payment_confirmation_emailbody(_member)
