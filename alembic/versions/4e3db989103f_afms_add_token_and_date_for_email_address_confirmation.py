@@ -1,14 +1,14 @@
 """AfMs: add token and date to AfM for email address confirmation
 
 Revision ID: 4e3db989103f
-Revises: 4ea1ace107fa
+Revises: 53f6bf273bb2
 Create Date: 2014-06-13 02:09:45.366288
 
 """
 
 # revision identifiers, used by Alembic.
 revision = '4e3db989103f'
-down_revision = '4ea1ace107fa'
+down_revision = '53f6bf273bb2'
 
 from alembic import op
 import sqlalchemy as sa
