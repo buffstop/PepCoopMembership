@@ -65,8 +65,15 @@ def main(global_config, **settings):
     # success and further steps
     config.add_route('success', '/success')
     config.add_route('success_check_email', '/check_email')
-    config.add_route('verify_email_password', '/verify/{email}/{code}')
-    config.add_route('success_pdf', '/C3S_SCE_AFM_{namepart}.pdf')
+    config.add_route('verify_email_password', '/verify/{email}/{code}')  # PDF
+    config.add_route('success_pdf', '/C3S_SCE_AFM_{namepart}.pdf')  # download
+    # confirm email address later (30c3 cases)
+    config.add_route(
+        'verify_afm_email',
+        '/vae/{refcode}/{token}/{email}')  # verify afm email
+    #config.add_route(
+    #    'verify_member_email',
+    #    '/vfe/{refcode}/{token}/{email}')  # verify founders mail?
     # routes & views for staff
     # applications for membership
     config.add_route('dashboard_only', '/dashboard')

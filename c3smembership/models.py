@@ -196,7 +196,10 @@ class C3sMember(Base):
     locale = Column(Unicode(255))
     date_of_birth = Column(Date(), nullable=False)
     email_is_confirmed = Column(Boolean, default=False)
-    email_confirm_code = Column(Unicode(255), unique=True)
+    email_confirm_code = Column(Unicode(255), unique=True)  # reference code
+    email_confirm_token = Column(Unicode(255), unique=True)  # token
+    email_confirm_mail_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
     # shares
     num_shares = Column(Integer())  # XXX TODO: check for number <= max_shares
     date_of_submission = Column(DateTime(), nullable=False)

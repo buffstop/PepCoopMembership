@@ -300,3 +300,154 @@ def delete_afms(request):
     return {
         'delete_form': delete_range_form.render()
     }
+
+
+@view_config(permission='manage',
+             route_name='mail_mail_confirmation')
+def mail_mail_conf(request):
+    '''
+    send email to member to confirm her email address by clicking a link
+    '''
+    afmid = request.matchdict['memberid']
+    afm = C3sMember.get_by_id(afmid)
+    if isinstance(afm, NoneType):
+        request.session.flash(
+            'id not found. no mail sent.',
+            'messages')
+        return HTTPFound(request.route_url('dashboard',
+                                           number=request.cookies['on_page'],
+                                           order=request.cookies['order'],
+                                           orderby=request.cookies['orderby']))
+
+    import random
+    import string
+    _looong_token = u''.join(
+        random.choice(
+            string.ascii_uppercase + string.digits) for x in range(13))
+    _url = (request.registry.settings['c3smembership.url'] +
+            '/vae/' + afm.email_confirm_code +
+            '/' + _looong_token + '/' + afm.email)
+
+    _body = u'''[english version below]
+
+Liebe_r C3S-Unterstützer_in,
+
+Uns wurde am {1} diese Mail-Adresse genannt, um mit Dir in Kontakt treten
+zu können.
+
+Um sicherzustellen, dass sich nicht versehentlich ein Tippfehler o.ä.
+eingeschlichen hat, bitten wir Dich um eine Bestätigung der Adresse. Dafür
+brauchst Du nur den folgenden Link aufzurufen:
+
+  {0}
+
+Solltest Du diese Adresse nicht bei uns angegeben haben, antworte bitte kurz
+auf diese E-Mail.
+
+
+Viele Grüße :: Das C3S-Team
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Dear C3S-Supporter,
+
+We were given this Email address to contact you on {2}. To make sure this
+address really works, we are asking you to confirm your address.
+Please click on the following link:
+
+    {0}
+
+If you did not give this email address to C3S, please reply briefly to this
+email.
+
+Best :: The C3S Team
+'''.format(
+    _url,
+    afm.date_of_submission.strftime("%d.%m.%Y"),
+    afm.date_of_submission.strftime("%d %b %Y"),
+)
+
+    log.info("mailing mail confirmation to AFM # %s" % afm.id)
+
+    message = Message(
+        subject=(u'[C3S] Please confirm your Email address! '
+                 u'/ Bitte E-Mail-Adresse bestätigen!'),
+        sender='yes@c3s.cc',
+        recipients=[afm.email],
+        body=_body
+    )
+    #print(message.subject)
+    #print(message.body)
+    mailer = get_mailer(request)
+    mailer.send(message)
+    afm.email_confirm_token = _looong_token
+    afm.email_confirm_mail_date = datetime.now()
+    return HTTPFound(request.route_url('dashboard',
+                                       number=request.cookies['on_page'],
+                                       order=request.cookies['order'],
+                                       orderby=request.cookies['orderby']) +
+                     '#' + str(afm.id))
+
+
+@view_config(renderer='templates/verify-mail.pt',
+             route_name='verify_afm_email')
+def verify_mailaddress_conf(request):
+    '''
+    let member confirm her email address by clicking a link
+    '''
+    user_email = request.matchdict['email']
+    refcode = request.matchdict['refcode']
+    token = request.matchdict['token']
+    # try to get entry from DB
+    afm = C3sMember.get_by_code(refcode)
+    if isinstance(afm, NoneType):  # no entry?
+        #print "entry not found"
+        return {
+            'confirmed': False,
+            'firstname': 'foo',
+            'lastname': 'bar',
+            'result_msg': 'bad URL / bad codes. please contact office@c3s.cc!',
+        }
+    # check token
+    if len(afm.email_confirm_token) == 0:  # token was invalidated already
+        #print "the token is empty"
+        return {
+            'confirmed': False,
+            'firstname': afm.firstname,
+            'lastname': afm.lastname,
+            'result_msg': 'your token is invalid. please contact office@c3s.cc!',
+        }
+
+    try:
+        assert(afm.email_confirm_token in token)
+        assert(token in afm.email_confirm_token)
+        assert(afm.email in user_email)
+        assert(user_email in afm.email)
+    except:
+        return {
+            'confirmed': False,
+            'firstname': 'foo',
+            'lastname': 'bar',
+            'result_msg': 'bad token/email. please contact office@c3s.cc!',
+        }
+
+    afm.email_is_confirmed = True
+    afm.email_confirm_token = u''
+    DBSession.flush()
+    # notify staff
+    message = Message(
+        subject='[C3S Yes!] afm email confirmed',
+        sender='noreply@c3s.cc',
+        recipients=[request.registry.settings['c3smembership.mailaddr'], ],
+        body=u'see {}/detail/{}'.format(
+            request.registry.settings['c3smembership.url'],
+            afm.id)
+    )
+    mailer = get_mailer(request)
+    mailer.send(message)
+    return {
+        'confirmed': True,
+        'firstname': afm.firstname,
+        'lastname': afm.lastname,
+        'result_msg': u'',
+    }

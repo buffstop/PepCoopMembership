@@ -6,21 +6,28 @@
       metal:use-macro="base_bootstrap"
       i18n:domain="c3smembership">
   <tal:block metal:fill-slot="middle">
-    <h1 i18n:translate="verify-email-title">C3S Membership Application: Email Verification</h1>
-    <div style="color:red">${result_msg}</div>
+    <h3 i18n:translate="verify-email-title">
+      <small>C3S Membership Application:</small>
+      Email Verification
+    </h3>
+    <h4 style="color:red">${result_msg}</h4>
   </tal:block>
   <tal:block metal:fill-slot="bottom">
-    <div tal:condition="namepart">
-    <h3 i18n:translate="verified-email-headline" class="deform">Your Email has been confirmed, ${firstname} ${lastname}!</h3>
-    <p i18n:translate="verified-email-paragraph">
-      Now that your email address has been confirmed, you may download your PDF.
+    <div tal:condition="confirmed">
+      <h3>
+        <span i18n:translate="">Your Email has been confirmed,</span>
+        ${firstname} ${lastname}!
+      </h3>
+      <p i18n:translate="">
+        Dankeschön!
+      </p>
+    </div>
+    <p>
+      &nbsp;
     </p>
     <p>
-      <a href="/C3S_SCE_AFM_${namepart}.pdf">
-        C3S_SCE_AFM_${namepart}.pdf
-      </a>
+      &nbsp;
     </p>
-    </div>
     <p>
       &nbsp;
     </p>

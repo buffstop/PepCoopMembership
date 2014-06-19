@@ -149,16 +149,21 @@
         <td><a href="mailto:${member.email}">${member.email}</a></td>
         <td>
           <div>
-            <a  tal:condition="not member.email_is_confirmed"
-                href="${request.route_url('mail_mail_confirmation',
-                      memberid=member.id)}"
-                title="sent ${member.signature_confirmed_date} (click to send email confirmation email)"
-                class="btn btn-warning">No...</a>
-            <a  tal:condition="member.email_is_confirmed"
-                href="${request.route_url('mail_mail_confirmation',
-                      memberid=member.id)}"
-                title="$ off {member.email_confirmed_date} (click to send again)"
-                class="btn btn-success">Yes.</a>
+            <a tal:condition="not member.email_is_confirmed and (isinstance(member.email_confirm_token, type(None)))"
+               href="${request.route_url('mail_mail_confirmation',
+                     memberid=member.id)}"
+               title="(click to send email confirmation email)"
+               class="btn btn-danger">No...</a>
+            <a tal:condition="(not member.email_is_confirmed) and (not isinstance(member.email_confirm_token, type(None)))"
+               href="${request.route_url('mail_mail_confirmation',
+                     memberid=member.id)}"
+               title="sent ${member.email_confirm_mail_date.strftime('%d.%m.%Y %H:%M')} (click to send email confirmation email again)"
+               class="btn btn-warning">Waiting...</a>
+            <a tal:condition="member.email_is_confirmed"
+               href="${request.route_url('mail_mail_confirmation',
+                     memberid=member.id)}"
+               title="${member.email_confirm_mail_date}"
+               class="btn btn-success">Yes.</a>
           </div>
         </td>
         <td>
