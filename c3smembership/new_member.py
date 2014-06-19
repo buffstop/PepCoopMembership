@@ -116,8 +116,8 @@ def new_member(request):
         _LOCALE_ = colander.SchemaNode(
             colander.String(),
             widget=deform.widget.HiddenWidget(),
-            default='DE',
-            missing='DE',
+            default='de',
+            missing='de',
         )
 
     class MembershipInfo(colander.Schema):
