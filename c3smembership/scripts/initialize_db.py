@@ -44,7 +44,7 @@ we have different use cases:
         so staffers can check out pagination
 """
 
-how_many = 17
+how_many = 7
 
 
 def usage(argv):
@@ -122,7 +122,7 @@ def main(argv=sys.argv):
             postcode=u"12345 foo",
             city=u"Footown Mäh",
             country=u"Foocountry",
-            locale=u"DE",
+            locale=u"en",
             date_of_birth=date.today(),
             email_is_confirmed=False,
             email_confirm_code=u"ABCDEFGHIJ",
@@ -155,7 +155,7 @@ def main(argv=sys.argv):
                 postcode=u"12345 foo",
                 city=u"Footown Mäh",
                 country=u"Foocountry",
-                locale=u"DE",
+                locale=u"de",
                 date_of_birth=date.today(),
                 email_is_confirmed=False,
                 email_confirm_code=u''.join(
