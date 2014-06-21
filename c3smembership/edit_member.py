@@ -191,14 +191,16 @@ def edit_member(request):
                     (u'investing',
                      u'Investierendes Mitglied'),
                 ),
-            )
+            ),
+            missing=u'unknown',
         )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
             title='Mitglied einer Verwertungsgesellschaft?',
-            validator=colander.OneOf([x[0] for x in yes_no]),
+            #validator=colander.OneOf([x[0] for x in yes_no]),
             widget=deform.widget.RadioChoiceWidget(values=yes_no),
             oid="other_colsoc",
+            default=u''
             #validator=colsoc_validator
         )
         name_of_colsoc = colander.SchemaNode(
