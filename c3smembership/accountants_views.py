@@ -336,6 +336,10 @@ def import_db(request):
                 "%s imported dataset %s" % (
                     authenticated_userid(request),
                     import_member.email_confirm_code))
+            request.session.flash(
+                "imported dataset %s" % (import_member.email_confirm_code),
+                'messages',
+            )
             #print('done with %s!' % counter)
         except ResourceClosedError, rce:  # pragma: no cover
             # XXX can't catch this exception,

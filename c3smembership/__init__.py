@@ -103,6 +103,10 @@ def main(global_config, **settings):
     config.add_route('import_founders', '/import_founders')
     config.add_route('import_crowdfunders', '/import_crowdfunders')
     config.add_route('logout', '/logout')
+    # gather missing information
+    config.add_route('mail_mtype_form', '/mtype/{afmid}')  # mail link to form
+    config.add_route('mtype_form', '/mtype/{refcode}/{token}/{email}')  # form
+    config.add_route('mtype_thanks', '/mtype_thanks')  # thanks
     # memberships
     config.add_route('make_member', '/make_member/{afm_id}')
     config.add_route('membership_listing',

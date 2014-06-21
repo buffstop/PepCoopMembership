@@ -451,3 +451,266 @@ def verify_mailaddress_conf(request):
         'lastname': afm.lastname,
         'result_msg': u'',
     }
+
+
+@view_config(permission='manage',
+             route_name='mail_mtype_form')
+def mail_mtype_fixer_link(request):
+    '''
+    send email to member to set her membership type details by visiting a form
+    '''
+    afmid = request.matchdict['afmid']
+    afm = C3sMember.get_by_id(afmid)
+    if isinstance(afm, NoneType):
+        request.session.flash(
+            'id not found. no mail sent.',
+            'messages')
+        return HTTPFound(request.route_url('dashboard',
+                                           number=request.cookies['on_page'],
+                                           order=request.cookies['order'],
+                                           orderby=request.cookies['orderby']))
+
+    import random
+    import string
+    _looong_token = u''.join(
+        random.choice(
+            string.ascii_uppercase + string.digits) for x in range(13))
+    _url = (request.registry.settings['c3smembership.url'] +
+            '/mtype/' + afm.email_confirm_code +
+            '/' + _looong_token + '/' + afm.email)
+
+    from .mail_mtype_util import make_mtype_email_body
+    _body = make_mtype_email_body(afm, _url)
+
+    log.info("mailing membership status form link to AFM # %s" % afm.id)
+
+    if afm.locale == 'de':
+        _subject = u'[C3S] Hilfe benötigt: Dein Mitgliedschaftsstatus'
+    else:
+        _subject = u'[C3S] Help needed: Your Membership Status'
+
+    message = Message(
+        subject=_subject,
+        sender='yes@c3s.cc',
+        recipients=[
+            afm.email,
+            request.registry.settings['c3smembership.mailaddr']],
+        body=_body
+    )
+    #print(message.subject)
+    #print(message.body)
+    mailer = get_mailer(request)
+    mailer.send(message)
+    afm.mtype_confirm_token = _looong_token
+    afm.mtype_email_date = datetime.now()
+    afm.membership_type = u'pending'
+    return HTTPFound(request.route_url('dashboard',
+                                       number=request.cookies['on_page'],
+                                       order=request.cookies['order'],
+                                       orderby=request.cookies['orderby']) +
+                     '#member_' + str(afm.id))
+
+
+@view_config(renderer='templates/mtype-form.pt',
+             route_name='mtype_form')
+def membership_status_fixer(request):
+    '''
+    let member confirm her email membership details by filling a form
+    '''
+    user_email = request.matchdict['email']
+    refcode = request.matchdict['refcode']
+    token = request.matchdict['token']
+    # try to get entry from DB
+    afm = C3sMember.get_by_code(refcode)
+    if isinstance(afm, NoneType):  # no entry?
+        #print "entry not found"
+        request.session.flash(
+            'bad URL / bad codes. please contact office@c3s.cc!',
+            'message_above_form'
+        )
+        return {
+            'form': '',
+            'confirmed': False,
+            'firstname': 'foo',
+            'lastname': 'bar',
+            'result_msg': 'bad URL / bad codes. please contact office@c3s.cc!',
+        }
+    # check token
+    #if isinstance(afm.mtype_confirm_token, NoneType):
+    #    #request.session.flash('no ')
+    #    #return HTTPFound(request.route_url('dashboard_only'))
+    # check token even more
+    if len(afm.mtype_confirm_token) == 0:  # token was invalidated already
+    #    #print "the token is empty"
+        request.session.flash(
+            'your token is invalid. please contact office@c3s.cc!',
+            'message_above_form'
+        )
+        return {
+            'form': '',
+            'confirmed': False,
+    #        'firstname': afm.firstname,
+    #        'lastname': afm.lastname,
+            'result_msg': 'your token is invalid. please contact office@c3s.cc!',
+        }
+
+    try:
+        print "token: {}".format(token)
+        assert(afm.mtype_confirm_token in token)
+        assert(token in afm.mtype_confirm_token)
+        assert(afm.email in user_email)
+        assert(user_email in afm.email)
+    except:
+        request.session.flash(
+            'bad token/email. please contact office@c3s.cc!',
+            'message_above_form')
+        return {
+            'form': '',
+            'confirmed': False,
+            #         'firstname': 'foo',
+            #         'lastname': 'bar',
+            'result_msg': 'bad token/email. please contact office@c3s.cc!',
+        }
+
+    # construct a form
+    class MembershipInfo(colander.Schema):
+        yes_no = ((u'yes', _(u'Yes')),
+                  (u'no', _(u'No')))
+        membership_type = colander.SchemaNode(
+            colander.String(),
+            title=_(u'I want to become a ... (choose '
+                    'membership type, see C3S SCE statute sec. 4)'),
+            description=_(u'choose the type of membership.'),
+            widget=deform.widget.RadioChoiceWidget(
+                values=(
+                    (u'normal',
+                     _(u'FULL member. Full members have to be natural persons '
+                       'who register at least three works with C3S they '
+                       'created themselves. This applies to composers, '
+                       'lyricists and remixers. They get a vote.')),
+                    (u'investing',
+                     _(u'INVESTING member. Investing members can be natural '
+                       'or legal entities or private companies that do not '
+                       'register works with C3S. They do not get a vote, '
+                       'but may counsel.'))
+                ),
+            )
+        )
+        member_of_colsoc = colander.SchemaNode(
+            colander.String(),
+            title=_(
+                u'Currently, I am a member of (at least) one other '
+                'collecting society.'),
+            validator=colander.OneOf([x[0] for x in yes_no]),
+            widget=deform.widget.RadioChoiceWidget(values=yes_no),
+            oid="other_colsoc",
+            #validator=colsoc_validator
+        )
+        name_of_colsoc = colander.SchemaNode(
+            colander.String(),
+            title=_(u'If so, which one(s)? (comma separated)'),
+            description=_(
+                u'Please tell us which collecting societies '
+                'you are a member of. '
+                'If more than one, please separate them by comma(s).'),
+            missing=unicode(''),
+            oid="colsoc_name",
+        )
+
+    class MembershipForm(colander.Schema):
+        """
+        The Form consists of
+        - Membership Information
+        """
+        membership_info = MembershipInfo(
+            title=_(u"Membership Requirements")
+        )
+
+    schema = MembershipForm()
+
+    form = deform.Form(
+        schema,
+        buttons=[
+            deform.Button('submit', _(u'Submit')),
+            deform.Button('reset', _(u'Reset'))
+        ],
+        use_ajax=True,
+        renderer=zpt_renderer
+    )
+    # if the form has NOT been used and submitted, remove error messages if any
+    if not 'submit' in request.POST:
+        request.session.pop_flash()
+
+    # if the form has been used and SUBMITTED, check contents
+    if 'submit' in request.POST:
+        controls = request.POST.items()
+        try:
+            appstruct = form.validate(controls)
+            #print("the appstruct from the form: %s \n") % appstruct
+            #for thing in appstruct:
+            #    print("the thing: %s") % thing
+            #    print("type: %s") % type(thing)
+
+            # data sanity: if not in collecting society, don't save
+            #  collsoc name even if it was supplied through form
+            if 'no' in appstruct['membership_info']['member_of_colsoc']:
+                appstruct['membership_info']['name_of_colsoc'] = ''
+                print appstruct['membership_info']['name_of_colsoc']
+                #print '-'*80
+
+        except ValidationFailure, e:
+            #print("the appstruct from the form: %s \n") % appstruct
+            #for thing in appstruct:
+            #    print("the thing: %s") % thing
+            #    print("type: %s") % type(thing)
+            print(e)
+            #message.append(
+            request.session.flash(
+                _(u"Please note: There were errors, "
+                  "please check the form below."),
+                'message_above_form',
+                allow_duplicate=False)
+            return{'form': e.render()}
+        # all good, store the information
+        afm.membership_type = appstruct['membership_info']['membership_type']
+        #print 'afm.membership_type: {}'.format(afm.membership_type)
+        afm.member_of_colsoc = (
+            appstruct['membership_info']['member_of_colsoc'] == u'yes')
+        #print 'afm.member_of_colsoc: {}'.format(afm.member_of_colsoc)
+        afm.name_of_colsoc = appstruct['membership_info']['name_of_colsoc']
+        #print 'afm.name_of_colsoc: {}'.format(afm.name_of_colsoc)
+
+        # delete token
+        afm.mtype_confirm_token = u''
+        # # notify staff
+        message = Message(
+            subject='[C3S Yes!] membership status confirmed',
+            sender='noreply@c3s.cc',
+            recipients=[
+                request.registry.settings['c3smembership.mailaddr'],
+            ],
+            body=u'see {}/detail/{}'.format(
+                request.registry.settings['c3smembership.url'],
+                afm.id)
+        )
+        mailer = get_mailer(request)
+        mailer.send(message)
+
+        return HTTPFound(request.route_url('mtype_thanks'))
+
+    # render the form in a template
+    html = form.render()
+
+    return {
+        'form': html,
+        'confirmed': True,
+    }
+
+
+@view_config(renderer='templates/mtype-thanks.pt',
+             route_name='mtype_thanks')
+def membership_status_thanks(request):
+    '''
+    say thanks
+    '''
+    return {'foo': 'bar'}
