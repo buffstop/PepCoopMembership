@@ -670,7 +670,9 @@ def membership_status_fixer(request):
                   "please check the form below."),
                 'message_above_form',
                 allow_duplicate=False)
-            return{'form': e.render()}
+            return{
+                'confirmed': True,
+                'form': e.render()}
         # all good, store the information
         afm.membership_type = appstruct['membership_info']['membership_type']
         #print 'afm.membership_type: {}'.format(afm.membership_type)
