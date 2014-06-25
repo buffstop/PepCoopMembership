@@ -3,7 +3,7 @@
 
 def make_mtype_email_body(input, the_url):
     if input.locale == 'de':
-        body = '''Hallo {0} {1},
+        body = u'''Hallo {0} {1},
 
 gemeinsam mit Dir freuen wir uns auf die erste Generalversammlung der C3S SCE
 am 23. August, um 14:00 Uhr im Millowitsch-Theater in Köln. Details dazu
@@ -66,7 +66,7 @@ Das Team der C3S
     the_url,
 )
     else:
-        body = '''Hello {0} {1},
+        body = u'''Hello {0} {1},
 
 together with you we are happily awaiting the first general assembly of C3S SCE
 on August 23rd, at 2 pm in the Millowitsch Theater in Cologne. You will soon
