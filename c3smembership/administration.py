@@ -409,7 +409,7 @@ def verify_mailaddress_conf(request):
             'result_msg': 'bad URL / bad codes. please contact office@c3s.cc!',
         }
     # check token
-    if len(afm.email_confirm_token) == 0:  # token was invalidated already
+    if ('_used' in afm.email_confirm_token):  # token was invalidated already
         #print "the token is empty"
         return {
             'confirmed': False,
@@ -432,7 +432,7 @@ def verify_mailaddress_conf(request):
         }
 
     afm.email_is_confirmed = True
-    afm.email_confirm_token = u''
+    afm.email_confirm_token += u'_used'
     DBSession.flush()
     # notify staff
     message = Message(
