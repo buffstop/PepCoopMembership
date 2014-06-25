@@ -6,12 +6,16 @@
       metal:use-macro="base_bootstrap"
       i18n:domain="c3smembership">
   <tal:block metal:fill-slot="css">
-    <link rel="stylesheet" href="${request.static_url('c3smembership:static/deform/form.css')}" type="text/css" media="screen" charset="utf-8" />
+    <link href="${request.static_url('c3smembership:static/deform/form.css')}"
+	  rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
     <link href="${request.static_url('c3smembership:static/bootstrap-3.0.3-dist/css/bootstrap.css')}"
           rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
-    <script type="text/javascript" src="${request.static_url('c3smembership:static/deform/deform.js')}"></script>
-    <!-- script src="http://code.jquery.com/jquery-1.9.1.js" --><!-- /script -->
-    <link rel="stylesheet" href="${request.static_url('c3smembership:static/jquery-ui.1.10.3-smoothness.css')}" />
+    <script src="${request.static_url('c3smembership:static/deform/deform.js')}"
+	    type="text/javascript"></script>
+    <script src="${request.static_url('c3smembership:static/jquery-2.1.1.min.js')}"
+	    type="text/javascript"></script>
+    <link  href="${request.static_url('c3smembership:static/jquery-ui.1.10.3-smoothness.css')}"
+	   rel="stylesheet" />
     <script src="${request.static_url('c3smembership:static/jquery-ui.1.10.3.js')}"></script>
     <script src="${request.static_url('c3smembership:static/dropdownsort.js')}"></script>
   <!--link rel="stylesheet" href="${request.static_url('c3smembership:static/c3sM.css')}" type="text/css" media="screen" charset="utf-8" /-->
