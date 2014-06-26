@@ -48,7 +48,11 @@
     <div id="footer">
       <div class="footer">
         &copy; Copyright 2014, C3S SCE.
-        <a href="https://www.c3s.cc/kontakt/">Kontakt &amp; Impressum</a>
+        <a tal:attributes="href python:'https://www.c3s.cc/kontakt/' if request.locale_name == 'de' else 'https://www.c3s.cc/en/contact-us/'"
+           i18n:translate="">Contact</a>
+	&amp;
+	<a tal:attributes="href python:'https://www.c3s.cc/impressum/' if request.locale_name == 'de' else 'https://www.c3s.cc/en/impressum/'"
+           i18n:translate="">Imprint</a>
       </div>
     </div>
     <tal:block metal:define-slot="javascript-last"></tal:block>
