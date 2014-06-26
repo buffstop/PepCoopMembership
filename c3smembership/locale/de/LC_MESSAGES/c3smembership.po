@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2014-03-14 09:51+0100\n"
-"PO-Revision-Date: 2014-03-14 09:55+0100\n"
+"PO-Revision-Date: 2014-06-26 15:00+0100\n"
 "Last-Translator: Christoph Scheid <christoph.scheid@c3s.cc>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -57,11 +57,11 @@ msgstr "Gab es einen Geldeingang in Höhe der Anteile?"
 
 #: c3smembership/accountants_views.py:779
 msgid "[C3S AFM] We have received your signature. Thanks!"
-msgstr "[C3S AFM] Wir haben Deine Unterschrift erhalten. Dankeschön!"
+msgstr "[C3S AFM] Wir haben Deine Unterschrift erhalten. Danke schön!"
 
 #: c3smembership/accountants_views.py:807
 msgid "[C3S AFM] We have received your payment. Thanks!"
-msgstr "[C3S AFM] Wir haben deine Zahlung erhalten. Dankeschön!"
+msgstr "[C3S AFM] Wir haben deine Zahlung erhalten. Danke schön!"
 
 #: c3smembership/edit_member.py:104 c3smembership/new_member.py:61
 #: c3smembership/views.py:485 c3smembership/templates/success.pt:27
@@ -96,7 +96,7 @@ msgstr "Persönliche Angaben"
 #: c3smembership/edit_member.py:262 c3smembership/new_member.py:189
 #: c3smembership/views.py:712 c3smembership/templates/success.pt:35
 msgid "Membership Requirements"
-msgstr "Vorraussetzungen der Mitgliedschaft"
+msgstr "Voraussetzungen der Mitgliedschaft"
 
 #: c3smembership/edit_member.py:265 c3smembership/new_member.py:192
 #: c3smembership/views.py:715 c3smembership/templates/success.pt:43
@@ -343,9 +343,10 @@ msgid ""
 "lyricists and remixers. They get a vote."
 msgstr ""
 "ORDENTLICHES Mitglied werden: Ordentliche (nutzende) Mitglieder müssen "
-"natürliche Personen sein und als Urheber_in mindestens drei eigene Werke zur "
-"Wahrnehmung bei der C3S registrieren. Dies trifft z.B. auf Komponist_innen, "
-"Liedtexter_innen oder Remixer_innen zu. Sie erhalten volles Stimmrecht."
+"natürliche Personen sein und als Urheber_in oder Musiker_in mindestens drei "
+"eigene Werke mit eigener Beteiligung zur Wahrnehmung bei der C3S "
+"registrieren. Dies trifft z.B. auf Komponist_innen, Liedtexter_innen, "
+"Remixer_innen und ausübende Musiker_innen zu. Sie erhalten volles Stimmrecht."
 
 #: c3smembership/views.py:610
 msgid ""
@@ -366,14 +367,14 @@ msgstr ""
 
 #: c3smembership/views.py:639
 msgid "If so, which one(s)? (comma separated)"
-msgstr "Falls ja, welche? Mehrere Nennungen bitte durch Komma getrennt"
+msgstr "Falls ja, welche? Mehrere Nennungen bitte durch Komma getrennt."
 
 #: c3smembership/views.py:640
 msgid ""
 "Please tell us which collecting societies you are a member of. If more than "
 "one, please separate them by comma(s)."
 msgstr ""
-"Bitte nenne uns die Verwertungsgesellschaft(en), in denen du Mitglied bist. "
+"Bitte nenne uns die Verwertungsgesellschaft(en), in denen Du Mitglied bist. "
 "Mehrere Nennungen bitte durch Komma getrennt"
 
 #: c3smembership/views.py:655
@@ -522,7 +523,7 @@ msgstr "(englisch)"
 #. Default: Disclaimer (Data Protection)
 #: c3smembership/templates/join.pt:94
 msgid "join-form-disclaimer-title"
-msgstr "Hinweis gem. § 4 BDSG"
+msgstr "Hinweis gem. § 4 BDSG:"
 
 #. Default: We will store and use the information you provide for
 #. administrative
