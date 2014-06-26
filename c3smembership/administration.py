@@ -386,7 +386,7 @@ Best :: The C3S Team
                                        number=request.cookies['on_page'],
                                        order=request.cookies['order'],
                                        orderby=request.cookies['orderby']) +
-                     '#' + str(afm.id))
+                     '#member_' + str(afm.id))
 
 
 @view_config(renderer='templates/verify-mail.pt',
@@ -540,8 +540,10 @@ def membership_status_fixer(request):
     #    #request.session.flash('no ')
     #    #return HTTPFound(request.route_url('dashboard_only'))
     # check token even more
-    if len(afm.mtype_confirm_token) == 0:  # token was invalidated already
-    #    #print "the token is empty"
+    if (len(afm.mtype_confirm_token) == 0) or (
+            afm.mtype_confirm_token.endswith('_used')):
+        # token was invalidated already
+        #    #print "the token is empty"
         request.session.flash(
             'your token is invalid. please contact office@c3s.cc!',
             'message_above_form'
@@ -594,7 +596,8 @@ def membership_status_fixer(request):
                        'register works with C3S. They do not get a vote, '
                        'but may counsel.'))
                 ),
-            )
+            ),
+            oid="mtype",
         )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
@@ -634,7 +637,7 @@ def membership_status_fixer(request):
             deform.Button('submit', _(u'Submit')),
             deform.Button('reset', _(u'Reset'))
         ],
-        use_ajax=True,
+        #use_ajax=True,
         renderer=zpt_renderer
     )
     # if the form has NOT been used and submitted, remove error messages if any
@@ -659,11 +662,11 @@ def membership_status_fixer(request):
                 #print '-'*80
 
         except ValidationFailure, e:
-            #print("the appstruct from the form: %s \n") % appstruct
+            #print("the controls from the form: %s \n") % controls
             #for thing in appstruct:
             #    print("the thing: %s") % thing
             #    print("type: %s") % type(thing)
-            print(e)
+            #print(e)
             #message.append(
             request.session.flash(
                 _(u"Please note: There were errors, "
@@ -682,8 +685,11 @@ def membership_status_fixer(request):
         afm.name_of_colsoc = appstruct['membership_info']['name_of_colsoc']
         #print 'afm.name_of_colsoc: {}'.format(afm.name_of_colsoc)
 
-        # delete token
-        afm.mtype_confirm_token = u''
+        # remove old messages from the session
+        request.session.pop_flash()
+
+        # invalidate token
+        afm.mtype_confirm_token += u'_used'
         # # notify staff
         message = Message(
             subject='[C3S Yes!] membership status confirmed',
