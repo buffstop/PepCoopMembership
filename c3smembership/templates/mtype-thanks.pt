@@ -15,32 +15,25 @@
     <script src="${request.static_url('c3smembership:static/dropdownsort.js')}"></script>
   </tal:block>
   <tal:block metal:fill-slot="middle">
-    <h4>
-      Dankeschön,
+    <h4 i18n:translate="">
+      Thank you!
     </h4>
-    <p>
-      Das war's auch schon! Vielen Dank für die Hilfe.
+    <p i18n:translate="">
+      That’s it. Thank you for helping out.
     </p>
-    <p>
-      Wir freuen uns darauf, Dich bei der Generalversammlung am 23. August in Köln zu treffen.
+    <p i18n:translate="">
+      We are looking forward to welcome you to our first general assembly on 23 August in Cologne, Germany.
     </p>
-    <p>
-      Dein C3S-Team
+    <p i18n:translate="">
+      Your C3S Team
     </p>
 
     <div class="alert alert-info">
       <h4>I sustain C3S</h4>
-      <p i18n:translate="">Dein Beitrag zu fairer Bezahlung für Musiker</p>
+      <p i18n:translate="">Support fair remuneration for artists</p>
       <a href="https://sustain.c3s.cc">
         https://sustain.c3s.cc
       </a>
     </div>
-  </tal:block>
-  <tal:block metal:fill-slot="deform-load">
-    <!--! loading deform -->
-    <!--! script type="text/javascript">deform.load()</script -->
-    <script type="text/javascript">
-      $(document).ready(sortDropDownListByText('#country'));
-    </script>
   </tal:block>
 </html>

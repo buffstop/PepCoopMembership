@@ -29,19 +29,16 @@
 				   alt="auf deutsche Sprache umschalten" /></a>
     </div>
     <div tal:condition="confirmed is True">
-      <h4>
-        Liebe Unterstützer_innen,
+      <h4 i18n:translate="">
+        Dear supporters,
       </h4>
-      <p>
+      <p i18n:translate="">
+        as mentioned in our mail we would like to give you the opportunity to add some information to your C3S account. We need your help so we can tell if you are eligible to vote or not.
       </p>
-      <p>
-        wie wir bereits per Mail erklärt haben, habt Ihr hier Gelegenheit, Teile Eurer Angaben zu ergänzen. Ohne ein wenig Hilfe von Eurer Seite können wir Euch nicht mitteilen, ob Ihr stimmberechtigt seid oder nicht.
+      <p i18n:translate="">In case you are unsure, please take a look at our FAQ (see link below) or just send a mail to info@c3s.cc. However, for those of you who are curious to know more about the details, there’s a link to our statutes (see below). Be prepared to enjoy some legal talk...
       </p>
-      <p>
-        Falls Ihr Fragen habt, schaut bitte in unsere FAQ (siehe unten) oder schreibt an info@c3s.cc. Wer es ganz genau wissen möchte und vor juristischen Texten nicht zurückschreckt... unten geht's zur Satzung.
-      </p>
-      <p>
-        Also los! Weniger als fünf Klicks, und es ist vollbracht.
+      <p i18n:translate="">
+        Let’s go! It’s less than five clicks, and it’s done.
       </p>
     </div>
     <div id="form" tal:content="structure form"/>

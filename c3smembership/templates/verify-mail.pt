@@ -19,7 +19,7 @@
         ${firstname} ${lastname}!
       </h3>
       <p i18n:translate="">
-        Dankeschön!
+        Thank You!
       </p>
     </div>
     <p>
