@@ -331,23 +331,19 @@ def import_crowdfunders(request):
             address2=u'',
             postcode=row[3],
             city=row[4],
-            #bundesland=row[8], drop it?
             country=row[5],
             locale=u'de',
-            #date_of_birth=datetime.strptime(row[11], '%Y-%m-%d'),
-            # (1970, 1, 1)
-            date_of_birth=datetime.datetime(1970, 2, 2),  # XXXneeds correction
-            #email_is_confirmed=True if (row[12] == 'True') else False,
+            date_of_birth=datetime.datetime.strptime(row[10], '%Y-%m-%d'),
             email_is_confirmed=True,
             email_confirm_code=row[9],
             num_shares=_num_shares,
-            #date_of_submission=row[24],
-            date_of_submission=datetime.datetime(1970, 3, 3),  # XXXneeds correction
+            # XXX date_of_submission is actually the membership date !!!
+            date_of_submission=datetime.datetime.strptime(row[11], '%Y-%m-%d'),
             membership_type=u'startnext',
-            #member_of_colsoc=True if (row[17] == 'True') else False,
             member_of_colsoc=False,
             name_of_colsoc=u'StartNext',
         )
+        import_startnexter.accountant_comment = row[12]
         import_startnexter.signature_received = True
         import_startnexter.signature_confirmed = True
         import_startnexter.payment_received = True
