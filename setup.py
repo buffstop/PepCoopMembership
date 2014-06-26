@@ -13,7 +13,7 @@ requires = [
     'cryptacular',
     'deform',  # should get deform-2.0...
     'fdfgen',
-    'lingua',
+    'lingua==1.5',  # stick to 1.5 for now. TODO: learn to use 2.1/2.3
     'pycountry',  # replacing 'webhelpers',
     'pyramid<1.6a',  # use pyramid 1.5
     'pyramid_beaker',
