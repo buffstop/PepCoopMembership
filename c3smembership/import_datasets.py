@@ -21,170 +21,116 @@ from types import NoneType
 import unicodecsv
 
 
-# @view_config(permission='manage',
-#              route_name='import_founders')
-# def import_founders(request):
-#     '''
-#     import the list of founders to the membership database
-#     '''
-#     try:  # check if the file exists
-#         with open('import/test_founders.csv', 'r') as f:
-#             # store contents in tempfile
-#             content = tempfile.NamedTemporaryFile()
-#             content.write(f.read())
-#             content.seek(0)  # rewind to beginning
+@view_config(permission='manage',
+             route_name='import_founders')
+def import_founders(request):
+    '''
+    import the list of founders
+    '''
+    try:  # check if the file exists
+        with open(request.registry.settings['founders_importfile'], 'r') as f:
+            # store contents in tempfile
+            content = tempfile.NamedTemporaryFile()
+            content.write(f.read())
+            content.seek(0)  # rewind to beginning
 
-#     except IOError, ioe:
-#         print ioe
-#         request.session.flash("file not found.", 'messages')
-#         return HTTPFound(request.route_url('dashboard_only'))
+    except IOError, ioe:
+        print ioe
+        request.session.flash("file not found.", 'messages')
+        return HTTPFound(request.route_url('dashboard_only'))
 
-#     # make sure we have a dummy entry in the db
-#     test = Membership.get_by_id(1)
-#     if isinstance(test, NoneType):
-#         print "need to get a dummy into the DB"
-#         from membership_utils import make_dummy_entries
-#         make_dummy_entries()
-#     else:
-#         print "ok, found someone."
-#         pass
+    # reader for CSV files
+    r = unicodecsv.reader(content.file, delimiter=',',
+                          encoding='utf-8',
+                          #encoding='iso-8859-2',
+                          quoting=unicodecsv.QUOTE_ALL
+                          )
+    header = r.next()  # first line is the header.
+    print("the header: %s" % header)
+    try:
+        assert header == [
+            u'Reihenfolge', u'Vorname', u'Nachname',  # 0, 1, 2
+            u'Email', u'Adresse',  # 3, 4
+            u'Adresse 2', u'PLZ', u'Ort', u'Bundesland etc', u'Land',  # 5-9
+            u'Anteile',  # 10
+            u'Geburtsdatum',  # 11
+        ]
+    except AssertionError, ae:
+        print ae
+        print "the header of the CSV does not match what we expect"
+        request.session.flash(
+            "Import: header fields mismatch. NOT importing",
+            'message_to_staff')
+        return HTTPFound(request.route_url('toolbox'))
 
-#     # reader for CSV files
-#     r = unicodecsv.reader(content.file, delimiter=',',
-#                           encoding='utf-8',
-#                           ##encoding='utf-8',
-#                           #encoding='iso-8859-2',
-#                           quoting=unicodecsv.QUOTE_ALL
-#                           )
-#     header = r.next()  # first line is the header.
-#     print("the header: %s" % header)
-#     #the header:  [u'Reihenfolge', u'Vorname', u'Nachname', u'Email',
-#     #              u'Adresse', u'Adresse 2', u'PLZ', u'Ort',
-#     #              u'Bundesland etc', u'Land', u'Anteile']
-#     # check it for compatibility
-#     try:
-#         assert header == [
-#             u'Reihenfolge', u'Vorname', u'Nachname',  # 0, 1, 2
-#             u'Email', u'Adresse',  # 3, 4
-#             u'Adresse 2', u'PLZ', u'Ort', u'Bundesland etc', u'Land',  # 5-9
-#             u'Anteile',  # 10
-#             u'Geburtsdatum',  # 11
-#         ]
-#     except AssertionError, ae:
-#         print ae
-#         print "the header of the CSV does not match what we expect"
-#         request.session.flash(
-#             "Import: header fields mismatch. NOT importing",
-#             'message_to_staff')
-#         return HTTPFound(request.route_url('toolbox'))
+    # count the datasets
+    counter = 0
 
-#     # count the datasets
-#     counter = 0
+    while True:
+        try:
+            row = r.next()
+        except:
+            break
+        counter += 1
 
-#     while True:
-#         try:
-#             row = r.next()
-#         except:
-#             break
-#         counter += 1
-#         #print("=== row %s: %s" % (counter, row))
-#         #print("=== DEBUG: row[12] is: %s " % row[12])
-#         #print("=== DEBUG: row[15] is: %s " % row[15])
-#         # DEBUGGING (show datasets):
-#         #for i in range(row.__len__()):
-#         #    print('%s header: %s row: %s' % (i, header[i], row[i]))
-# # (Pdb) for i in range(row.__len__()): print('%s header: %s row: %s' % (i, header[i], row[i]))
-#         #import pdb
-#         #pdb.set_trace()
-#         #print(row[12] is True)
-
-#         import_member = Membership(
-#             firstname=row[1],
-#             lastname=row[2],
-#             email=row[3],
-#             password='None',
-#             address1=row[4],
-#             address2=row[5],
-#             postcode=row[6],
-#             city=row[7],
-#             #bundesland=row[8], drop it?
-#             country=row[9],
-#             locale=u'DE',
-#             date_of_birth=datetime.datetime.strptime(row[11], '%Y-%m-%d'),
-#             # (1970, 1, 1)
-#             #date_of_birth=datetime.datetime(1980, 1, 1),  # XXX
-#             #email_is_confirmed=True if (row[12] == 'True') else False,
-#             email_is_confirmed=True,
-#             #email_confirm_code=row[13],
-#             #date_of_submission=row[15],
-#             membership_type=u'normal',
-#             #member_of_colsoc=True if (row[17] == 'True') else False,
-#             member_of_colsoc=False,
-#             #name_of_colsoc=row[18],
-#             name_of_colsoc=u'',
-#             #num_shares=row[14],
-#             date_of_membership=datetime.datetime(2013, 9, 25),
-#         )
-#         shares = Shares(
-#             number=row[10],
-#             date_of_acquisition=datetime.datetime(2013, 9, 25),
-#             reference_code=u'GruendungHH'+str(counter),
-#             signature_received=True,
-#             signature_received_date=datetime.datetime(2013, 9, 25),
-#             payment_received=True,
-#             payment_received_date=datetime.datetime(2013, 9, 25),
-#         )
-#         import_member.shares += [shares]
-#         try:
-#             dbsession = DBSession
-#             dbsession.add(import_member)
-#             #dbsession.flush()
-#             request.session.flash(
-#                 "imported dataset %s" % (import_member.email_confirm_code),
-#                 'messages')
-#             #log.info(
-#             #    "%s imported dataset %s" % (
-#             #        authenticated_userid(request),
-#             #        import_member.email_confirm_code))
-#             #print('done with %s!' % counter)
-#         except ResourceClosedError, rce:
-#             # XXX can't catch this exception,
-#             # because it happens somwhere else, later, deeper !?!
-#             print "transaction was aborted/resource closed"
-#             print rce
-#             return {
-#                 'message': "tried import of dataset(s) with existing confirm code. ABORTED!"}
-#         except IntegrityError, ie:
-#             print "integrity error"
-#             dbsession.rollback()
-#             print ie
-#             if 'column email_confirm_code is not unique' in ie.message:
-#                 print("import of dataset %s failed, because the confirmation"
-#                       "code already existed" % counter)
-#                 return {
-#                     'message': "tried import of dataset(s) with existing confirm code. ABORTED!"}
-#         except StopIteration, si:
-#             print "stop iteration reached"
-#             print si
-#             return {'message': "file found, StopIteration reached."}
-#         #except:
-#         #    print "passing"
-#         #    pass
-
-#     #print("done with all import steps, successful or not!")
-#     return HTTPFound(
-#         request.route_url(
-#             'membership_listing', number=0, orderby='id', order='asc'))
-#                 # _codes.append(row[13])
-#                 # print("the codes: %s" % str(_codes))
-
-#     # except StopIteration, si:
-#     #     print si
-#     #     print("counter: %s" % counter)
-#     #     return {'message': "file found. import complete",
-#     #             #'codes': _codes,
-#     #             }
-# #return
+        import_member = C3sMember(
+            firstname=row[1],
+            lastname=row[2],
+            email=row[3],
+            password='None',
+            address1=row[4],
+            address2=row[5],
+            postcode=row[6],
+            city=row[7],
+            country=row[9],
+            locale=u'de',
+            date_of_birth=datetime.datetime.strptime(row[11], '%Y-%m-%d'),
+            email_is_confirmed=True,
+            email_confirm_code=u'GründungHH_{}'.format(counter),
+            date_of_submission=datetime.datetime(2013, 9, 25),
+            membership_type=u'unknown',
+            member_of_colsoc=False,
+            name_of_colsoc=u'',
+            num_shares=row[10],
+        )
+        import_member.signature_received = True
+        import_member.signature_received_date = datetime.datetime.strptime(
+            '2013-09-25', '%Y-%m-%d')
+        import_member.signature_confirmed = True
+        import_member.signature_confirmed_date = datetime.datetime.strptime(
+            '2013-09-25', '%Y-%m-%d')
+        import_member.payment_received = True
+        import_member.payment_received_date = datetime.date(2013, 9, 25)
+        import_member.payment_confirmed = True
+        import_member.payment_confirmed_date = datetime.date(2013, 9, 25)
+        import_member.date_of_submission = datetime.date(2013, 9, 25)
+        try:
+            dbsession = DBSession
+            dbsession.add(import_member)
+            request.session.flash(
+                "imported dataset %s" % (import_member.email_confirm_code),
+                'messages')
+        except ResourceClosedError, rce:
+            print "transaction was aborted/resource closed"
+            print rce
+            return {
+                'message': "resource closed error. ABORTED!"}
+        except IntegrityError, ie:
+            print "integrity error"
+            dbsession.rollback()
+            print ie
+            if 'column email_confirm_code is not unique' in ie.message:
+                print("import of dataset %s failed, because the confirmation"
+                      "code already existed" % counter)
+                return {
+                    'message': "integrity error. ABORTED!"}
+        except StopIteration, si:
+            print "stop iteration reached"
+            print si
+            return {'message': "file found, StopIteration reached."}
+    return HTTPFound(
+        request.route_url(
+            'dashboard', number=0, orderby='id', order='asc'))
 
 
 @view_config(permission='manage',
