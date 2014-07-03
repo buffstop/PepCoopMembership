@@ -18,5 +18,9 @@ class CSVRenderer(object):
         resp = system['request'].response
         resp.content_type = 'text/csv'
         resp.content_disposition = 'attachment;filename="yes.csv"'
-        return fout.getvalue()
-#        return encrypt_with_gnupg(fout.getvalue())
+        if system['request'].registry.settings[
+                'c3smembership.runmode'] == 'dev':
+            return fout.getvalue()
+        if system['request'].registry.settings[
+                'c3smembership.runmode'] == 'prod':    
+            return encrypt_with_gnupg(fout.getvalue())
