@@ -25,6 +25,7 @@ from deform import ValidationFailure
 import logging
 
 from pyramid.httpexceptions import HTTPFound
+from pyramid.security import authenticated_userid
 from pyramid.view import view_config
 #from sqlalchemy.exc import (
     #InvalidRequestError,
@@ -75,7 +76,7 @@ def edit_member(request):
         'city': _m.city,
         'country': _m.country,
         'date_of_birth': _m.date_of_birth,
-        '_LOCALE': _m.locale,
+        '_LOCALE_': _m.locale,
     }
 
     #print("MEMBER of COLSOC?: %s" % _m.member_of_colsoc)
@@ -356,9 +357,9 @@ def edit_member(request):
                 pass
             else:
                 #print ("change in %s:" % thing[0])
-                log.info (  # XXX this needs to go into the logs
+                log.info(  # XXX this needs to go into the logs
                     "%s changes %s of id %s to %s" % (
-                        request.authenticated_userid,
+                        authenticated_userid(request),
                         thing[0],
                         _m.id,
                         thing[1]
