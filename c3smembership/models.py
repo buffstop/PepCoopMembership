@@ -392,6 +392,18 @@ class C3sMember(Base):
         """return list of applications with same email"""
         return DBSession.query(cls).filter(cls.email == mail).slice(0, 10)
 
+    @classmethod
+    def get_matching_people(cls, prefix):
+        '''
+        return only entries matchint the prefix
+        '''
+        all = DBSession.query(cls).all()
+        names = {}
+        for item in all:
+            if item.lastname.startswith(prefix):
+                _key = item.email_confirm_code + ' ' + item.lastname + ', ' + item.firstname
+                names[_key] = _key
+        return names
 
 class Shares(Base):
     '''

@@ -1,3 +1,4 @@
+
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
@@ -111,6 +112,9 @@ def main(global_config, **settings):
     config.add_route('make_member', '/make_member/{afm_id}')
     config.add_route('membership_listing',
                      '/memberships/{number}/{orderby}/{order}')
+    # search for people
+    config.add_route('search_people', '/search_people')
+    config.add_route('autocomplete_people_search', '/aps/')
     # fix the database
     config.add_route('fix_database', '/fix_database')
     config.scan()
