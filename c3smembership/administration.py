@@ -337,8 +337,8 @@ def mail_mail_conf(request):
 
 Liebe_r C3S-Unterstützer_in,
 
-Uns wurde am {1} diese Mail-Adresse genannt, um mit Dir in Kontakt treten
-zu können.
+Du hast auf deiner Beitrittserklärung zur C3S am {1} diese Mail-Adresse
+angegeben.
 
 Um sicherzustellen, dass sich nicht versehentlich ein Tippfehler o.ä.
 eingeschlichen hat, bitten wir Dich um eine Bestätigung der Adresse. Dafür
@@ -356,9 +356,9 @@ Viele Grüße :: Das C3S-Team
 
 Dear C3S-Supporter,
 
-We were given this Email address to contact you on {2}. To make sure this
-address really works, we are asking you to confirm your address.
-Please click on the following link:
+You provided us with this mail address on your C3S memebership form on
+{2}. To make sure this address really works, we are asking you to confirm
+your address. Please click on the following link:
 
     {0}
 
