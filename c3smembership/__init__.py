@@ -111,5 +111,7 @@ def main(global_config, **settings):
     config.add_route('make_member', '/make_member/{afm_id}')
     config.add_route('membership_listing',
                      '/memberships/{number}/{orderby}/{order}')
+    # fix the database
+    config.add_route('fix_database', '/fix_database')
     config.scan()
     return config.make_wsgi_app()
