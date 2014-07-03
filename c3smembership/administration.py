@@ -93,6 +93,7 @@ def stats_view(request):
         'afm_shares_unpaid': C3sMember.afm_num_shares_unpaid(),
         'afm_shares_paid': C3sMember.afm_num_shares_paid(),
         # shares
+        #'num_shares': C3sMember.get_total_shares(),
         #'num_shares': Shares.get_total_shares(),
         # memberships
         #'num_memberships': Membership.get_number(),
@@ -100,6 +101,10 @@ def stats_view(request):
         #'num_ms_jur': '0',  # XXX Membership.num_ms_jur(),
         #'num_ms_norm': Membership.num_ms_norm(),
         #'num_ms_inves': Membership.num_ms_invest(),
+        # countries
+        'num_countries': C3sMember.get_num_countries(),
+        'countries_list': C3sMember.get_countries_list(),
+
         # staff figures
         'num_staff': len(C3sStaff.get_all())
     }

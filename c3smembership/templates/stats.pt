@@ -12,10 +12,23 @@
     <p>
       ${_number_of_datasets} DB-Einträge
       <small>Eingegangene Mitgliedschaftsanträge</small><br />
-      ${afm_shares_unpaid} Anteile, die noch nicht bezahlt sind. Summe: X<br />
-      ${afm_shares_paid} Anteile, die schon bezahlt sind. Summe: Y<br />
+      ${afm_shares_unpaid} Anteile, die noch nicht bezahlt sind.
+      Summe: ${python: int(afm_shares_unpaid)*50}€
+      <br />
+      ${afm_shares_paid} Anteile, die schon bezahlt sind.
+      Summe: ${python: int(afm_shares_paid)*50}€<br />
     </p>
+    <h3>Länder</h3>
+    Angaben ohne Gewähr auf Richtigkeit.<br />
+    Anzahl verschiedener Länder: ${num_countries}
+    <table>
+      <tr><td>country</td><td>number</td></tr>
+      <tr tal:repeat="country countries_list.keys()">
+        <td>${country}</td><td>${countries_list[country]}</td></tr>
+    </table>
+    
     <h3>GenossInnen/Mitgliedschaften</h3>
+    <p>erfordert merge</p>
     <p>
       Anzahl GenossInnen: $ off {num_memberships}<br />
       Anzahl natürliche Personen: $ off {num_ms_nat}<br />

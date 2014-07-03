@@ -39,6 +39,9 @@
       <a href="${request.route_url('stats')}"
          class="btn btn-warning">Statistics</a>
 
+      <a href="${request.route_url('search_people')}"
+         class="btn btn-warning">Search for People</a>
+
     <h3>Export &amp; Import</h3>
     <p>    
       <a href="${request.route_url('export_all')}"

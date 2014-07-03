@@ -393,6 +393,30 @@ class C3sMember(Base):
         return DBSession.query(cls).filter(cls.email == mail).slice(0, 10)
 
     @classmethod
+    def get_num_countries(cls):
+        '''return number of countries in DB'''
+        _list = []
+        _all = DBSession.query(cls)
+        for item in _all:
+            if item.country not in _list:
+                _list.append(item.country)
+        return len(_list)
+
+    @classmethod
+    def get_countries_list(cls):
+        '''return dict of countries and number of occurrences'''
+        _c_dict = {}
+        _all = DBSession.query(cls)
+        for item in _all:
+            if item.country not in _c_dict.keys():
+                #print u"adding {} to the list".format(item.country)
+                _c_dict[item.country] = 1
+            else:
+                #print u"found one more entry for {}".format(item.country)
+                _c_dict[item.country] += 1
+        return _c_dict
+
+    @classmethod
     def get_matching_people(cls, prefix):
         '''
         return only entries matchint the prefix
@@ -404,6 +428,7 @@ class C3sMember(Base):
                 _key = item.email_confirm_code + ' ' + item.lastname + ', ' + item.firstname
                 names[_key] = _key
         return names
+
 
 class Shares(Base):
     '''
