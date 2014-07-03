@@ -335,47 +335,59 @@ def mail_mail_conf(request):
 
     _body = u'''[english version below]
 
-Liebe_r C3S-Unterstützer_in,
+Hallo {1} {2},
 
-Du hast auf deiner Beitrittserklärung zur C3S am {1} diese Mail-Adresse
-angegeben.
+gemeinsam mit Dir freuen wir uns auf die erste Generalversammlung der C3S SCE
+am 23. August, um 14:00 Uhr im Millowitsch-Theater in Köln. Details dazu
+erhältst Du in Kürze in einer separaten Einladung.
 
-Um sicherzustellen, dass sich nicht versehentlich ein Tippfehler o.ä.
-eingeschlichen hat, bitten wir Dich um eine Bestätigung der Adresse. Dafür
-brauchst Du nur den folgenden Link aufzurufen:
+Da wir die Einladungen per Email verschicken werden, möchten wir Dich bitten
+uns kurz zu bestätigen, dass diese Emailadresse korrekt ist und Du auf diesem
+Wege erreichbar bist. Dafür brauchst Du nur den folgenden Link aufzurufen:
 
   {0}
 
-Solltest Du diese Adresse nicht bei uns angegeben haben, antworte bitte kurz
-auf diese E-Mail.
+Solltest Du nicht {1} {2} sein und diese Adresse nicht bei uns angegeben haben,
+antworte bitte kurz auf diese E-Mail. Dann werden wir die Adresse aus unser
+Datenbank streichen.
+
+Antworte bitte ebenfalls, falls Du die Email-Adresse ändern möchtest.
 
 
 Viele Grüße :: Das C3S-Team
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Dear C3S-Supporter,
+Hello {1} {2},
 
-You provided us with this mail address on your C3S memebership form on
-{2}. To make sure this address really works, we are asking you to confirm
-your address. Please click on the following link:
+together with you we are happily awaiting the first general assembly of C3S SCE
+on August 23rd, at 2 pm in the Millowitsch-Theater in Cologne. You will soon
+receive the details in a separate invitation.
+
+As we will send the invitations via email, we would like you to confirm your
+email address beforehand.
+
+Just click the following link to confirm your address:
 
     {0}
 
-If you did not give this email address to C3S, please reply briefly to this
-email.
+If you are not {1} {2} and you didn't give this email address to us, please
+reply to this email with a short explanation. Then we will remove your address
+from our database.
 
-Best :: The C3S Team
+Should you want to change your email address please reply to this mail, too.
+
+Best wishes :: The C3S Team
 '''.format(
-    _url,
-    afm.date_of_submission.strftime("%d.%m.%Y"),
-    afm.date_of_submission.strftime("%d %b %Y"),
+    _url,  # {0}
+    afm.firstname,  # {1}
+    afm.lastname,  # {2}
 )
 
     log.info("mailing mail confirmation to AFM # %s" % afm.id)
 
     message = Message(
-        subject=(u'[C3S] Please confirm your Email address! '
+        subject=(u'[C3S] Please confirm your email address! '
                  u'/ Bitte E-Mail-Adresse bestätigen!'),
         sender='yes@c3s.cc',
         recipients=[afm.email],
