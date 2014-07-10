@@ -37,6 +37,7 @@ def main(global_config, **settings):
 
     config.include('pyramid_mailer')
     config.include('pyramid_chameleon')  # for pyramid 1.5a... for later
+    config.include('cornice')
     config.add_translation_dirs(
         'colander:locale/',
         'deform:locale/',  # copy deform.po and .mo to locale/de/LC_MESSAGES/

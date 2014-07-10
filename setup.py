@@ -10,6 +10,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = [
     'alembic',  # migrate the database when introducing new fields
     'Babel',
+    'cornice',
     'cryptacular',
     'deform',  # should get deform-2.0...
     'fdfgen',
