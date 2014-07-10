@@ -110,7 +110,7 @@
              class="glyphicon glyphicon-chevron-down"></a>
         </th>
         <th>status</th>
-        <th>code</th>
+        <!-- <th>code</th> -->
         <th>
           firstname <br />
           <a href="${request.route_url('dashboard', number=current, orderby='firstname', order='asc')}"
@@ -131,7 +131,6 @@
         </th>
         <th>email</th>
         <th>email<br />conf'd?</th>
-        <th>recreate<br />PDF</th>
         <th>sig.<br />rec'd?</th>
         <th>send sig.<br />conf. email</th>
         <th>paym.<br />rec'd?</th>
@@ -166,10 +165,10 @@
             ok
           </a>
         </td>
-        <td><a href="/detail/${member.id}">${member.email_confirm_code}</a></td>
+        <!-- <td><a href="/detail/${member.id}">${member.email_confirm_code}</a></td> -->
         <td>${member.firstname}</td>
         <td>${member.lastname}</td>
-        <td><a href="mailto:${member.email}">${member.email}</a></td>
+        <td><a href="mailto:${member.email}" title="${member.email}">mailto</a></td>
         <td>
           <div>
             <a tal:condition="not member.email_is_confirmed and (isinstance(member.email_confirm_token, type(None)))"
@@ -188,12 +187,6 @@
                title="${member.email_confirm_mail_date}"
                class="btn btn-default">Yes.</a>
           </div>
-        </td>
-        <td>
-          <!--! re-create hte Application for Membership PDF -->
-          <a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf" download="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf">
-            PDF
-          </a>
         </td>
         <td>
           <div tal:condition="not member.signature_received"><!--! signature not yet received-->

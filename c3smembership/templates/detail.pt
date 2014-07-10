@@ -79,10 +79,21 @@
 	  <td>${member.date_of_submission}</td>
         </tr>
 	<tr>
+          <td>comment</td>
+	  <td>${member.accountant_comment}</td>
+        </tr>
+	<tr>
           <td>signature received?</td>
           <td>
             <div tal:condition="not member.signature_received">
-              <div class="btn btn-danger">Nein</div>
+              <div class="btn btn-danger"
+                   title="immer noch nicht">Nein</div>
+              <!--! re-create hte Application for Membership PDF -->
+              <a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf"
+                 download="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf"
+                 class="btn btn-success">
+                PDF generieren
+              </a>
               <a href="${request.route_url('switch_sig', memberid=member.id)}"
                  class="btn btn-primary">
                 Eingang bestätigen
