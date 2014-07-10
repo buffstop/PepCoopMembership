@@ -46,10 +46,6 @@ def new_member(request):
         """
         colander schema for membership application form
         """
-        #id = colander.SchemaNode(
-        #    colander.Integer(),
-        #    title='Database ID (optional, used to re-add deleted member',
-        #)
         firstname = colander.SchemaNode(
             colander.String(),
             title='Vorname',
@@ -123,7 +119,8 @@ def new_member(request):
     class MembershipInfo(colander.Schema):
 
         yes_no = ((u'yes', _(u'Yes')),
-                  (u'no', _(u'No')))
+                  (u'no', _(u'No')),
+                  (u'dontknow', _(u'Unknown')),)
 
         membership_type = colander.SchemaNode(
             colander.String(),
@@ -135,14 +132,18 @@ def new_member(request):
                      (u'Normales Mitglied')),
                     (u'investing',
                      u'Investierendes Mitglied'),
+                    (u'unknown',
+                     u'Unbekannt.'),
                 ),
-            )
+            ),
+            missing=unicode('')
         )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
             title='Mitglied einer Verwertungsgesellschaft?',
             validator=colander.OneOf([x[0] for x in yes_no]),
             widget=deform.widget.RadioChoiceWidget(values=yes_no),
+            missing=unicode(''),
             oid="other_colsoc",
             #validator=colsoc_validator
         )

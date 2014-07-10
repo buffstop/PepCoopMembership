@@ -66,10 +66,12 @@ def edit_member(request):
         return HTTPFound(request.route_url('dashboard_only'))
 
     appstruct = {}
+    _email_is_confirmed = 'yes' if _m.email_is_confirmed else 'no'
     appstruct['person'] = {
         'firstname': _m.firstname,
         'lastname': _m.lastname,
         'email': _m.email,
+        'email_is_confirmed': _email_is_confirmed,
         'address1': _m.address1,
         'address2': _m.address2,
         'postcode': _m.postcode,
@@ -110,6 +112,17 @@ def edit_member(request):
             validator=colander.Email(),
             oid="email",
         )
+        email_is_confirmed = colander.SchemaNode(
+            colander.String(),
+            title=u'Email bestätigt?',
+            widget=deform.widget.RadioChoiceWidget(
+                values=(
+                    (u'yes', u'Ja, bestätigt'),
+                    (u'no', u'Nein, unklar'),)),
+            missing=u'',
+            oid="email_is_confirmed",
+        )
+
         passwort = colander.SchemaNode(
             colander.String(),
             widget=deform.widget.HiddenWidget(),
@@ -179,7 +192,8 @@ def edit_member(request):
     class MembershipInfo(colander.Schema):
 
         yes_no = ((u'yes', _(u'Yes')),
-                  (u'no', _(u'No')))
+                  (u'no', _(u'No')),
+                  (u'dontknow', u'Unbekannt'),)
 
         membership_type = colander.SchemaNode(
             colander.String(),
@@ -191,9 +205,11 @@ def edit_member(request):
                      (u'Normales Mitglied')),
                     (u'investing',
                      u'Investierendes Mitglied'),
+                    (u'unknown',
+                     u'Unbekannt.'),
                 ),
             ),
-            missing=u'unknown',
+            missing=u'',
         )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
@@ -201,7 +217,8 @@ def edit_member(request):
             #validator=colander.OneOf([x[0] for x in yes_no]),
             widget=deform.widget.RadioChoiceWidget(values=yes_no),
             oid="other_colsoc",
-            default=u''
+            default=u'',
+            missing=unicode(''),
             #validator=colsoc_validator
         )
         name_of_colsoc = colander.SchemaNode(
@@ -332,6 +349,8 @@ def edit_member(request):
             ('lastname', appstruct['person']['lastname']),
             ('date_of_birth', appstruct['person']['date_of_birth']),
             ('email', appstruct['person']['email']),
+            ('email_is_confirmed',
+             1 if (appstruct['person']['email_is_confirmed'] == 'yes') else 0),
             ('address1', appstruct['person']['address1']),
             ('address2', appstruct['person']['address2']),
             ('postcode', appstruct['person']['postcode']),
