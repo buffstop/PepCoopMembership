@@ -322,10 +322,10 @@ Best wishes :: The C3S Team
         recipients=[_m.email],
         body=_body
     )
-    print(message.subject)
-    print(message.body)
+    #print(message.subject)
+    #print(message.body)
     mailer = get_mailer(request)
-    #mailer.send(message)
+    mailer.send(message)
     #_m._token = _looong_token
     _m.email_invite_flag_bcgv14 = True
     _m.email_invite_date_bcgv14 = datetime.now()
