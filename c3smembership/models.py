@@ -231,6 +231,9 @@ class C3sMember(Base):
     # startnex repair operations
     mtype_confirm_token = Column(Unicode(255))
     mtype_email_date = Column(DateTime(), default=datetime(1970, 1, 1))
+    # invitations
+    email_invite_flag_bcgv14 = Column(Boolean, default=False)
+    email_invite_date_bcgv14 = Column(DateTime(), default=datetime(1970, 1, 1))
 
     def __init__(self, firstname, lastname, email, password,
                  address1, address2, postcode, city, country, locale,

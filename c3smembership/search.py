@@ -57,7 +57,37 @@ def search_people(request):
     )
     autoformhtml = form.render()
 
-    return {'autoform': autoformhtml}
+    '''
+    we use another form with autocomplete to let staff find entries faster
+    '''
+    class AutocompleteRefCodeForm(colander.MappingSchema):
+        code_to_show = colander.SchemaNode(
+            colander.String(),
+            title='Code finden (quicksearch; Groß-/Kleinschreibung beachten!)',
+            #title='',
+            widget=deform.widget.AutocompleteInputWidget(
+                min_length=1,
+                css_class="form-inline",
+                #values=the_codes,  # XXX input matching ones only
+                values=request.route_path(
+                    'autocomplete_input_values',
+                    traverse=('autocomplete_input_values')
+                )
+            )
+        )
+
+    schema = AutocompleteRefCodeForm()
+    form = deform.Form(
+        schema,
+        css_class="form-inline",
+        buttons=('go!',),
+    )
+    refcodeformhtml = form.render()
+
+    return {
+        'autoform': autoformhtml,
+        'refcodeform': refcodeformhtml,
+    }
 
 
 # autocomplete_people_search

@@ -62,12 +62,6 @@
       <a href="${request.route_url('new_member')}"
          class="btn btn-success">New</a>
     </p>
-    <div class="list-inline">
-      <div class="panel panel-primary">
-        <!-- h3 class="panel-title">Find entry by confirmation code</h3 -->
-        <div tal:content="structure autoform">the autocomplete form to search for codes</div>
-      </div>
-    </div>
   </tal:block>
   <tal:block metal:fill-slot="middle">
     <p>
@@ -100,7 +94,7 @@
     </p>
     <table class="table table-striped"><!--! the actual table  -->
       <tr class="table-striped">
-        <th>
+        <th><!--! sorting -->
           id <br />
           <a href="${request.route_url('dashboard', number=current, orderby='id', order='asc')}"
              title="sort by id: ascending"
@@ -109,7 +103,13 @@
              title="sort by id: descending"
              class="glyphicon glyphicon-chevron-down"></a>
         </th>
-        <th>status</th>
+        <th>
+          BC/GV
+        </th>
+        <th>
+          mtype<br />
+          status
+        </th>
         <!-- <th>code</th> -->
         <th>
           firstname <br />
@@ -144,6 +144,15 @@
       <tr tal:repeat="member members"
           tal:attributes="id python: 'member_{0}'.format(member.id)">
         <td id="${id}"><a href="/detail/${member.id}">${member.id}</a></td>
+        <td>
+          <a tal:condition="not member.email_invite_flag_bcgv14"
+             href="${request.route_url('invite_member', m_id=member.id)}"
+             title="BC/GV invitation not sent yet"
+             class="btn btn-danger"></a>
+          <a tal:condition="member.email_invite_flag_bcgv14"
+             href="${request.route_url('invite_member', m_id=member.id)}"
+             title="gesendet ${member.email_invite_date_bcgv14.strftime('am %d.%m.%Y um %H:%M')}"
+             class="btn btn-success"></a>
         <td>
           <a tal:condition="(member.membership_type == 'startnext') or
                             (member.membership_type == 'unknown') or
