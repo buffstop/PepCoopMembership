@@ -49,9 +49,9 @@ Das Team der C3S
 
 
 
-[1] http://archive.c3s.cc/legal/C3S_de_v1.0.pdf
+[1] https://archive.c3s.cc/legal/C3S_de_v1.0.pdf
 
-[2] http://yes.c3s.cc
+[2] https://yes.c3s.cc
 
 [3] https://sustain.c3s.cc
 
@@ -111,9 +111,9 @@ Your C3S team
 
 
 
-[1] http://archive.c3s.cc/legal/C3S_de_v1.0.pdf
+[1] https://archive.c3s.cc/legal/C3S_de_v1.0.pdf
 
-[2] http://yes.c3s.cc
+[2] https://yes.c3s.cc
 
 [3] https://sustain.c3s.cc
 
