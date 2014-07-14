@@ -22,9 +22,9 @@ def search_people(request):
     if 'code_to_show' in request.POST:
         try:
             _code = request.POST['code_to_show']
-            print u"_code = {}".format(_code)
+            #print u"_code = {}".format(_code)
             _code_ = _code.split(' ')[0]
-            print u"_code_ = {}".format(_code_)
+            #print u"_code_ = {}".format(_code_)
             _entry = C3sMember.get_by_code(_code_)
 
             return HTTPFound(
@@ -86,6 +86,65 @@ def search_people(request):
 
     return {
         'autoform': autoformhtml,
+        'refcodeform': refcodeformhtml,
+    }
+
+
+@view_config(route_name='search_codes',
+             renderer='templates/search_people.pt',
+             permission='manage')
+def search_codes(request):
+    '''
+    search for codes
+    '''
+    '''
+    we use a form with autocomplete to let staff find entries faster
+    '''
+    # check for input from "find people" form
+    if 'code_to_show' in request.POST:
+        try:
+            _code = request.POST['code_to_show']
+            #print u"_code = {}".format(_code)
+            _code_ = _code.split(' ')[0]
+            #print u"_code_ = {}".format(_code_)
+            _entry = C3sMember.get_by_code(_code_)
+
+            return HTTPFound(
+                location=request.route_url(
+                    'detail',
+                    memberid=_entry.id)
+            )
+        except:
+            pass
+
+    '''
+    we use another form with autocomplete to let staff find entries faster
+    '''
+    class AutocompleteRefCodeForm(colander.MappingSchema):
+        code_to_show = colander.SchemaNode(
+            colander.String(),
+            title='Code finden (quicksearch; Groß-/Kleinschreibung beachten!)',
+            #title='',
+            widget=deform.widget.AutocompleteInputWidget(
+                min_length=1,
+                css_class="form-inline",
+                #values=the_codes,  # XXX input matching ones only
+                values=request.route_path(
+                    'autocomplete_input_values',
+                    traverse=('autocomplete_input_values')
+                )
+            )
+        )
+
+    schema = AutocompleteRefCodeForm()
+    form = deform.Form(
+        schema,
+        css_class="form-inline",
+        buttons=('go!',),
+    )
+    refcodeformhtml = form.render()
+
+    return {
         'refcodeform': refcodeformhtml,
     }
 

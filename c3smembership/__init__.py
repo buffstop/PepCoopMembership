@@ -80,7 +80,6 @@ def main(global_config, **settings):
     # applications for membership
     config.add_route('dashboard_only', '/dashboard')
     config.add_route('dashboard', '/dashboard/{number}/{orderby}/{order}')
-    config.add_route('autocomplete_input_values', '/aiv/')
     config.add_route('toolbox', '/toolbox')
     config.add_route('stats', '/stats')
     config.add_route('staff', '/staff')
@@ -118,6 +117,9 @@ def main(global_config, **settings):
     # search for people
     config.add_route('search_people', '/search_people')
     config.add_route('autocomplete_people_search', '/aps/')
+    # search for codes
+    config.add_route('search_codes', '/search_codes')
+    config.add_route('autocomplete_input_values', '/aiv/')
     # fix the database
     config.add_route('fix_database', '/fix_database')
     config.scan()

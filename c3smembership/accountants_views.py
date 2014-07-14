@@ -692,35 +692,6 @@ def accountants_desk(request):
         num_display = request.registry.settings[
             'c3smembership.dashboard_number']
 
-    '''
-    we use a form with autocomplete to let staff find entries faster
-    '''
-    #the_codes = C3sMember.get_all_codes()
-    #print("the codes: %s" % the_codes)
-
-    class AutocompleteForm(colander.MappingSchema):
-        code_to_show = colander.SchemaNode(
-            colander.String(),
-            title='Code finden (quicksearch; Groß-/Kleinschreibung beachten!)',
-            #title='',
-            widget=deform.widget.AutocompleteInputWidget(
-                min_length=1,
-                css_class="form-inline",
-                #values=the_codes,  # XXX input matching ones only
-                values=request.route_path(
-                    'autocomplete_input_values',
-                    traverse=('autocomplete_input_values')
-                )
-            )
-        )
-
-    schema = AutocompleteForm()
-    form = deform.Form(
-        schema,
-        css_class="form-inline",
-        buttons=('go!',),
-    )
-    autoformhtml = form.render()
     """
     base_offset helps us to minimize impact on the database
     when querying for results.
@@ -751,8 +722,7 @@ def accountants_desk(request):
     if 'message' in request.GET:
         _message = request.GET['message']
 
-    return {'autoform': autoformhtml,
-            '_number_of_datasets': _number_of_datasets,
+    return {'_number_of_datasets': _number_of_datasets,
             'members': _members,
             'num_display': num_display,
             'next': next_page,
