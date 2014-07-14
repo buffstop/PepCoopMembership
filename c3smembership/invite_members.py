@@ -101,203 +101,221 @@ Heyestraße 194
 
 lädt Dich ein
 
-- zur ersten Generalversammlung nach § 13 der Satzung der C3S SCE [1],
-- zum C3S Barcamp 2014 und
-- zur C3S-Party.
+* zur ersten jährlichen Generalversammlung nach § 13 der Satzung der C3S SCE [1],
+* zum C3S-Barcamp 2014 und
+* zur C3S-Party.
 
 Bitte lies zunächst den gesamten Einladungstext. Er enthält wichtige Hinweise.
 
 
 Die Generalversammlung
-=======================
+======================
 
-Die erste Generalversammlung findet im Rahmen der c/o pop convention statt:
+Die erste Generalversammlung der C3S SCE findet im Rahmen der c/o pop convention
+in Köln statt:
 
 am     23. August 2014
 von    14:00 bis 18:00 Uhr (Verlängerung möglich)
 im     Millowitsch-Theater, Aachener Straße 5, 50674 Köln
 
-Die Anmeldung beginnt um 12:00 Uhr im Foyer des Millowitsch-Theaters. Bitte
-kommt zeitig, um Verzögerungen zu vermeiden. Die Teilnahme ist
-selbstverständlich kostenlos. Am Ende der Mail findest Du den Link zur
-Bestätigung der Teilnahme oder zur Absage.
+Die Anmeldung beginnt um 12:00 Uhr im Foyer des Millowitsch-Theaters.
+
+Bitte komme zeitig, um Verzögerungen zu vermeiden, da wir Dir erst Material
+aushändigen müssen. Die Teilnahme ist selbstverständlich kostenlos. Bitte teile
+uns bis zum 11.08.2014 über dieses Formular mit, ob Du teilnimmst oder nicht:
+
+{0}
 
 
-Warum ist Eure Teilnahme wichtig?
+Warum ist Deine Teilnahme wichtig?
+==================================
 
-Die Generalversammlung ist das Organ, das die grundlegenden Entscheidungen der
-C3S SCE trifft. Ihr seid die Generalversammlung.
+Die Generalversammlung ist das Organ, das die grundlegenden Entscheidungen
+der C3S SCE trifft. Gemeinsam mit den anderen Mitgliedern bist Du die
+Generalversammlung.
 
-Eines unserer Hauptziele ist die Mitbestimmung durch alle nutzenden Mitglieder
-und die Mitwirkung aller Mitglieder. Wir glauben fest daran, dass es machbar
-ist. Gemeinsam mit Euch treten wir den Beweis an: Ihr könnt Eure Meinung sagen,
-Ihr könnt diskutieren, Ihr könnt aktiver Teil der C3S SCE werden, und Ihr könnt
-abstimmen. Vor allem könnt Ihr Euch informieren, woran und wie die C3S SCE
-arbeitet, und wir können uns kennenlernen. Die C3S SCE ist Eure Community, Eure
-Genossenschaft. Nach der Zulassung wird sie Eure Verwertungsgesellschaft sein.
+Eines unserer Hauptziele ist die Mitbestimmung durch alle nutzenden Mitglieder,
+und die Mitwirkung aller Mitglieder. Du kannst Deine Meinung sagen, Du kannst
+diskutieren, Du kannst aktiver Teil der C3S SCE werden, und Du kannst abstimmen.
+Vor allem kannst Du Dich informieren, woran und wie die C3S SCE arbeitet, und Du
+kannst andere Mitglieder kennenlernen. Die C3S SCE ist Deine Community, Deine
+Genossenschaft. Nach der Zulassung wird sie Deine Verwertungsgesellschaft sein.
 
 
 Veranstaltungen: Ablauf und Rahmenprogramm
+==========================================
 
-21.08.2014: [c/o pop convention] "C3S SCE - Der Verwaltungsrat steht Rede und
-Antwort"
-                    Fritz Thyssen Stiftung / Robert Ellscheid Saal [2]
-                    Apostelnkloster 13-15, 50672 Köln
-                    Uhrzeit wird angekündigt
-                    Tickets zur c/o pop sind bei uns zum vergünstigten Preis
-                    von 50 € erhältlich. [office@c3s.cc]
+21.08.2014: [c/o pop convention] "C3S SCE - Der Verwaltungsrat
+            steht Rede und Antwort"
+            Fritz Thyssen Stiftung / Robert Ellscheid Saal [2]
+            Apostelnkloster 13-15, 50672 Köln
+            Uhrzeit wird hier angekündigt: http://c-o-pop.de/convention/programm/
+            Tickets zur c/o pop sind bei uns zum vergünstigten Preis von € 50 
+            erhältlich (bitte Mail an office@c3s.cc senden).
 
-22.08.2014: [C3S SCE] Barcamp [3]
-                    Alter S-Bahnhof Düsseldorf-Gerresheim [4]
-                    Heyestr. 194, 40625 Düsseldorf
-                    @ m.eik: *** Uhrzeiten einfügen ***
-                    @ m.eik: Eintritt: x €, incl. Essen y €
+22.08.2014: [C3S SCE] Barcamp 2014 [3]
+            Alter Bahnhof Düsseldorf-Gerresheim [4]
+            Heyestr. 194, 40625 Düsseldorf
+            12:00 Uhr bis 20:00 Uhr
+            Teilnahme € 9,00 // Teilnahme inkl. Essen € 19,00
+            Voranmeldung erforderlich:
+            {0}
 
-23.08.2014: [C3S SCE] 1. Generalversammlung
-                    Millowitsch-Theater [5]
-                    Aachener Straße 5, 50674 Köln
-                    14:00 Uhr bis 18:00 Uhr (Verlängerung möglich)
-                    Akkreditierung ab 12:00 Uhr
-                    kostenfrei
+23.08.2014: [C3S SCE] 1. Generalversammlung der C3S SCE
+            Millowitsch-Theater [5]
+            Aachener Straße 5, 50674 Köln
+            14:00 Uhr bis 18:00 Uhr (Verlängerung möglich) 
+            Akkreditierung ab 12:00 Uhr
+            Eintritt frei
+            Voranmeldung erforderlich:
+            {0}
 
-23.08.2014: [C3S SCE] Party - offen für alle
-                    CAMPI Volksbühne (neben Millowitsch-Theater)
-                    Aachener Straße 5, 50674 Köln
-                    kläre ich gerade: ab 20:00 Uhr
-                    kläre ich gerade: Eintritt?
-
-
-Die Generalversammlung
-
-Mit Tonaufzeichnung.
+23.08.2014: [C3S SCE] Party mit DJ - offen für alle
+            CAMPI Volksbühne (neben Millowitsch-Theater)
+            Aachener Straße 5, 50674 Köln
+            ab 17:00 Uhr
+            Eintritt frei
 
 
-Agenda
-=======
+Agenda der Generalversammlung 2014 der C3S SCE
+==============================================
+
 Begrüßung der Anwesenden
+
 # 1 Bestimmen der Versammlungsleitung und de(s/r) Protokollführer(s/in)
-[Vorschlag: Meinhard, Protokoll?]
 
 # 2 Genehmigung der Tagesordnung
 
 # 3 Wiederkehrende Tagesordnungspunkte
 
-## 3.1 Entgegennahme der Tätigkeitsberichte der geschäftsführenden
-       Direktoren und des Verwaltungsrates mit anschließender Aussprache
+## 3.1 Entgegennahme der Tätigkeitsberichte der geschäftsführenden 
+       Direktoren und des Verwaltungsrates mit anschließender Aussprache
 ## 3.2 Feststellung des Jahresabschlusses
-## 3.3 Entscheidung über die Verwendung des Jahresüberschusses und die
-       Verrechnung des Jahresfehlbetrages
-## 3.4 Entgegennahme der Berichte über die genossenschaftliche Prüfung
-       (inkl. des Gründungsberichts)
-## 3.5 Entlastung der geschäftsführenden Direktoren und des Verwaltungsrates
+## 3.3 Entscheidung über die Verwendung des Jahresüberschusses und die
+       Verrechnung des Jahresfehlbetrages
+## 3.4 Entgegennahme der Berichte über die genossenschaftliche Prüfung und
+       des Gründungsberichts
+## 3.5 Entlastung der geschäftsführenden Direktoren und des Verwaltungsrates
 
-# 4 Beirat
+# 4 Anträge auf Satzungsänderung
 
-## 4.1 Beschluss Neuwahl eines VRlers ja/nein und ggf Neuwahl
-## 4.2 Beschluss zur Einrichtung eines Beirats
+# 5 Bericht vom C3S-Barcamp 2014
 
-# 5 Bericht Barcamp
+# 6 Antrag auf Beschluss zur Einrichtung eines Beirats
 
-# 6 Einrichtung der Beratungskommissionen
-## 6.1 Kommission Tarife
-## 6.2 Kommission Verteilung
-## 6.3 Kommission Wahrnehmungsverträge
+# 7 Einrichtung der Beratungskommissionen
+## 7.1 Kommission Tarife
+## 7.2 Kommission Verteilung 
+## 7.3 Kommission Wahrnehmungsverträge
+## 7.4 Kommission Mitgliederausbau
+## 7.5 Kommission Mitgliedsbeitragsordnung
 
-# 7 Diskussionen
+# 8 Diskussionen
 
-Beschlussanträge und Anträge zur Änderung der Tagesordnung können bis zum
+Beschlussanträge und Anträge zur Änderung der Tagesordnung kannst Du bis zum
 16. August (Ausschlussfrist 24 Uhr MEZ/CET) in Textform unter agenda@c3s.cc
-eingereicht werden.
+einreichen.
 
 
 Organisatorisches
-------------------
+=================
 
 Teilnahmeberechtigt an der Generalversammlung sind nur Mitglieder der C3S SCE
 und Bevollmächtigte nicht anwesender, aber stimmberechtigter Mitglieder.
 Bevollmächtigte dürfen nach § 13 (6), Satz 3 der Satzung nur Mitglieder der
-Genossenschaft, Ehegatten, Eltern, Kinder oder Geschwister eines Mitglieds
-sein.
+Genossenschaft, Ehegatten, Eltern, Kinder oder Geschwister eines Mitglieds sein.
+Eingetragene Lebenspartner werden wie Ehegatten behandelt. Du kannst online bei
+Absage Deiner Teilnahme eine(n) Vertreter(in) benennen - mehr dazu unter:
 
-Bitte denkt daran, dass der/die Bevollmächtigte Eure von Euch unterzeichnete
+{0}
+
+Bitte denke daran, dass der/die Bevollmächtigte eine von Dir unterzeichnete
 schriftliche Vollmacht mitbringen muss. Eine Person kann maximal zwei
-Stimmberechtigte vertreten. Einen Vordruck für die Vollmacht findet Ihr hier:
+Stimmberechtigte vertreten. Einen Vordruck für die Vollmacht findest Du hier:
 
-  https://archive.c3s.cc/legal/vollmacht_gv14_de.pdf
+https://url.c3s.cc/vollmacht
 
 Um die Generalversammlung vorzubereiten und Diskussionen vorzuverlagern,
-werden wir am 22. August ein Barcamp [2] in Düsseldorf organisieren.
-Themen, die dort besprochen werden sollen, könnt Ihr hier im Wiki ergänzen:
+werden wir am 22. August ein Barcamp [2] in Düsseldorf organisieren. Eine
+Zusammenfassung der Ergebnisse des Barcamps wird Dir bei der Anmeldung zur
+Generalversammlung ausgehändigt. Themen, die dort besprochen werden sollen,
+kannst Du hier im Wiki einsehen und ergänzen:
 
-  https://wiki.c3s.cc (zugang bitte bei bedarf erfragen: office@c3s.cc)
+https://url.c3s.cc/barcamp2014
 
-Vor der Generalversammlung erhaltet Ihr den Geschäftsbericht zum Download.
-Auf der Basis der Informationen im Geschäftsbericht entscheidet die
-Generalversammlung über die Entlastung des Verwaltungsrats und der
-Geschäftsführenden Direktoren.
+(Zugang bitte erfragen: office@c3s.cc)
 
-Wenn Ihr für eine der Positionen unter dem Tagesordnungspunkt #4 kandidieren
-möchtet, sendet uns bitte eine Mail an: election@c3s.cc Wir werden Euch um
-einige Zusatzinformationen bitten und Euch im Vorfeld den Mitgliedern
-vorstellen.
+Vor der Generalversammlung erhältst Du den Geschäftsbericht sowie eine
+detaillierte Agenda zum Download. Auf der Basis der Informationen im
+Geschäftsbericht entscheidet die Generalversammlung über die Entlastung des
+Verwaltungsrats und der Geschäftsführenden Direktoren.
+
+Während der Generalversammlung wird ein Audio-Mitschnitt aufgezeichnet, um
+ein fehlerfreies Protokoll zu gewährleisten. Der Mitschnitt wird nicht
+veröffentlicht, aber intern als Anhang zum Protokoll archiviert.
+
+Wer nicht möchte, dass sein Redebeitrag aufgezeichnet wird, kann dem vor
+Beginn seines/ihres Beitrags widersprechen.
 
 
 Anreise und Unterbringung
---------------------------
+=========================
 
 Leider können wir als C3S SCE keine Anreisen oder Unterbringung selber
-organisieren oder finanzieren. Wir können Euch aber helfen.
+organisieren oder finanzieren. Wir können Dir aber helfen, indem Du eine
+Mitfahrgelegenheit oder Couchsurfing anbieten oder danach fragen kannst:
 
-[Können wir hier eine Wiki-Seite des Barcamps für MfG-Vermittlung einrichten?]
+Mitfahrgelegenheiten:
+https://url.c3s.cc/fahren
 
-  öffentliche (!) mitfahrgelegenheiten-liste:
-  https://pad.c3s.cc/mitfahrgelegenheiten_barcamp_gv_2014
-
-
-Wo geht's zur Anmeldung?
-
-Dies ist Euer individueller Link zur Anmeldung:
+Couchsurfing:
+https://url.c3s.cc/schlafen
 
 
-  **************** W I C H T I G  ****************************************
-  *
-  *  {0}
-  *
-  ************************************************************************
+Wo gehts zur Anmeldung?
+=======================
+
+Dies ist Dein individueller Link zur Anmeldung:
 
 
-Bitte teilt uns dort bis zum 11. August mit, ob Ihr teilnehmt.
+*****************************  W I C H T I G  *****************************
+  
+  {0}
 
-DEUTLICHER HINWEIS AUF RASCHE ANMELDUNG - Orga, Kapazität
+Bitte teile uns dort rechtzeitig mit, ob Du teilnnimmst. Wir müssen umgehend
+wissen, ob die Location ausreichend groß ist. Wenn irgend möglich, antworte
+uns daher bitte bis zum 11. August.
 
-Auf der verlinkten Seite könnt Ihr separat die Teilnahme für die
+***************************************************************************
+
+Auf der verlinkten Seite kannst Du separat die Teilnahme für die
 Generalversammlung und das Barcamp bestätigen. Auch Essen und (natürlich)
-ein T-Shirt mit neuem Motiv für die tollen C3S-Tage am Rhein könnt Ihr Euch
+ein T-Shirt mit neuem Motiv für die tollen C3S-Tage am Rhein kannst Du Dir
 holen - die T-Shirt-Preise haben wir für die Veranstaltungen übrigens
 heruntergesetzt. ;-)
 
 
 
-Das war's! Versorgt uns mit Themenvorschlägen, plant Eure Fahrt - dann
-sehen wir uns Ende August in Düsseldorf und Köln! Bei Fragen könnt Ihr Euch
-an info@c3s.cc wenden oder auch unsere neue Xing-Community nutzen:
-http://url.c3s.cc/xing
+Das wars! Versorge uns mit Themenvorschlägen, plane Deine Fahrt - dann sehen
+wir uns Ende August in Düsseldorf und Köln! Bei Fragen kannst Du Dich wie
+immer an info@c3s.cc wenden oder auch unsere neue Xing-Community nutzen:
+
+https://url.c3s.cc/xing
 
 
-Wir freuen uns drauf.
+Wir freuen uns auf Dich & Deine Ideen!
 
-Das C3S-Team
+Dein C3S-Team
 
 
 ====================
 
-[1] URL Satzung
-[2] Wegbeschreibung/URL Fritz Thyssen Stiftung / Robert Ellscheid Saal
-[3] URL: Was ist ein Barcamp?
-[4] Wegbeschreibung/URL C3S HQ
-[5] Wegbeschreibung/URL Millowitsch-Theater
-[6] Wegbeschreibung/URL Location Party
--> [2], [5], [6] können auf einer einzigen Karte dargestellt werden
+[1] Satzung der C3S SCE: https://url.c3s.cc/satzung
+[2] Karte Fritz Thyssen Stiftung: https://url.c3s.cc/fritzthyssen
+[3] Was ist ein Barcamp? https://url.c3s.cc/bcerklaerung
+[4] Karte C3S HQ (Barcamp): https://url.c3s.cc/c3shq
+[5] Karte Millowitsch-Theater (Generalversammlung): https://url.c3s.cc/millowitsch
+[6] Karte CAMPI Volksbühne (Party): https://url.c3s.cc/campi
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -322,10 +340,10 @@ Best wishes :: The C3S Team
         recipients=[_m.email],
         body=_body
     )
-    print(message.subject)
-    print(message.body)
+    #print(message.subject)
+    #print(message.body)
     mailer = get_mailer(request)
-    #mailer.send(message)
+    mailer.send(message)
     #_m._token = _looong_token
     _m.email_invite_flag_bcgv14 = True
     _m.email_invite_date_bcgv14 = datetime.now()
