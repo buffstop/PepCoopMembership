@@ -29,11 +29,11 @@ from pyramid_mailer.message import Message
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPFound
-#from pyramid.security import (
-#    authenticated_userid,
+from pyramid.security import (
+    authenticated_userid,
     #forget,
     #remember,
-#)
+)
 #from pyramid.url import route_url
 
 #from pyramid_mailer import get_mailer
@@ -167,7 +167,7 @@ def staff_view(request):
 
 best,
 your membership tool''' % (_staffer.login,
-                           request.authenticated_userid))
+                           authenticated_userid(request)))
             message = Message(
                 subject='[C3S Yes] staff was deleted.',
                 sender='noreply@c3s.cc',
@@ -209,7 +209,7 @@ the password of %s was changed by %s.
 
 best,
 your membership tool''' % (existing.login,
-                           request.authenticated_userid))
+                           authenticated_userid(request)))
             message = Message(
                 subject='[C3S Yes] staff password changed.',
                 sender='noreply@c3s.cc',
@@ -235,7 +235,7 @@ your membership tool''' % (existing.login,
 
 best,
 your membership tool''' % (staffer.login,
-                           request.authenticated_userid))
+                           authenticated_userid(request)))
             message = Message(
                 subject='[C3S Yes] staff was added.',
                 sender='noreply@c3s.cc',
