@@ -266,6 +266,16 @@ Wer nicht möchte, dass sein Redebeitrag aufgezeichnet wird, kann dem vor
 Beginn seines/ihres Beitrags widersprechen.
 
 
+OpenPGP Key-Signing-Party
+=========================
+
+Wenn Du bereits Deine Emails mit OpenPGP verschlüsselst, kannst Du nach
+Ende der Generalversammlung die Party zum gegenseitigen Key-Signing
+nutzen. Alle Infos dazu findest Du in Kürze im Wiki:
+
+https://url.c3s.cc/barcamp2014
+
+
 Anreise und Unterbringung
 =========================
 
@@ -503,6 +513,18 @@ archived internally as an appendix to the minutes.
 
 Those who do not wish their speech contributions to be recorded, may
 veto before commencing to speak.
+
+
+OpenPGP Key-Signing-Party
+=========================
+
+If you already use OpenPGP to encrypt your e-mails you may take the
+opportunity for a round of key-signing after the assembly. More
+information will be available soon in our wiki:
+
+https://url.c3s.cc/barcamp2014
+
+(Please ask for access: wiki@c3s.cc)
 
 
 Travel and accommodation
