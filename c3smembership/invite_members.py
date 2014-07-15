@@ -124,8 +124,8 @@ Die Anmeldung beginnt um 12:00 Uhr im Foyer des Millowitsch-Theaters.
 
 Bitte komme zeitig, um Verzögerungen zu vermeiden, da wir Dir erst
 Material aushändigen müssen. Die Teilnahme ist selbstverständlich
-kostenlos. Bitte teile uns bis zum 11.08.2014 über dieses Formular mit,
-ob Du teilnimmst oder nicht:
+kostenlos. Bitte teile uns möglichst bis zum 11.08.2014 über dieses
+Formular mit, ob Du teilnimmst oder nicht:
 
 {0}
 
@@ -153,23 +153,22 @@ Veranstaltungen: Ablauf und Rahmenprogramm
             steht Rede und Antwort"
             Fritz Thyssen Stiftung / Robert Ellscheid Saal [2]
             Apostelnkloster 13-15, 50672 Köln
-            Uhrzeit wird hier angekündigt:
-            http://c-o-pop.de/convention/programm/
+            14:30 - 15:30 Uhr
             Tickets zur c/o pop sind bei uns zum vergünstigten Preis
             von € 50 erhältlich (bitte Mail an office@c3s.cc senden).
 
 22.08.2014: [C3S SCE] Barcamp 2014 [3]
             Alter Bahnhof Düsseldorf-Gerresheim [4]
             Heyestr. 194, 40625 Düsseldorf
-            12:00 Uhr bis 20:00 Uhr
-            Teilnahme € 9,00 // Teilnahme inkl. Essen € 19,00
+            12:00 - 20:00 Uhr
+            Teilnahme € 9,00 // Teilnahme inkl. Essen € 20,00
             Voranmeldung erforderlich:
             {0}
 
 23.08.2014: [C3S SCE] 1. Generalversammlung der C3S SCE
             Millowitsch-Theater [5]
             Aachener Straße 5, 50674 Köln
-            14:00 Uhr bis 18:00 Uhr (Verlängerung möglich)
+            14:00 - 18:00 Uhr (Verlängerung möglich)
             Akkreditierung ab 12:00 Uhr
             Eintritt frei
             Voranmeldung erforderlich:
@@ -275,6 +274,8 @@ nutzen. Alle Infos dazu findest Du in Kürze im Wiki:
 
 https://url.c3s.cc/barcamp2014
 
+(Zugang bitte erfragen: wiki@c3s.cc)
+
 
 Anreise und Unterbringung
 =========================
@@ -372,9 +373,9 @@ Registration will commence at 12 noon in the foyer of the Millowitsch
 Theater.
 
 Please be punctual in order to avoid delays, because there is material
-to be distributed to you. Of course, participation is free, Please let
-us know until August 11th, 2014, via this form, whether you will attend
-or not:
+to be distributed to you. Of course, participation is free. If possible,
+please let us know until August 11th, 2014, via this form, whether you
+will attend or not:
 
 {0}
 
@@ -401,15 +402,14 @@ Events: Agenda and supporting program
                   answers your questions"
                   Fritz Thyssen Stiftung / Robert Ellscheid Saal [2]
                   Apostelnkloster 13-15, 50672 Köln
-                  The time will be announced here:
-                  http://c-o-pop.de/convention/programm/
+                  2:30 pm - 3:30 pm
                   Tickets for the c/o pop are available at a discount
                   rate of € 50 (please send an e-mail to office@c3s.cc).
 
 22nd August 2014: [C3S SCE] Barcamp 2014 [3]
                   Alter Bahnhof Düsseldorf-Gerresheim [4]
                   Heyestraße. 194, 40625 Düsseldorf
-                  12 noon until 8 pm
+                  12:00 am - 8:00 pm
                   Participation € 9,00 // Participation and food € 19,00
                   Advance reservation required:
                   {0}
@@ -417,8 +417,8 @@ Events: Agenda and supporting program
 23rd August 2014: [C3S SCE] 1. General Assembly of the C3S SCE
                   Millowitsch Theater [5]
                   Aachener Straße 5, 50674 Köln
-                  2 pm until 6 pm (extension possible)
-                  Accrediting commences at 12 noon
+                  2:00 pm - 6:00 pm (extension possible)
+                  Accrediting commences at 12:00 am
                   Admission free
                   Advance reservation required:
                   {0}
@@ -426,7 +426,7 @@ Events: Agenda and supporting program
 23rd August 2014: [C3S SCE] Party with DJ - open for all
                   CAMPI Volksbühne (next to the Millowitsch Theater)
                   Aachener Straße 5, 50674 Köln
-                  from 5 pm
+                  from 5:00 pm
                   Admission free
 
 
@@ -480,12 +480,12 @@ rights. According to § 13 (6), sentence 3, of the articles of
 association, only members of the cooperative, their spouses, parents,
 children or siblings are allowed to become authorized representatives of
 absent members. Registered civil partners are treated as spouses. If you
-cancel your participation, you may register a representatives online --
+cancel your participation, you may register a representative online --
 read more at:
 
 {0}
 
-Please make sure that your representatives brings a written
+Please make sure that your representative brings a written
 authorization signed by you. One representative may represent no more
 than two members with voting power. You can find a blank form for the
 authorization here:
@@ -579,7 +579,7 @@ Your C3S team
 
 [1] Articles of association of the C3S SCE: https://url.c3s.cc/statutes
 [2] Map of Fritz Thyssen Stiftung: https://url.c3s.cc/fritzthyssen
-[3] What is a barcamp? https://url.c3s.cc/bcdefinition
+[3] What is a barcamp? https://url.c3s.cc/bcexplanation
 [4] Map of C3S HQ (Barcamp): https://url.c3s.cc/c3shq
 [5] Map of Millowitsch Theater (General Assembly):
     https://url.c3s.cc/millowitsch
