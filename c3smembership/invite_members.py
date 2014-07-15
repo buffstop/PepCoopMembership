@@ -410,7 +410,7 @@ Events: Agenda and supporting program
                   Alter Bahnhof Düsseldorf-Gerresheim [4]
                   Heyestraße. 194, 40625 Düsseldorf
                   12:00 am - 8:00 pm
-                  Participation € 9,00 // Participation and food € 19,00
+                  Participation € 9,00 // Participation and food € 20,00
                   Advance reservation required:
                   {0}
 
