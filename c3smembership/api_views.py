@@ -48,4 +48,5 @@ def api_userinfo(request):
         'firstname': _m.firstname,
         'lastname': _m.lastname,
         'email': _m.email,
+        'mtype': _m.membership_type,
     }
