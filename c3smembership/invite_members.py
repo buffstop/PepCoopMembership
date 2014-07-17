@@ -204,9 +204,9 @@ Begrüßung der Anwesenden
 
 # 4 Anträge auf Satzungsänderung
 
-## 4.1 Satzungsänderungsantrag zu § 16 Abs. 3
+## 4.1 Satzungsänderungsantrag zu § 13 Abs. 6
 In § 13 Abs. 6 S. 3 werden hinter dem Wort "Ehegatten" die Worte: "oder
-eingetragene Lebenspartner" eingefügt. § 16 Abs. 3 Satz3 erhält damit
+eingetragene Lebenspartner" eingefügt. § 13 Abs. 6 Satz3 erhält damit
 folgende Fassung: 
 
 "Bevollmächtigte können nur Mitglieder der Genossenschaft, Ehegatten
