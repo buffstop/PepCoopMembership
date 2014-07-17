@@ -407,17 +407,18 @@ https://url.c3s.cc/millowitsch
 
 Hello {1} {2},
 
-the
+the board of directors of the
 
 Cultural Commons Collecting Society SCE
 mit beschränkter Haftung
 - C3S SCE -
 Heyestraße 194
 40625 Düsseldorf
+Germany
 
 invites you
 
-* to the first annual general assembly, according to § 13 of the
+* to the 1. statutory general assembly, according to § 13 of the
   articles of association of the C3S SCE [1],
 * to the C3S barcamp 2014,
 * to the C3S party.
@@ -477,7 +478,7 @@ Events: Agenda and supporting program
                   Alter Bahnhof Düsseldorf-Gerresheim [4]
                   Heyestraße. 194, 40625 Düsseldorf
                   12:00 am - 8:00 pm
-                  Participation € 9,00 // Participation and food € 20,00
+                  Participation € 9,00 // Participation and food € 21,00
                   Advance reservation required:
                   {0}
 
@@ -486,7 +487,7 @@ Events: Agenda and supporting program
                   Aachener Straße 5, 50674 Köln
                   2:00 pm - 6:00 pm (extension possible)
                   Accrediting commences at 12:00 am
-                  Admission free
+                  Admission free // Food sold by CAMPI
                   Advance reservation required:
                   {0}
 
@@ -519,6 +520,14 @@ Welcoming address
 ## 3.5 Discharge of the executive directors and the board of directors
 
 # 4 Proposals for amendments to the articles of association
+## 4.1 Proposal for amendment to § 13 (6), sentence 3
+In § 13 (6), sentence 3, following the word „spouses“ the words: „or
+registered civil partners“ will be inserted. § 13 (6), sentence 3, gets
+the following wording: 
+
+"Only members of the co-operative, or spouses or registered civil
+partners, parents, children or siblings of a member can be
+representatives."
 
 # 5 Report from the C3S barcamp 2014
 
@@ -541,14 +550,32 @@ midnight MET/CET) by sending them in written form to agenda@c3s.cc.
 Organizational information
 ==========================
 
+Participation
+-------------
 Entitled to participate in the general assembly are only members of the
 C3S SCE and authorized representatives of absent members with voting
-rights. According to § 13 (6), sentence 3, of the articles of
-association, only members of the cooperative, their spouses, parents,
-children or siblings are allowed to become authorized representatives of
-absent members. Registered civil partners are treated as spouses. If you
-cancel your participation, you may register a representative online --
-read more at:
+rights.
+
+Authorized representatives
+--------------------------
+In case changes in the articles of association are announced, at least
+50% of the total number of registered members entitled to vote have to
+be present or represented (§ 13 Abs. 4 Satz 2 der Satzung). If you are
+not able to attend but you are entitled to vote, please choose a
+representing person who has to provide an authorization by you:
+
+https://url.c3s.cc/authorization
+
+Please consider, no representative may represent more than two members
+by authorization. Therefore, you should ask your representative if he
+or she represents other members as well. Authorizations must be provided
+in written form and original copy only; we can’t accept a fax or scan!
+
+According to § 13 (6), sentence 3, of the articles of association, only
+members of the cooperative, their spouses, parents, children or siblings
+are allowed to become authorized representatives of absent members.
+Registered civil partners are treated as spouses. If you cancel your
+participation, you may register a representative online -- read more at:
 
 {0}
 
@@ -559,6 +586,15 @@ authorization here:
 
 https://url.c3s.cc/authorization
 
+Annual report
+-------------
+By 17th August, 2014, you will receive the annual report and the
+detailed agenda for download. Based on the information in the annual
+report, the general assembly will decide about the discharge of the
+executive directors and the board of directors.
+
+BarCamp
+-------
 In order to prepare the general assembly and to shift forward
 discussions, we will organize a barcamp [2] in Düsseldorf on August
 22nd. You will receive a summary of the results of the barcamp when you
@@ -567,13 +603,13 @@ the topics that are to be discussed during the barcamp:
 
 https://url.c3s.cc/barcamp2014
 
-(Please ask for access: wiki@c3s.cc)
+The number of participants at the BarCamp is limited to 200 persons for
+capacity reasons. It’s worth to register early - from August 11th,
+2014, no registrations will be possible anymore. There is no sale of
+tickets at the door!
 
-Before the general assembly you will receive the annual report and the
-detailed agenda for download. Based on the information in the annual
-report, the general assembly will decide about the discharge of the
-executive directors and the board of directors.
-
+Audio recording
+---------------
 An audio recording of the general assembly will be made in order to
 ensure error-free minutes. The recording will not be published, but
 archived internally as an appendix to the minutes.
@@ -590,8 +626,6 @@ opportunity for a round of key-signing after the assembly. More
 information will be available soon in our wiki:
 
 https://url.c3s.cc/barcamp2014
-
-(Please ask for access: wiki@c3s.cc)
 
 
 Travel and accommodation
@@ -617,7 +651,7 @@ This is your personal registration link:
 
 Please let us know in time whether you will participate. We must know as
 soon as possible whether the location will be large enough. If possible,
-please respond by August 11th at the latest.
+please respond by August 11th, 2014, at the latest.
 
 *****************************************************************
 
@@ -627,7 +661,10 @@ course) a t-shirt with a new image for the great days with the C3S on
 the banks of the river Rhine -- we have reduced our t-shirt prices for
 these events. 
 
-
+If you want to be sure to take a t-shirt home from either the BarCamp or
+the general assembly, save the date for pre-order: 11th August, 2014.
+For organizational reasons, there is no pre-order possible from then on.
+On location, we will only be able to sell the last few remaining items.
 
 That's all! Let us know your proposals for topics, plan your trip -- and
 we shall meet at the end of August in Düsseldorf and Cologne! If you
@@ -639,10 +676,34 @@ https://url.c3s.cc/xing
 
 We look forward to you and your ideas!
 
-Your C3S team
+The board of directors of the C3S SCE
+Meinhard Starostik - Chairman
 
 
 ====================
+
+The board of directors of the C3S SCE is:
+
+Executive Directors:
+* m.eik michalke (Cultural Politics)
+* Wolfgang Senges (Business Development & Partnerships)
+
+Chairmen:
+Meinhard Starostik, Chairman (Business Law & Accounting)
+Danny Bruder, stellv. Vorsitzender des VR (Network Artists & Culture)
+
+Further members of the board:
+* Tanja Mark (Marketing & PR)
+* Florian Posdziech (Web Development)
+* Christoph Scheid (Technology)
+* Sven Scholz (Communikation)
+* Holger Schwetter (Finance & Research)
+* Michael Weller (Copyright)
+* Veit Winkler (Internal Management & Internationalization)
+
+====================
+
+Links:
 
 [1] Articles of association of the C3S SCE: https://url.c3s.cc/statutes
 [2] Map of Fritz Thyssen Stiftung: https://url.c3s.cc/fritzthyssen
