@@ -204,15 +204,6 @@ Begrüßung der Anwesenden
 
 # 4 Anträge auf Satzungsänderung
 
-## 4.1 Satzungsänderungsantrag zu § 13 Abs. 6
-In § 13 Abs. 6 S. 3 werden hinter dem Wort "Ehegatten" die Worte: "oder
-eingetragene Lebenspartner" eingefügt. § 13 Abs. 6 Satz3 erhält damit
-folgende Fassung: 
-
-"Bevollmächtigte können nur Mitglieder der Genossenschaft, Ehegatten
-oder eingetragene Lebenspartner, Eltern, Kinder oder Geschwister eines
-Mitglieds sein."
-
 # 5 Bericht vom C3S-Barcamp 2014
 
 # 6 Antrag auf Beschluss zur Einrichtung eines Beirats
@@ -291,9 +282,10 @@ besprochen werden sollen, kannst Du hier im Wiki einsehen und ergänzen:
 
 https://url.c3s.cc/barcamp2014
 
-Die Anzahl der Teilnehmer am Barcamp ist aus Kapazitätsgründen beschränkt
-auf 200 Personen. Daher bitte frühzeitig anmelden - ab 11. August 2014
-ist keine Anmeldung mehr möglich. Tagestickets sind nicht verfügbar!
+Die Anzahl der Teilnehmer am Barcamp ist aus Kapazitätsgründen
+beschränkt auf 200 Personen. Daher bitte frühzeitig anmelden - ab
+11. August 2014 ist keine Anmeldung mehr möglich. Tagestickets sind
+nicht verfügbar!
 
 
 Audio-Protokoll
@@ -520,14 +512,6 @@ Welcoming address
 ## 3.5 Discharge of the executive directors and the board of directors
 
 # 4 Proposals for amendments to the articles of association
-## 4.1 Proposal for amendment to § 13 (6), sentence 3
-In § 13 (6), sentence 3, following the word „spouses“ the words: „or
-registered civil partners“ will be inserted. § 13 (6), sentence 3, gets
-the following wording: 
-
-"Only members of the co-operative, or spouses or registered civil
-partners, parents, children or siblings of a member can be
-representatives."
 
 # 5 Report from the C3S barcamp 2014
 
