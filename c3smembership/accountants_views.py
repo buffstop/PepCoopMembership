@@ -769,8 +769,11 @@ def switch_sig(request):
     )
 
     return HTTPFound(
-        request.route_url('dashboard',
-                          number=dashboard_page, order=order, orderby=order_by))
+        request.route_url(
+            'dashboard',
+            number=dashboard_page, order=order, orderby=order_by)
+        + '#member_' + str(_member.id)
+    )
 
 
 @view_config(permission='manage',
@@ -796,7 +799,9 @@ def delete_entry(request):
         request.route_url(
             'dashboard_only',
             _query={'message': 'Member with id {0} was deleted.'.format(
-                    memberid)}))
+                    memberid)}
+        ) + '#member_' + str(_member.id)
+    )
 
 
 @view_config(permission='manage',
@@ -827,8 +832,11 @@ def switch_pay(request):
         )
     )
     return HTTPFound(
-        request.route_url('dashboard',
-                          number=dashboard_page, order=order, orderby=order_by))
+        request.route_url(
+            'dashboard',
+            number=dashboard_page, order=order, orderby=order_by
+        ) + '#member_' + str(_member.id)
+    )
 
 
 @view_config(renderer='templates/detail.pt',
