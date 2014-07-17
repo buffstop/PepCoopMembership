@@ -91,7 +91,7 @@ def invite_member_BCGV(request):
 
 Hallo {1} {2},
 
-die
+der Verwaltungsrat der
 
 Cultural Commons Collecting Society SCE
 mit beschränkter Haftung
@@ -101,7 +101,7 @@ Heyestraße 194
 
 lädt Dich ein
 
-* zur ersten jährlichen Generalversammlung nach § 13 der Satzung der C3S
+* zur 1. ordentlichen Generalversammlung nach § 13 der Satzung der C3S
   SCE [1],
 * zum C3S-Barcamp 2014 und
 * zur C3S-Party.
@@ -113,8 +113,8 @@ Hinweise.
 Die Generalversammlung
 ======================
 
-Die erste Generalversammlung der C3S SCE findet im Rahmen der c/o pop
-convention in Köln statt:
+Die erste Generalversammlung der C3S SCE findet statt im Rahmen der
+c/o pop convention in Köln:
 
 am     23. August 2014
 von    14:00 bis 18:00 Uhr (Verlängerung möglich)
@@ -161,7 +161,7 @@ Veranstaltungen: Ablauf und Rahmenprogramm
             Alter Bahnhof Düsseldorf-Gerresheim [4]
             Heyestr. 194, 40625 Düsseldorf
             12:00 - 20:00 Uhr
-            Teilnahme € 9,00 // Teilnahme inkl. Essen € 20,00
+            Teilnahme € 9,00 // Teilnahme inkl. Essen € 21,00
             Voranmeldung erforderlich:
             {0}
 
@@ -204,6 +204,15 @@ Begrüßung der Anwesenden
 
 # 4 Anträge auf Satzungsänderung
 
+## 4.1 Satzungsänderungsantrag zu § 16 Abs. 3
+In § 16 Abs. 3 S. 3 werden hinter dem Wort "Ehegatten" die Worte: "oder
+eingetragene Lebenspartner" eingefügt. § 16 Abs. 3 Satz3 erhält damit
+folgende Fassung: 
+
+"Bevollmächtigte können nur Mitglieder der Genossenschaft, Ehegatten
+oder eingetragene Lebenspartner, Eltern, Kinder oder Geschwister eines
+Mitglieds sein."
+
 # 5 Bericht vom C3S-Barcamp 2014
 
 # 6 Antrag auf Beschluss zur Einrichtung eines Beirats
@@ -225,9 +234,30 @@ agenda@c3s.cc einreichen.
 Organisatorisches
 =================
 
+
+Teilnahme
+---------
 Teilnahmeberechtigt an der Generalversammlung sind nur Mitglieder der
 C3S SCE und Bevollmächtigte nicht anwesender, aber stimmberechtigter
-Mitglieder. Bevollmächtigte dürfen nach § 13 (6), Satz 3 der Satzung nur
+Mitglieder.
+
+
+Stellvertretende Bevollmächtigte
+--------------------------------
+Falls eine Satzungsänderung beantragt wird, müssen mindestens 50% der
+stimmberechtigten Mitglieder vertreten sein (§ 13 Abs. 4 Satz 2 der
+Satzung). Solltest Du nicht teilnehmen können und stimmberechtigt sein,
+also nutzendes Mitglied, erteile bitte eine Vollmacht:
+
+https://url.c3s.cc/vollmacht
+
+Bitte bedenke, dass jede(r) Bevollmächtigte nur zwei Mitglieder per
+Vollmacht vertreten darf. Frage also vorher nach, ob der/die
+Bevollmächtigte schon andere Personen vertritt. Vollmachten müssen
+schriftlich und im Original vorgelegt werden; Fax oder Scan reichen
+nicht aus!
+
+Bevollmächtigte dürfen nach § 13 (6), Satz 3 der Satzung nur
 Mitglieder der Genossenschaft, Ehegatten, Eltern, Kinder oder
 Geschwister eines Mitglieds sein. Eingetragene Lebenspartner werden wie
 Ehegatten behandelt. Du kannst online bei Absage Deiner Teilnahme
@@ -235,13 +265,24 @@ eine(n) Vertreter(in) benennen - mehr dazu unter:
 
 {0}
 
-Bitte denke daran, dass der/die Bevollmächtigte eine von Dir
-unterzeichnete schriftliche Vollmacht mitbringen muss. Eine Person kann
-maximal zwei Stimmberechtigte vertreten. Einen Vordruck für die
-Vollmacht findest Du hier:
+Bitte denke daran, dass der/die Bevollmächtigte die von Dir
+unterzeichnete schriftliche Vollmacht mitbringen muss. Einen Vordruck
+für die Vollmacht findest Du hier:
 
 https://url.c3s.cc/vollmacht
 
+
+Geschäftsbericht
+----------------
+Am 17.08.2014 erhältst Du den Geschäftsbericht sowie eine detaillierte
+Agenda mit allen Anträgen auf Satzungsänderung und Beschlussanträgen
+zum Download. Auf der Basis der Informationen im Geschäftsbericht
+entscheidet die Generalversammlung über die Entlastung des
+Verwaltungsrats und der Geschäftsführenden Direktoren.
+
+
+Barcamp
+-------
 Um die Generalversammlung vorzubereiten und Diskussionen vorzuverlagern,
 werden wir am 22. August ein Barcamp [2] in Düsseldorf organisieren.
 Eine Zusammenfassung der Ergebnisse des Barcamps wird Dir bei der
@@ -250,13 +291,13 @@ besprochen werden sollen, kannst Du hier im Wiki einsehen und ergänzen:
 
 https://url.c3s.cc/barcamp2014
 
-(Zugang bitte erfragen: wiki@c3s.cc)
+Die Anzahl der Teilnehmer am Barcamp ist aus Kapazitätsgründen beschränkt
+auf 200 Personen. Daher bitte frühzeitig anmelden - ab 11. August 2014
+ist keine Anmeldung mehr möglich. Tagestickets sind nicht verfügbar!
 
-Vor der Generalversammlung erhältst Du den Geschäftsbericht sowie eine
-detaillierte Agenda zum Download. Auf der Basis der Informationen im
-Geschäftsbericht entscheidet die Generalversammlung über die Entlastung
-des Verwaltungsrats und der Geschäftsführenden Direktoren.
 
+Audio-Protokoll
+---------------
 Während der Generalversammlung wird ein Audio-Mitschnitt aufgezeichnet,
 um ein fehlerfreies Protokoll zu gewährleisten. Der Mitschnitt wird
 nicht veröffentlicht, aber intern als Anhang zum Protokoll archiviert.
@@ -266,19 +307,16 @@ Beginn seines/ihres Beitrags widersprechen.
 
 
 OpenPGP Key-Signing-Party
-=========================
-
+-------------------------
 Wenn Du bereits Deine Emails mit OpenPGP verschlüsselst, kannst Du nach
 Ende der Generalversammlung die Party zum gegenseitigen Key-Signing
 nutzen. Alle Infos dazu findest Du in Kürze im Wiki:
 
 https://url.c3s.cc/barcamp2014
 
-(Zugang bitte erfragen: wiki@c3s.cc)
-
 
 Anreise und Unterbringung
-=========================
+-------------------------
 
 Leider können wir als C3S SCE keine Anreisen oder Unterbringung selber
 organisieren oder finanzieren. Wir können Dir aber helfen, indem Du eine
@@ -300,7 +338,7 @@ Dies ist Dein individueller Link zur Anmeldung:
 
 Bitte teile uns dort rechtzeitig mit, ob Du teilnnimmst. Wir müssen
 umgehend wissen, ob die Location ausreichend groß ist. Wenn irgend
-möglich, antworte uns daher bitte bis zum 11. August.
+möglich, antworte uns daher bitte bis zum 11. August 2014.
 
 ***********************************************************************
 
@@ -310,6 +348,11 @@ Generalversammlung und das Barcamp bestätigen. Auch Essen und
 kannst Du Dir holen - die T-Shirt-Preise haben wir für die
 Veranstaltungen übrigens heruntergesetzt. 
 
+Wenn Du sicher sein möchtest, von Deiner Teilnahme an Barcamp oder
+Generalversammlung ein T-Shirt mit nach Hause zu nehmen, solltest Du es
+unbedingt bis zum 11. August 2014 vorbestellen. Danach ist aus
+organisatorischen Gründen keine Vorbestellung mehr möglich. Wir werden
+nur einzelne Restposten zum Verkauf anbieten können.
 
 
 Das wars! Versorge uns mit Themenvorschlägen, plane Deine Fahrt - dann
@@ -322,10 +365,34 @@ https://url.c3s.cc/xing
 
 Wir freuen uns auf Dich & Deine Ideen!
 
-Dein C3S-Team
+Der Verwaltungsrat der C3S SCE
+Meinhard Starostik - Vorsitzender
 
 
 ====================
+
+Der Verwaltungsrat der C3S SCE setzt sich zusammen aus:
+
+Geschäftsführende Direktoren:
+* m.eik michalke (Kulturpolitik)
+* Wolfgang Senges (Geschäftsentwicklung & Partnerschaften)
+
+Vorsitz:
+Meinhard Starostik, Vorsitzender des VR (Wirtschaftsrecht & Rechnungswesen)
+Danny Bruder, stellv. Vorsitzender des VR (Netzwerk Kunst & Kultur)
+
+Weitere Mitglieder:
+* Tanja Mark (Marketing & PR)
+* Florian Posdziech (Schriftführer des VR // Webentwicklung)
+* Christoph Scheid (Technologie)
+* Sven Scholz (Kommunikation)
+* Holger Schwetter (Finanzierung & Forschung)
+* Michael Weller (Urheberrecht)
+* Veit Winkler (Interne Organisation & Internationalisierung)
+
+====================
+
+Links:
 
 [1] Satzung der C3S SCE: https://url.c3s.cc/satzung
 [2] Karte Fritz Thyssen Stiftung: https://url.c3s.cc/fritzthyssen
