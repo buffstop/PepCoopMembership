@@ -205,7 +205,7 @@ Begrüßung der Anwesenden
 # 4 Anträge auf Satzungsänderung
 
 ## 4.1 Satzungsänderungsantrag zu § 16 Abs. 3
-In § 16 Abs. 3 S. 3 werden hinter dem Wort "Ehegatten" die Worte: "oder
+In § 13 Abs. 6 S. 3 werden hinter dem Wort "Ehegatten" die Worte: "oder
 eingetragene Lebenspartner" eingefügt. § 16 Abs. 3 Satz3 erhält damit
 folgende Fassung: 
 
