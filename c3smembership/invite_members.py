@@ -707,9 +707,12 @@ Links:
     message = Message(
         subject=(u'[C3S] Invitation to Barcamp and Assembly '
                  u'/ Einladung zu Barcamp und Generalversammlung'),
-        sender='yes@c3s.cc',
+        sender='yes@office.c3s.cc',
         recipients=[_m.email],
-        body=_body
+        body=_body,
+        extra_headers={
+            'Reply-To': 'yes@c3s.cc',
+            }
     )
     #print(message.subject)
     #print(message.body)
