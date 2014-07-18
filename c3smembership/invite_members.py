@@ -197,12 +197,11 @@ Begrüßung der Anwesenden
 ## 3.2 Feststellung des Jahresabschlusses
 ## 3.3 Entscheidung über die Verwendung des Jahresüberschusses und die
        Verrechnung des Jahresfehlbetrages
-## 3.4 Entgegennahme der Berichte über die genossenschaftliche Prüfung
-       und des Gründungsberichts
-## 3.5 Entlastung der geschäftsführenden Direktoren und des
+## 3.4 Entlastung der geschäftsführenden Direktoren und des
        Verwaltungsrates
 
 # 4 Anträge auf Satzungsänderung
+Zurzeit liegen uns keine Anträge auf Satzungsänderung vor.
 
 # 5 Bericht vom C3S-Barcamp 2014
 
@@ -240,7 +239,7 @@ stimmberechtigten Mitglieder vertreten sein (§ 13 Abs. 4 Satz 2 der
 Satzung). Solltest Du nicht teilnehmen können und stimmberechtigt sein,
 also nutzendes Mitglied, erteile bitte eine Vollmacht:
 
-https://url.c3s.cc/vollmacht
+https://url.c3s.cc/vmprivat
 
 Bitte bedenke, dass jede(r) Bevollmächtigte nur zwei Mitglieder per
 Vollmacht vertreten darf. Frage also vorher nach, ob der/die
@@ -260,7 +259,10 @@ Bitte denke daran, dass der/die Bevollmächtigte die von Dir
 unterzeichnete schriftliche Vollmacht mitbringen muss. Einen Vordruck
 für die Vollmacht findest Du hier:
 
-https://url.c3s.cc/vollmacht
+Privatpersonen: https://url.c3s.cc/vmprivat
+Unternehmen & Vereinigungen: https://url.c3s.cc/vmkoerperschaft
+
+Auch nicht-stimmberechtigte, investierende Mitglieder können sich vertreten lassen.
 
 
 Geschäftsbericht
@@ -300,7 +302,7 @@ Beginn seines/ihres Beitrags widersprechen.
 
 OpenPGP Key-Signing-Party
 -------------------------
-Wenn Du bereits Deine Emails mit OpenPGP verschlüsselst, kannst Du nach
+Wenn Du bereits Deine E-Mails mit OpenPGP verschlüsselst, kannst Du nach
 Ende der Generalversammlung die Party zum gegenseitigen Key-Signing
 nutzen. Alle Infos dazu findest Du in Kürze im Wiki:
 
@@ -309,7 +311,6 @@ https://url.c3s.cc/barcamp2014
 
 Anreise und Unterbringung
 -------------------------
-
 Leider können wir als C3S SCE keine Anreisen oder Unterbringung selber
 organisieren oder finanzieren. Wir können Dir aber helfen, indem Du eine
 Mitfahrgelegenheit oder Couchsurfing anbieten oder danach fragen kannst:
@@ -507,11 +508,10 @@ Welcoming address
 ## 3.2 Approval of the annual report
 ## 3.3 Decision on the use of the annual net profit and the accounting
        for the annual deficit
-## 3.4 Acceptance of the reports about the cooperative auditing and the
-       formation report
-## 3.5 Discharge of the executive directors and the board of directors
+## 3.4 Discharge of the executive directors and the board of directors
 
 # 4 Proposals for amendments to the articles of association
+Currently, there are no proposals for ammendments.
 
 # 5 Report from the C3S barcamp 2014
 
@@ -548,7 +548,7 @@ be present or represented (§ 13 Abs. 4 Satz 2 der Satzung). If you are
 not able to attend but you are entitled to vote, please choose a
 representing person who has to provide an authorization by you:
 
-https://url.c3s.cc/authorization
+https://url.c3s.cc/auprivate
 
 Please consider, no representative may represent more than two members
 by authorization. Therefore, you should ask your representative if he
@@ -568,7 +568,12 @@ authorization signed by you. One representative may represent no more
 than two members with voting power. You can find a blank form for the
 authorization here:
 
-https://url.c3s.cc/authorization
+https://url.c3s.cc/auprivate
+https://url.c3s.cc/aucorporate
+
+Also, members who are not entitled to vote (investing members) may
+choose an authorized representative.
+
 
 Annual report
 -------------
@@ -603,7 +608,7 @@ veto before commencing to speak.
 
 
 OpenPGP Key-Signing-Party
-=========================
+-------------------------
 
 If you already use OpenPGP to encrypt your e-mails you may take the
 opportunity for a round of key-signing after the assembly. More
@@ -613,7 +618,7 @@ https://url.c3s.cc/barcamp2014
 
 
 Travel and accommodation
-========================
+------------------------
 
 Unfortunately, the C3S SCE is unable to organize, or finance, travel and
 accommodation. But we can help you if you want to offer, or search for,
