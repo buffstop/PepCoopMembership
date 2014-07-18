@@ -477,155 +477,155 @@ class Shares(Base):
             total += s.number
         return total
 
-# table for relation between membership and shares
-membership_shares = Table(
-    'membership_shares', Base.metadata,
-    Column(
-        'membership_id', Integer, ForeignKey('memberships.id'),
-        primary_key=True, nullable=False),
-    Column(
-        'shares_id', Integer, ForeignKey('shares.id'),
-        primary_key=True, nullable=False)
-)
+# # table for relation between membership and shares
+# membership_shares = Table(
+#     'membership_shares', Base.metadata,
+#     Column(
+#         'membership_id', Integer, ForeignKey('memberships.id'),
+#         primary_key=True, nullable=False),
+#     Column(
+#         'shares_id', Integer, ForeignKey('shares.id'),
+#         primary_key=True, nullable=False)
+# )
 
 
-class Membership(Base):
-    '''
-    the database of memberships
+# class Membership(Base):
+#     '''
+#     the database of memberships
 
-    single submissions of the form are to be merged here
-    '''
-    __tablename__ = 'memberships'
-    id = Column(Integer, primary_key=True)
-    # personal information
-    firstname = Column(Unicode(255))
-    lastname = Column(Unicode(255))
-    email = Column(Unicode(255))
-    _password = Column('password', Unicode(60))
-    last_password_change = Column(
-        DateTime,
-        default=func.current_timestamp())
-    address1 = Column(Unicode(255))
-    address2 = Column(Unicode(255))
-    postcode = Column(Unicode(255))
-    city = Column(Unicode(255))
-    country = Column(Unicode(255))
-    locale = Column(Unicode(255))
-    date_of_birth = Column(Date(), nullable=False)
-    email_is_confirmed = Column(Boolean, default=False)
-    email_confirmed_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    email_confirm_code = Column(Unicode(255), unique=True)
-    # shares
-    shares = relationship(
-        Shares,
-        secondary=membership_shares,
-        backref="memberships"
-    )
-    #num_shares = Column(Integer())  # XXX TODO: check for number <= max_shares
-    date_of_membership = Column(DateTime(), nullable=False)
-    accountant_comment = Column(Unicode(255))
-    # membership information
-    membership_type = Column(Unicode(255))
-    member_of_colsoc = Column(Boolean, default=False)
-    name_of_colsoc = Column(Unicode(255))
+#     single submissions of the form are to be merged here
+#     '''
+#     __tablename__ = 'memberships'
+#     id = Column(Integer, primary_key=True)
+#     # personal information
+#     firstname = Column(Unicode(255))
+#     lastname = Column(Unicode(255))
+#     email = Column(Unicode(255))
+#     _password = Column('password', Unicode(60))
+#     last_password_change = Column(
+#         DateTime,
+#         default=func.current_timestamp())
+#     address1 = Column(Unicode(255))
+#     address2 = Column(Unicode(255))
+#     postcode = Column(Unicode(255))
+#     city = Column(Unicode(255))
+#     country = Column(Unicode(255))
+#     locale = Column(Unicode(255))
+#     date_of_birth = Column(Date(), nullable=False)
+#     email_is_confirmed = Column(Boolean, default=False)
+#     email_confirmed_date = Column(
+#         DateTime(), default=datetime(1970, 1, 1))
+#     email_confirm_code = Column(Unicode(255), unique=True)
+#     # shares
+#     shares = relationship(
+#         Shares,
+#         secondary=membership_shares,
+#         backref="memberships"
+#     )
+#     #num_shares = Column(Integer())  # XXX TODO: check for number <= max_shares
+#     date_of_membership = Column(DateTime(), nullable=False)
+#     accountant_comment = Column(Unicode(255))
+#     # membership information
+#     membership_type = Column(Unicode(255))
+#     member_of_colsoc = Column(Boolean, default=False)
+#     name_of_colsoc = Column(Unicode(255))
 
-    def __init__(self, firstname, lastname, email, password,
-                 address1, address2, postcode, city, country, locale,
-                 date_of_birth, email_is_confirmed,
-                 membership_type, member_of_colsoc, name_of_colsoc,
-                 date_of_membership=datetime.now(),
-                 ):
-        self.firstname = firstname
-        self.lastname = lastname
-        self.email = email
-        self.password = password
-        self.last_password_change = datetime.now()
-        self.address1 = address1
-        self.address2 = address2
-        self.postcode = postcode
-        self.city = city
-        self.country = country
-        self.locale = locale
-        self.date_of_birth = date_of_birth
-        self.email_is_confirmed = email_is_confirmed
-        self.date_of_membership = date_of_membership
-        self.membership_type = membership_type
-        self.member_of_colsoc = member_of_colsoc
-        if self.member_of_colsoc is True:
-            self.name_of_colsoc = name_of_colsoc
-        else:
-            self.name_of_colsoc = u''
+#     def __init__(self, firstname, lastname, email, password,
+#                  address1, address2, postcode, city, country, locale,
+#                  date_of_birth, email_is_confirmed,
+#                  membership_type, member_of_colsoc, name_of_colsoc,
+#                  date_of_membership=datetime.now(),
+#                  ):
+#         self.firstname = firstname
+#         self.lastname = lastname
+#         self.email = email
+#         self.password = password
+#         self.last_password_change = datetime.now()
+#         self.address1 = address1
+#         self.address2 = address2
+#         self.postcode = postcode
+#         self.city = city
+#         self.country = country
+#         self.locale = locale
+#         self.date_of_birth = date_of_birth
+#         self.email_is_confirmed = email_is_confirmed
+#         self.date_of_membership = date_of_membership
+#         self.membership_type = membership_type
+#         self.member_of_colsoc = member_of_colsoc
+#         if self.member_of_colsoc is True:
+#             self.name_of_colsoc = name_of_colsoc
+#         else:
+#             self.name_of_colsoc = u''
 
-    def _get_password(self):
-        return self._password
+#     def _get_password(self):
+#         return self._password
 
-    def _set_password(self, password):
-        self._password = hash_password(password)
+#     def _set_password(self, password):
+#         self._password = hash_password(password)
 
-    password = property(_get_password, _set_password)
-    password = synonym('_password', descriptor=password)
+#     password = property(_get_password, _set_password)
+#     password = synonym('_password', descriptor=password)
 
-    def get_num_shares(self):
-        num = 0
-        for s in self.shares:
-            num += s.number
-        return num
+#     def get_num_shares(self):
+#         num = 0
+#         for s in self.shares:
+#             num += s.number
+#         return num
 
-    num_shares = property(get_num_shares)
+#     num_shares = property(get_num_shares)
 
-    @classmethod
-    def get_number(cls):
-        """return number of members (by counting rows in table)"""
-        return DBSession.query(cls).count()
+#     @classmethod
+#     def get_number(cls):
+#         """return number of members (by counting rows in table)"""
+#         return DBSession.query(cls).count()
 
-    @classmethod
-    def get_by_id(cls, _id):
-        """return one member by id"""
-        return DBSession.query(cls).filter(cls.id == _id).first()
+#     @classmethod
+#     def get_by_id(cls, _id):
+#         """return one member by id"""
+#         return DBSession.query(cls).filter(cls.id == _id).first()
 
-    # @classmethod
-    # def num_ms_nat(cls):
-    #     'number of memberships of natural persons'
-    #     return DBSession.query(cls).filter(cls.membership_type == 'normal').first()
+#     # @classmethod
+#     # def num_ms_nat(cls):
+#     #     'number of memberships of natural persons'
+#     #     return DBSession.query(cls).filter(cls.membership_type == 'normal').first()
 
-    # @classmethod
-    # def num_ms_jur(cls):
-    #     'number of memberships of natural persons'
-    #     return DBSession.query(cls).filter(
-    #              cls.membership_type == 'normal').first()
-    @classmethod
-    def num_ms_norm(cls):
-        'number of memberships of natural persons'
-        return DBSession.query(cls).filter(
-            cls.membership_type == u'normal').count()
+#     # @classmethod
+#     # def num_ms_jur(cls):
+#     #     'number of memberships of natural persons'
+#     #     return DBSession.query(cls).filter(
+#     #              cls.membership_type == 'normal').first()
+#     @classmethod
+#     def num_ms_norm(cls):
+#         'number of memberships of natural persons'
+#         return DBSession.query(cls).filter(
+#             cls.membership_type == u'normal').count()
 
-    @classmethod
-    def num_ms_invest(cls):
-        'number of memberships of natural persons'
-        return DBSession.query(cls).filter(
-            cls.membership_type == u'investing').count()
+#     @classmethod
+#     def num_ms_invest(cls):
+#         'number of memberships of natural persons'
+#         return DBSession.query(cls).filter(
+#             cls.membership_type == u'investing').count()
 
-    @classmethod
-    def membership_listing(cls, order_by, how_many=10, offset=0, order="asc"):
-        try:
-            attr = getattr(cls, order_by)
-            order_function = getattr(attr, order)
-        except:
-            raise Exception("Invalid order_by ({0}) or order value "
-                            "({1})".format(order_by, order))
-        _how_many = int(offset) + int(how_many)
-        _offset = int(offset)
-        q = DBSession.query(cls).order_by(order_function())\
-                                .slice(_offset, _how_many)
-        return q
+#     @classmethod
+#     def membership_listing(cls, order_by, how_many=10, offset=0, order="asc"):
+#         try:
+#             attr = getattr(cls, order_by)
+#             order_function = getattr(attr, order)
+#         except:
+#             raise Exception("Invalid order_by ({0}) or order value "
+#                             "({1})".format(order_by, order))
+#         _how_many = int(offset) + int(how_many)
+#         _offset = int(offset)
+#         q = DBSession.query(cls).order_by(order_function())\
+#                                 .slice(_offset, _how_many)
+#         return q
 
-    @classmethod
-    def get_same_lastnames(cls, name):  # XXX todo: similar
-        """return list of members with same lastnames"""
-        return DBSession.query(cls).filter(cls.lastname == name).slice(0, 10)
+#     @classmethod
+#     def get_same_lastnames(cls, name):  # XXX todo: similar
+#         """return list of members with same lastnames"""
+#         return DBSession.query(cls).filter(cls.lastname == name).slice(0, 10)
 
-    @classmethod
-    def get_same_email(cls, mail):  # XXX todo: similar
-        """return list of members with same email"""
-        return DBSession.query(cls).filter(cls.email == mail).slice(0, 10)
+#     @classmethod
+#     def get_same_email(cls, mail):  # XXX todo: similar
+#         """return list of members with same email"""
+#         return DBSession.query(cls).filter(cls.email == mail).slice(0, 10)
