@@ -48,12 +48,12 @@ def new_member(request):
         """
         firstname = colander.SchemaNode(
             colander.String(),
-            title='Vorname',
+            title=u'Vorname (b. Körpersch.: Firma)',
             oid="firstname",
         )
         lastname = colander.SchemaNode(
             colander.String(),
-            title='Nachnahme',
+            title=u'Nachnahme (b. Körpersch.: c/o Person)',
             oid="lastname",
         )
         email = colander.SchemaNode(
@@ -122,6 +122,20 @@ def new_member(request):
                   (u'no', _(u'No')),
                   (u'dontknow', _(u'Unknown')),)
 
+        entity_type = colander.SchemaNode(
+            colander.String(),
+            title=(u'Person oder Körperschaft?'),
+            description=u'Bitte die Kategorie des Mitglied auswählen.',
+            widget=deform.widget.RadioChoiceWidget(
+                values=(
+                    (u'person',
+                     (u'Person')),
+                    (u'legalentity',
+                     u'Körperschaft'),
+                ),
+            ),
+            missing=unicode('')
+        )
         membership_type = colander.SchemaNode(
             colander.String(),
             title=(u'Art der Mitgliedschaft (lt. Satzung, §4)'),
@@ -296,6 +310,11 @@ def new_member(request):
             #opt_URL=appstruct['opt_URL'],
             num_shares=appstruct['shares']['num_shares'],
         )
+        if 'legalentity' in appstruct['membership_info']['entity_type']:
+            print "this is a legal entity"
+            member.membership_type = 'investing'
+            member.is_legalentity = True
+
         dbsession = DBSession()
 
         try:
