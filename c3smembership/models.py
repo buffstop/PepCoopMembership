@@ -228,12 +228,19 @@ class C3sMember(Base):
     membership_type = Column(Unicode(255))
     member_of_colsoc = Column(Boolean, default=False)
     name_of_colsoc = Column(Unicode(255))
+    # bureaucracy
+    membership_accepted = Column(Boolean, default=False)
+    membership_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
+    membership_number = Column(Unicode(255))
     # startnex repair operations
     mtype_confirm_token = Column(Unicode(255))
     mtype_email_date = Column(DateTime(), default=datetime(1970, 1, 1))
     # invitations
     email_invite_flag_bcgv14 = Column(Boolean, default=False)
     email_invite_date_bcgv14 = Column(DateTime(), default=datetime(1970, 1, 1))
+    # legal entities
+    is_legalentity = Column(Boolean, default=False)
 
     def __init__(self, firstname, lastname, email, password,
                  address1, address2, postcode, city, country, locale,
