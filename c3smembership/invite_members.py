@@ -137,13 +137,14 @@ Die Generalversammlung ist das Organ, das die grundlegenden
 Entscheidungen der C3S SCE trifft. Gemeinsam mit den anderen Mitgliedern
 bist Du die Generalversammlung.
 
-Eines unserer Hauptziele ist die Mitbestimmung durch alle nutzenden
-Mitglieder, und die Mitwirkung aller Mitglieder. Du kannst Deine Meinung
-sagen, Du kannst diskutieren, Du kannst aktiver Teil der C3S SCE werden,
-und Du kannst abstimmen. Vor allem kannst Du Dich informieren, woran und
-wie die C3S SCE arbeitet, und Du kannst andere Mitglieder kennenlernen.
-Die C3S SCE ist Deine Community, Deine Genossenschaft. Nach der
-Zulassung wird sie Deine Verwertungsgesellschaft sein.
+Eines unserer Hauptziele ist die Mitbestimmung durch alle Urheber_innen
+und ausübenden Musiker_innen, und die Mitwirkung aller Mitglieder. Du
+kannst Deine Meinung sagen, Du kannst diskutieren, Du kannst aktiver
+Teil der C3S SCE werden, und Du kannst abstimmen. Vor allem kannst Du
+Dich informieren, woran und wie die C3S SCE arbeitet, und Du kannst
+andere Mitglieder kennenlernen. Die C3S SCE ist Deine Community,
+Deine Genossenschaft. Nach der Zulassung wird sie Deine
+Verwertungsgesellschaft sein.
 
 
 Veranstaltungen: Ablauf und Rahmenprogramm
@@ -217,8 +218,8 @@ Zurzeit liegen uns keine Anträge auf Satzungsänderung vor.
 # 8 Diskussionen
 
 Beschlussanträge und Anträge zur Änderung der Tagesordnung kannst Du bis
-zum 16. August (Ausschlussfrist 24 Uhr MEZ/CET) in Textform unter
-agenda@c3s.cc einreichen.
+zum 16. August (Ausschlussfrist 24 Uhr MESZ/CEST, d.h. UTC +2) in
+Textform unter agenda@c3s.cc einreichen.
 
 
 Organisatorisches
@@ -262,7 +263,8 @@ für die Vollmacht findest Du hier:
 Privatpersonen: https://url.c3s.cc/vmprivat
 Unternehmen & Vereinigungen: https://url.c3s.cc/vmkoerperschaft
 
-Auch nicht-stimmberechtigte, investierende Mitglieder können sich vertreten lassen.
+Auch nicht-stimmberechtigte, investierende Mitglieder können sich
+vertreten lassen.
 
 
 Geschäftsbericht
@@ -527,8 +529,9 @@ Currently, there are no proposals for ammendments.
 # 8 Discussions
 
 You are entitled to contribute resolution proposals and proposals for
-amendments to the agenda until August 16th, 2014 (cutoff period 12
-midnight MET/CET) by sending them in written form to agenda@c3s.cc.
+amendments to the agenda until August 16th, 2014 (deadline: 12 pm
+midnight MEST/CEST, that is UTC +2) by sending them in written form
+to agenda@c3s.cc.
 
 
 Organizational information
@@ -546,14 +549,14 @@ In case changes in the articles of association are announced, at least
 50% of the total number of registered members entitled to vote have to
 be present or represented (§ 13 Abs. 4 Satz 2 der Satzung). If you are
 not able to attend but you are entitled to vote, please choose a
-representing person who has to provide an authorization by you:
+proxy who has to produce a written power of attorney for registration:
 
 https://url.c3s.cc/auprivate
 
-Please consider, no representative may represent more than two members
-by authorization. Therefore, you should ask your representative if he
-or she represents other members as well. Authorizations must be provided
-in written form and original copy only; we can’t accept a fax or scan!
+Please consider, no proxy may represent more than two members.
+Therefore, you should ask your representative if he or she represents
+other members as well. We accept the original document only; we can’t
+accept a fax or scan!
 
 According to § 13 (6), sentence 3, of the articles of association, only
 members of the cooperative, their spouses, parents, children or siblings
@@ -568,11 +571,11 @@ authorization signed by you. One representative may represent no more
 than two members with voting power. You can find a blank form for the
 authorization here:
 
-https://url.c3s.cc/auprivate
-https://url.c3s.cc/aucorporate
+Private persons: https://url.c3s.cc/auprivate
+Corporations & associations: https://url.c3s.cc/aucorporate
 
 Also, members who are not entitled to vote (investing members) may
-choose an authorized representative.
+choose a proxy.
 
 
 Annual report
@@ -644,7 +647,7 @@ please respond by August 11th, 2014, at the latest.
 
 *****************************************************************
 
-On the linked page you can confirm your participation at the general
+On the linked page you can confirm your participation in the general
 assembly and the barcamp separately. You can also book food, and (of
 course) a t-shirt with a new image for the great days with the C3S on
 the banks of the river Rhine -- we have reduced our t-shirt prices for
