@@ -308,7 +308,7 @@ Wenn Du bereits Deine E-Mails mit OpenPGP verschlüsselst, kannst Du nach
 Ende der Generalversammlung die Party zum gegenseitigen Key-Signing
 nutzen. Alle Infos dazu findest Du in Kürze im Wiki:
 
-https://url.c3s.cc/barcamp2014
+https://url.c3s.cc/keysigning
 
 
 Anreise und Unterbringung
@@ -617,7 +617,7 @@ If you already use OpenPGP to encrypt your e-mails you may take the
 opportunity for a round of key-signing after the assembly. More
 information will be available soon in our wiki:
 
-https://url.c3s.cc/barcamp2014
+https://url.c3s.cc/keysigning
 
 
 Travel and accommodation
