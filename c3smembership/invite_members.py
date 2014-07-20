@@ -229,8 +229,7 @@ Organisatorisches
 Teilnahme
 ---------
 Teilnahmeberechtigt an der Generalversammlung sind nur Mitglieder der
-C3S SCE und Bevollmächtigte nicht anwesender, aber stimmberechtigter
-Mitglieder.
+C3S SCE oder Bevollmächtigte nicht anwesender Mitglieder.
 
 
 Stellvertretende Bevollmächtigte
@@ -539,9 +538,8 @@ Organizational information
 
 Participation
 -------------
-Entitled to participate in the general assembly are only members of the
-C3S SCE and authorized representatives of absent members with voting
-rights.
+Entitled to participate in the general assembly are C3S members only or
+the authorized representatives of absent members.
 
 Authorized representatives
 --------------------------
