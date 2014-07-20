@@ -666,7 +666,7 @@ our brand-new Xing community (English is welcome):
 https://url.c3s.cc/xing
 
 
-We look forward to you and your ideas!
+We are looking forward to seeing you and learning to know your ideas!
 
 The board of directors of the C3S SCE
 Meinhard Starostik - Chairman
