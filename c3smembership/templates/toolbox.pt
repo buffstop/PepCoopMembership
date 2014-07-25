@@ -38,9 +38,10 @@
     <h1>Toolbox</h1>
       <a href="${request.route_url('stats')}"
          class="btn btn-warning">Statistics</a>
-
       <a href="${request.route_url('search_people')}"
-         class="btn btn-warning">Search for People</a>
+         class="btn btn-success">Search for People</a>
+      <a href="${request.route_url('search_codes')}"
+         class="btn btn-success">Search for ReferenceCodes</a>
 
     <h3>Export &amp; Import</h3>
     <p>    

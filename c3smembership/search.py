@@ -57,41 +57,13 @@ def search_people(request):
     )
     autoformhtml = form.render()
 
-    '''
-    we use another form with autocomplete to let staff find entries faster
-    '''
-    class AutocompleteRefCodeForm(colander.MappingSchema):
-        code_to_show = colander.SchemaNode(
-            colander.String(),
-            title='Code finden (quicksearch; Groß-/Kleinschreibung beachten!)',
-            #title='',
-            widget=deform.widget.AutocompleteInputWidget(
-                min_length=1,
-                css_class="form-inline",
-                #values=the_codes,  # XXX input matching ones only
-                values=request.route_path(
-                    'autocomplete_input_values',
-                    traverse=('autocomplete_input_values')
-                )
-            )
-        )
-
-    schema = AutocompleteRefCodeForm()
-    form = deform.Form(
-        schema,
-        css_class="form-inline",
-        buttons=('go!',),
-    )
-    refcodeformhtml = form.render()
-
     return {
         'autoform': autoformhtml,
-        'refcodeform': refcodeformhtml,
     }
 
 
 @view_config(route_name='search_codes',
-             renderer='templates/search_people.pt',
+             renderer='templates/search_codes.pt',
              permission='manage')
 def search_codes(request):
     '''
@@ -124,11 +96,9 @@ def search_codes(request):
         code_to_show = colander.SchemaNode(
             colander.String(),
             title='Code finden (quicksearch; Groß-/Kleinschreibung beachten!)',
-            #title='',
             widget=deform.widget.AutocompleteInputWidget(
                 min_length=1,
                 css_class="form-inline",
-                #values=the_codes,  # XXX input matching ones only
                 values=request.route_path(
                     'autocomplete_input_values',
                     traverse=('autocomplete_input_values')
@@ -162,4 +132,5 @@ def autocomplete_people_search(request):
     string to find matching entries (e.g. starting with 'foo') in the database
     '''
     text = request.params.get('term', '')
+    print u"DEBUG: autocomp. people search for: {}".format(text)
     return C3sMember.get_matching_people(text)
