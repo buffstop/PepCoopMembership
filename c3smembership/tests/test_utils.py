@@ -1,5 +1,5 @@
 # -*- coding: utf-8  -*-
-import os
+#import os
 import unittest
 import transaction
 from datetime import date
@@ -25,9 +25,9 @@ class TestUtilities(unittest.TestCase):
         try:
             DBSession.close()
             DBSession.remove()
-            #print("removing old DBSession ===================================")
+            #print("removing old DBSession ==============================")
         except:
-            #print("no DBSession to remove ===================================")
+            #print("no DBSession to remove ==============================")
             pass
         from sqlalchemy import create_engine
         #engine = create_engine('sqlite:///test_utils.db')
@@ -189,7 +189,9 @@ class TestUtilities(unittest.TestCase):
 #         #print("test_generate_csv: the result: %s") % result
 #         from datetime import date
 #         today = date.today().strftime("%Y-%m-%d")
-#         expected_result = today + ',pending...,Jöhn,Doe,devnull@c3s.cc,1234567890,In the Middle,Of Nowhere,12345,My Town,de,investing,1987-06-05,j,GEMA FöTT,25\r\n'
+#         expected_result = today + ',pending...,
+#Jöhn,Doe,devnull@c3s.cc,1234567890,In the Middle,Of Nowhere,
+#12345,My Town,de,investing,1987-06-05,j,GEMA FöTT,25\r\n'
 #         # note the \r\n at the end: that is line-ending foo!
 
 #         #print("type of today: %s ") % type(today)
@@ -241,39 +243,44 @@ class TestUtilities(unittest.TestCase):
             u'member of coll. soc.:           yes' in result)
         self.failUnless(u"that's it.. bye!" in result)
 
-    # def test_accountant_mail(self):
-    #     """
-    #     test creation of email Message object
-    #     """
-    #     from c3sintent.utils import accountant_mail
-    #     import datetime
-    #     my_appstruct = {
-    #         'activity': [u'composer', u'dj'],
-    #         'firstname': u'Jöhn test_accountant_mail',
-    #         'lastname': u'Doe',
-    #         'date_of_birth': datetime.date(1987, 6, 5),
-    #         'city': u'Town',
-    #         'email': u'devnull@example.com',
-    #         'country': u'af',
-    #         'member_of_colsoc': u'yes',
-    #         'name_of_colsoc': u'Foo Colsoc',
-    #         'invest_member': u'yes',
-    #         'opt_URL': u'http://the.yes',
-    #         'opt_band': u'the yes',
-    #         'noticed_dataProtection': u'yes'
-    #     }
-    #     result = accountant_mail(my_appstruct)
+    def test_accountant_mail(self):
+        """
+        test creation of email Message object
+        """
+        from c3smembership.utils import accountant_mail
+        import datetime
+        my_appstruct = {
+            'firstname': u'Jöhn test_accountant_mail',
+            'lastname': u'Doe',
+            'email': u'devnull@example.com',
+            'email_confirm_code': 'ABCDEFGH',
+            'address1': 'address part one',
+            'address2': 'address part two',
+            'postcode': 'POSTCODE',
+            'city': u'Town',
+            'country': u'af',
+            'date_of_birth': datetime.date(1987, 6, 5),
+            'membership_type': 'normal',
+            'member_of_colsoc': u'yes',
+            'name_of_colsoc': u'Foo Colsoc',
+            'num_shares': 7,
+            # hä?
+            'message_recipient': 'yes@c3s.cc',
+        }
+        result = accountant_mail(my_appstruct)
+        print result.body
 
-    #     from pyramid_mailer.message import Message
+        from pyramid_mailer.message import Message
 
-    #     self.assertTrue(isinstance(result, Message))
-    #     self.assertTrue('yes@c3s.cc' in result.recipients)
-    #     self.failUnless('-----BEGIN PGP MESSAGE-----' in result.body,
-    #                     'something missing in the mail body!')
-    #     self.failUnless('-----END PGP MESSAGE-----' in result.body,
-    #                     'something missing in the mail body!')
-    #     self.failUnless(
-    #         '[C3S] Yes! a new letter of intent' in result.subject,
-    #         'something missing in the mail body!')
-    #     self.failUnless('noreply@c3s.cc' == result.sender,
-    #                     'something missing in the mail body!')
+        self.assertTrue(isinstance(result, Message))
+        self.assertTrue('yes@c3s.cc' in result.recipients)
+        self.failUnless('-BEGIN PGP MESSAGE-' in result.body,
+                        'something missing in the mail body!')
+        self.failUnless('-END PGP MESSAGE-' in result.body,
+                        'something missing in the mail body!')
+        print result.subject
+        self.failUnless(
+            '[C3S] Yes! a new member' in result.subject,
+            'something missing in the mail subject!')
+        self.failUnless('noreply@c3s.cc' == result.sender,
+                        'something missing in the mail body!')

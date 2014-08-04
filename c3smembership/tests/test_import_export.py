@@ -45,7 +45,8 @@ class ImportExportTests(unittest.TestCase):
             #'sqlalchemy.url': 'sqlite:///test_import.db',
             'sqlalchemy.url': 'sqlite:///:memory:',
             'available_languages': 'da de en es fr',
-            'c3smembership.dashboard_number': '30'}
+            'c3smembership.dashboard_number': '30',
+        }
         engine = engine_from_config(my_settings)
         DBSession.configure(bind=engine)
         Base.metadata.create_all(engine)
@@ -100,6 +101,7 @@ class ImportExportTests(unittest.TestCase):
 
         from c3smembership import main
         app = main({}, **my_settings)
+        app.registry.settings['c3smembership.runmode'] = 'dev'
         from webtest import TestApp
         self.testapp = TestApp(app)
 
@@ -405,3 +407,8 @@ class ImportExportTests(unittest.TestCase):
         #print("len(_ec): %s, _ec: %s" % (len(_ec), _ec))
         self.assertTrue(_ec in _ic)
         self.assertTrue(_ic in _ec)
+
+    def test_export_yes_emails(self):
+        #    from c3smembership.import_export import export_yes_emails
+        #    result = export_yes_emails(dummyreq)
+        pass

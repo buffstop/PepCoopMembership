@@ -134,7 +134,8 @@ def new_member(request):
                      u'Körperschaft'),
                 ),
             ),
-            missing=unicode('')
+            missing=unicode(''),
+            oid='entity_type',
         )
         membership_type = colander.SchemaNode(
             colander.String(),
@@ -150,7 +151,8 @@ def new_member(request):
                      u'Unbekannt.'),
                 ),
             ),
-            missing=unicode('')
+            missing=unicode(''),
+            oid='membership_type',
         )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
@@ -311,7 +313,7 @@ def new_member(request):
             num_shares=appstruct['shares']['num_shares'],
         )
         if 'legalentity' in appstruct['membership_info']['entity_type']:
-            print "this is a legal entity"
+            #print "this is a legal entity"
             member.membership_type = 'investing'
             member.is_legalentity = True
 

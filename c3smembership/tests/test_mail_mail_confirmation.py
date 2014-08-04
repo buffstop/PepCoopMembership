@@ -130,14 +130,18 @@ class TestMailMailConfirmationViews(unittest.TestCase):
         self.assertEqual(len(mailer.outbox), 1)
         self.assertEqual(
             mailer.outbox[0].subject,
-            u"[C3S] Please confirm your Email address! "
+            u"[C3S] Please confirm your email address! "
             u"/ Bitte E-Mail-Adresse bestätigen!"
         )
-
+        #print mailer.outbox[0].body
         self.assertTrue(
-            u"Dear C3S-Supporter," in mailer.outbox[0].body)
+            u"Hello" in mailer.outbox[0].body)
         self.assertTrue(
-            u"Liebe_r C3S-Unterstützer_in," in mailer.outbox[0].body)
+            u"Hallo" in mailer.outbox[0].body)
+        _m = C3sMember.get_by_id(1)
+        self.assertTrue(
+            u'{} {}'.format(
+                _m.firstname, _m.lastname) in mailer.outbox[0].body)
         self.assertTrue(
             u"http://foo.com/vae/" in mailer.outbox[0].body)
 

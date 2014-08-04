@@ -16,6 +16,8 @@ from sqlalchemy import (
     DateTime,
     Date,
     Unicode,
+    or_,
+    and_,
     #desc,
     #asc
 )
@@ -173,10 +175,74 @@ class C3sStaff(Base):
         return DBSession.query(cls).all()
 
 
+class Shares(Base):
+    '''
+    the database of shares
+
+    once AFM submissions are complete, the part about the shares is moved here
+    '''
+    __tablename__ = 'shares'
+    id = Column(Integer, primary_key=True)
+    number = Column(Integer())  # how many
+    date_of_acquisition = Column(DateTime(), nullable=False)  # when
+    reference_code = Column(Unicode(255), unique=True)  # ex email_confirm_code
+    signature_received = Column(Boolean, default=False)
+    signature_received_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
+    signature_confirmed = Column(Boolean, default=False)
+    signature_confirmed_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
+    payment_received = Column(Boolean, default=False)
+    payment_received_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
+    payment_confirmed = Column(Boolean, default=False)
+    payment_confirmed_date = Column(
+        DateTime(), default=datetime(1970, 1, 1))
+    accountant_comment = Column(Unicode(255))
+
+    @classmethod
+    def get_number(cls):
+        """return number of entries (by counting rows in table)"""
+        return DBSession.query(cls).count()
+
+    @classmethod
+    def get_by_id(cls, _id):
+        """return one member by id"""
+        return DBSession.query(cls).filter(cls.id == _id).first()
+
+    @classmethod
+    def get_total_shares(cls):
+        """return number of shares of accepted members"""
+        all = DBSession.query(cls).all()
+        total = 0
+        for s in all:
+            total += s.number
+        return total
+
+# table for relation between membership and shares
+members_shares = Table(
+    'members_shares', Base.metadata,
+    Column(
+        'members_id', Integer, ForeignKey('members.id'),
+        primary_key=True, nullable=False),
+    Column(
+        'shares_id', Integer, ForeignKey('shares.id'),
+        primary_key=True, nullable=False)
+)
+
+
 class C3sMember(Base):
     '''
     this table holds submissions to the C3S AFM form
     (AFM = application for membership)
+
+    ..and has seen changes over time. additions:
+
+    * crowdfunders,
+    * founders from the initial assembly (RL!)
+    * legal entities
+
+    ..being turned into accepted members
     '''
     __tablename__ = 'members'
     id = Column(Integer, primary_key=True)
@@ -200,6 +266,9 @@ class C3sMember(Base):
     email_confirm_token = Column(Unicode(255), unique=True)  # token
     email_confirm_mail_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    # duplicate entries // people submitting at different times
+    is_duplicate = Column(Boolean, default=False)
+    is_duplicate_of = Column(Integer, nullable=True)
     # shares
     num_shares = Column(Integer())  # XXX TODO: check for number <= max_shares
     date_of_submission = Column(DateTime(), nullable=False)
@@ -215,6 +284,12 @@ class C3sMember(Base):
     payment_confirmed = Column(Boolean, default=False)
     payment_confirmed_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    # shares in other table
+    shares = relationship(
+        Shares,
+        secondary=members_shares,
+        backref="members"
+    )
     # reminders
     sent_signature_reminder = Column(Integer, default=0)
     sent_signature_reminder_date = Column(
@@ -232,7 +307,7 @@ class C3sMember(Base):
     membership_accepted = Column(Boolean, default=False)
     membership_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
-    membership_number = Column(Unicode(255))
+    membership_number = Column(Integer())
     # startnex repair operations
     mtype_confirm_token = Column(Unicode(255))
     mtype_email_date = Column(DateTime(), default=datetime(1970, 1, 1))
@@ -241,6 +316,8 @@ class C3sMember(Base):
     email_invite_date_bcgv14 = Column(DateTime(), default=datetime(1970, 1, 1))
     # legal entities
     is_legalentity = Column(Boolean, default=False)
+    court_of_law = Column(Unicode(255))
+    registration_number = Column(Unicode(255))
 
     def __init__(self, firstname, lastname, email, password,
                  address1, address2, postcode, city, country, locale,
@@ -321,11 +398,169 @@ class C3sMember(Base):
         """
         return DBSession.query(cls).filter(cls.id == _id).delete()
 
+    # listings
+    #@classmethod
+    #def get_applications(cls, order_by, how_many=10, offset=0, order="asc"):
+    #    '''return the list of applications not yet accepted as members.'''
+    #    return DBSession.query(cls).filter(
+    #        or_(
+    #            cls.membership_accepted == 0,
+    #            cls.membership_accepted == '',
+    #            cls.membership_accepted == None,
+    #    ).all()
+    # see nonmember_listing
+    @classmethod
+    def get_duplicates(cls):
+        '''return the list of duplicates.'''
+        return DBSession.query(cls).filter(
+            cls.is_duplicate == 1).all()
+
+    @classmethod
+    def get_members(cls, order_by, how_many=10, offset=0, order="asc"):
+        '''return the list accepted as members.'''
+        #return DBSession.query(cls).filter(
+        #    cls.membership_accepted == 1).all()
+        try:
+            attr = getattr(cls, order_by)
+            order_function = getattr(attr, order)
+        except:
+            raise Exception("Invalid order_by ({0}) or order value "
+                            "({1})".format(order_by, order))
+        _how_many = int(offset) + int(how_many)
+        _offset = int(offset)
+        q = DBSession.query(cls).filter(
+            cls.membership_accepted == 1
+        ).order_by(order_function()).slice(_offset, _how_many)
+        return q
+
+    # statistical stuff
     @classmethod
     def get_number(cls):
         """return number of submissions (by counting rows in table)"""
         return DBSession.query(cls).count()
 
+    # @classmethod
+    # def get_num_empty_slots(cls):
+    #     """
+    #     return number of submissions (by counting rows in table)
+    #     awefully broken, needs fixing XXX
+    #     """
+    #     _all = DBSession.query(cls).all()
+    #     print len(_all)
+    #     _count = 0
+    #     _found = []
+    #     _range = [i for i in range(1, 1119)]
+    #     max_id = 0
+    #     print "_range: {}".format(_range)
+    #     for i in _all:
+    #         #print (i.id)
+    #         assert(i.id is not None)
+    #         if i.id > max_id:
+    #             max_id = i.id
+    #         _count += 1
+    #         if i.id in _range:
+    #             #print "removing {}".format(i.id)
+    #             _range.remove(i.id)
+    #             _found.extend([i.id])
+
+    #     print "max_id: {}".format(max_id)
+    #     print "loop finished. count is {}. len(_range) is {}. type: {}".format(
+    #         _count, len(_range), type(_range))
+    #     #print "_range: {}".format(_range)
+    #     #print "_found: {}".format(_found)
+    #     _diff = [x for x in _range if (x not in _found)]
+    #     #print "_range - _found: {}".format(
+    #         _diff)
+    #     print "number of unused ids: {}".format(len(_diff))
+    #     #from sqlalchemy import func
+    #     #print "the max: {}".format(DBSession.query(func.max(cls.id)))
+    #     return _count
+
+    @classmethod
+    def get_num_members_accepted(cls):
+        '''
+        count the members that have actually been accepted as members
+        '''
+        return DBSession.query(
+            cls).filter(cls.membership_accepted == 1).count()
+
+    @classmethod
+    def get_num_non_accepted(cls):
+        '''
+        count the members that have actually been accepted as members
+        '''
+        return DBSession.query(
+            cls).filter(or_(
+                cls.membership_accepted != 1,
+                cls.membership_accepted == 0,
+                cls.membership_accepted == None,
+            )).count()
+
+    @classmethod
+    def get_num_mem_nat_acc(cls):
+        '''
+        count the *persons* that have actually been accepted as members
+        '''
+        return DBSession.query(cls).filter(
+            cls.is_legalentity == 0,
+            cls.membership_accepted == 1,
+        ).count()
+
+    @classmethod
+    def get_num_mem_jur_acc(cls):
+        '''
+        count the *legal entities* that have actually been accepted as members
+        '''
+        return DBSession.query(
+            cls).filter(
+                cls.is_legalentity == 1,
+                cls.membership_accepted == 1
+            ).count()
+
+    @classmethod
+    def get_num_mem_norm(cls):
+        '''
+        count the memberships that are normal members
+        '''
+        return DBSession.query(
+            cls).filter(
+                cls.membership_accepted == 1,
+                cls.membership_type == 'normal'
+            ).count()
+
+    @classmethod
+    def get_num_mem_invest(cls):
+        '''
+        count the memberships that are investing members
+        '''
+        return DBSession.query(
+            cls).filter(
+                cls.membership_accepted == 1,
+                cls.membership_type == 'investing'
+            ).count()
+
+    @classmethod
+    def get_num_mem_other_features(cls):
+        '''
+        count the memberships that are neither normal nor investing members
+        '''
+        _foo = DBSession.query(
+            cls).filter(
+                cls.membership_accepted == 1,
+                cls.membership_type != 'normal',
+                cls.membership_type != 'investing',
+            ).all()
+        #print "how many unknown: {}".format(len(_foo))
+        _other = {}
+        for i in _foo:
+            if i.membership_type in _other.keys():
+                _other[i.membership_type] += 1
+            else:
+                _other[i.membership_type] = 1
+        #print "the options: {}".format(_other)
+        return len(_foo)
+
+    # listings
     @classmethod
     def member_listing(cls, order_by, how_many=10, offset=0, order="asc"):
         try:
@@ -340,6 +575,48 @@ class C3sMember(Base):
                                 .slice(_offset, _how_many)
         return q
 
+    @classmethod
+    def nonmember_listing(cls, order_by, how_many, offset=0, order="asc"):
+        try:
+            attr = getattr(cls, order_by)
+            order_function = getattr(attr, order)
+        except:
+            raise Exception("Invalid order_by ({0}) or order value "
+                            "({1})".format(order_by, order))
+        _how_many = int(offset) + int(how_many)
+        _offset = int(offset)
+        q = DBSession.query(cls).filter(
+            or_(
+                cls.membership_accepted == 0,
+                cls.membership_accepted == '',
+                cls.membership_accepted == None,
+            )
+        ).order_by(
+            order_function()
+        ).slice(_offset, _how_many)
+        #print "length of nonmember listing: {}".format(q.count())
+        #print "nonmember listing q: {}".format(q)
+        return q.all()
+
+    @classmethod
+    def nonmember_listing_count(cls, order_by=u'id'):
+        q = DBSession.query(cls).filter(
+            or_(
+                cls.membership_accepted == 0,
+                cls.membership_accepted == '',
+                cls.membership_accepted == None,
+            )
+        ).count()
+        #print "length of nonmember listing: {}".format(q)
+        #print "nonmember listing q: {}".format(q)
+        return q
+
+    @classmethod
+    def get_num_nonmember_listing(cls):
+        #cls.nonmember_listing(order_by='id').count()
+        return cls.nonmember_listing_count()
+
+    # count for statistics
     @classmethod
     def afm_num_shares_unpaid(cls):
         all = DBSession.query(cls).all()
@@ -358,6 +635,7 @@ class C3sMember(Base):
                 num_shares_paid += item.num_shares
         return num_shares_paid
 
+    # autocomplete
     @classmethod
     def get_matching_codes(cls, prefix):
         '''
@@ -392,16 +670,64 @@ class C3sMember(Base):
         login = cls.get_by_id(_id)  # is None if user not exists
         return login
 
+    # for merge comparisons
     @classmethod
     def get_same_lastnames(cls, name):  # XXX todo: similar
-        """return list of applications with same lastnames"""
-        return DBSession.query(cls).filter(cls.lastname == name).slice(0, 10)
+        """return list of accepted members with same lastnames"""
+        return DBSession.query(cls).filter(
+            and_(
+                cls.membership_accepted == 1,
+                cls.lastname == name
+            )).slice(0, 10)
 
     @classmethod
     def get_same_email(cls, mail):  # XXX todo: similar
-        """return list of applications with same email"""
-        return DBSession.query(cls).filter(cls.email == mail).slice(0, 10)
+        """return list of accepted members with same email"""
+        return DBSession.query(cls).filter(
+            and_(
+                cls.membership_accepted == 1,
+                cls.email == mail,
+            )).slice(0, 10)
 
+    # membership numbers etc.
+    @classmethod
+    def get_num_membership_numbers(cls):
+        '''
+        count the number of membership numbers
+        '''
+        return DBSession.query(cls).filter(cls.membership_number).count()
+
+    @classmethod
+    def get_next_free_membership_number(cls):
+        '''
+        returns the next free membership number
+        '''
+        return C3sMember.get_highest_membership_number()+1
+
+    @classmethod
+    def get_highest_membership_number(cls):
+        '''
+        get the highest membership number
+        '''
+        nrs = DBSession.query(cls.membership_number).filter(
+            cls.membership_number != None).all()
+        _list = []
+        for i in nrs:
+            #print "-- {} -- {}".format(i, i[0])
+            _list.append(int(i[0]))
+        try:
+            _max = max(_list)
+        except:
+            _list = [0, 999999999]
+            _max = 999999999
+        try:
+            assert(_max == 999999999)
+            _list.remove(max(_list))  # remove known maximum
+        except:
+            pass
+        return max(_list)
+
+    # countries
     @classmethod
     def get_num_countries(cls):
         '''return number of countries in DB'''
@@ -426,6 +752,7 @@ class C3sMember(Base):
                 _c_dict[item.country] += 1
         return _c_dict
 
+    # autocomplete
     @classmethod
     def get_matching_people(cls, prefix):
         '''
@@ -435,54 +762,12 @@ class C3sMember(Base):
         names = {}
         for item in all:
             if item.lastname.startswith(prefix):
-                _key = item.email_confirm_code + ' ' + item.lastname + ', ' + item.firstname
+                _key = (
+                    item.email_confirm_code + ' ' +
+                    item.lastname + ', ' + item.firstname)
                 names[_key] = _key
         return names
 
-
-class Shares(Base):
-    '''
-    the database of shares
-
-    once AFM submissions are complete, the part about the shares is moved here
-    '''
-    __tablename__ = 'shares'
-    id = Column(Integer, primary_key=True)
-    number = Column(Integer())  # how many
-    date_of_acquisition = Column(DateTime(), nullable=False)  # when
-    reference_code = Column(Unicode(255), unique=True)  # ex email_confirm_code
-    signature_received = Column(Boolean, default=False)
-    signature_received_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    signature_confirmed = Column(Boolean, default=False)
-    signature_confirmed_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    payment_received = Column(Boolean, default=False)
-    payment_received_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    payment_confirmed = Column(Boolean, default=False)
-    payment_confirmed_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    accountant_comment = Column(Unicode(255))
-
-    @classmethod
-    def get_number(cls):
-        """return number of entries (by counting rows in table)"""
-        return DBSession.query(cls).count()
-
-    @classmethod
-    def get_by_id(cls, _id):
-        """return one member by id"""
-        return DBSession.query(cls).filter(cls.id == _id).first()
-
-    @classmethod
-    def get_total_shares(cls):
-        """return number of shares"""
-        all = DBSession.query(cls).all()
-        total = 0
-        for s in all:
-            total += s.number
-        return total
 
 # # table for relation between membership and shares
 # membership_shares = Table(
@@ -529,7 +814,8 @@ class Shares(Base):
 #         secondary=membership_shares,
 #         backref="memberships"
 #     )
-#     #num_shares = Column(Integer())  # XXX TODO: check for number <= max_shares
+#     #num_shares = Column(Integer())
+#         # XXX TODO: check for number <= max_shares
 #     date_of_membership = Column(DateTime(), nullable=False)
 #     accountant_comment = Column(Unicode(255))
 #     # membership information
@@ -594,7 +880,8 @@ class Shares(Base):
 #     # @classmethod
 #     # def num_ms_nat(cls):
 #     #     'number of memberships of natural persons'
-#     #     return DBSession.query(cls).filter(cls.membership_type == 'normal').first()
+#     #     return DBSession.query(cls).filter(
+#     #         cls.membership_type == 'normal').first()
 
 #     # @classmethod
 #     # def num_ms_jur(cls):
@@ -614,7 +901,8 @@ class Shares(Base):
 #             cls.membership_type == u'investing').count()
 
 #     @classmethod
-#     def membership_listing(cls, order_by, how_many=10, offset=0, order="asc"):
+#     def membership_listing(
+#             cls, order_by, how_many=10, offset=0, order="asc"):
 #         try:
 #             attr = getattr(cls, order_by)
 #             order_function = getattr(attr, order)

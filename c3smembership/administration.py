@@ -4,7 +4,7 @@ from c3smembership.models import (
     C3sStaff,
     DBSession,
     Group,
-    #Shares,
+    Shares,
     #Membership,
     #MembershipNumber,
 )
@@ -77,37 +77,6 @@ LOGGING = True
 if LOGGING:  # pragma: no cover
     import logging
     log = logging.getLogger(__name__)
-
-
-@view_config(renderer='templates/stats.pt',
-             permission='manage',
-             route_name='stats')
-def stats_view(request):
-    """
-    This view lets accountants view statistics:
-    how many membership applications, real members, shares, etc.
-    """
-    return {
-        # form submissions
-        '_number_of_datasets': C3sMember.get_number(),
-        'afm_shares_unpaid': C3sMember.afm_num_shares_unpaid(),
-        'afm_shares_paid': C3sMember.afm_num_shares_paid(),
-        # shares
-        #'num_shares': C3sMember.get_total_shares(),
-        #'num_shares': Shares.get_total_shares(),
-        # memberships
-        #'num_memberships': Membership.get_number(),
-        #'num_ms_nat': Membership.get_number(),  # XXX check!
-        #'num_ms_jur': '0',  # XXX Membership.num_ms_jur(),
-        #'num_ms_norm': Membership.num_ms_norm(),
-        #'num_ms_inves': Membership.num_ms_invest(),
-        # countries
-        'num_countries': C3sMember.get_num_countries(),
-        'countries_list': C3sMember.get_countries_list(),
-
-        # staff figures
-        'num_staff': len(C3sStaff.get_all())
-    }
 
 
 @view_config(renderer='templates/toolbox.pt',

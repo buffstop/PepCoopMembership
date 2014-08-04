@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="${request.locale_name}"
+      metal:use-macro="backend">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="pyramid web application">
+    <meta name="author" content="Pylons Project">
+    
+    <title>Merge Applicant to become C3S Member</title>
+  </head>
+  <body>
+    <div class="container">
+      <tal:block metal:fill-slot="middle">
+        <h1>Merge an Applicant <small>to become a C3S SCE member</small></h1>
+        <div style="color:red;"
+             tal:repeat="message request.session.pop_flash('merge_message')"
+             class="alert alert-danger">
+          ${message}
+        </div>
+        <p>You are about to make this person a proper member of C3S SCE:</p>
+        <p class="alert alert-info">
+            ${member.firstname} ${member.lastname}<br />
+            email: ${member.email}<br />
+            address1: ${member.address1}<br />
+            address2: ${member.address2}<br />
+            postcode: ${member.postcode}<br />
+            city: ${member.city}<br />
+            country: ${member.country}<br />
+            born: ${member.date_of_birth}<br />
+            #shares: ${member.num_shares}<br />
+            mem.type: ${member.membership_type}<br />
+            REFCODE: ${member.email_confirm_code}<br />
+        </p>
+        <p>
+          Membership Number to be given: ${next_mship_number}
+          <form action="${request.route_url('make_member', afm_id=member.id)}"
+            method="post"
+            class="form">
+        <p>
+          <input name="make_member" type="hidden"
+                 size="3" maxlength="3"
+                 value="${member.id}"
+                 class="form-control"/>
+          <input name="submit" type="submit"
+                 class="btn btn-primary"
+                 title="Make Member of C3S SCE"/>
+        </p>
+      </form>
+        </p>
+        <p>
+          But wait!<br />
+          Review the lists below (if any) as there might be <strike>similar</strike>
+          entries or even the same person registered in the database 
+          of memberships already.
+        </p>
+        <h3>similar <small>candidates from the database of</small> memberships</h3>
+
+        <!--! lastname -->
+        <tal:block tal:condition="same_mships_lastn.count() is not 0">
+          <h4><small>same</small> lastname <small>(up to 10)</small></h4>
+          <ul>
+            <li tal:repeat="sim same_mships_lastn">
+              ${sim.firstname} ${sim.lastname} ${sim.email}
+              born ${sim.date_of_birth} (${sim.num_shares} shares)
+              ${sim.postcode} ${sim.city}
+              <a href="$ off {request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
+                 class="btn btn-success">
+                Merge ${member.num_shares} Shares (${member.email_confirm_code})
+                to ${sim.firstname} ${sim.lastname}</a>
+            </li>
+          </ul>
+        </tal:block>
+        <!--! email -->
+        <tal:block tal:condition="same_mships_email.count() is not 0">
+          <h4><small>same</small> email <small>(up to 10)</small></h4>
+          <ul>
+            <li tal:repeat="sim same_mships_email">
+              ${sim.firstname} ${sim.lastname} ${sim.email}
+              born ${sim.date_of_birth} (${sim.num_shares} shares)
+              ${sim.postcode} ${sim.city}
+              <a href="$ off {request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
+                 class="btn btn-success">
+                Merge ${member.num_shares} Shares (${member.email_confirm_code})
+                to ${sim.firstname} ${sim.lastname}
+              </a>
+            </li>
+          </ul>
+        </tal:block>
+        <!--! date of birth -->
+        $ off {same_mships_dob.count()}
+        <tal:block tal:condition="True or same_mships_dob.count() is not 0">
+          <h4><small>same</small> date of birth <small>(up to 10)</small></h4>
+          <ul>
+            <li tal:repeat="sim []" off="same_mships_dob">
+              ${sim.firstname} ${sim.lastname} ${sim.email}
+              born ${sim.date_of_birth} (${sim.num_shares} shares)
+              ${sim.postcode} ${sim.city}
+              <a href="$ off {request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
+                 class="btn btn-success">
+                Merge ${member.num_shares} Shares (${member.email_confirm_code})
+                to ${sim.firstname} ${sim.lastname}
+              </a>
+            </li>
+          </ul>
+        </tal:block>
+        <!--! city -->
+        <tal:block tal:condition="True or same_mships_city.count() is not 0">
+          <h4><small>same</small> email <small>(up to 10)</small></h4>
+          <ul>
+            <li tal:repeat="sim []" off="same_mships_email">
+              ${sim.firstname} ${sim.lastname} ${sim.email}
+              born ${sim.date_of_birth} (${sim.num_shares} shares)
+              ${sim.postcode} ${sim.city}
+              <a href="${request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
+                 class="btn btn-success">
+                Merge ${member.num_shares} Shares (${member.email_confirm_code})
+                to ${sim.firstname} ${sim.lastname}
+              </a>
+            </li>
+          </ul>
+        </tal:block>
+        <!--! postcode -->
+        <tal:block tal:condition="True or same_mships_postcode.count() is not 0">
+          <h4><small>same</small> postcode <small>(up to 10)</small></h4>
+          <ul>
+            <li tal:repeat="sim []" off="same_mships_email">
+              ${sim.firstname} ${sim.lastname} ${sim.email}
+              born ${sim.date_of_birth} (${sim.num_shares} shares)
+              ${sim.postcode} ${sim.city}
+              <a href="${request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
+                 class="btn btn-success">
+                Merge ${member.num_shares} Shares (${member.email_confirm_code})
+                to ${sim.firstname} ${sim.lastname}
+              </a>
+            </li>
+          </ul>
+        </tal:block>
+      </tal:block>
+      
+      <tal:block metal:fill-slot="bottom">
+        <hr>
+        <div class="hidden-print">
+          <p>
+            <a href="${request.route_url('dashboard_only')}"
+               class="btn btn-primary">Dashboard</a>
+            <a href="${request.route_url('logout')}"
+               class="btn btn-danger">Abmelden</a></p>
+        </div>
+      </tal:block>
+    </div>
+  </body>
+</html>

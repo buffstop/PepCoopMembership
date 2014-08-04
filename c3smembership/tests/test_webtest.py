@@ -222,11 +222,11 @@ class AccountantsFunctionalTests(unittest.TestCase):
             '<p>Number of data sets:' in res6b.body)
 
         # change the number of items to show
-        form = res6b.forms[1]
+        form = res6b.forms[0]
         form['num_to_show'] = "42"  # post a number: OK
         resX = form.submit('submit', status=200)
 
-        form = resX.forms[1]
+        form = resX.forms[0]
         form['num_to_show'] = "mooo"  # post a string: no good
         resY = form.submit('submit', status=200)
 
@@ -305,9 +305,12 @@ class AccountantsFunctionalTests(unittest.TestCase):
     def test_dashboard_orderByFirstnameAsc_dashboardOrdered(self):
         res = self._login()
         res2 = self.testapp.get('/dashboard/0/firstname/asc')
+        #print res2.body
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
-        first_name = first_member_row('td:nth-child(3)')
+        #print "the first row: {}".format(first_member_row)
+        first_name = first_member_row('td:nth-child(4)')
+        #print "the first name: {}".format(first_name)
         self.assertEqual(u'AAASomeFirstnäme', first_name.text())
 
     def test_dashboard_orderByFirstnameDesc_dashboardOrdered(self):
@@ -315,7 +318,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
         res2 = self.testapp.get('/dashboard/0/firstname/desc')
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
-        first_name = first_member_row('td:nth-child(3)')
+        first_name = first_member_row('td:nth-child(4)')
         self.assertEqual(u'SomeFirstnäme', first_name.text())
 
     def test_dashboard_orderByLastnameAsc_dashboardOrdered(self):
@@ -323,7 +326,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
         res2 = self.testapp.get('/dashboard/0/lastname/asc')
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
-        last_name = first_member_row('td:nth-child(4)')
+        last_name = first_member_row('td:nth-child(5)')
         self.assertEqual(u'AAASomeLastnäme', last_name.text())
 
     def test_dashboard_orderByLastnameDesc_dashboardOrdered(self):
@@ -331,7 +334,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
         res2 = self.testapp.get('/dashboard/0/lastname/desc')
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
-        last_name = first_member_row('td:nth-child(4)')
+        last_name = first_member_row('td:nth-child(5)')
         self.assertEqual(u'XXXSomeLastnäme', last_name.text())
 
     def test_dashboard_afterDelete_sameOrderAsBefore(self):
@@ -342,7 +345,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
         resdel = resdel.follow()
         pq = self._get_pyquery(resdel.body)
         first_member_row = pq('tr:nth-child(2)')
-        last_name = first_member_row('td:nth-child(4)')
+        last_name = first_member_row('td:nth-child(5)')
         self.assertEqual(u'SomeLastnäme', last_name.text())
 
     def test_dashboard_afterDelete_messageShown(self):
@@ -414,20 +417,20 @@ class AccountantsFunctionalTests(unittest.TestCase):
 
     def _change_num_to_show(self, num_to_show="1"):
         res = self.testapp.get('/dashboard/0/id/desc')
-        form = res.forms[1]
+        form = res.forms[0]
         form['num_to_show'] = num_to_show
         resX = form.submit('submit', status=200)
         return resX
 
-    def test_dashboard_search_code(self):
+    def test_search_code(self):
         """
-        load the dashboard and search for confirmation code
+        load the search page and search for confirmation code
         """
         #
         # login
         #
         res3 = self._login()
-
+        res3 = self.testapp.get('/search_codes', status=200)
         """
         we fill the confirmation code search form with a valid code,
         submit the form
@@ -437,13 +440,50 @@ class AccountantsFunctionalTests(unittest.TestCase):
         form = res3.forms[0]
         form['code_to_show'] = 'foo'
         res = form.submit()
-        self.failUnless('Dashboard' in res.body)
+        self.failUnless('Search for members' in res.body)
+        self.failUnless('Code finden' in res.body)
         # now use existing code
         form = res.forms[0]
-        form['code_to_show'] = 'ABCDEFGFOO'
-        res = form.submit()
-        self.failIf('Dashboard' in res.body)
+        #print form.fields
+        form['code_to_show'] = 'ABCDEFGBAZ'
+        #print form['code_to_show'].value
+        res2 = form.submit()
+        #print res2.body
+        res = res2.follow()
+        self.failUnless('Details for Member Application' in res.body)
+        self.failUnless('ABCDEFGBAZ' in res.body)
 
+    def test_search_people(self):
+        """
+        load the search page and search for people
+        """
+        #
+        # login
+        #
+        res3 = self._login()
+        res3 = self.testapp.get('/search_people', status=200)
+        """
+        we fill the confirmation code search form with a valid code,
+        submit the form
+        and check results
+        """
+        # try invalid code
+        form = res3.forms[0]
+        form['code_to_show'] = 'foo'
+        res = form.submit()
+        self.failUnless('Search for members' in res.body)
+        self.failUnless('Personen finden' in res.body)
+        # now use existing code
+        form = res.forms[0]
+        #print form.fields
+        form['code_to_show'] = u'XXXSomeLastnäme'
+        #print form['code_to_show'].value
+        res = form.submit()
+        #print res.body
+        #res = res2.follow()
+        #self.failUnless('Details for Member Application' in res.body)
+        #self.failUnless('ABCDEFGBAZ' in res.body)
+        # XXX FIXME
     def test_dashboard_regenerate_pdf(self):
         """
         load the dashboard and regenerate a PDF

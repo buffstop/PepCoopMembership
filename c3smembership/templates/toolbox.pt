@@ -42,6 +42,42 @@
          class="btn btn-success">Search for People</a>
       <a href="${request.route_url('search_codes')}"
          class="btn btn-success">Search for ReferenceCodes</a>
+      <a href="${request.route_url('dashboard',number=0, orderby='id', order='asc')}"
+         class="btn btn-primary">AfM Dashboard</a>
+      <a href="${request.route_url('membership_listing_backend',number=0, orderby='id', order='asc')}"
+         class="btn btn-success">Membership List (backend)</a>
+      <a href="${request.route_url('membership_listing_alphabetical')}"
+         class="btn btn-success">Alphabetical Member List</a>
+
+    <h3>The Merge Process</h3>
+      <a href="${request.route_url('fix_import_crowdfunders')}"
+         class="btn btn-warning import-takes-time">Fix Import (./crowdfunders.csv)</a>
+      because their import was lacking the 'membership_date' data.
+      With this step, it is saved under 'date_of_submission'.
+      <br />
+      <a href="${request.route_url('flag_duplicates')}"
+         class="btn btn-danger">Flag the duplicates</a>
+      because people should get only one membership number,
+      even if they hold several packages of shares,
+      aquired at different points in time.
+      <br />
+      <a href="${request.route_url('make_founders_members')}"
+         class="btn btn-danger">Make Founders Members</a>
+      gives founders membership status, date and number
+      <br />
+      <a href="${request.route_url('make_crowdfounders_members')}"
+         class="btn btn-danger">Make CrowdFounders Members</a>
+      gives crowdfounders membership status, date and number (exception: duplicates)
+      <br />
+      <a href="${request.route_url('make_yesser_members')}"
+         class="btn btn-danger">Make Yes'ers Members</a>
+      gives form users membership status, date and number (exception: duplicates)
+      <br />
+      <a href="${request.route_url('merge_duplicates')}"
+         class="btn btn-danger">Merge duplicates</a>
+      will give the shares aquired at a different point in time
+      to the first entry by a given person.
+
 
     <h3>Export &amp; Import</h3>
     <p>    
@@ -72,10 +108,11 @@
          class="btn btn-primary">AfM Dashboard</a>
       <a href="${request.route_url('delete_afms')}"
          class="btn btn-danger">Delete a range of AfMs from the Dashboard</a>
+      <hr />
     </p>
     <h3>Memberships</h3>
     <p>    
-      <a href="${request.route_url('membership_listing',number=0, orderby='id', order='asc')}"
+      <a href="${request.route_url('membership_listing_backend',number=0, orderby='id', order='asc')}"
          class="btn btn-primary">Show Memberships</a>
     </p>
     <h3>Staff</h3>

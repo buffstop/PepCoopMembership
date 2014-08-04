@@ -329,20 +329,112 @@ def import_crowdfunders(request):
             print "stop iteration reached"
             print si
             return {'message': "file found, StopIteration reached."}
-        #except:
-        #    print "passing"
-        #    pass
 
     #print("done with all import steps, successful or not!")
     return HTTPFound(
         request.route_url('dashboard_only'))
-                # _codes.append(row[13])
-                # print("the codes: %s" % str(_codes))
 
-    # except StopIteration, si:
-    #     print si
-    #     print("counter: %s" % counter)
-    #     return {'message': "file found. import complete",
-    #             #'codes': _codes,
-    #             }
-#return
+
+@view_config(permission='manage',
+             route_name='fix_import_crowdfunders')
+def fix_import_crowdfunders(request):
+    '''
+    fix the import of
+    the list of crowdfunders to the membership database
+    '''
+    try:  # check if the file exists
+        #with open('import/startnext_success.utf8.csv', 'r') as f:
+        startnext_importfile = request.registry.settings[
+            'startnext_importfile']
+        with open(startnext_importfile, 'r') as f:
+            print("the csv file was found.")
+            # store contents in tempfile
+            content = tempfile.NamedTemporaryFile()
+            content.write(f.read())
+            content.seek(0)  # rewind to beginning
+
+    except IOError, ioe:
+        print ioe
+        request.session.flash("file not found.", 'messages')
+        request.session.flash(ioe, 'messages')
+        return HTTPFound(request.route_url('dashboard_only'))
+
+    # reader for CSV files
+    #rdr = unicodecsv.reader(content.file, delimiter='\t',
+    rdr = unicodecsv.reader(content.file, delimiter=';',
+                            encoding='utf-8',
+                            quoting=unicodecsv.QUOTE_ALL
+                            )
+    header = rdr.next()  # first line is the header.
+    '''
+    the header (first line) of the CSV file is used to confirm the format
+    '''
+    print("the header = %s" % header)
+    try:
+        expected_header = [u'Gesamtwert',  # 0
+                           u'Dankesch\xf6n 1',  # 1
+                           u'Anschrift',  # 2
+                           u'PLZ ',  # 3
+                           u'Ort ',  # 4
+                           u'Land',  # 5
+                           u'Vorname',  # 6
+                           u'Nachname',  # 7
+                           u'E-Mail',  # 8
+                           u'Transaktions-ID',  # 9
+                           u'Geburtsdatum',  # 10
+                           u'memberDate',  # 11
+                           u'Kommentar',  # 12
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'',
+                           u'', ]
+        assert header == expected_header
+    except AssertionError, ae:
+        print ae
+        print "the header of the crowdfunder CSV does not match what we expect"
+        request.session.flash(
+            "Importing Crowdfunders: header fields mismatch. NOT importing",
+            'message_to_staff')
+        return HTTPFound(request.route_url('toolbox'))
+    # count the datasets
+    counter = 0
+
+    while True:
+        try:
+            row = rdr.next()
+            # DEBUG: just take a few for testing
+            #if counter == 2:
+            #    break
+        except:
+            break  # stop import if there is no next line
+        counter += 1
+        #highest_mem_num += 1  # later...
+
+        #print("=== row %s: %s" % (counter, row))
+
+        _startnexter = C3sMember.get_by_code(row[9])
+        print u"found {}, has {}, should be {}".format(
+            _startnexter.firstname,
+            _startnexter.date_of_submission,
+            row[11],
+        )
+        if row[11] is not '':
+            print "----PING! {}".format(_startnexter.id)
+            _startnexter.date_of_submission = datetime.datetime.strptime(
+                row[11], '%Y-%m-%d')  # lost in a rush... fixing it now
+        DBSession.flush()
+
+    return HTTPFound(
+        request.route_url('toolbox'))

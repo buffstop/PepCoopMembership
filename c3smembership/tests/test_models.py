@@ -6,7 +6,7 @@ import transaction
 from pyramid import testing
 from datetime import date
 from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError
+#from sqlalchemy.exc import IntegrityError
 from c3smembership.models import (
     DBSession,
     Base,
@@ -23,9 +23,9 @@ class C3sMembershipModelTestBase(unittest.TestCase):
         self.config.include('pyramid_mailer.testing')
         try:
             DBSession.remove()
-            #print("removing old DBSession ===================================")
+            #print("removing old DBSession ==============================")
         except:
-            #print("no DBSession to remove ===================================")
+            #print("no DBSession to remove ==============================")
             pass
         #engine = create_engine('sqlite:///test_models.db')
         engine = create_engine('sqlite:///:memory:')
@@ -75,7 +75,7 @@ class C3sMembershipModelTestBase(unittest.TestCase):
             membership_type,
             member_of_colsoc, name_of_colsoc,
             #opt_band, opt_URL
-            )
+        )
 
     def _makeAnotherOne(self,
                         firstname=u'SomeFirstname',
@@ -151,6 +151,15 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance.email_is_confirmed, False, "expected False")
         self.assertEqual(instance.membership_type, u'normal', "No match!")
 
+    def test_get_number(self):
+        instance = self._makeOne()
+        #session = DBSession()
+        self.session.add(instance)
+        myMembershipSigneeClass = self._getTargetClass()
+        number_from_DB = myMembershipSigneeClass.get_number()
+        #print number_from_DB
+        self.assertEqual(number_from_DB, 2)
+
     def test_get_by_code(self):
         instance = self._makeOne()
         #session = DBSession()
@@ -214,7 +223,8 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         myMembershipSigneeClass = self._getTargetClass()
         instance_from_DB = myMembershipSigneeClass.get_by_id('1')
         del_instance_from_DB = myMembershipSigneeClass.delete_by_id('1')
-        #print del_instance_from_DB
+        #print
+        del_instance_from_DB
         instance_from_DB = myMembershipSigneeClass.get_by_id('1')
         self.assertEqual(None, instance_from_DB)
 
@@ -451,4 +461,3 @@ class C3sStaffTests(unittest.TestCase):
         #print(C3sStaff.check_password(cashier1, 'cashierspassword'))
         C3sStaff.check_password(u'staffer2', u'staffer2spassword')
         #self.assert
-   

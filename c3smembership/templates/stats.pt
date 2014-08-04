@@ -11,33 +11,71 @@
     <h3><small>Anzahl</small> Mitgliedschaftsanträge, Anteile, etc.</h3>
     <p>
       ${_number_of_datasets} DB-Einträge
-      <small>Eingegangene Mitgliedschaftsanträge</small><br />
+      <small>Eingegangene Mitgliedschaftsanträge und vollständige Mitgliedschaften</small><br />
       ${afm_shares_unpaid} Anteile, die noch nicht bezahlt sind.
       Summe: ${python: int(afm_shares_unpaid)*50}€
       <br />
       ${afm_shares_paid} Anteile, die schon bezahlt sind.
       Summe: ${python: int(afm_shares_paid)*50}€<br />
     </p>
-    <h3>Länder</h3>
-    Angaben ohne Gewähr auf Richtigkeit.<br />
-    Anzahl verschiedener Länder: ${num_countries}
-    <table>
-      <tr><td>country</td><td>number</td></tr>
-      <tr tal:repeat="country countries_list.keys()">
-        <td>${country}</td><td>${countries_list[country]}</td></tr>
-    </table>
-    
-    <h3>GenossInnen/Mitgliedschaften</h3>
-    <p>erfordert merge</p>
+    <h4>Throughput/Turnover</h4>
     <p>
-      Anzahl GenossInnen: $ off {num_memberships}<br />
-      Anzahl natürliche Personen: $ off {num_ms_nat}<br />
-      Anzahl juristische Personen: $ off {num_ms_jur}<br />
-      Anzahl normale Mitgliedschaften: $ off {num_ms_norm}<br />
-      Anzahl invest. Mitgliedschaften: $ off {num_ms_inves}<br />
-      Anzahl Anteile: $ off {num_shares}<br />
+      Anzahl fertiger mitgliedschaften: ${num_members_accepted}
+      <a href="$request.route_url('membership_listing_backend'
+               ,number=0, orderby='id', order='asc')">ansehen</a>
+      <br />
+      Anzahl unfertiger mitgliedschaften: ${num_non_accepted}
+      <small>(incl. ${num_duplicates} Duplikate)</small>
+      <a href="${request.route_url('dashboard', number=0,
+               orderby='id', order='asc')}">ansehen</a>
+      <br />
+      Anzahl Duplikate: ${num_duplicates}<br />
+      <!-- Anzahl nonmember_listing: ${num_nonmember_listing}<br />
+      Anzahl nonmember_listing_count: ${nonmember_listing_count}<br />
+      Anzahl Leerer DB IDs: $ off {num_empty_slots}<br />-->
+      Testsumme: ${num_members_accepted} + ${num_non_accepted}
+      = ${num_members_accepted + num_non_accepted}
+      <small>(num_members_accepted + num_non_accepted)</small>
     </p>
-    <!-- XXX TODO h5>Auflistung nach PLZ u. Land</h5 --> 
+      <h3>GenossInnen/Mitgliedschaften</h3>
+    <p>
+      Anzahl Mitgliedschaften: ${num_members_accepted}  <small>incl. Körperschaften</small><br />
+      <hr />
+      Anzahl natürliche Personen: ${num_ms_nat_acc} <small>Menschen</small><br />
+      Anzahl juristische Personen: ${num_ms_jur_acc} <small>Körperschaften</small><br />
+      (Test:) Summe dieser zwei: ${num_ms_nat_acc+num_ms_jur_acc}<br />
+      <hr />
+      Anzahl normale Mitgliedschaften: ${num_ms_norm}<br />
+      Anzahl invest. Mitgliedschaften: ${num_ms_inves}<br />
+      Anzahl unbek. Mitgliedschaften: ${num_ms_features}<br />
+      (Test:) Summe dieser drei 'Arten' Mitgliedschaften:
+      ${num_ms_features}+${num_ms_inves}+${num_ms_norm}=
+      ${num_ms_features+num_ms_inves+num_ms_norm}<br />
+      <hr />
+      Anzahl Anteile: ${num_shares_members}<br />
+    </p>
+    <h4>Mitgliedschaftsnummern</h4>
+    Anzahl vergebener Mitgliedschaftsnummern: ${num_memnums}
+    &nbsp;&nbsp;&nbsp;<small>incl: phorsichts 999.999.999</small><br />
+    <span tal:condition="num_memnums >= 1">
+      Größte vergebene Mitgliedschaftsnummer: ${max_memnum}
+      &nbsp;&nbsp;&nbsp;<small>Ausnahme: phorsichts 999.999.999</small><br />
+      Nächste zuvergebene Mitgliedschaftsnummer: ${next_memnum}
+    </span>
+
+    <h3>Länder</h3>
+    Angaben ohne Gewähr auf Richtigkeit.
+    Zahlen beinhalten Mitglieder und Nichtmitglieder.<br />
+    Anzahl verschiedener Länder: ${num_countries}
+    <table class="table table-striped">
+      <tr class="table-striped">
+        <td>country</td><td>number</td>
+      </tr>
+      <tr tal:repeat="country countries_list">
+        <td>${country[0]}</td><td>${country[1]}</td></tr>
+    </table>
+    <h5>XXX TODO Auflistung nach PLZ... grafische übersicht</h5> 
+
     <h3>Staff</h3>
     <p>
       Wie viele Accounts gibt es? ${num_staff}<br />
@@ -54,7 +92,7 @@
       <p>
         <a href="${request.route_url('dashboard_only')}"
             class="btn btn-primary">Dashboard</a>
-        <a href="${request.route_url('membership_listing',number=0,orderby='id',order='asc')}"
+        <a href="${request.route_url('membership_listing_backend',number=0,orderby='id',order='asc')}"
            class="btn btn-success">Memberships</a>
         <a href="${request.route_url('logout')}" class="btn btn-danger">Abmelden</a>
       </p>
