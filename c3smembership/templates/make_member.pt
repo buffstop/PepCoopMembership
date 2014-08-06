@@ -33,24 +33,29 @@
             mem.type: ${member.membership_type}<br />
             REFCODE: ${member.email_confirm_code}<br />
         </p>
-        <p>
-          Membership Number to be given: ${next_mship_number}
-          <form action="${request.route_url('make_member', afm_id=member.id)}"
-            method="post"
-            class="form">
-        <p>
-          <input name="make_member" type="hidden"
-                 size="3" maxlength="3"
-                 value="${member.id}"
-                 class="form-control"/>
-          <input name="submit" type="submit"
-                 class="btn btn-primary"
-                 title="Make Member of C3S SCE"/>
-        </p>
-      </form>
-        </p>
-        <p>
+        <div tal:condition="not member.is_duplicate">
+          <p>
+            Membership Number to be given: ${next_mship_number}
+            <form action="${request.route_url('make_member', afm_id=member.id)}"
+                  method="post"
+                  class="form">
+              <input name="make_member" type="hidden"
+                     size="3" maxlength="3"
+                     value="${member.id}"
+                     class="form-control"/>
+              Mitgliedschaftsdatum (yyyy-mm-dd):
+              <input name="membership_date" type="text">
+              <input name="submit" type="submit"
+                     class="btn btn-primary"
+                     value="Make Member of C3S SCE"/>
+            </form>
+          </p>
           But wait!<br />
+        </div>
+        <div tal:condition="member.is_duplicate">
+          This Application for membership is a duplicate! see merge options below...
+        </div>
+        <p>
           Review the lists below (if any) as there might be <strike>similar</strike>
           entries or even the same person registered in the database 
           of memberships already.
@@ -58,81 +63,73 @@
         <h3>similar <small>candidates from the database of</small> memberships</h3>
 
         <!--! lastname -->
-        <tal:block tal:condition="same_mships_lastn.count() is not 0">
+        <tal:block tal:condition="len(same_mships_lastn) is not 0">
           <h4><small>same</small> lastname <small>(up to 10)</small></h4>
           <ul>
             <li tal:repeat="sim same_mships_lastn">
-              ${sim.firstname} ${sim.lastname} ${sim.email}
-              born ${sim.date_of_birth} (${sim.num_shares} shares)
-              ${sim.postcode} ${sim.city}
-              <a href="$ off {request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
+              ${sim.firstname} ${sim.lastname} (${sim.num_shares} shares)<br />
+              ${sim.email} born ${sim.date_of_birth}<br />
+              ${sim.address1} ${sim.address2}<br />
+              ${sim.postcode} ${sim.city}<br />
+              see <a target="_blank_${sim.id}"
+                     href="${request.route_url('detail', memberid=sim.id)}">
+                ${sim.id}</a>
+              <a href="${request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
                  class="btn btn-success">
-                Merge ${member.num_shares} Shares (${member.email_confirm_code})
-                to ${sim.firstname} ${sim.lastname}</a>
+                Merge to id ${sim.id}, ${sim.email_confirm_code}</a>
+            </li>
+          </ul>
+        </tal:block>
+        <!--! firstname -->
+        <tal:block tal:condition="len(same_mships_firstn) is not 0">
+          <h4><small>same</small> firstname <small>(up to 10)</small></h4>
+          <ul>
+            <li tal:repeat="sim same_mships_firstn">
+              ${sim.firstname} ${sim.lastname} (${sim.num_shares} shares)<br />
+              ${sim.email} born ${sim.date_of_birth}<br />
+              ${sim.address1} ${sim.address2}<br />
+              ${sim.postcode} ${sim.city}<br />
+              see <a target="_blank_${sim.id}"
+                     href="${request.route_url('detail', memberid=sim.id)}">
+                ${sim.id}</a>
+              <a href="${request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
+                 class="btn btn-success">
+                Merge to id ${sim.id}, ${sim.email_confirm_code}</a>
             </li>
           </ul>
         </tal:block>
         <!--! email -->
-        <tal:block tal:condition="same_mships_email.count() is not 0">
+        <tal:block tal:condition="len(same_mships_email) is not 0">
           <h4><small>same</small> email <small>(up to 10)</small></h4>
           <ul>
             <li tal:repeat="sim same_mships_email">
-              ${sim.firstname} ${sim.lastname} ${sim.email}
-              born ${sim.date_of_birth} (${sim.num_shares} shares)
-              ${sim.postcode} ${sim.city}
-              <a href="$ off {request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
+              ${sim.firstname} ${sim.lastname} (${sim.num_shares} shares)<br />
+              ${sim.email} born ${sim.date_of_birth}<br />
+              ${sim.address1} ${sim.address2}<br />
+              ${sim.postcode} ${sim.city}<br />
+              see <a href="${request.route_url('detail', memberid=sim.id)}">
+                ${sim.id}</a>
+              <a href="${request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
                  class="btn btn-success">
-                Merge ${member.num_shares} Shares (${member.email_confirm_code})
-                to ${sim.firstname} ${sim.lastname}
+                Merge to id ${sim.id}, ${sim.email_confirm_code}
               </a>
             </li>
           </ul>
         </tal:block>
         <!--! date of birth -->
-        $ off {same_mships_dob.count()}
-        <tal:block tal:condition="True or same_mships_dob.count() is not 0">
+        <tal:block tal:condition="len(same_mships_dob) is not 0">
           <h4><small>same</small> date of birth <small>(up to 10)</small></h4>
           <ul>
-            <li tal:repeat="sim []" off="same_mships_dob">
-              ${sim.firstname} ${sim.lastname} ${sim.email}
-              born ${sim.date_of_birth} (${sim.num_shares} shares)
-              ${sim.postcode} ${sim.city}
-              <a href="$ off {request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
-                 class="btn btn-success">
-                Merge ${member.num_shares} Shares (${member.email_confirm_code})
-                to ${sim.firstname} ${sim.lastname}
-              </a>
-            </li>
-          </ul>
-        </tal:block>
-        <!--! city -->
-        <tal:block tal:condition="True or same_mships_city.count() is not 0">
-          <h4><small>same</small> email <small>(up to 10)</small></h4>
-          <ul>
-            <li tal:repeat="sim []" off="same_mships_email">
-              ${sim.firstname} ${sim.lastname} ${sim.email}
-              born ${sim.date_of_birth} (${sim.num_shares} shares)
-              ${sim.postcode} ${sim.city}
+            <li tal:repeat="sim same_mships_dob">
+              ${sim.firstname} ${sim.lastname} (${sim.num_shares} shares)<br />
+              ${sim.email} born ${sim.date_of_birth}<br />
+              ${sim.address1} ${sim.address2}<br />
+              ${sim.postcode} ${sim.city}<br />
+              see <a href="${request.route_url('detail', memberid=sim.id)}">
+                ${sim.id}</a>
               <a href="${request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
                  class="btn btn-success">
-                Merge ${member.num_shares} Shares (${member.email_confirm_code})
-                to ${sim.firstname} ${sim.lastname}
-              </a>
-            </li>
-          </ul>
-        </tal:block>
-        <!--! postcode -->
-        <tal:block tal:condition="True or same_mships_postcode.count() is not 0">
-          <h4><small>same</small> postcode <small>(up to 10)</small></h4>
-          <ul>
-            <li tal:repeat="sim []" off="same_mships_email">
-              ${sim.firstname} ${sim.lastname} ${sim.email}
-              born ${sim.date_of_birth} (${sim.num_shares} shares)
-              ${sim.postcode} ${sim.city}
-              <a href="${request.route_url('merge_member',afm_id=member.id,mid=sim.id)}"
-                 class="btn btn-success">
-                Merge ${member.num_shares} Shares (${member.email_confirm_code})
-                to ${sim.firstname} ${sim.lastname}
+                Merge to id ${sim.id}, ${sim.email_confirm_code}
               </a>
             </li>
           </ul>

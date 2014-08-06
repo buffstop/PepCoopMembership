@@ -128,6 +128,48 @@ def membership_listing_backend(request):
     }
 
 
+@view_config(permission='manage',
+             route_name='merge_member')
+def merge_member_view(request):
+    _id = request.matchdict['afm_id']
+    _mid = request.matchdict['mid']
+    print "shall merge {} to {}".format(_id, _mid)
+
+    orig = C3sMember.get_by_id(_mid)
+    merg = C3sMember.get_by_id(_id)
+
+    if not (orig.membership_accepted):
+        request.session.flash(
+            'you can only merge to accepted members!',
+            'merge_message')
+        HTTPFound(request.route_url('make_member', afm_id=_id))
+    #print "resulting number of shares: {}".format(
+    #    int(orig.num_shares) + int(merg.num_shares))
+    #print "resulting number of shares exceeds 60? {}".format(
+    #    int(orig.num_shares) + int(merg.num_shares) > 60)
+    exceeds_60 = int(orig.num_shares) + int(merg.num_shares) > 60
+    if exceeds_60:
+        request.session.flash(
+            'merger would exceed 60 shares!',
+            'merge_message')
+        return HTTPFound(request.route_url('make_member', afm_id=_id))
+    shares = Shares(
+        number=merg.num_shares,
+        date_of_acquisition=merg.date_of_submission,
+        reference_code=merg.email_confirm_code,
+        signature_received=merg.signature_received,
+        signature_received_date=merg.signature_received_date,
+        payment_received=merg.payment_received,
+        payment_received_date=merg.payment_received_date,
+    )
+    DBSession.add(shares)  # persist
+    orig.shares.append(shares)
+    orig.num_shares += merg.num_shares
+    DBSession.delete(merg)
+
+    return HTTPFound(request.route_url('detail', memberid=_mid))
+
+
 @view_config(renderer='templates/make_member.pt',
              permission='manage',
              route_name='make_member')
@@ -140,15 +182,24 @@ def make_member_view(request):
     except:
         return HTTPFound(
             location=request.route_url('dashboard_only'))
-    if _m.membership_accepted == 1:
+    if _m.membership_accepted:
         #request.session.flash('id {} is already accepted member!')
         return HTTPFound(request.route_url('detail', memberid=_m.id))
 
     if 'make_member' in request.POST:
         #print "yes! contents: {}".format(request.POST['make_member'])
+        try:
+            _m.membership_date = datetime.strptime(
+                request.POST['membership_date'], '%Y-%m-%d')
+        except ValueError, ve:
+            request.session.flash(ve.message, 'merge_message')
+            return HTTPFound(request.route_url('make_member', afm_id=_m.id))
+
         _m.membership_accepted = True
-        _m.membership_date = datetime.now().date()
-        _m.is_legalentity = False  # check for legalentities !!!
+        if _m.is_legalentity:
+            _m.membership_type = 'investing'
+        else:
+            _m.is_legalentity = False
         _m.membership_number = C3sMember.get_next_free_membership_number()
         shares = Shares(
             number=_m.num_shares,
@@ -166,11 +217,11 @@ def make_member_view(request):
     return {
         'member': _m,
         'next_mship_number': C3sMember.get_next_free_membership_number(),
-        #'same_mships_firstn': C3sMember.get_same_firstnames(_m.firstname),
+        'same_mships_firstn': C3sMember.get_same_firstnames(_m.firstname),
         'same_mships_lastn': C3sMember.get_same_lastnames(_m.lastname),
         'same_mships_email': C3sMember.get_same_email(_m.email),
-        #'same_mships_dob': C3sMember.get_same_date_of_birth(
-        #    _m.date_of_birth),
+        'same_mships_dob': C3sMember.get_same_date_of_birth(
+            _m.date_of_birth),
         #'same_mships_city': C3sMember.get_same_city(_m.city),
         #'same_mships_postcode': C3sMember.get_same_postcode(_m.postcode),
     }
@@ -231,13 +282,13 @@ def flag_duplicates(request):
         assert(orig.num_shares + dupl.num_shares < 60)
 
     for d in duplicates:
-        print "--> d[0]: {}; d[1]: {}".format(d[0], d[1])
+        print "--> original: {}; duplicate: {}".format(d[0], d[1])
         orig = C3sMember.get_by_id(d[0])
         dupl = C3sMember.get_by_id(d[1])
         # set flags
         dupl.is_duplicate = True
         dupl.is_duplicate_of = orig.id
-
+    request.session.flash('duplicates were flagged.', 'message_to_staff')
     return HTTPFound(
         location=request.route_url('toolbox'))
 
@@ -249,11 +300,11 @@ def make_founders_members(request):
     give membership status, date and number to the founders
     '''
     _order_by = 'id'
-    _founders = C3sMember.member_listing(
+    _founders = C3sMember.get_range_ids(
         _order_by,  # order as in database (by id)
-        how_many=50,  # we have 50 founders
-        offset=930,  # starting at 932, omit 1st 931
-        order=u'asc').all()
+        first_id=1017,  # we have 50 founders
+        last_id=1066,  # starting at 932, omit 1st 931
+        order=u'asc')
     print "got {} items.".format(len(_founders))
     try:  # sanity check
         for _f in _founders:
@@ -266,6 +317,7 @@ def make_founders_members(request):
             assert(_f.payment_received_date == datetime(2013, 9, 25))
     except:
         print "failed sanity check!"
+        request.session.flash('failed sanity check.', 'message_to_staff')
         return HTTPFound(location=request.route_url('toolbox'))
 
     #try:
@@ -276,7 +328,7 @@ def make_founders_members(request):
         _f.is_legalentity = False
         # prepare numbering
         _number = int(_f.email_confirm_code.split('_')[1])
-        print "the number from refcode: {}".format(_number)
+        #print "the number from refcode: {}".format(_number)
         # membership_number
         if _number < 20:
             _f.membership_number = _number
@@ -311,6 +363,7 @@ def make_founders_members(request):
         except:
             print "shares failed for id {}!".format(_f.id)
 
+    request.session.flash('made founders members.', 'message_to_staff')
     return HTTPFound(
         location=request.route_url('toolbox'))
 
@@ -322,11 +375,11 @@ def make_crowdfounders_members(request):
     give membership status, date and number to the crowdfounders
     '''
     _order_by = 'id'
-    _crowdfounders = C3sMember.member_listing(
+    _crowdfounders = C3sMember.get_range_ids(
         _order_by,  # order as in database (by id)
-        how_many=520,  # we have 520 founders
-        offset=410,  # starting at 411, omit 1st 410
-        order=u'asc').all()
+        first_id=496,  # we have 520 founders
+        last_id=1016,  # starting at 411, omit 1st 410
+        order=u'asc')
     print "got {} items.".format(len(_crowdfounders))
     try:  # sanity check
         print "checking crowdfounder data"
@@ -351,6 +404,7 @@ def make_crowdfounders_members(request):
         # make member
         _f.membership_accepted = True
         _f.membership_date = _f.date_of_submission
+        #print "DEBUG: date of membership: {}".format(_f.date_of_submission)
         _f.is_legalentity = False
 
         # handle shares
@@ -390,7 +444,7 @@ def make_crowdfounders_members(request):
         i.membership_number = highest_mem_num
         print "member id {} with code {} got number {}".format(
             i.id, i.email_confirm_code, highest_mem_num)
-
+    request.session.flash('made crowdfounders members.', 'message_to_staff')
     return HTTPFound(
         location=request.route_url('toolbox'))
 
@@ -407,23 +461,48 @@ def make_yesser_members(request):
     were imported in between.
     '''
     _order_by = 'id'
-    _range_1 = C3sMember.member_listing(
+    _range_1 = C3sMember.get_range_ids(
         _order_by,  # order as in database (by id)
-        how_many=410,  # the first set
-        offset=0,  # starting at 1
-        order=u'asc').all()
+        first_id=1,  # the first set
+        last_id=495,  # starting at 1
+        order=u'asc')
     print "got {} items.".format(len(_range_1))
 
     #prepare membership_number
     #_next_mship_number = int(C3sMember.get_next_free_membership_number())
 
+    yes_mergelater = []
+
     # iterate
     def make_members(_range):
+        #global yes_mergelater
         for i in _range:
             if i.is_duplicate:
                 print "--> id {} is a duplicate.".format(i.id)
                 continue
-            if i.signature_confirmed and i.payment_confirmed:
+            if (  # check for cutoff date
+                    (i.signature_received and i.payment_received) and
+                    ((i.signature_received_date > datetime(2014, 07, 16)) or
+                    (i.payment_received_date > datetime(2014, 07, 16)))
+            ):
+                print "got one with date later than 2014-07-16: id {}".format(
+                    i.id)
+                continue  # do not make member now...
+
+            if (  # check for date of registry
+                    (i.signature_received and i.payment_received) and
+                    ((i.signature_received_date > datetime(2014, 03, 29)) or
+                     (i.payment_received_date > datetime(2014, 03, 29)))
+            ):
+                print "got one with date later than 2014-03-29: id {}".format(
+                    i.id)
+                yes_mergelater.append(i.id)
+                continue  # do not make member now...
+            if (
+                    (i.signature_received and i.payment_received) and
+                    (i.signature_received_date < datetime(2014, 07, 16)) and
+                    (i.payment_received_date < datetime(2014, 07, 16))
+            ):
                 print u"id {} {} {} --> member w/ refcode {}".format(
                     i.id, i.firstname, i.lastname,
                     #_next_mship_number,
@@ -431,7 +510,7 @@ def make_yesser_members(request):
                 )
                 # do it
                 i.membership_accepted = True
-                i.membership_date = datetime(2013, 9, 24)  # XXX
+                i.membership_date = datetime(2014, 3, 29)  # XXX
                 # we don't have this date, do we?
                 i.is_legalentity = False
                 i.membership_number = C3sMember.get_next_free_membership_number()
@@ -455,23 +534,27 @@ def make_yesser_members(request):
 
     make_members(_range_1)
     print "...done with the first range (id ), off to second..."
-    _range_2 = C3sMember.member_listing(
+    _range_2 = C3sMember.get_range_ids(
         _order_by,  # order as in database (by id)
-        how_many=25,  # the second set
-        offset=981,  # starting at 982 (id 1067)
-        order=u'asc').all()
+        first_id=1067,  # the second set
+        last_id=1092,  # starting at 982 (id 1067)
+        order=u'asc')
     print "got {} items.".format(len(_range_2))
     make_members(_range_2)
     print "...done with the second"
 
-    _range_3 = C3sMember.member_listing(
-        _order_by,  # order as in database (by id)
-        how_many=25,  # the third set
-        offset=1012,  # starting at 1013 (id 1109)
-        order=u'asc').all()
-    print "got {} items.".format(len(_range_2))
-    make_members(_range_3)
+    #_range_3 = C3sMember.get_range_ids(
+    #    _order_by,  # order as in database (by id)
+    #    first_id=1109,  # the third set
+    #    last_id=1500,  # starting at 1013 (id 1109)
+    #    order=u'asc')
+    #print "got {} items.".format(len(_range_2))
+    #make_members(_range_3, count_yes_mergelater)
     print "...done with the last"
+    print "did not touch {} afms to be merged later: {}".format(
+        len(yes_mergelater), yes_mergelater
+    )
+    request.session.flash('made yessers members.', 'message_to_staff')
     return HTTPFound(
         location=request.route_url('toolbox'))
 
@@ -486,30 +569,34 @@ def merge_duplicates(request):
     for d in dupes:
         orig = C3sMember.get_by_id(d.is_duplicate_of)
         dupe = C3sMember.get_by_id(d.id)
+        assert(orig.membership_accepted)
         assert(orig.lastname == dupe.lastname)
         assert(orig.num_shares + dupe.num_shares < 60)
+        # only if duplicate fulfills requirements
+        if dupe.signature_received and dupe.payment_received:
 
-        # the duplicates shares are added to the originals shares
-        share_pkg = Shares(
-            number=dupe.num_shares,
-            date_of_acquisition=dupe.date_of_submission,  # this holds for
-            # all crowdfounders, because we imported it to that field.
-            # we had no better data.
-            # but still we have order within the crowdfounders because we
-            # can use the startnext reference code for ordering
-            reference_code=dupe.email_confirm_code,
-            signature_received=dupe.signature_received,
-            signature_received_date=dupe.signature_received_date,
-            payment_received=dupe.payment_received,
-            payment_received_date=dupe.payment_received_date,
-        )
-        DBSession.add(share_pkg)  # persist
-        orig.shares.append(share_pkg)
-        orig.num_shares += dupe.num_shares  # update num_shares
-        print u"gave {} shares to {}/{}, now totalling {} shares.".format(
-            dupe.num_shares, orig.id,
-            orig.lastname, orig.num_shares,
-        )
-
+            # the duplicates shares are added to the originals shares
+            share_pkg = Shares(
+                number=dupe.num_shares,
+                date_of_acquisition=dupe.date_of_submission,  # this holds for
+                # all crowdfounders, because we imported it to that field.
+                # we had no better data.
+                # but still we have order within the crowdfounders because we
+                # can use the startnext reference code for ordering
+                reference_code=dupe.email_confirm_code,
+                signature_received=dupe.signature_received,
+                signature_received_date=dupe.signature_received_date,
+                payment_received=dupe.payment_received,
+                payment_received_date=dupe.payment_received_date,
+            )
+            DBSession.add(share_pkg)  # persist
+            orig.shares.append(share_pkg)
+            orig.num_shares += dupe.num_shares  # update num_shares
+            DBSession.delete(dupe)  # delete the duplicate
+            print u"gave {} shares to {}/{}, now totalling {} shares.".format(
+                dupe.num_shares, orig.id,
+                orig.lastname, orig.num_shares,
+            )
+    request.session.flash('merged duplicates.', 'message_to_staff')
     return HTTPFound(
         location=request.route_url('toolbox'))

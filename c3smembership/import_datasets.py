@@ -425,16 +425,18 @@ def fix_import_crowdfunders(request):
         #print("=== row %s: %s" % (counter, row))
 
         _startnexter = C3sMember.get_by_code(row[9])
-        print u"found {}, has {}, should be {}".format(
+        print u"found {}: {}, has {}, should be {}".format(
+            _startnexter.id,
             _startnexter.firstname,
             _startnexter.date_of_submission,
             row[11],
         )
         if row[11] is not '':
-            print "----PING! {}".format(_startnexter.id)
+            #print "----PING! {}".format(_startnexter.id)
             _startnexter.date_of_submission = datetime.datetime.strptime(
                 row[11], '%Y-%m-%d')  # lost in a rush... fixing it now
         DBSession.flush()
 
+    request.session.flash('fixed import of crowdfounders.', 'message_to_staff')
     return HTTPFound(
         request.route_url('toolbox'))

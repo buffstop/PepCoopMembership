@@ -150,7 +150,7 @@
           <div tal:condition="member.membership_accepted">
             m${member.membership_number}</div>
           <div tal:condition="member.is_duplicate">
-            <a href="$request.route_url('detail', memberid=member.is_duplicate_of)">dup:${member.is_duplicate_of}</div>
+            <a href="${request.route_url('detail', memberid=member.is_duplicate_of)}">dup:${member.is_duplicate_of}</div>
         </td>
         <td>
           <a tal:condition="not member.email_invite_flag_bcgv14"

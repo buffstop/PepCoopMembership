@@ -222,14 +222,13 @@ def edit_member(request):
             title='Aufnahmedatum',
             #widget=deform.widget.DatePartsWidget(
             #    inline=True),
-            default=date(2014, 4, 1),
             validator=Range(
                 min=date(2013, 9, 24),
                 max=date.today(),
                 min_err=_(u'${val} is earlier than earliest date ${min}'),
                 max_err=_(u'${val} is later than latest date ${max}')
             ),
-            missing=date(2013, 9, 24),
+            missing=date(1970, 1, 1),
             oid="membership_date",
         )
         is_duplicate = colander.SchemaNode(
@@ -240,7 +239,7 @@ def edit_member(request):
         )
         is_duplicate_of = colander.SchemaNode(
             colander.String(),
-            title='ReferenzCode',
+            title='Id',
             missing='',
             oid="duplicate_of",
         )
@@ -254,14 +253,13 @@ def edit_member(request):
             title=_('Datum Unterschriftseingang'),
             #widget=deform.widget.DatePartsWidget(
             #    inline=True),
-            #default=date(2014, 4, 1),
             validator=Range(
-                min=date(2013, 9, 24),
+                min=date(1070, 1, 1),
                 max=date.today(),
                 min_err=_(u'${val} is earlier than earliest date ${min}'),
                 max_err=_(u'${val} is later than latest date ${max}')
             ),
-            missing=date(2013, 9, 24),
+            missing=date(1970, 1, 1),
         )
         payment_received = colander.SchemaNode(
             colander.Boolean(),
@@ -272,14 +270,13 @@ def edit_member(request):
             title='Datum Zahlungserhalt',
             #widget=deform.widget.DatePartsWidget(
             #    inline=True),
-            #default=date(2014, 4, 1),
             validator=Range(
-                min=date(2013, 9, 24),
+                min=date(1970, 1, 1),
                 max=date.today(),
                 min_err=_(u'${val} is earlier than earliest date ${min}'),
                 max_err=_(u'${val} is later than latest date ${max}')
             ),
-            missing=date(2013, 9, 24),
+            missing=date(1970, 1, 1),
             oid="_received_date",
         )
 

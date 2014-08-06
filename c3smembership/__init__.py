@@ -114,6 +114,7 @@ def main(global_config, **settings):
     config.add_route('flag_duplicates', '/flag_dup')
     config.add_route('merge_duplicates', '/merge_dup')
     config.add_route('make_member', '/make_member/{afm_id}')
+    config.add_route('merge_member', '/merge_member/{afm_id}/{mid}')
     config.add_route('make_founders_members', '/make_founders_members')
     config.add_route('make_crowdfounders_members',
                      '/make_crowdfounders_members')

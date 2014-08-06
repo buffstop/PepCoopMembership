@@ -576,6 +576,22 @@ class C3sMember(Base):
         return q
 
     @classmethod
+    def get_range_ids(cls, order_by, first_id, last_id, order="asc"):
+        try:
+            attr = getattr(cls, order_by)
+            order_function = getattr(attr, order)
+        except:
+            raise Exception("Invalid order_by ({0}) or order value "
+                            "({1})".format(order_by, order))
+        q = DBSession.query(cls).filter(
+            and_(
+                cls.id >= first_id,
+                cls.id <= last_id,
+            )
+        ).order_by(order_function()).all()
+        return q
+
+    @classmethod
     def nonmember_listing(cls, order_by, how_many, offset=0, order="asc"):
         try:
             attr = getattr(cls, order_by)
@@ -678,7 +694,16 @@ class C3sMember(Base):
             and_(
                 cls.membership_accepted == 1,
                 cls.lastname == name
-            )).slice(0, 10)
+            )).all()
+
+    @classmethod
+    def get_same_firstnames(cls, name):  # XXX todo: similar
+        """return list of accepted members with same fistnames"""
+        return DBSession.query(cls).filter(
+            and_(
+                cls.membership_accepted == 1,
+                cls.firstname == name
+            )).all()
 
     @classmethod
     def get_same_email(cls, mail):  # XXX todo: similar
@@ -687,7 +712,16 @@ class C3sMember(Base):
             and_(
                 cls.membership_accepted == 1,
                 cls.email == mail,
-            )).slice(0, 10)
+            )).all()
+
+    @classmethod
+    def get_same_date_of_birth(cls, dob):  # XXX todo: similar
+        """return list of accepted members with same date of birth"""
+        return DBSession.query(cls).filter(
+            and_(
+                cls.membership_accepted == 1,
+                cls.date_of_birth == dob,
+            )).all()
 
     # membership numbers etc.
     @classmethod

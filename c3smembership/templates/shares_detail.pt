@@ -34,7 +34,11 @@
         </td>
       </tr>
       <tr>
-        <td>date_of_submission</td>
+        <td>reference code</td>
+	<td>${s.reference_code}</td>
+      </tr>
+      <tr>
+        <td>date_of_acquisition</td>
 	<td>${s.date_of_acquisition}</td>
       </tr>
       <tr>
