@@ -83,6 +83,8 @@
     <p>    
       <a href="${request.route_url('export_all')}"
          class="btn btn-primary">Export All (.csv)</a>
+      <a href="${request.route_url('export_members')}"
+         class="btn btn-primary">Export Members (.csv)</a>
       <a href="${request.route_url('export_yes_emails')}"
          class="btn btn-primary">Export AfM Emails (sig. &amp; paym. confirmed) (.csv)</a>
     </p>
