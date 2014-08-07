@@ -165,9 +165,17 @@ def merge_member_view(request):
             'merger would exceed 60 shares!',
             'merge_message')
         return HTTPFound(request.route_url('make_member', afm_id=_id))
+    _date_for_shares = merg.signature_received_date if (
+        merg.signature_received_date > merg.payment_received_date
+    ) else merg.payment_received_date
+    print "the date for the shares: {} (s: {}; p: {})".format(
+        _date_for_shares,
+        merg.signature_received_date,
+        merg.payment_received_date
+    )
     shares = Shares(
         number=merg.num_shares,
-        date_of_acquisition=merg.date_of_submission,
+        date_of_acquisition=_date_for_shares,
         reference_code=merg.email_confirm_code,
         signature_received=merg.signature_received,
         signature_received_date=merg.signature_received_date,
@@ -215,7 +223,7 @@ def make_member_view(request):
         _m.membership_number = C3sMember.get_next_free_membership_number()
         shares = Shares(
             number=_m.num_shares,
-            date_of_acquisition=_m.date_of_submission,
+            date_of_acquisition=_m.membership_date,
             reference_code=_m.email_confirm_code,
             signature_received=_m.signature_received,
             signature_received_date=_m.signature_received_date,
