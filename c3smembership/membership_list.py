@@ -206,6 +206,10 @@ def make_member_view(request):
         #request.session.flash('id {} is already accepted member!')
         return HTTPFound(request.route_url('detail', memberid=_m.id))
 
+    if not (_m.signature_received and _m.payment_received):
+        request.session.flash('signature or payment missing!', 'messages')
+        return HTTPFound(request.route_url('dashboard_only'))
+
     if 'make_member' in request.POST:
         #print "yes! contents: {}".format(request.POST['make_member'])
         try:
