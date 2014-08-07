@@ -487,3 +487,60 @@ def export_yes_emails(request):
     return {
         'header': ['Vorname Nachname <devnull@c3s.cc>', ],
         'rows': rows}
+
+
+@view_config(renderer='csv',
+             permission='manage',
+             route_name='export_members')
+def export_memberships(request):
+    """
+    export the database to a CSV file
+    """
+    _num = C3sMember.get_number()
+    datasets = C3sMember.get_members(
+        'id', how_many=_num, offset=0, order=u'asc')
+    header = ['firstname', 'lastname', 'email',
+              'address1', 'address2', 'postcode', 'city', 'country',
+              'locale', 'date_of_birth',
+              #'email_is_confirmed',
+              'email_confirm_code',
+              'membership_date',
+              'num_shares',  # 'date_of_submission',
+              #'shares list (number+date)',
+              'membership_type',
+              'member_of_colsoc', 'name_of_colsoc',
+              'signature_received', 'signature_received_date',
+              'payment_received', 'payment_received_date',
+              #'signature_confirmed', 'signature_confirmed_date',
+              #'payment_confirmed', 'payment_confirmed_date',
+              'accountant_comment',
+              'is_legalentity',
+              'court of law',
+              'registration number',
+              ]
+    rows = []  # start with empty list
+    for m in datasets:
+        rows.append(
+            (m.firstname, m.lastname, m.email,
+             m.address1, m.address2, m.postcode, m.city, m.country,
+             m.locale, m.date_of_birth,
+             #m.email_is_confirmed,
+             m.email_confirm_code,
+             m.membership_date,
+             m.num_shares,
+             #m.date_of_submission,
+             #'+'.join(str(s.id)+'('+str(s.number)+')' for s in m.shares),
+             m.membership_type,
+             m.member_of_colsoc, m.name_of_colsoc,
+             m.signature_received, m.signature_received_date,
+             m.payment_received, m.payment_received_date,
+             #m.signature_confirmed, m.signature_confirmed_date,
+             #m.payment_confirmed, m.payment_confirmed_date,
+             m.accountant_comment,
+             m.is_legalentity,
+             m.court_of_law,
+             m.registration_number,)
+        )
+    return {
+        'header': header,
+        'rows': rows}
