@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from datetime import datetime
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -33,7 +35,17 @@ def member_list_print_view(request):
     # sort members alphabetically
     import locale
     locale.setlocale(locale.LC_ALL, "de_DE.UTF-8")
+
+    _members.sort(key=lambda x: x.firstname, cmp=locale.strcoll)
     _members.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
+
+    #from icu import Locale, Collator
+    #locale = Locale('de_DE.utf-8')
+    #locale = Locale('de_DE')
+    #collator = Collator.createInstance(Locale('de_DE.utf-8'))
+    #print dir(collator)
+    #_members.sort(key=lambda x: x.lastname, cmp=collator.compare)
+
     from datetime import date
     _today = date.today()
     return {
