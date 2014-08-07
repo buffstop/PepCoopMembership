@@ -306,11 +306,15 @@ def make_founders_members(request):
         last_id=1066,  # starting at 932, omit 1st 931
         order=u'asc')
     print "got {} items.".format(len(_founders))
+    #print "first:"
+    #print _founders[0].firstname
+    #print "last:"
+    #print _founders[49].firstname
     try:  # sanity check
         for _f in _founders:
-            print u"founder id: {} firstname: {} refcode: {}".format(
-                _f.id, _f.firstname, _f.email_confirm_code
-            )
+            #print u"founder id: {} firstname: {} refcode: {}".format(
+            #_f.id, _f.firstname, _f.email_confirm_code
+            #)
             assert(_f.email_confirm_code.split('_')[0].endswith('dungHH'))
             assert(_f.date_of_submission == datetime(2013, 9, 25))
             assert(_f.signature_received_date == datetime(2013, 9, 25))
@@ -503,8 +507,8 @@ def make_yesser_members(request):
                     (i.signature_received_date < datetime(2014, 07, 16)) and
                     (i.payment_received_date < datetime(2014, 07, 16))
             ):
-                print u"id {} {} {} --> member w/ refcode {}".format(
-                    i.id, i.firstname, i.lastname,
+                print u"id {} --> member w/ refcode {}".format(
+                    i.id,
                     #_next_mship_number,
                     i.email_confirm_code,
                 )
@@ -593,9 +597,9 @@ def merge_duplicates(request):
             orig.shares.append(share_pkg)
             orig.num_shares += dupe.num_shares  # update num_shares
             DBSession.delete(dupe)  # delete the duplicate
-            print u"gave {} shares to {}/{}, now totalling {} shares.".format(
+            print u"gave {} shares to id {}, now totalling {} shares.".format(
                 dupe.num_shares, orig.id,
-                orig.lastname, orig.num_shares,
+                orig.num_shares,
             )
     request.session.flash('merged duplicates.', 'message_to_staff')
     return HTTPFound(

@@ -422,12 +422,12 @@ def fix_import_crowdfunders(request):
         counter += 1
         #highest_mem_num += 1  # later...
 
-        #print("=== row %s: %s" % (counter, row))
+        print(u"=== row %s: %s" % (counter, row))
 
         _startnexter = C3sMember.get_by_code(row[9])
-        print u"found {}: {}, has {}, should be {}".format(
+        print u"found {}: has {}, should be {}".format(
             _startnexter.id,
-            _startnexter.firstname,
+            #_startnexter.firstname,
             _startnexter.date_of_submission,
             row[11],
         )

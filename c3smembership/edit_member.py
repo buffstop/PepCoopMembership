@@ -546,57 +546,58 @@ def edit_member(request):
                 print "has no membership number but is now accepted: give one"
                 _m.membership_number = C3sMember.get_next_free_membership_number()
 
-            # check for shares
-            print "turning shares to package.."
-            share_pkg = Shares(
-                number=_m.num_shares,
-                date_of_acquisition=_m.date_of_submission,
-                reference_code=_m.email_confirm_code,
-                signature_received=_m.signature_received,
-                signature_received_date=_m.signature_received_date,
-                payment_received=_m.payment_received,
-                payment_received_date=_m.payment_received_date
-            )
-            # shall we test for existing shares packages !?!
-            _shares_found = False
-            for s in _m.shares:
-                if _m.email_confirm_code in s.reference_code:
-                    _shares_found = True
-                    print "found the shares!"
-            if not _shares_found:
-                print "did not find these shares, need to add them!!"
-                _m.shares.extend(share_pkg)
-                DBSession.add(share_pkg)
-                _m.num_shares += share_pkg.number
-            try:
-                assert len(_m.shares) == 0
-                print "the shares before: {}".format(_m.shares)
-                _m.shares = [share_pkg]
-                DBSession.add(share_pkg)
-                DBSession.flush()
-                print "the shares after: {}".format(_m.shares)
-            except:
-                pass
-                try:
-                    assert len(_m.shares) != 0
-                    print "the shares: {}".format(_m.shares)
-                    _m.shares.extend(share_pkg)
-                    DBSession.add(share_pkg)
-                    print "the shares: {}".format(_m.shares)
-                except:
-                    pass
-                #DBSession.add(share_pkg)
-                #_m.shares = [share_pkg]
+            # # check for shares
+            # print "turning shares to package.."
+            # share_pkg = Shares(
+            #     number=_m.num_shares,
+            #     date_of_acquisition=_m.date_of_submission,
+            #     reference_code=_m.email_confirm_code,
+            #     signature_received=_m.signature_received,
+            #     signature_received_date=_m.signature_received_date,
+            #     payment_received=_m.payment_received,
+            #     payment_received_date=_m.payment_received_date
+            # )
+            # # shall we test for existing shares packages !?!
+            # _shares_found = False
+            # print "how many shares? {}".format(len(_m.shares))
+            # for s in _m.shares:
+            #     if _m.email_confirm_code in s.reference_code:
+            #         _shares_found = True
+            #         print "found the shares!"
+            # if not _shares_found:
+            #     print "did not find these shares, need to add them!!"
+            #     _m.shares.extend(share_pkg)
+            #     DBSession.add(share_pkg)
+            #     _m.num_shares += share_pkg.number
+            # try:
+            #     assert len(_m.shares) == 0
+            #     print "the shares before: {}".format(_m.shares)
+            #     _m.shares = [share_pkg]
+            #     DBSession.add(share_pkg)
+            #     DBSession.flush()
+            #     print "the shares after: {}".format(_m.shares)
+            # except:
+            #     pass
+            #     try:
+            #         assert len(_m.shares) != 0
+            #         print "the shares: {}".format(_m.shares)
+            #         _m.shares.extend(share_pkg)
+            #         DBSession.add(share_pkg)
+            #         print "the shares: {}".format(_m.shares)
+            #     except:
+            #         pass
+            #     #DBSession.add(share_pkg)
+            #     #_m.shares = [share_pkg]
 
-                if appstruct[
-                        'membership_info']['entity_type'] == 'legalentity':
-                    _m.is_legalentity = True
-                else:
-                    _m.is_legalentity = False
-            if len(_m.shares) == 0:
-                print "no shares packages"
-            else:
-                print "seems to have shares packages"
+        if appstruct[
+            'membership_info']['entity_type'] == 'legalentity':
+            _m.is_legalentity = True
+        else:
+            _m.is_legalentity = False
+        #if len(_m.shares) == 0:
+        #        print "no shares packages"
+        #    else:
+        #        print "seems to have shares packages"
 
         # empty the messages queue (as validation worked anyways)
         deleted_msg = request.session.pop_flash()
