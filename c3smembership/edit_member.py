@@ -110,7 +110,7 @@ def edit_member(request):
     }
     # special features for non-/not-yet-accepted-members
     if not _m.membership_accepted:
-        print "debug: stuff for not-yet-accepted"
+        #print "debug: stuff for not-yet-accepted"
         is_not_accepted = True
 
     #print('the appstruct: %s' % appstruct)
@@ -460,8 +460,8 @@ def edit_member(request):
             return{'form': e.render()}
 
         # debug
-        print("appstruct['membership_meta']['membership_accepted'] "
-              "is %s" % appstruct['membership_meta']['membership_accepted'])
+        #print("appstruct['membership_meta']['membership_accepted'] "
+        #      "is %s" % appstruct['membership_meta']['membership_accepted'])
         # to store the data in the DB, the old objet is updated
         listing = [  # map data attributes to appstruct items
             ('firstname', appstruct['person']['firstname']),
@@ -534,16 +534,17 @@ def edit_member(request):
         if appstruct['membership_meta'][
                 'membership_accepted'] == _m.membership_accepted:
             #if appstruct['membership_meta']['membership_accepted']:
-            print "appstruct['..._meta']['membership_accepted']: Same"
+            #print "appstruct['..._meta']['membership_accepted']: Same"
                 # being set to yes
+            pass
         else:
-            print "appstruct['..._meta']['membership_accepted']: Changed"
+            #print "appstruct['..._meta']['membership_accepted']: Changed"
             _m.membership_accepted = appstruct[
                 'membership_meta']['membership_accepted']
             if (  # in case no membership number
                     (isinstance(_m.membership_number, NoneType)) and
                     (_m.membership_accepted)):
-                print "has no membership number but is now accepted: give one"
+                #print "has no membership number but is now accepted: give one"
                 _m.membership_number = C3sMember.get_next_free_membership_number()
 
             # # check for shares
