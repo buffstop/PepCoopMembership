@@ -104,7 +104,7 @@
              class="glyphicon glyphicon-chevron-down"></a>
         </th>
         <th>
-          BC/GV
+          certificate
         </th>
         <th>
           mtype<br />
@@ -146,14 +146,17 @@
             <a href="$request.route_url('detail', memberid=member.is_duplicate_of)">dup:${member.is_duplicate_of}</div>
         </td>
         <td>
-          <a tal:condition="not member.email_invite_flag_bcgv14"
-             href="${request.route_url('invite_member', m_id=member.id)}"
-             title="BC/GV invitation not sent yet"
-             class="btn btn-danger"></a>
-          <a tal:condition="member.email_invite_flag_bcgv14"
-             href="${request.route_url('invite_member', m_id=member.id)}"
-             title="gesendet ${member.email_invite_date_bcgv14.strftime('am %d.%m.%Y um %H:%M')}"
+          <a tal:condition="not member.certificate_email"
+             href="${request.route_url('certificate_mail', id=member.id)}"
+             title="certificate not sent yet"
+             class="btn btn-warning"></a>
+          <a tal:condition="member.certificate_email"
+             href="${request.route_url('certificate_mail', id=member.id)}"
+             title="gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}"
              class="btn btn-success"></a>
+          <a href="${request.route_url('certificate_pdf', id=member.id, name=member.lastname+member.firstname, token=member.certificate_token)}"
+             title="Mitgliedschaftsurkunde ansehen"
+             class="btn btn-success">PDF</a>
         <td>
           <a tal:condition="(member.membership_type == 'startnext') or
                             (member.membership_type == 'unknown') or

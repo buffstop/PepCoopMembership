@@ -127,6 +127,9 @@ def main(global_config, **settings):
                      '/aml')
     # shares
     config.add_route('detail_shares', '/detail_shares/{id}')
+    # membership_certificate
+    config.add_route('certificate_mail', '/cert_mail/{id}')
+    config.add_route('certificate_pdf', '/cert/{id}/C3S_{name}_{token}.pdf')
     # invite people
     config.add_route('invite_member', '/invite_member/{m_id}')
     # search for people

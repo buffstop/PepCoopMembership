@@ -224,5 +224,37 @@
           </td>
         </tr>
       </table>
+
+      <h3>Membership Certificate</h3>
+
+      <table class="table table-striped">
+	<tr>
+          <td>
+            Versand Mitgliedsbescheinigungs-Email
+          </td>
+          <td>
+            <a tal:condition="not member.certificate_email"
+               href="${request.route_url('certificate_mail', id=member.id)}"
+               title="certificate not sent yet"
+               class="btn btn-warning">Noch nie.</a>
+            <a tal:condition="member.certificate_email"
+               href="${request.route_url('certificate_mail', id=member.id)}"
+               title="gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}"
+               class="btn btn-success">gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}</a>
+            <small>
+              Ein Klick hier setzt ein (neues) Token und versendet eine Email mit Link.<br />
+              Der Link enthält auch das Token, ohne welches KEIN pdf generiert wird.<br />
+              Ausserdem wird überprüft, ob das Token älter ist als 14 Tage; in dem fall gibt es KEIN PDF.
+          </td>
+        </tr>
+        <tr>
+          <td>PDF generieren (download)</td>
+          <td>
+            <a href="${request.route_url('certificate_pdf', id=member.id, name=member.lastname+member.firstname, token=member.certificate_token)}"
+               title="Mitgliedschaftsurkunde ansehen"
+               class="btn btn-success">PDF generieren und laden</a>
+          </td>
+        </tr>
+      </table>
   </tal:block>
 </html>

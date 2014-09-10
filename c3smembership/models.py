@@ -318,6 +318,10 @@ class C3sMember(Base):
     is_legalentity = Column(Boolean, default=False)
     court_of_law = Column(Unicode(255))
     registration_number = Column(Unicode(255))
+    # membership certificate
+    certificate_email = Column(Boolean, default=False)
+    certificate_token = Column(Unicode(10))
+    certificate_email_date = Column(DateTime())
 
     def __init__(self, firstname, lastname, email, password,
                  address1, address2, postcode, city, country, locale,
