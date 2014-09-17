@@ -52,10 +52,10 @@ def send_certificate_email(request):
         _m.lastname + _m.firstname)
     _url = request.route_url('certificate_pdf',
                              id=_m.id, name=_name, token=_m.certificate_token)
-    print '#'*60
-    print _m.certificate_token
-    print _url
-    print '#'*60
+    #print '#'*60
+    #print _m.certificate_token
+    #print _url
+    #print '#'*60
 
     mailer = get_mailer(request)
     the_message = Message(
@@ -120,6 +120,28 @@ def generate_certificate(request):
             'Nicht gefunden. Bitte office@c3s.cc kontaktieren.',
             status='404 Not Found',
         )
+    return gen_cert(request, _m)
+
+
+@view_config(permission='manage',
+             route_name='certificate_pdf_staff')
+def generate_certificate_staff(request):
+    '''
+    generate a membership_certificate for staffers
+    '''
+    mid = request.matchdict['id']
+
+    try:
+        _m = C3sMember.get_by_id(mid)
+        assert(not isinstance(_m, NoneType))
+    except:
+        return Response(
+            'Not found. Please check URL.',
+        )
+    return gen_cert(request, _m)
+
+
+def gen_cert(request, _m):
 
     import os
     here = os.path.dirname(__file__)

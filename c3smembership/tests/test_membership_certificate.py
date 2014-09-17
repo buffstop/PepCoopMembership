@@ -248,7 +248,6 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member.certificate_token = u'hotzenplotz123'
         member.membership_accepted = True
 
-
         result = generate_certificate(request)
         #print result.body
         self.assertTrue(result.status_code == 404)  # not found
@@ -280,5 +279,26 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member.is_legalentity = True
 
         result = generate_certificate(request)
+        self.assertTrue(100000 < len(result.body) < 110000)
+        self.assertTrue(result.content_type == 'application/pdf')
+
+    def test_generate_certificate_staff(self):
+        """
+        test the certificate generation option in the backend
+        """
+        from c3smembership.membership_certificate import \
+            generate_certificate_staff
+        request = testing.DummyRequest()
+
+        request.matchdict = {
+            'id': '1000',  # token is not necessary here
+        }
+        result = generate_certificate_staff(request)
+        self.assertTrue('Not found. Please check URL.' in result.body)
+        request.matchdict = {
+            'id': '1',  # token is not necessary here
+        }
+        result = generate_certificate_staff(request)
+
         self.assertTrue(100000 < len(result.body) < 110000)
         self.assertTrue(result.content_type == 'application/pdf')
