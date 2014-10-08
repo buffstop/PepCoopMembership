@@ -78,8 +78,10 @@ def send_certificate_email(request):
     return HTTPFound(
         location=request.route_url(
             'membership_listing_backend',
-            number=37, orderby='id', order='asc')
-    )
+            number=request.cookies['m_on_page'],
+            order=request.cookies['m_order'],
+            orderby=request.cookies['m_orderby']) +
+        '#member_' + str(_m.id))
 
 
 @view_config(permission='view',
