@@ -63,7 +63,6 @@ def send_certificate_email(request):
             _m.locale == 'de') else u'C3S membership certificate',
         sender='office@c3s.cc',
         recipients=[_m.email, ],
-        bcc=['office@c3s.cc'],
         body=render(
             'templates/mail/membership_certificate_' + _m.locale + '.pt',
             {
