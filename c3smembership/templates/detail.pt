@@ -11,7 +11,7 @@
         <a href="${request.route_url('dashboard_only')}"
            class="btn btn-success"
            >back to dashboard</a>
-        ot the 
+        or the 
         <a href="${request.route_url('membership_listing_backend', number=0, orderby='id', order='asc')}"
            class="btn btn-success"
            >memberships</a>.
