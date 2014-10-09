@@ -50,6 +50,7 @@ def send_certificate_email(request):
         '[^a-zA-Z]',  # other than these
         '-',  # with a -
         _m.lastname + _m.firstname)
+
     _url = request.route_url('certificate_pdf',
                              id=_m.id, name=_name, token=_m.certificate_token)
     #print '#'*60
@@ -143,7 +144,9 @@ def generate_certificate_staff(request):
 
 
 def gen_cert(request, _m):
-
+    '''
+    create a membership certificate PDF file using pdflatex
+    '''
     import os
     here = os.path.dirname(__file__)
     # latex header and footer
@@ -187,6 +190,11 @@ def gen_cert(request, _m):
     pdf_file.name = latex_file.name.rstrip('.tex')  # + '.pdf'
     pdf_file.name += '.pdf'
 
+    is_founder = True if 'dungHH_' in _m.email_confirm_code else False
+    #print u"email confirm code: {}".format(_m.email_confirm_code)
+    #print u"is a founding member? {}".format(
+    #    True if 'dungHH_' in _m.email_confirm_code else False)
+    # prepare the certificate text
     if _m.locale == 'de':  # german
         hereby_confirmed = u'Hiermit wird bestätigt, dass'
         is_member = u'Mitglied der Cultural Commons Collecting Society SCE ' \
@@ -194,23 +202,41 @@ def gen_cert(request, _m):
         one_more_share = u' und einen weiteren Geschäftsanteil übernommen hat'
         several_shares = u' weitere Geschäftsanteile übernommen hat'
         and_block = u' und '
-        confirm_date = u'Der Beitritt wurde am {} zugelassen'.format(
-            datetime.strftime(_m.membership_date, '%d.%m.%Y'))
+        if is_founder:
+            confirm_date = (
+                u'Der Beitritt erfolgte im Rahmen der Gründung am 25.09.2013')
+        else:
+            confirm_date = u'Der Beitritt wurde am {} zugelassen'.format(
+                datetime.strftime(_m.membership_date, '%d.%m.%Y'))
         mship_num = u'Die Mitgliedsnummer lautet {}.'.format(
             _m.membership_number
         )
+        mship_num_text = u'Mitgliedsnummer {}'.format(
+            _m.membership_number
+        )
+        exec_dir = u'Geschäftsführender Direktor'
+
     else:  # default fallback is english
         hereby_confirmed = u'This is to certify that'
         is_member = u'is a member of the >>Cultural Commons Collecting ' \
                     u'Society SCE mit beschränkter Haftung (C3S SCE)<<'
-        one_more_share = u'and has subscribed to one additional share'
+        one_more_share = u' and has subscribed to one additional share'
         several_shares = u'additional shares'
-        and_block = u'and has subscribed to'
-        confirm_date = u'Registered on the {}'.format(
-            datetime.strftime(_m.membership_date, '%Y-%m-%d'))
+        and_block = u' and has subscribed to'
+        if is_founder:
+            confirm_date = (
+                u'Membership was aquired as a founding member '
+                'on the 25th of September 2013')
+        else:
+            confirm_date = u'Registered on the {}'.format(
+                datetime.strftime(_m.membership_date, '%Y-%m-%d'))
         mship_num = u'The membership number is {}.'.format(
             _m.membership_number
         )
+        mship_num_text = u'membership number {}'.format(
+            _m.membership_number
+        )
+        exec_dir = 'Executive Director'
 
     # construct latex_file
     latex_data = '''
@@ -231,6 +257,7 @@ def gen_cert(request, _m):
 \def\signMeik{%s}
 \def\signWolfgang{%s}
 \def\\txtBlkCEO{%s}
+\def\\txtBlkMembershipNum{%s}
     ''' % (
         latex_header_tex,
         latex_background_image,
@@ -249,7 +276,8 @@ def gen_cert(request, _m):
             date.today(), "%d.%m.%Y") if _m.locale == 'de' else date.today(),
         sign_meik,
         sign_wolfgang,
-        'CEO',
+        exec_dir,
+        mship_num_text,
     )
     if _m.is_legalentity:  # XXX TODO: field of company name
         latex_data += '''
