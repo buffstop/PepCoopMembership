@@ -124,6 +124,12 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member1 = C3sMember.get_by_id(1)
         #member1.certificate_token = u'hotzenplotz123'
         member1.membership_accepted = True
+
+        # the request needs stuff to be in the cookie (for redirects)
+        request.cookies['m_on_page'] = 23
+        request.cookies['m_order'] = 'asc'
+        request.cookies['m_orderby'] = 'id'
+
         result = send_certificate_email(request)
         #print result
         self.assertTrue(result.status_code == 302)  # redirect
@@ -174,6 +180,12 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member2 = C3sMember.get_by_id(2)
         #member1.certificate_token = u'hotzenplotz123'
         member2.membership_accepted = True
+
+        # the request needs stuff to be in the cookie (for redirects)
+        request.cookies['m_on_page'] = 23
+        request.cookies['m_order'] = 'asc'
+        request.cookies['m_orderby'] = 'id'
+
         result = send_certificate_email(request)
         #print result
         self.assertTrue(result.status_code == 302)  # redirect
@@ -263,7 +275,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
         result = generate_certificate(request)
 
         # print result.body
-        self.assertTrue(100000 < len(result.body) < 110000)
+        self.assertTrue(100000 < len(result.body) < 120000)
         self.assertTrue(result.content_type == 'application/pdf')
 
         # edge case: member has one share
@@ -271,7 +283,8 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member.num_shares = 1
 
         result = generate_certificate(request)
-        self.assertTrue(100000 < len(result.body) < 110000)
+        self.assertTrue(100000 < len(result.body) < 120000)
+
         self.assertTrue(result.content_type == 'application/pdf')
 
         # edge case: member has one share
@@ -279,7 +292,43 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member.is_legalentity = True
 
         result = generate_certificate(request)
-        self.assertTrue(100000 < len(result.body) < 110000)
+        self.assertTrue(100000 < len(result.body) < 120000)
+        self.assertTrue(result.content_type == 'application/pdf')
+
+    def test_generate_certificate_awkward_characters(self):
+        """
+        test the certificate generation with awkward characters in datasets
+        because LaTeX interprets some characters as special characters.
+        """
+        from c3smembership.membership_certificate import generate_certificate
+        request = testing.DummyRequest()
+        request.matchdict = {
+            'id': '1',
+            'name': 'foobar',
+            'token': 'hotzenplotz'
+        }
+
+        result = generate_certificate(request)
+
+        self.assertTrue(result.status_code == 404)  # not found
+
+        request.matchdict = {
+            'id': '1',
+            'name': 'foobar',
+            'token': 'hotzenplotz123'
+        }
+        member = C3sMember.get_by_id(1)
+        member.firstname = u"Foobar Corp & Co."
+        member.lastname = u"Your Number #1"
+        member.certificate_token = u'hotzenplotz123'
+        member.membership_accepted = True
+
+        # # need to get the date right!
+        member.certificate_email_date = datetime.now(
+        ) - timedelta(weeks=1)
+
+        result = generate_certificate(request)
+        self.assertTrue(100000 < len(result.body) < 120000)
         self.assertTrue(result.content_type == 'application/pdf')
 
     def test_generate_certificate_staff(self):
@@ -300,5 +349,5 @@ class TestMembershipCertificateViews(unittest.TestCase):
         }
         result = generate_certificate_staff(request)
 
-        self.assertTrue(100000 < len(result.body) < 110000)
+        self.assertTrue(100000 < len(result.body) < 120000)
         self.assertTrue(result.content_type == 'application/pdf')

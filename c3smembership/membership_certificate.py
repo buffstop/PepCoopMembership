@@ -9,6 +9,7 @@ from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
+import re
 import shutil
 import subprocess
 import tempfile
@@ -45,7 +46,6 @@ def send_certificate_email(request):
     # create a token for the certificate
     _m.certificate_token = make_random_token()
     # construct mail
-    import re
     _name = re.sub(  # # replace characters
         '[^a-zA-Z]',  # other than these
         '-',  # with a -
@@ -300,6 +300,10 @@ def gen_cert(request, _m):
         latex_data += '''
 \def\\txtBlkAddShares{.}'''
 
+    # escape some characters to appease LaTeX
+    latex_data = re.sub('&', '\&', latex_data)
+    latex_data = re.sub('#', '\#', latex_data)
+
     # finish the latex document
     latex_data += '''
 \input{%s}''' % latex_footer_tex
@@ -321,6 +325,16 @@ def gen_cert(request, _m):
         stdout=FNULL, stderr=subprocess.STDOUT  # hide output
     )
     #print("the output of pdflatex run: %s" % pdflatex_output)
+
+    # debug: open the PDF in a viewer
+    #subprocess.call(
+    #    [
+    #        'evince',
+    #        pdf_file.name
+    #    ],
+    #    stdout=FNULL, stderr=subprocess.STDOUT  # hide output
+    #)
+
     # return a pdf file
     response = Response(content_type='application/pdf')
     response.app_iter = open(pdf_file.name, "r")
