@@ -16,3 +16,4 @@ off/
 *.db*
 c3smembership/static/jquery-ui-1.10.3/
 c3smembership/static/jquery-2.0.3/
+pytz-2014.9-py2.7.egg
