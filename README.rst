@@ -18,16 +18,20 @@ Also see ./tx/README.rst for more help on the translation machinery.
 setup
 -----
 
-see ci.sh
+see ci.sh (is partially out of date)
 install pdftk (sudo apt-get install pdftk)
+$ virtualenv env
+manually appy deform/widget.py.patch to env/lib/python2.7/site-packages/deform-2.0a2-py2.7.egg/deform/widget.py
+$ cp deform/slider.pt env/lib/python2.7/site-packages/deform-2.0a2-py2.7.egg/deform/templates/slider.pt
+$ env/bin/python setup.py develop
 
 
 run (in development mode)
 -------------------------
 
-$ pserve development.ini --reload
+$ env/bin/pserve development.ini --reload
 
-The app will rebuild templates and reload code whenever there are changes.
+The app will rebuild templates and reload code whenever there are changes by using --reload.
 
 
 run (in production mode, daemon mode)
