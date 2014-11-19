@@ -15,5 +15,4 @@ pyramid.pid
 off/
 *.db*
 c3smembership/static/jquery-ui-1.10.3/
-c3smembership/static/bootstrap-3.0.3-dist/
 c3smembership/static/jquery-2.0.3/

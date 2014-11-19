@@ -12,7 +12,7 @@ requires = [
     'Babel',
     'cornice',
     'cryptacular',
-    'deform',  # should get deform-2.0...
+    'deform==2.0a2',  # should get deform-2.0...
     'fdfgen',
     'lingua==1.5',  # stick to 1.5 for now. TODO: learn to use 2.1/2.3
     'pycountry',  # replacing 'webhelpers',
