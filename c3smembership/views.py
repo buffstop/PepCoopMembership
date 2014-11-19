@@ -695,7 +695,6 @@ def join_c3s(request):
                 max_err=_(u"You may choose 60 shares at most. (3000 Euro)"),
             ),
             oid="num_shares")
-        pass
 
     class MembershipForm(colander.Schema):
         """
