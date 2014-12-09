@@ -1,19 +1,25 @@
 *.db
+*.db*
 *.egg-info
+*.idea
+*.log
 *.pyc
 *.py~
-*~
-env/
-.coverage
-python-eggs/
-*.log
 *.wsgi
-cover/
-nosetests.xml
-*.idea
-pyramid.pid
-off/
-*.db*
-c3smembership/static/jquery-ui-1.10.3/
+*~
+.coverage
 c3smembership/static/jquery-2.0.3/
+c3smembership/static/jquery-ui-1.10.3/
+cover/
+env/
+off/
+pyramid.pid
+python-eggs/
 pytz-2014.9-py2.7.egg
+
+# ignore local test settings
+nosetests.xml
+
+# certificate files are in a separate private repository
+certificate/
+
