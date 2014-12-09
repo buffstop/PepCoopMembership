@@ -19,10 +19,15 @@ setup
 -----
 
 see ci.sh (is partially out of date)
+
 install pdftk (sudo apt-get install pdftk)
+
 $ virtualenv env
-manually appy deform/widget.py.patch to env/lib/python2.7/site-packages/deform-2.0a2-py2.7.egg/deform/widget.py
+
+manually apply deform/widget.py.patch to env/lib/python2.7/site-packages/deform-2.0a2-py2.7.egg/deform/widget.py
+
 $ cp deform/slider.pt env/lib/python2.7/site-packages/deform-2.0a2-py2.7.egg/deform/templates/slider.pt
+
 $ env/bin/python setup.py develop
 
 
