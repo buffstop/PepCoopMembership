@@ -2,7 +2,7 @@
 from time import strftime
 
 
-def make_signature_reminder_emailbody(_input):
+def make_signature_reminder_emailbody(_member):
     '''
     a mail body to remind membership applicants
     to send the form with their signature
@@ -62,15 +62,15 @@ All the best
 
 the team of C3S
     '''.format(
-        _input.firstname,
-        _input.lastname,
-        _input.date_of_submission.strftime("%d. %m. %Y"),
-        _input.date_of_submission.strftime("%d %b %Y"),
+        _member.firstname,
+        _member.lastname,
+        _member.date_of_submission.strftime("%d. %m. %Y"),
+        _member.date_of_submission.strftime("%d %b %Y"),
     )
     return _text
 
 
-def make_payment_reminder_emailbody(_input):
+def make_payment_reminder_emailbody(_member):
     '''
     a mail body to remind membership applicants
     to send the payment for their shares
@@ -86,9 +86,13 @@ Du hast Deine Beitrittserklärung am {2} ausgefüllt. Leider hast Du versäumt,
 die Überweisung von {3} Euro für {4} Anteile vorzunehmen. Bitte überweise die
 genannte Summe auf folgendes Konto der C3S SCE:
 
-IBAN DE79 8309 4495 0003 2643 78
-BIC GENODEF1ETK
-Ethikbank
+IBAN: DE79 8309 4495 0003 2643 78
+BIC: GENODEF1ETK
+Bank: Ethikbank
+
+Bei der Überweisung des Geldes für die Genossenschaftsanteile bitte den 
+folgenden Verwendungszweck angeben: {6}
+
 
 Falls Du kein Mitglied mehr werden möchtest, melde Dich bitte unter
 office@c3s.cc. Wenn Deine Überweisung eingegangen ist, erhältst Du eine
@@ -113,8 +117,12 @@ However, you still have to transfer {3} Euro for
 the {4} shares you purchased. Please transfer the aforementioned
 amount to this bank account of C3S SCE:
 
-IBAN DE79 8309 4495 0003 2643 78
-BIC GENODEF1ETK
+IBAN: DE79 8309 4495 0003 2643 78
+BIC: GENODEF1ETK
+Bank: Ethikbank
+
+When transfering money for your shares to us, please use the following
+confirmation code as reference: {6}
 
 In case you don't want to become a member anymore, or you have more
 questions on joining C3S, please contact us at office@c3s.cc.
@@ -128,11 +136,12 @@ All the best
 Eva
 for the team of C3S
     '''.format(
-        _input.firstname,
-        _input.lastname,
-        _input.date_of_submission.strftime("%d.%m.%Y"),
-        int(_input.num_shares) * 50,
-        _input.num_shares,
-        _input.date_of_submission.strftime("%d %b %Y"),
+        _member.firstname,
+        _member.lastname,
+        _member.date_of_submission.strftime("%d.%m.%Y"),
+        int(_member.num_shares) * 50,
+        _member.num_shares,
+        _member.date_of_submission.strftime("%d %b %Y"),
+        u'C3Shares ' + _member.email_confirm_code
     )
     return _text

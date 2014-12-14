@@ -233,7 +233,7 @@ def edit_member(request):
         )
         is_duplicate = colander.SchemaNode(
             colander.Boolean(),
-            title=_(u'ist weiterer, späterer Mitgliedsantrag, gehört zu einem'
+            title=_(u'ist weiterer, späterer Mitgliedsantrag, gehört zu einem '
                     u'anderen Antrag oder einer bestehenden Mitgliedschaft.'),
             oid="is_duplicate",
         )
@@ -337,7 +337,8 @@ def edit_member(request):
         )
         name_of_colsoc = colander.SchemaNode(
             colander.String(),
-            title=(u'Falls ja, welche? (Kommasepariert)'),
+            title=(u'Falls ja, welche?'),
+            description=u' Mehrere Mitgliedschaften bitte durch Kommata voneinander trennen.',
             missing=unicode(''),
             oid="colsoc_name",
             #validator=colander.All(
