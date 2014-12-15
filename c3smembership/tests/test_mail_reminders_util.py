@@ -68,7 +68,7 @@ class TestMailMailConfirmationViews(unittest.TestCase):
 
         parts = [german_part, english_part]
         for part in parts:
-            payment_reference_code = u'C3Shares ' + self.__member.email_confirm_code
+            payment_reference_code = u'C3Shares ABCDEFGFOO'
             occurances = 0
             index = part.find(payment_reference_code)
             while index > -1:
