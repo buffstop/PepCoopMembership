@@ -15,6 +15,12 @@ Help via screencast is available: http://translate.c3s.cc
 Also see ./tx/README.rst for more help on the translation machinery.
 
 
+fonts
+-----
+
+The .odt files for the membership application in pdftk require the font Signika which can be downloaded at: http://www.google.com/fonts/specimen/Signika
+
+
 setup
 -----
 
