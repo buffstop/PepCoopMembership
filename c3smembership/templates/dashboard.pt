@@ -361,5 +361,12 @@
       Please <a href="${request.route_url('logout')}">log out</a>
       when you are done.
     </p>
+    <p>
+      <small>
+      c3sMembership &ndash; ${git_tag} &ndash;
+      <a tal:condition="github_commit_url is not None" href="${github_commit_url}">${git_commit_hash}</a>
+      <span tal:condition="github_commit_url is None">${git_commit_hash}</span>
+    </small>
+    </p>
   </tal:block>
 </html>

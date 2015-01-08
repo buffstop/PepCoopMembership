@@ -22,6 +22,8 @@ import colander
 import deform
 from deform import ValidationFailure
 
+from git_tools import GitTools
+
 from pyramid.i18n import (
     get_localizer,
 )
@@ -259,19 +261,31 @@ def accountants_desk(request):
     if 'message' in request.GET:
         _message = request.GET['message']
 
-    return {'_number_of_datasets': _number_of_datasets,
-            'members': _members,
-            'num_display': num_display,
-            'next': next_page,
-            'previous': previous_page,
-            'current': _page_to_show,
-            'orderby': _order_by,
-            'order': _order,
-            'message': _message,
-            'last_page': _last_page,
-            'is_last_page': _page_to_show == _last_page,
-            'is_first_page': _page_to_show == 0,
-            }
+    git_commit_hash = GitTools.get_commit_hash()
+    if git_commit_hash is None:
+        git_commit_hash = '(no source reference available)'
+    git_tag = GitTools.get_tag()
+    if git_tag is None:
+        git_tag = '(no version number available)'
+    github_commit_url = GitTools.get_github_commit_url()
+
+    return {
+        '_number_of_datasets': _number_of_datasets,
+        'members': _members,
+        'num_display': num_display,
+        'next': next_page,
+        'previous': previous_page,
+        'current': _page_to_show,
+        'orderby': _order_by,
+        'order': _order,
+        'message': _message,
+        'last_page': _last_page,
+        'is_last_page': _page_to_show == _last_page,
+        'is_first_page': _page_to_show == 0,
+        'git_commit_hash': git_commit_hash,
+        'git_tag': git_tag,
+        'github_commit_url': github_commit_url
+    }
 
 
 @view_config(permission='manage',
