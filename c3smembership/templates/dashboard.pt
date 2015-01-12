@@ -363,9 +363,8 @@
     </p>
     <p>
       <small>
-      c3sMembership &ndash; ${git_tag} &ndash;
-      <a tal:condition="github_commit_url is not None" href="${github_commit_url}">${git_commit_hash}</a>
-      <span tal:condition="github_commit_url is None">${git_commit_hash}</span>
+      c3sMembership &ndash; ${version_number} &ndash;
+      <a tal:condition="version_location_url is not None and version_location_name is not None" href="${version_location_url}">${version_location_name}</a>
     </small>
     </p>
   </tal:block>
