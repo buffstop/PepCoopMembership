@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+"""Provides views for login, dashboard and payment and user management."""
+
 from c3smembership.models import (
     C3sMember,
     C3sStaff,
@@ -36,10 +38,10 @@ from translationstring import TranslationStringFactory
 from datetime import datetime
 import math
 
-deform_templates = resource_filename('deform', 'templates')
-c3smembership_templates = resource_filename('c3smembership', 'templates')
+DEFORM_TEMPLATES = resource_filename('deform', 'templates')
+C3SMEMBERSHIP_TEMPLATES = resource_filename('c3smembership', 'templates')
 
-my_search_path = (deform_templates, c3smembership_templates)
+MY_SEARCH_PATH = (DEFORM_TEMPLATES, C3SMEMBERSHIP_TEMPLATES)
 
 _ = TranslationStringFactory('c3smembership')
 
@@ -47,14 +49,14 @@ _ = TranslationStringFactory('c3smembership')
 def translator(term):
     return get_localizer(get_current_request()).translate(term)
 
-my_template_dir = resource_filename('c3smembership', 'templates/')
-deform_template_dir = resource_filename('deform', 'templates/')
+MY_TEMPLATE_DIR = resource_filename('c3smembership', 'templates/')
+DEFORM_TEMPLATE_DIR = resource_filename('deform', 'templates/')
 
-# the zpt_renderer is referred to within the demo.ini file by dotted name
-zpt_renderer = deform.ZPTRendererFactory(
+# the ZPT_RENDERER is referred to within the demo.ini file by dotted name
+ZPT_RENDERER = deform.ZPTRendererFactory(
     [
-        my_template_dir,
-        deform_template_dir,
+        MY_TEMPLATE_DIR,
+        DEFORM_TEMPLATE_DIR,
     ],
     translator=translator,
 )
@@ -64,7 +66,7 @@ LOGGING = True
 
 if LOGGING:  # pragma: no cover
     import logging
-    log = logging.getLogger(__name__)
+    LOG = logging.getLogger(__name__)
 
 
 @view_config(renderer='templates/login.pt',
@@ -76,7 +78,7 @@ def accountants_login(request):
     """
     logged_in = authenticated_userid(request)
 
-    log.info("login by {0}".format(logged_in))
+    LOG.info("login by %s", logged_in)
 
     if logged_in is not None:
         return HTTPFound(request.route_url('dashboard_only'))
@@ -111,15 +113,15 @@ def accountants_login(request):
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
-        except ValidationFailure, e:
-            print(e)
+        except ValidationFailure, e_validation_failure:
+            print(e_validation_failure)
 
             request.session.flash(
                 _(u"Please note: There were errors, "
                   "please check the form below."),
                 'message_above_form',
                 allow_duplicate=False)
-            return{'form': e.render()}
+            return{'form': e_validation_failure.render()}
 
         # get user and check pw...
         login = appstruct['login']
@@ -130,16 +132,16 @@ def accountants_login(request):
         except AttributeError:  # pragma: no cover
             checked = False
         if checked:
-            log.info("password check for {0}: good!".format(login))
+            LOG.info("password check for %s: good!", login)
             headers = remember(request, login)
-            log.info("logging in {0}".format(login))
+            LOG.info("logging in %s", login)
             return HTTPFound(
                 location=route_url(
                     'dashboard_only',
                     request=request),
                 headers=headers)
         else:
-            log.info("password check: failed for %s." % login)
+            LOG.info("password check: failed for %s.", login)
     else:
         request.session.pop('message_above_form')
 
@@ -160,7 +162,7 @@ def accountants_desk(request):
         _page_to_show = int(request.matchdict['number'])
         _order_by = request.matchdict['orderby']
         _order = request.matchdict['order']
-    except:
+    except (KeyError, ValueError):
         _page_to_show = 0
         _order_by = 'id'
         _order = 'asc'
@@ -170,7 +172,7 @@ def accountants_desk(request):
             _num = int(request.POST['num_to_show'])
             if isinstance(_num, type(1)):
                 num_display = _num
-        except:
+        except (KeyError, ValueError):
             num_display = 20
     elif 'num_display' in request.cookies:
         num_display = int(request.cookies['num_display'])
@@ -245,12 +247,11 @@ def switch_sig(request):
         _member.signature_received = True
         _member.signature_received_date = datetime.now()
 
-    log.info(
-        "signature status of member.id %s changed by %s to %s" % (
-            _member.id,
-            request.user.login,
-            _member.signature_received
-        )
+    LOG.info(
+        "signature status of member.id %s changed by %s to %s",
+        _member.id,
+        request.user.login,
+        _member.signature_received
     )
 
     return HTTPFound(
@@ -271,11 +272,10 @@ def delete_entry(request):
     _member = C3sMember.get_by_id(memberid)
 
     C3sMember.delete_by_id(_member.id)
-    log.info(
-        "member.id %s was deleted by %s" % (
-            _member.id,
-            request.user.login,
-        )
+    LOG.info(
+        "member.id %s was deleted by %s",
+        _member.id,
+        request.user.login
     )
     _message = "member.id %s was deleted" % _member.id
 
@@ -310,12 +310,11 @@ def switch_pay(request):
         _member.payment_received = True
         _member.payment_received_date = datetime.now()
 
-    log.info(
-        "payment info of member.id %s changed by %s to %s" % (
-            _member.id,
-            request.user.login,
-            _member.payment_received
-        )
+    LOG.info(
+        "payment info of member.id %s changed by %s to %s",
+        _member.id,
+        request.user.login,
+        _member.payment_received
     )
     return HTTPFound(
         request.route_url(
@@ -335,8 +334,7 @@ def member_detail(request):
     """
     logged_in = authenticated_userid(request)
     memberid = request.matchdict['memberid']
-    log.info("member details of id %s checked by %s" % (
-        memberid, logged_in))
+    LOG.info("member details of id %s checked by %s", memberid, logged_in)
 
     _member = C3sMember.get_by_id(memberid)
 
@@ -365,7 +363,7 @@ def member_detail(request):
             deform.Button('reset', _(u'Reset'))
         ],
         use_ajax=True,
-        renderer=zpt_renderer
+        renderer=ZPT_RENDERER
     )
 
     # if the form has been used and SUBMITTED, check contents
@@ -373,34 +371,34 @@ def member_detail(request):
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
-        except ValidationFailure, e:  # pragma: no cover
-            log.info(e)
-            print(e)
+        except ValidationFailure, e_validation_failure:  # pragma: no cover
+            LOG.info(e_validation_failure)
+            print(e_validation_failure)
             request.session.flash(
                 _(u"Please note: There were errors, "
                   "please check the form below."),
                 'message_above_form',
                 allow_duplicate=False)
-            return{'form': e.render()}
+            return{'form': e_validation_failure.render()}
 
         # change info about member in database
         test1 = (  # changed value through form (different from db)?
             appstruct['signature_received'] == _member.signature_received)
         if not test1:
-            log.info(
-                "info about signature of %s changed by %s to %s" % (
-                    _member.id,
-                    request.user.login,
-                    appstruct['signature_received']))
+            LOG.info(
+                "info about signature of %s changed by %s to %s",
+                _member.id,
+                request.user.login,
+                appstruct['signature_received'])
             _member.signature_received = appstruct['signature_received']
         test2 = (  # changed value through form (different from db)?
             appstruct['payment_received'] == _member.payment_received)
         if not test2:
-            log.info(
-                "info about payment of %s changed by %s to %s" % (
-                    _member.id,
-                    request.user.login,
-                    appstruct['payment_received']))
+            LOG.info(
+                "info about payment of %s changed by %s to %s",
+                _member.id,
+                request.user.login,
+                appstruct['payment_received'])
             _member.payment_received = appstruct['payment_received']
         # store appstruct in session
         request.session['appstruct'] = appstruct
@@ -462,9 +460,10 @@ def regenerate_pdf(request):
         'date_of_birth': _member.date_of_birth,
         'date_of_submission': _member.date_of_submission,
     }
-    log.info(
-        "%s regenerated the PDF for code %s" % (
-            authenticated_userid(request), _code))
+    LOG.info(
+        "%s regenerated the PDF for code %s",
+        authenticated_userid(request),
+        _code)
     return generate_pdf(_appstruct)
 
 
@@ -564,7 +563,7 @@ def mail_signature_reminder(request):
     mailer.send(message)
     try:
         _member.sent_signature_reminder += 1
-    except:  # pragma: no cover
+    except TypeError:
         # if value was None (after migration of DB schema)
         _member.sent_signature_reminder = 1
     _member.sent_signature_reminder_date = datetime.now()
@@ -596,7 +595,7 @@ def mail_payment_reminder(request):
     mailer.send(message)
     try:  # if value is int
         _member.sent_payment_reminder += 1
-    except:  # pragma: no cover
+    except TypeError:  # pragma: no cover
         # if value was None (after migration of DB schema)
         _member.sent_payment_reminder = 1
     _member.sent_payment_reminder_date = datetime.now()
