@@ -267,11 +267,13 @@ def accountants_desk(request):
     version_location_name = None
     if request.registry.settings['c3smembership.runmode'] == 'dev':
         git_tag = GitTools.get_tag()
-        if version_number is not None:
-            version_number = git_tag
+        branch_name = GitTools.get_branch()
+        if git_tag is None:
+            git_tag = '???'
+        version_number = '{0} (Tag {1}, Branch {2})'.format(
+            version_number, git_tag, branch_name)
         version_location_name = GitTools.get_commit_hash()
         version_location_url = GitTools.get_github_commit_url()
-
 
     return {
         '_number_of_datasets': _number_of_datasets,
@@ -288,7 +290,7 @@ def accountants_desk(request):
         'is_first_page': _page_to_show == 0,
         'version_number': version_number,
         'version_location_name': version_location_name,
-        'version_location_url': version_location_url
+        'version_location_url': version_location_url,
     }
 
 
