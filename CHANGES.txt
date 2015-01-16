@@ -1,1 +1,10 @@
-write me...
+Next Release
+============
+
+- Feature 1260 "Indroduce proper version numbers"
+
+    - Created helper class GitTools to provide git information about tags,
+      branches and commits.
+
+    - Included version information into dashboard view and template.
+
