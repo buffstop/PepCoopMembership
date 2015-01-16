@@ -1,1 +1,7 @@
-write me...
+Next Release
+============
+
+- Feature 1288 "Code cleanup"
+
+	- Code cleanup of accountants_view.py
+
