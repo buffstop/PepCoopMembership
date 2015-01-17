@@ -117,6 +117,10 @@ class TestGitTools(unittest.TestCase):
             'https://github.com/user/test123456789.git\n',
             'https://www.github.com/user/test123456789\n',
             'https://www.github.com/user/test123456789.git\n',
+            'git://github.com/user/test123456789\n',
+            'git://github.com/user/test123456789.git\n',
+            'git://www.github.com/user/test123456789\n',
+            'git://www.github.com/user/test123456789.git\n',
         ]
         for stdout_value in stdout_values:
             test_cases.append({

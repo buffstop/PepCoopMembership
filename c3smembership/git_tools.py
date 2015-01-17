@@ -62,13 +62,13 @@ class GitTools(object):
         if git_remote_url is None:
             return None
         match = re.search(
-            '^https://(?P<www>www.)?github.com/(?P<user>' + \
-                '[A-Za-z0-9]+)/(?P<project>[A-Za-z0-9]+)(.git)?$',
+            '^(?P<protocol>(https|git))://(?P<www>www.)?github.com/' + \
+                '(?P<user>[A-Za-z0-9]+)/(?P<repository>[A-Za-z0-9]+)(.git)?$',
             git_remote_url)
         if match is not None and match.groups():
             return 'https://github.com/{0}/{1}'.format(
                 match.group('user'),
-                match.group('project'))
+                match.group('repository'))
         else:
             return None
 
