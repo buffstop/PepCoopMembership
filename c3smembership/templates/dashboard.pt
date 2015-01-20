@@ -105,9 +105,11 @@
              title="sort by id: descending"
              class="glyphicon glyphicon-chevron-down"></a>
         </th>
+        <!-- Deactivated for task1291. Left inside for next GV.
         <th>
           BC/GV
         </th>
+        -->
         <th>
           mtype<br />
           status
@@ -152,6 +154,7 @@
           <div tal:condition="member.is_duplicate">
             <a href="${request.route_url('detail', memberid=member.is_duplicate_of)}">dup:${member.is_duplicate_of}</div>
         </td>
+        <!-- Deactivated for task1291. Left inside for next GV.
         <td>
           <a tal:condition="not member.email_invite_flag_bcgv14"
              href="${request.route_url('invite_member', m_id=member.id)}"
@@ -161,6 +164,8 @@
              href="${request.route_url('invite_member', m_id=member.id)}"
              title="gesendet ${member.email_invite_date_bcgv14.strftime('am %d.%m.%Y um %H:%M')}"
              class="btn btn-success"></a>
+        </td>
+        -->
         <td>
           <a tal:condition="(member.membership_type == 'startnext') or
                             (member.membership_type == 'unknown') or

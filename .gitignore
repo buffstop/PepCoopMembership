@@ -11,6 +11,7 @@
 c3smembership/static/jquery-2.0.3/
 c3smembership/static/jquery-ui-1.10.3/
 cover/
+docs/_build/
 env/
 off/
 pyramid.pid
