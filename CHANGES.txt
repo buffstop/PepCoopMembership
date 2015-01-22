@@ -1,5 +1,5 @@
-1.10.1rc1
-=========
+1.10.1
+======
 
 - Removed column "BC/GV" from Application for Membership dashboard. Emails
   were sent without confirmation when clicking the button.
