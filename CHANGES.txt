@@ -3,5 +3,9 @@ Next Release
 
 - Feature 1288 "Code cleanup"
 
-	- Code cleanup of accountants_view.py
+	- Code cleanup of accountants_view.py.
+	- Integrated the deform TextInputSliderWidget so that it doesn't need
+	  to be applied as a text and neither the slider.pt template needs to
+	  be copied anywhere. This reduces manual setup steps to run the
+	  application.
 

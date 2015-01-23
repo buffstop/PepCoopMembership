@@ -22,6 +22,7 @@ from colander import (
     Invalid,
     Range,
 )
+import deform_text_input_slider_widget
 
 from pyramid.i18n import (
     #TranslationStringFactory,
@@ -40,11 +41,6 @@ from pyramid.httpexceptions import HTTPFound
 #from pyramid.url import route_url
 from translationstring import TranslationStringFactory
 
-deform_templates = resource_filename('deform', 'templates')
-c3smembership_templates = resource_filename('c3smembership', 'templates')
-
-my_search_path = (deform_templates, c3smembership_templates)
-
 _ = TranslationStringFactory('c3smembership')
 
 
@@ -52,8 +48,8 @@ def translator(term):
     #print("=== this is def translator")
     return get_localizer(get_current_request()).translate(term)
 
-my_template_dir = resource_filename('c3smembership', 'templates/')
-deform_template_dir = resource_filename('deform', 'templates/')
+my_template_dir = resource_filename('c3smembership', 'templates')
+deform_template_dir = resource_filename('deform', 'templates')
 
 zpt_renderer = deform.ZPTRendererFactory(
     [
@@ -686,7 +682,7 @@ def join_c3s(request):
             description=_(
                 u'You can choose any amount of shares between 1 and 60.'),
             default="1",
-            widget=deform.widget.TextInputSliderWidget(
+            widget=deform_text_input_slider_widget.TextInputSliderWidget(
                 size=3, css_class='num_shares_input'),
             validator=colander.Range(
                 min=1,
