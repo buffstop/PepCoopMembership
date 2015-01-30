@@ -319,26 +319,41 @@ def delete_entry(request):
     """
     This view lets accountants delete entries (doublettes)
     """
-    memberid = request.matchdict['memberid']
-    _member = C3sMember.get_by_id(memberid)
 
-    C3sMember.delete_by_id(_member.id)
-    log.info(
-        "member.id %s was deleted by %s" % (
-            _member.id,
-            request.user.login,
+    deletion_confirmed = False
+    if 'deletion_confirmed' in request.params:
+        deletion_confirmed = (request.params['deletion_confirmed'] == '1')
+
+    if deletion_confirmed:
+        memberid = request.matchdict['memberid']
+        _member = C3sMember.get_by_id(memberid)
+
+        C3sMember.delete_by_id(_member.id)
+        log.info(
+            "member.id %s was deleted by %s" % (
+                _member.id,
+                request.user.login,
+            )
         )
-    )
-    _message = "member.id %s was deleted" % _member.id
+        _message = "member.id %s was deleted" % _member.id
 
-    request.session.flash(_message, 'messages')
-    return HTTPFound(
-        request.route_url(
-            'dashboard_only',
-            _query={'message': 'Member with id {0} was deleted.'.format(
-                    memberid)}
-        ) + '#member_' + str(_member.id)
-    )
+        request.session.flash(_message, 'messages')
+        return HTTPFound(
+            request.route_url(
+                'dashboard_only',
+                _query={'message': 'Member with id {0} was deleted.'.format(
+                        memberid)}
+            ) + '#member_' + str(_member.id)
+        )
+    else:
+        return HTTPFound(
+            request.route_url(
+                'dashboard_only',
+                _query={'message': 'Deleting the member was not confirmed' + \
+                    ' and therefore nothing was deleted.'}
+            )
+        )
+
 
 
 @view_config(permission='manage',
