@@ -1,3 +1,14 @@
+Next release
+============
+
+- Set GPL license for c3sMembership code and CC BY 4.0 for documentation.
+
+- Added copyright notice for c3sMembership code and documentation as well
+  redistributed works.
+
+- Added license texts GPL and MIT for redistributed works.
+
+
 1.10.1
 ======
 

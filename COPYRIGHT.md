@@ -10,6 +10,10 @@ c3sMembership -- Membership Application and Database
 Copyright (c) 2015 Cultural Commons Collecting Society SCE mbH (C3S SCE) and
 contributors.
 
+
+Code
+^^^^
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -23,9 +27,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+Documentation
+^^^^^^^^^^^^^
+
 The documentation of this program is licensed under a Creative Commons
-Attribution 4.0 license (CC-BY 4.0,
-http://creativecommons.org/licenses/by/4.0/).
+Attribution 4.0 license (CC-BY 4.0).
+
+You should have received a copy of the license along with this
+work. If not, see <http://creativecommons.org/licenses/by/4.0/>. 
 
 
 Redistributed Works
