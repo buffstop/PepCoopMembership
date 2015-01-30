@@ -11,17 +11,19 @@
     <link rel="stylesheet" href="${request.static_url('deform:static/css/typeahead.css')}"
           type="text/css" media="screen" charset="utf-8" />
     <!--! jquery and deform.js need to be on top for autocomplete -->
-    <script src="${request.static_url('c3smembership:static/jquery-2.0.3/jquery-2.0.3.min.js')}"
+    <script src="${request.static_url('c3smembership:static/jquery-2.1.1.min.js')}"
             type="text/javascript"></script>
     <!-- Krissik -->
     <script type="text/javascript">
         $().ready(function() {
             console.debug("ready");
             $(".delete-link").click(function(event) {
+                event.preventDefault();
                 member_id = $(this).attr('id').split('-')[2];
                 answer = confirm("Are you sure you want to delete member " + member_id + "?");
-                if(answer == false) {
-                    event.preventDefault();
+                if (answer) {
+                  delete_link = $(this).attr('href') + '?deletion_confirmed=1';
+                  window.location = delete_link;
                 }
             });
             $(".send-reminder").click(function(event) {
