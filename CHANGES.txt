@@ -6,6 +6,12 @@ Next Release
   a wrong jQuery path would not allow deletions without confirmation dialog
   in the future.
 
+- Fixed usage of jQuery, jQuery UI and Bootstrap. Reorganized files and
+  corrected all references.
+
+- Fixed link to statistics of finished memberships.
+
+
 
 1.10.1
 ======

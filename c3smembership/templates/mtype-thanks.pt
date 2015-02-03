@@ -7,11 +7,11 @@
       i18n:domain="c3smembership">
   <tal:block metal:fill-slot="css">
     <link rel="stylesheet" href="${request.static_url('c3smembership:static/deform/form.css')}" type="text/css" media="screen" charset="utf-8" />
-    <link href="${request.static_url('c3smembership:static/bootstrap-3.0.3-dist/css/bootstrap.css')}"
+    <link href="${request.static_url('c3smembership:static/bootstrap/css/bootstrap.min.css')}"
           rel="stylesheet" type="text/css" media="screen" charset="utf-8" />
     <script type="text/javascript" src="${request.static_url('c3smembership:static/deform/deform.js')}"></script>
-    <link rel="stylesheet" href="${request.static_url('c3smembership:static/jquery-ui.1.10.3-smoothness.css')}" />
-    <script src="${request.static_url('c3smembership:static/jquery-ui.1.10.3.js')}"></script>
+    <link rel="stylesheet" href="${request.static_url('c3smembership:static/jquery-ui/jquery-ui.css')}" />
+    <script src="${request.static_url('c3smembership:static/jquery-ui/jquery-ui.min.js')}"></script>
     <script src="${request.static_url('c3smembership:static/dropdownsort.js')}"></script>
   </tal:block>
   <tal:block metal:fill-slot="middle">

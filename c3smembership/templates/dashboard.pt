@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="${request.static_url('deform:static/css/typeahead.css')}"
           type="text/css" media="screen" charset="utf-8" />
     <!--! jquery and deform.js need to be on top for autocomplete -->
-    <script src="${request.static_url('c3smembership:static/jquery-2.1.1.min.js')}"
+    <script src="${request.static_url('c3smembership:static/jquery/jquery.min.js')}"
             type="text/javascript"></script>
     <!-- Krissik -->
     <script type="text/javascript">
