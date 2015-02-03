@@ -391,6 +391,23 @@ def switch_pay(request):
     )
 
 
+@view_config(renderer='json',
+             permission='manage',
+             route_name='member_info')
+def member_info(request):
+    memberid = request.matchdict['memberid']
+    member = C3sMember.get_by_id(memberid)
+    if member is None:
+        return {}
+    else:
+        return {
+            'id': member.id,
+            'firstname': member.firstname,
+            'lastname': member.lastname
+        }
+    return None
+
+
 @view_config(renderer='templates/detail.pt',
              permission='manage',
              route_name='detail')

@@ -125,6 +125,8 @@ def main(global_config, **settings):
                      '/memberships/{number}/{orderby}/{order}')
     config.add_route('membership_listing_alphabetical',
                      '/aml')
+    config.add_route('member_info', '/members/info/{memberid}')
+
     # shares
     config.add_route('detail_shares', '/detail_shares/{id}')
     # membership_certificate
