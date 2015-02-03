@@ -21,8 +21,8 @@
     <h4>Throughput/Turnover</h4>
     <p>
       Anzahl fertiger mitgliedschaften: ${num_members_accepted}
-      <a href="$request.route_url('membership_listing_backend'
-               ,number=0, orderby='id', order='asc')">ansehen</a>
+      <a href="${request.route_url('membership_listing_backend'
+               ,number=0, orderby='id', order='asc')}">ansehen</a>
       <br />
       Anzahl unfertiger mitgliedschaften: ${num_non_accepted}
       <small>(incl. ${num_duplicates} Duplikate)</small>
