@@ -14,8 +14,8 @@
     <script type="text/javascript"
             src="${request.static_url('c3smembership:static/deform/deform.js')}"></script>
     <link rel="stylesheet"
-          href="${request.static_url('c3smembership:static/jquery-ui.1.10.3-smoothness.css')}" />
-    <script src="${request.static_url('c3smembership:static/jquery-ui.1.10.3.js')}"></script>
+          href="${request.static_url('c3smembership:static/jquery-ui/jquery-ui.css')}" />
+    <script src="${request.static_url('c3smembership:static/jquery-ui/jquery-ui.min.js')}"></script>
     <script src="${request.static_url('c3smembership:static/dropdownsort.js')}"></script>
     <link rel="stylesheet" href="${request.static_url('c3smembership:static/c3sM.css')}"
           type="text/css" media="screen" charset="utf-8" />
