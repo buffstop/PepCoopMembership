@@ -35,7 +35,7 @@
       </div>
     </div>
     <div>
-      <script src="${request.static_url('c3smembership:static/jquery-2.0.3/jquery-2.0.3.min.js')}"
+      <script src="${request.static_url('c3smembership:static/jquery/jquery.min.js')}"
               type="text/javascript"></script>
       <script src="${request.static_url('c3smembership:static/bootstrap/js/bootstrap.min.js')}"
               type="text/javascript"></script>
