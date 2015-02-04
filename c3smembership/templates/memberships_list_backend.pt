@@ -18,10 +18,12 @@
         $().ready(function() {
             console.debug("ready");
             $(".delete-link").click(function(event) {
+                event.preventDefault();
                 member_id = $(this).attr('id').split('-')[2];
                 answer = confirm("Are you sure you want to delete member " + member_id + "?");
-                if(answer == false) {
-                    event.preventDefault();
+                if (answer) {
+                  delete_link = $(this).attr('href') + '?deletion_confirmed=1';
+                  window.location.href = delete_link;
                 }
             });
             $(".send-reminder").click(function(event) {

@@ -23,7 +23,7 @@
                 answer = confirm("Are you sure you want to delete member " + member_id + "?");
                 if (answer) {
                   delete_link = $(this).attr('href') + '?deletion_confirmed=1';
-                  window.location = delete_link;
+                  window.location.href = delete_link;
                 }
             });
             $(".send-reminder").click(function(event) {
