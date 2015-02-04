@@ -11,6 +11,14 @@ Next Release
 
 - Fixed link to statistics of finished memberships.
 
+- Set GPL license for c3sMembership code and CC BY 4.0 for documentation.
+
+- Added copyright notice for c3sMembership code and documentation as well
+  as redistributed works.
+
+- Added license texts GPL and MIT for redistributed works.
+
+- Added license texts section to documentation.
 
 
 1.10.1

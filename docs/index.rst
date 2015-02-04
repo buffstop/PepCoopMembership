@@ -3,6 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+
 Welcome to c3sMembership's documentation!
 =========================================
 
@@ -11,6 +12,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   license_texts/index
 
 
 Indices and tables
@@ -20,3 +22,13 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+
+License
+=======
+
+This documentation is licensed under a `Creative Commons Attribution 4.0
+International License <http://creativecommons.org/licenses/by/4.0/>`_
+(CC BY 4.0).
+
+You should have received a copy of the license along with this
+work. If not, see http://creativecommons.org/licenses/by/4.0/. 
