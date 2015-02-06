@@ -261,11 +261,14 @@ def accountants_desk(request):
     if 'message' in request.GET:
         _message = request.GET['message']
 
+    # build version information for footer
     import c3smembership
     version_number = c3smembership.__version__
     version_location_url = None
     version_location_name = None
     if request.registry.settings['c3smembership.runmode'] == 'dev':
+        # retrieving git information is expensive and therefore only
+        # displayed in development mode
         git_tag = GitTools.get_tag()
         branch_name = GitTools.get_branch()
         if git_tag is None:
