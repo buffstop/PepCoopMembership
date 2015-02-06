@@ -7,6 +7,11 @@ import re
 class GitTools(object):
     """Provides methods to access git information."""
 
+    github_remote_regex = '(?P<protocol>(http(s)?|git|ssh|ftp(s)?|rsync))' + \
+        ':\\/\\/((?P<ssh_user>[^@]+)@)?((?P<subdomain>.+)\\.)?github.com' + \
+        '(:(?P<port>\\d{1,5}))?\\/(?P<github_user>[A-Za-z0-9]+)\\/' + \
+        '(?P<github_repository>[A-Za-z0-9]+)(.git)?\\/?'
+
     @classmethod
     def __execute_shell_command(cls, command):
         """Encapsulates the execution of a shell command.
@@ -62,13 +67,12 @@ class GitTools(object):
         if git_remote_url is None:
             return None
         match = re.search(
-            '^(?P<protocol>(https|git))://(?P<www>www.)?github.com/' + \
-                '(?P<user>[A-Za-z0-9]+)/(?P<repository>[A-Za-z0-9]+)(.git)?$',
+            cls.github_remote_regex,
             git_remote_url)
         if match is not None and match.groups():
             return 'https://github.com/{0}/{1}'.format(
-                match.group('user'),
-                match.group('repository'))
+                match.group('github_user'),
+                match.group('github_repository'))
         else:
             return None
 

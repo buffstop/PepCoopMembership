@@ -3,6 +3,7 @@
 import unittest
 import subprocess
 import mock
+import re
 
 from c3smembership.git_tools import GitTools
 
@@ -247,4 +248,155 @@ class TestGitTools(unittest.TestCase):
             expected_commands=[
                 'git rev-parse --abbrev-ref HEAD',
                 'git config --get remote.origin.url'])
+
+    def test_github_remote_regex(self):
+        """Test regular expression GitTools.github_remote_regex.
+
+        Parts of the regular expression are tested separately. Test are only
+        done for success so far. Tests for failure could be added.
+        """
+        github_remote_test_values = [
+            # test protocols
+            {
+                'value': 'git://github.com/myGithubUser123/test456Repository',
+                'protocol': 'git',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'http://github.com/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'http',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'https://github.com/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'https',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'ftp://github.com/myGithubUser123/test456Repository',
+                'protocol': 'ftp',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'ftps://github.com/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'ftps',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'rsync://github.com/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'rsync',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            # test ssh user
+            {
+                'value': 'ssh://user@github.com/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'ssh',
+                'ssh_user': 'user',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            # test subdomains
+            {
+                'value': 'ssh://subdomain.github.com/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'ssh',
+                'subdomain': 'subdomain',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'ssh://some.sub.domain.github.com/' + \
+                    'myGithubUser123/test456Repository',
+                'protocol': 'ssh',
+                'subdomain': 'some.sub.domain',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            # test ports
+            {
+                'value': 'ssh://github.com:1/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'ssh',
+                'port': '1',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'ssh://github.com:12/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'ssh',
+                'port': '12',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'ssh://github.com:123/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'ssh',
+                'port': '123',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'ssh://github.com:1234/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'ssh',
+                'port': '1234',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'ssh://github.com:65535/myGithubUser123/' + \
+                    'test456Repository',
+                'protocol': 'ssh',
+                'port': '65535',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            # test repository syntax
+            {
+                'value': 'ssh://github.com/myGithubUser123/' + \
+                    'test456Repository/',
+                'protocol': 'ssh',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'ssh://github.com/myGithubUser123/' + \
+                    'test456Repository.git',
+                'protocol': 'ssh',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+            {
+                'value': 'ssh://github.com/myGithubUser123/' + \
+                    'test456Repository.git/',
+                'protocol': 'ssh',
+                'github_user': 'myGithubUser123',
+                'github_repository': 'test456Repository'
+            },
+        ]
+        pattern = re.compile(GitTools.github_remote_regex)
+        for test_case in github_remote_test_values:
+            match = pattern.search(test_case['value'])
+            groupdict = match.groupdict()
+            for group in groupdict:
+                if groupdict[group] is not None:
+                    self.assertTrue(group in test_case)
+                    self.assertEqual(groupdict[group], test_case[group])
+            for group in test_case:
+                if group != 'value':
+                    self.assertTrue(group in groupdict)
+                    self.assertEqual(groupdict[group], test_case[group])
 
