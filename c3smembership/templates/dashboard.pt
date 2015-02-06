@@ -368,5 +368,11 @@
       Please <a href="${request.route_url('logout')}">log out</a>
       when you are done.
     </p>
+    <p>
+      <small>
+      c3sMembership ${version_number} &ndash;
+      <a tal:condition="version_location_url is not None and version_location_name is not None" href="${version_location_url}">${version_location_name}</a>
+    </small>
+    </p>
   </tal:block>
 </html>

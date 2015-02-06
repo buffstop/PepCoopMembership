@@ -22,6 +22,8 @@ import colander
 import deform
 from deform import ValidationFailure
 
+from git_tools import GitTools
+
 from pyramid.i18n import (
     get_localizer,
 )
@@ -259,19 +261,40 @@ def accountants_desk(request):
     if 'message' in request.GET:
         _message = request.GET['message']
 
-    return {'_number_of_datasets': _number_of_datasets,
-            'members': _members,
-            'num_display': num_display,
-            'next': next_page,
-            'previous': previous_page,
-            'current': _page_to_show,
-            'orderby': _order_by,
-            'order': _order,
-            'message': _message,
-            'last_page': _last_page,
-            'is_last_page': _page_to_show == _last_page,
-            'is_first_page': _page_to_show == 0,
-            }
+    # build version information for footer
+    import c3smembership
+    version_number = c3smembership.__version__
+    version_location_url = None
+    version_location_name = None
+    if request.registry.settings['c3smembership.runmode'] == 'dev':
+        # retrieving git information is expensive and therefore only
+        # displayed in development mode
+        git_tag = GitTools.get_tag()
+        branch_name = GitTools.get_branch()
+        if git_tag is None:
+            git_tag = '???'
+        version_number = '{0} (Tag {1}, Branch {2})'.format(
+            version_number, git_tag, branch_name)
+        version_location_name = GitTools.get_commit_hash()
+        version_location_url = GitTools.get_github_commit_url()
+
+    return {
+        '_number_of_datasets': _number_of_datasets,
+        'members': _members,
+        'num_display': num_display,
+        'next': next_page,
+        'previous': previous_page,
+        'current': _page_to_show,
+        'orderby': _order_by,
+        'order': _order,
+        'message': _message,
+        'last_page': _last_page,
+        'is_last_page': _page_to_show == _last_page,
+        'is_first_page': _page_to_show == 0,
+        'version_number': version_number,
+        'version_location_name': version_location_name,
+        'version_location_url': version_location_url,
+    }
 
 
 @view_config(permission='manage',

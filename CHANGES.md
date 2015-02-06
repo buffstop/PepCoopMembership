@@ -20,6 +20,11 @@ Next Release
 
 - Added license texts section to documentation.
 
+- Included version information into dashboard view and template. Created
+  helper class GitTools to provide git information about tags, branches and
+  commits.
+
+
 
 1.10.1
 ======

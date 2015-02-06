@@ -1,4 +1,7 @@
 
+__version__ = '1.10.1'
+
+
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
