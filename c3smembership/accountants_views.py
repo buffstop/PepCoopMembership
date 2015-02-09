@@ -350,7 +350,7 @@ def delete_entry(request):
             request.route_url(
                 'dashboard_only',
                 _query={'message': 'Deleting the member was not confirmed' + \
-                    ' and therefore nothing was deleted.'}
+                    ' and therefore nothing has been deleted.'}
             )
         )
 
@@ -393,8 +393,8 @@ def switch_pay(request):
 
 @view_config(renderer='json',
              permission='manage',
-             route_name='member_info')
-def member_info(request):
+             route_name='get_member')
+def get_member(request):
     memberid = request.matchdict['memberid']
     member = C3sMember.get_by_id(memberid)
     if member is None:
