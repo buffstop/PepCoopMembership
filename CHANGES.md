@@ -20,6 +20,8 @@ Next Release
 
 - Added license texts section to documentation.
 
+- Added list of contributors.
+
 
 1.10.1
 ======
