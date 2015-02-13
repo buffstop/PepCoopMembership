@@ -320,9 +320,9 @@ def delete_entry(request):
     This view lets accountants delete entries (doublettes)
     """
 
-    deletion_confirmed = False
-    if 'deletion_confirmed' in request.params:
-        deletion_confirmed = (request.params['deletion_confirmed'] == '1')
+    deletion_confirmed = (request.params.get('deletion_confirmed', '0') == '1')
+    redirection_view = request.params.get('redirect', 'dashboard_only')
+    log.info('redirect to: ' + str(redirection_view))
 
     if deletion_confirmed:
         memberid = request.matchdict['memberid']
@@ -340,15 +340,15 @@ def delete_entry(request):
         request.session.flash(_message, 'messages')
         return HTTPFound(
             request.route_url(
-                'dashboard_only',
+                redirection_view,
                 _query={'message': 'Member with id {0} was deleted.'.format(
                         memberid)}
-            ) + '#member_' + str(_member.id)
+            ) + '#member_' + str(memberid)
         )
     else:
         return HTTPFound(
             request.route_url(
-                'dashboard_only',
+                redirection_view,
                 _query={'message': 'Deleting the member was not confirmed' + \
                     ' and therefore nothing has been deleted.'}
             )

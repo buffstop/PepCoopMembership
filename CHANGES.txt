@@ -11,6 +11,8 @@ Next Release
 
 - Fixed link to statistics of finished memberships.
 
+- Implemented redirect for member deletion based on route name.
+
 
 
 1.10.1
