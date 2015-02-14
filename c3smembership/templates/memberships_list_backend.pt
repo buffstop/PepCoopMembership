@@ -20,11 +20,19 @@
             $(".delete-link").click(function(event) {
                 event.preventDefault();
                 member_id = $(this).attr('id').split('-')[2];
-                answer = confirm("Are you sure you want to delete member " + member_id + "?");
-                if (answer) {
-                  delete_link = $(this).attr('href') + '?deletion_confirmed=1';
-                  window.location.href = delete_link;
-                }
+                ajaxUrl = '${request.route_url('get_member', memberid=0)}'
+                ajaxUrl = ajaxUrl.substring(0, ajaxUrl.length - 1) + member_id;
+                member_data = $.get(
+                  ajaxUrl,
+                  function(member) {
+                    answer = confirm("Do you want to delete member " + member.id + " \"" + member.lastname + ", " + member.firstname + "\"?");
+                    if (answer) {
+                      deleteUrl = '${request.route_url('delete_entry', memberid='{memberid}', _query={'redirect': 'membership_listing_backend_only'})}';
+                      deleteUrl = deleteUrl.replace(encodeURIComponent('{memberid}'), member_id) + '&deletion_confirmed=1';
+                      window.location.href = deleteUrl;
+                    }
+                  }
+                );
             });
             $(".send-reminder").click(function(event) {
                 member_id = $(this).attr('id').split('-')[2];
@@ -214,7 +222,7 @@
              class="btn btn-warning">edit</a>
         </td>
         <td><!--! delete application -->
-          <a href="${request.route_url('delete_entry', memberid=member.id)}"
+          <a href="${request.route_url('delete_entry', memberid=member.id, _query={'redirect': 'membership_listing_backend_only'})}"
              class="btn btn-danger delete-link"
              id="delete-link-${member.id}" >delete</a></td>
       </tr>
