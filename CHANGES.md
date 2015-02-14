@@ -22,6 +22,9 @@ Next Release
 
 - Added list of contributors.
 
+- Implemented redirect for member deletion based on route name.
+
+
 
 1.10.1
 ======
