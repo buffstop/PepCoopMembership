@@ -1,3 +1,9 @@
+from deform import widget
+from colander import (
+    Invalid,
+    null,
+    )
+
 '''
 this custom made widget needs to be patched into the deform widget.py
 that came with you installation. the best place is between TextInputWidget
@@ -6,7 +12,7 @@ e.g. env/lib/python2.7/site-packages/deform-2.0a2-py2.7.egg/deform/widget.py
 '''
 
 
-class TextInputSliderWidget(Widget):
+class TextInputSliderWidget(widget.Widget):
     """
     Renders an ``<input type="text"/>`` widget
     accompanied by a div to show the slider.

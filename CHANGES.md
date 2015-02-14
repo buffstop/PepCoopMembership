@@ -24,6 +24,17 @@ Next Release
   helper class GitTools to provide git information about tags, branches and
   commits.
 
+- Code cleanup
+
+  - accountants_view.py
+
+  - views.py
+
+- Integrated the deform TextInputSliderWidget so that it doesn't need
+  to be applied as a text and neither the slider.pt template needs to
+  be copied anywhere. This reduces manual setup steps to run the
+  application.
+
 
 
 1.10.1
