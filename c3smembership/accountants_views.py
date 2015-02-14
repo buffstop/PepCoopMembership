@@ -327,6 +327,8 @@ def delete_entry(request):
     if deletion_confirmed:
         memberid = request.matchdict['memberid']
         _member = C3sMember.get_by_id(memberid)
+        member_lastname = _member.lastname
+        member_firstname = _member.firstname
 
         C3sMember.delete_by_id(_member.id)
         log.info(
@@ -341,8 +343,10 @@ def delete_entry(request):
         return HTTPFound(
             request.route_url(
                 redirection_view,
-                _query={'message': 'Member with id {0} was deleted.'.format(
-                        memberid)}
+                _query={'message': u'Member with id {0} \"{1}, {2}\" was deleted.'.format(
+                        memberid,
+                        member_lastname,
+                        member_firstname)}
             ) + '#member_' + str(memberid)
         )
     else:
