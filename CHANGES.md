@@ -1,5 +1,25 @@
 Next Release
-============
+=======
+
+- Included version information into dashboard view and template. Created
+  helper class GitTools to provide git information about tags, branches and
+  commits.
+
+- Code cleanup
+
+  - accountants_view.py
+
+  - views.py
+
+- Integrated the deform TextInputSliderWidget so that it doesn't need
+  to be applied as a text and neither the slider.pt template needs to
+  be copied anywhere. This reduces manual setup steps to run the
+  application.
+
+
+
+1.10.2
+======
 
 - Fixed jQuery path in dashboard template which was preventing the
   confirmation dialog for deleting a member to be shown. Made sure that
@@ -20,20 +40,9 @@ Next Release
 
 - Added license texts section to documentation.
 
-- Included version information into dashboard view and template. Created
-  helper class GitTools to provide git information about tags, branches and
-  commits.
+- Added list of contributors.
 
-- Code cleanup
-
-  - accountants_view.py
-
-  - views.py
-
-- Integrated the deform TextInputSliderWidget so that it doesn't need
-  to be applied as a text and neither the slider.pt template needs to
-  be copied anywhere. This reduces manual setup steps to run the
-  application.
+- Implemented redirect for member deletion based on route name.
 
 
 

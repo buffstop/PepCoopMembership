@@ -1,5 +1,5 @@
 
-__version__ = '1.10.1'
+__version__ = '1.10.2'
 
 
 from pyramid.config import Configurator
@@ -124,10 +124,14 @@ def main(global_config, **settings):
                      '/make_crowdfounders_members')
     config.add_route('make_yesser_members',
                      '/make_yesser_members')
+    config.add_route('membership_listing_backend_only',
+                     '/memberships')
     config.add_route('membership_listing_backend',
                      '/memberships/{number}/{orderby}/{order}')
     config.add_route('membership_listing_alphabetical',
                      '/aml')
+    config.add_route('get_member', '/members/{memberid}')
+
     # shares
     config.add_route('detail_shares', '/detail_shares/{id}')
     # membership_certificate
