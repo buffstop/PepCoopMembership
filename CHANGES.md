@@ -1,5 +1,5 @@
-Next Release
-============
+1.10.2
+======
 
 - Fixed jQuery path in dashboard template which was preventing the
   confirmation dialog for deleting a member to be shown. Made sure that
