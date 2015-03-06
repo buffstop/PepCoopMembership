@@ -16,6 +16,8 @@ Next Release
   be copied anywhere. This reduces manual setup steps to run the
   application.
 
+- Changed salutation of payment reminder email body.
+
 
 
 1.10.2
