@@ -231,7 +231,7 @@
         <table class="table table-striped">
 	  <tr>
             <td>
-              Versand Mitgliedsbescheinigungs-Email
+              Versand Mitgliedsbescheinigungs-E-Mail
             </td>
             <td>
               <a tal:condition="not member.certificate_email"
@@ -243,7 +243,7 @@
                  title="gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}"
                  class="btn btn-success">gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}</a>
               <small>
-                Ein Klick hier setzt ein (neues) Token und versendet eine Email mit Link.<br />
+                Ein Klick hier setzt ein (neues) Token und versendet eine E-Mail mit Link.<br />
                 Der Link enthält auch das Token, ohne welches KEIN pdf generiert wird.<br />
                 Ausserdem wird überprüft, ob das Token älter ist als 14 Tage; in dem fall gibt es KEIN PDF.
               </small>

@@ -273,8 +273,8 @@ gemeinsam mit Dir freuen wir uns auf die erste Generalversammlung der C3S SCE
 am 23. August, um 14:00 Uhr im Millowitsch-Theater in Köln. Details dazu
 erhältst Du in Kürze in einer separaten Einladung.
 
-Da wir die Einladungen per Email verschicken werden, möchten wir Dich bitten
-uns kurz zu bestätigen, dass diese Emailadresse korrekt ist und Du auf diesem
+Da wir die Einladungen per E-Mail verschicken werden, möchten wir Dich bitten
+uns kurz zu bestätigen, dass diese E-Mail-Adresse korrekt ist und Du auf diesem
 Wege erreichbar bist. Dafür brauchst Du nur den folgenden Link aufzurufen:
 
   {0}
@@ -283,7 +283,7 @@ Solltest Du nicht {1} {2} sein und diese Adresse nicht bei uns angegeben haben,
 antworte bitte kurz auf diese E-Mail. Dann werden wir die Adresse aus unser
 Datenbank streichen.
 
-Antworte bitte ebenfalls, falls Du die Email-Adresse ändern möchtest.
+Antworte bitte ebenfalls, falls Du die E-Mail-Adresse ändern möchtest.
 
 
 Viele Grüße :: Das C3S-Team

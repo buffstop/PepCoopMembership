@@ -18,6 +18,9 @@ Next Release
 
 - Changed salutation of payment reminder email body.
 
+- Fixed several German typos like "Nachnahme" instead of "Nachname", "Email"
+  instead of "E-Mail" and "Addresse" instead of "Adresse".
+
 
 
 1.10.2

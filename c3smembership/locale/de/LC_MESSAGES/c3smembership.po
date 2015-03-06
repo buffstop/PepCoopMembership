@@ -295,7 +295,7 @@ msgid ""
 "please use this link to verify your email address and download your "
 "personalised PDF:"
 msgstr ""
-"bitte benutze diesen Link um Deine Email-Adresse zu bestätigen und Dein "
+"bitte benutze diesen Link um Deine E-Mail-Adresse zu bestätigen und Dein "
 "Formular zu laden:"
 
 #: c3smembership/views.py:215
@@ -308,7 +308,7 @@ msgstr "Dein C3S Team"
 
 #: c3smembership/views.py:222
 msgid "C3S: confirm your email address and load your PDF"
-msgstr "C3S: Bestätige deine Email-Adresse und lade Dein PDF"
+msgstr "C3S: Bestätige deine E-Mail-Adresse und lade Dein PDF"
 
 #: c3smembership/views.py:304
 msgid ""
@@ -348,7 +348,7 @@ msgid ""
 "have to enter it."
 msgstr ""
 "Wir brauchen ein Passwort, um deine Daten zu schützen. Nach der Bestätigung "
-"der Email-Adresse wird es abgefragt."
+"der E-Mail-Adresse wird es abgefragt."
 
 #: c3smembership/views.py:501 c3smembership/templates/success.pt:29
 msgid "Address Line 1"
@@ -430,12 +430,12 @@ msgstr "Impressum"
 #. Default: C3S Membership Application: Check your email
 #: c3smembership/templates/check-mail.pt:13
 msgid "check-email-title"
-msgstr "C3S Mitgliedsantrag: Bitte Emails abrufen."
+msgstr "C3S Mitgliedsantrag: Bitte E-Mails abrufen."
 
 #. Default: An email was sent,
 #: c3smembership/templates/check-mail.pt:16
 msgid "check-email-headline"
-msgstr "Eine Email wurde verschickt,"
+msgstr "Eine E-Mail wurde verschickt,"
 
 #. Default: You will receive an email from noreply@c3s.cc with a link. Please
 #. check
@@ -443,18 +443,18 @@ msgstr "Eine Email wurde verschickt,"
 #: c3smembership/templates/check-mail.pt:17
 msgid "check-email-paragraph-check-email"
 msgstr ""
-"Du wirst eine Email von noreply@c3s.cc mit einem Bestätigungslink erhalten. "
-"Bitte rufe Deine Emails ab."
+"Du wirst eine E-Mail von noreply@c3s.cc mit einem Bestätigungslink erhalten. "
+"Bitte rufe Deine E-Mails ab."
 
 #. Default: The email subject line will read:
 #: c3smembership/templates/check-mail.pt:21
 msgid "check-email-paragraph-check-email-hint"
-msgstr "Der Betreff der Email lautet: "
+msgstr "Der Betreff der E-Mail lautet: "
 
 #. Default: C3S: confirm your email address and load your PDF
 #: c3smembership/templates/check-mail.pt:22
 msgid "check-email-paragraph-check-email-subject"
-msgstr "C3S: Email-Adresse bestätigen und Formular abrufen"
+msgstr "C3S: E-Mail-Adresse bestätigen und Formular abrufen"
 
 #. Default: Join the Cultural Commons Collecting Society (C3S)
 #. Default: Join Cultural Commons Collecting Society (C3S)
@@ -478,7 +478,7 @@ msgstr ""
 msgid "join-form-fill-verify-print-send"
 msgstr ""
 "Zunächst musst Du bitte das Formular ausfüllen. Anschließend erhältst Du "
-"eine Email zur Bestätigung Deiner Anfrage."
+"eine E-Mail zur Bestätigung Deiner Anfrage."
 
 #. Default: Membership for private companies and institutions can be applied
 #. for
@@ -630,7 +630,7 @@ msgstr "Das hat funktioniert,"
 msgid "success-paragraph-thanks"
 msgstr ""
 "Was nun passieren muss: Kontrolliere die Angaben unten, dann fordere eine "
-"Bestätigungsemail an, lade Dein PDF und sende es unterschrieben per "
+"Bestätigungs-E-Mail an, lade Dein PDF und sende es unterschrieben per "
 "Briefpost an uns zurück."
 
 #. Default: Your data we received
@@ -675,7 +675,7 @@ msgstr "Falls oben alle Angaben richtig sind..."
 #. Default: Next: verify your email
 #: c3smembership/templates/success.pt:61
 msgid "success-headline-verify-email"
-msgstr "Bestätige deine Email-Adresse"
+msgstr "Bestätige deine E-Mail-Adresse"
 
 #. Default: Click the button to have an email sent to your account. Then, check
 #. your email and use the link we send you to get your PDF. This needs to be
@@ -684,17 +684,17 @@ msgstr "Bestätige deine Email-Adresse"
 msgid "success-paragraph-verify-email"
 msgstr ""
 "Nach Anfordern der Bestätigungsmail schicken wir eine Mail an deine Adresse. "
-"Rufe deine Emails ab und nutze den Bestätigungslink, um dein PDF zu laden. "
+"Rufe deine E-Mails ab und nutze den Bestätigungslink, um dein PDF zu laden. "
 "Dieses muss ausgedruckt und unterschrieben an uns zurückgesandt werden."
 
 #: c3smembership/templates/success.pt:69
 msgid "Send Mail"
-msgstr "Email anfordern"
+msgstr "E-Mail anfordern"
 
 #. Default: <dynamic element> Email Verification
 #: c3smembership/templates/verify-mail.pt:9
 msgid "verify-email-title"
-msgstr "C3S-Mitgliedsantrag: Email-Adresse bestätigen"
+msgstr "C3S-Mitgliedsantrag: E-Mail-Adresse bestätigen"
 
 #: c3smembership/templates/verify-mail.pt:18
 msgid "Your Email has been confirmed,"
@@ -775,7 +775,7 @@ msgstr "Diese und weitere Informationen findest Du auf Seite 2 des PDF."
 #~ msgstr "[C3S AFM] Wir haben deine Zahlung erhalten. Danke schön!"
 
 #~ msgid "verified-email-headline"
-#~ msgstr "Deine Email-Adresse wurde bestätigt, "
+#~ msgstr "Deine E-Mail-Adresse wurde bestätigt, "
 
 #~ msgid "verified-email-paragraph"
-#~ msgstr "Da Seine Email-Adresse nun bestätigt ist, darfst Du Dein PDF laden."
+#~ msgstr "Da Deine E-Mail-Adresse nun bestätigt ist, darfst Du Dein PDF laden."

@@ -101,18 +101,18 @@ def edit_member(request):
         )
         lastname = colander.SchemaNode(
             colander.String(),
-            title='Nachnahme',
+            title='Nachname',
             oid="lastname",
         )
         email = colander.SchemaNode(
             colander.String(),
-            title=_(u'Email'),
+            title=_(u'E-Mail-Adresse'),
             validator=colander.Email(),
             oid="email",
         )
         email_is_confirmed = colander.SchemaNode(
             colander.String(),
-            title=u'Email bestätigt?',
+            title=u'E-Mail-Adresse bestätigt?',
             widget=deform.widget.RadioChoiceWidget(
                 values=(
                     (u'yes', u'Ja, bestätigt'),
@@ -129,12 +129,12 @@ def edit_member(request):
         )
         address1 = colander.SchemaNode(
             colander.String(),
-            title='Addresse Zeile 1'
+            title='Adesse Zeile 1'
         )
         address2 = colander.SchemaNode(
             colander.String(),
             missing=unicode(''),
-            title='Addresse Zeile 2'
+            title='Adresse Zeile 2'
         )
         postcode = colander.SchemaNode(
             colander.String(),
