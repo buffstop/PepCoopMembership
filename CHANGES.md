@@ -29,6 +29,9 @@ Next Release
 
 - Fix setup.py which was referencing CHANGES.txt instead of CHANGES.md.
 
+- Make the link to the Cultural Commons Manifesto language specific in order
+  to show the C3S website in the corresponding language.
+
 
 
 1.10.2
