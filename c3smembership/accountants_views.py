@@ -293,7 +293,7 @@ def delete_entry(request):
 
     deletion_confirmed = (request.params.get('deletion_confirmed', '0') == '1')
     redirection_view = request.params.get('redirect', 'dashboard_only')
-    log.info('redirect to: ' + str(redirection_view))
+    LOG.info('redirect to: ' + str(redirection_view))
 
     if deletion_confirmed:
         memberid = request.matchdict['memberid']
