@@ -21,6 +21,10 @@ Next Release
 - Fixed several German typos like "Nachnahme" instead of "Nachname", "Email"
   instead of "E-Mail" and "Addresse" instead of "Adresse".
 
+- Changed certificate email templates from .pt to .txt as they were plain
+  text, therefore not compatible with .pt internationalization and causing 
+  parsing errors.
+
 
 
 1.10.2
