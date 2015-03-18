@@ -32,6 +32,8 @@ Next Release
 - Make the link to the Cultural Commons Manifesto language specific in order
   to show the C3S website in the corresponding language.
 
+- Add documentation about internationalization of template and python files.
+
 
 
 1.10.2
