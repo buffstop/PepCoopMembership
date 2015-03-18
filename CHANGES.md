@@ -27,6 +27,8 @@ Next Release
 
 - Fix several template HTML syntax errors.
 
+- Fix setup.py which was referencing CHANGES.txt instead of CHANGES.md.
+
 
 
 1.10.2
