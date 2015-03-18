@@ -2,11 +2,11 @@
 <html lang="${request.locale_name}"
       metal:use-macro="backend">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="pyramid web application">
-    <meta name="author" content="Pylons Project">
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="pyramid web application"/>
+    <meta name="author" content="Pylons Project"/>
     
     <title>Merge Applicant to become C3S Member</title>
   </head>
@@ -44,7 +44,7 @@
                      value="${member.id}"
                      class="form-control"/>
               Mitgliedschaftsdatum (yyyy-mm-dd):
-              <input name="membership_date" type="text">
+              <input name="membership_date" type="text"/>
               <input name="submit" type="submit"
                      class="btn btn-primary"
                      value="Make Member of C3S SCE"/>
@@ -137,7 +137,7 @@
       </tal:block>
       
       <tal:block metal:fill-slot="bottom">
-        <hr>
+        <hr/>
         <div class="hidden-print">
           <p>
             <a href="${request.route_url('dashboard_only')}"

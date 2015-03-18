@@ -21,6 +21,17 @@ Next Release
 - Fixed several German typos like "Nachnahme" instead of "Nachname", "Email"
   instead of "E-Mail" and "Addresse" instead of "Adresse".
 
+- Change certificate email templates from .pt to .txt as are plain
+  text, therefore not compatible with .pt internationalization and causing 
+  parsing errors.
+
+- Fix several template HTML syntax errors.
+
+- Fix setup.py which was referencing CHANGES.txt instead of CHANGES.md.
+
+- Make the link to the Cultural Commons Manifesto language specific in order
+  to show the C3S website in the corresponding language.
+
 
 
 1.10.2

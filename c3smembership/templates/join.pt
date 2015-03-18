@@ -85,7 +85,8 @@ $(document).ready(function(){
 
     <h2 i18n:translate="join-form-headline-fine-print" class="deform">The Fine Print</h2>
     <p i18n:translate="" class="infoIndent">
-      <a href="https://www.c3s.cc/en-manifesto/" target="_blank"
+      <a href="https://www.c3s.cc/en/about-us/manifesto/" target="_blank"
+  i18n:attributes="href manifesto-link"
 	 i18n:name="join-form-manifesto-title"
 	 i18n:translate="join-form-manifesto-title">The Cultural Commons Manifesto</a>
     </p>

@@ -72,43 +72,40 @@
       </table>
       
       <h3>Membership Meta</h3>
-      <table class="table table-striped">
-	<tr>
-          <td>membership_accepted</td>
-	  <td>
-            ${'Yes' if member.membership_accepted else 'No'}
-          </td>
+    <table class="table table-striped">
+        <tr>
+            <td>membership_accepted</td>
+            <td>
+                ${'Yes' if member.membership_accepted else 'No'}
+            </td>
         </tr>
-	<tr>
-	<tr tal:condition="member.membership_accepted">
-          <td>membership_number</td>
-	  <td>
-            ${member.membership_number}
-          </td>
+        <tr tal:condition="member.membership_accepted">
+            <td>membership_number</td>
+            <td>
+                ${member.membership_number}
+            </td>
         </tr>
-	<tr tal:condition="member.membership_accepted">
-          <td>membership_date</td>
-	  <td>${member.membership_date}</td>
+        <tr tal:condition="member.membership_accepted">
+            <td>membership_date</td>
+            <td>${member.membership_date}</td>
         </tr>
-	<tr>
-          <td>is_duplicate ?</td>
-	  <td>${'Yes' if member.is_duplicate else 'No/Unknown'}</td>
+        <tr>
+            <td>is_duplicate ?</td>
+            <td>${'Yes' if member.is_duplicate else 'No/Unknown'}</td>
         </tr>
-	<tr tal:condition="member.is_duplicate">
-          <td>is duplicate of</td>
-	  <td>
-            <a href="${request.route_url('detail', memberid=member.is_duplicate_of)}">
-              ${member.is_duplicate_of}
-            </a>
-          </td>
+        <tr tal:condition="member.is_duplicate">
+            <td>is duplicate of</td>
+            <td>
+                <a href="${request.route_url('detail', memberid=member.is_duplicate_of)}">
+                    ${member.is_duplicate_of}
+                </a>
+            </td>
         </tr>
-	<tr>
-          <td>
-          <a name="comment"></a>staff comment</td>
-	  <td>${member.accountant_comment}</td>
+        <tr>
+            <td><a name="comment"></a>staff comment</td>
+            <td>${member.accountant_comment}</td>
         </tr>
-
-      </table>
+    </table>
       
       <h3>Membership Info</h3>
 
