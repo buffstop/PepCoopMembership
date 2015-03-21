@@ -15,6 +15,12 @@ Help via screencast is available: http://translate.c3s.cc
 Also see ./tx/README.rst for more help on the translation machinery.
 
 
+fonts
+-----
+
+The .odt files for the membership application in pdftk require the font Signika which can be downloaded at: http://www.google.com/fonts/specimen/Signika
+
+
 setup
 -----
 
@@ -23,10 +29,6 @@ see ci.sh (is partially out of date)
 install pdftk (sudo apt-get install pdftk)
 
 $ virtualenv env
-
-manually apply deform/widget.py.patch to env/lib/python2.7/site-packages/deform-2.0a2-py2.7.egg/deform/widget.py
-
-$ cp deform/slider.pt env/lib/python2.7/site-packages/deform-2.0a2-py2.7.egg/deform/templates/slider.pt
 
 $ env/bin/python setup.py develop
 

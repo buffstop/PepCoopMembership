@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+CHANGES = open(os.path.join(here, 'CHANGES.md')).read()
 
 requires = [
     'alembic',  # migrate the database when introducing new fields
@@ -35,6 +35,7 @@ test_requirements = [
     'coverage',
     'nose',
     'pdfminer',  # and its dependency
+    'mock', # for creating mock objects
     'pyquery',
     'selenium',
     'slate',  # pdf to text helper
@@ -45,7 +46,7 @@ if sys.version_info[:3] < (2, 5, 0):
     requires.append('pysqlite')
 
 setup(name='c3smembership',
-      version='0.1',
+      version=__import__('c3smembership').__version__,
       description='Membership Form for C3S (form, PDF, email)',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

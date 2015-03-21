@@ -58,20 +58,23 @@ def send_certificate_email(request):
     #print _url
     #print '#'*60
 
+    message_body_file_name = \
+        'c3smembership/templates/mail/membership_certificate_' + \
+        _m.locale + '.txt'
+    with open(message_body_file_name, 'rb') as content_file:
+        message_body = content_file.read().decode('utf-8')
+        message_body = message_body.format(
+            name=_m.firstname,
+            url=_url
+        )
+
     mailer = get_mailer(request)
     the_message = Message(
         subject=u'C3S-Mitgliedsbescheinigung' if (
             _m.locale == 'de') else u'C3S membership certificate',
         sender='office@c3s.cc',
         recipients=[_m.email, ],
-        body=render(
-            'templates/mail/membership_certificate_' + _m.locale + '.pt',
-            {
-                'name': _m.firstname,
-                'url': _url,
-            },
-            request=request,
-        )
+        body = message_body
     )
     mailer.send(the_message)
     _m.certificate_email = True

@@ -1,9 +1,9 @@
-Hello ${name},
+Hello {name},
 
 
 we are happy to deliver your personal membership certificate!
 
- ${url}
+ {url}
 
 Please review your data and simply reply to this mail if anything turns
 out to be wrong.

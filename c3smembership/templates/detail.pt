@@ -72,43 +72,40 @@
       </table>
       
       <h3>Membership Meta</h3>
-      <table class="table table-striped">
-	<tr>
-          <td>membership_accepted</td>
-	  <td>
-            ${'Yes' if member.membership_accepted else 'No'}
-          </td>
+    <table class="table table-striped">
+        <tr>
+            <td>membership_accepted</td>
+            <td>
+                ${'Yes' if member.membership_accepted else 'No'}
+            </td>
         </tr>
-	<tr>
-	<tr tal:condition="member.membership_accepted">
-          <td>membership_number</td>
-	  <td>
-            ${member.membership_number}
-          </td>
+        <tr tal:condition="member.membership_accepted">
+            <td>membership_number</td>
+            <td>
+                ${member.membership_number}
+            </td>
         </tr>
-	<tr tal:condition="member.membership_accepted">
-          <td>membership_date</td>
-	  <td>${member.membership_date}</td>
+        <tr tal:condition="member.membership_accepted">
+            <td>membership_date</td>
+            <td>${member.membership_date}</td>
         </tr>
-	<tr>
-          <td>is_duplicate ?</td>
-	  <td>${'Yes' if member.is_duplicate else 'No/Unknown'}</td>
+        <tr>
+            <td>is_duplicate ?</td>
+            <td>${'Yes' if member.is_duplicate else 'No/Unknown'}</td>
         </tr>
-	<tr tal:condition="member.is_duplicate">
-          <td>is duplicate of</td>
-	  <td>
-            <a href="${request.route_url('detail', memberid=member.is_duplicate_of)}">
-              ${member.is_duplicate_of}
-            </a>
-          </td>
+        <tr tal:condition="member.is_duplicate">
+            <td>is duplicate of</td>
+            <td>
+                <a href="${request.route_url('detail', memberid=member.is_duplicate_of)}">
+                    ${member.is_duplicate_of}
+                </a>
+            </td>
         </tr>
-	<tr>
-          <td>
-          <a name="comment"></a>staff comment</td>
-	  <td>${member.accountant_comment}</td>
+        <tr>
+            <td><a name="comment"></a>staff comment</td>
+            <td>${member.accountant_comment}</td>
         </tr>
-
-      </table>
+    </table>
       
       <h3>Membership Info</h3>
 
@@ -231,7 +228,7 @@
         <table class="table table-striped">
 	  <tr>
             <td>
-              Versand Mitgliedsbescheinigungs-Email
+              Versand Mitgliedsbescheinigungs-E-Mail
             </td>
             <td>
               <a tal:condition="not member.certificate_email"
@@ -243,7 +240,7 @@
                  title="gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}"
                  class="btn btn-success">gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}</a>
               <small>
-                Ein Klick hier setzt ein (neues) Token und versendet eine Email mit Link.<br />
+                Ein Klick hier setzt ein (neues) Token und versendet eine E-Mail mit Link.<br />
                 Der Link enthält auch das Token, ohne welches KEIN pdf generiert wird.<br />
                 Ausserdem wird überprüft, ob das Token älter ist als 14 Tage; in dem fall gibt es KEIN PDF.
               </small>

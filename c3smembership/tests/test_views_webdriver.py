@@ -83,7 +83,7 @@ class JoinFormTests(SeleniumTestBase):
 
         self.driver.find_element_by_name('submit').click()
 
-        self.failUnless('Email anfordern' in self.driver.page_source)
+        self.failUnless('E-Mail anfordern' in self.driver.page_source)
 
         # TODO: check contents of success page XXX
         self.assertTrue('Christoph' in self.driver.page_source)

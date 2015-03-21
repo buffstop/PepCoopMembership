@@ -6,7 +6,6 @@ from c3smembership.utils import (
 )
 from c3smembership.models import (
     C3sMember,
-    #C3sStaff,
     DBSession,
 )
 from types import NoneType
@@ -22,9 +21,9 @@ from colander import (
     Invalid,
     Range,
 )
+import deform_text_input_slider_widget
 
 from pyramid.i18n import (
-    #TranslationStringFactory,
     get_localizer,
     get_locale_name,
 )
@@ -32,92 +31,35 @@ from pyramid.view import view_config
 from pyramid.threadlocal import get_current_request
 from pyramid_mailer import get_mailer
 from pyramid.httpexceptions import HTTPFound
-#from pyramid.security import (
-    #remember,
-    #forget,
-    #authenticated_userid,
-#)
-#from pyramid.url import route_url
 from translationstring import TranslationStringFactory
-
-deform_templates = resource_filename('deform', 'templates')
-c3smembership_templates = resource_filename('c3smembership', 'templates')
-
-my_search_path = (deform_templates, c3smembership_templates)
+from sqlalchemy.exc import (
+    InvalidRequestError,
+    IntegrityError
+)
 
 _ = TranslationStringFactory('c3smembership')
 
 
 def translator(term):
-    #print("=== this is def translator")
     return get_localizer(get_current_request()).translate(term)
 
-my_template_dir = resource_filename('c3smembership', 'templates/')
-deform_template_dir = resource_filename('deform', 'templates/')
+MY_TEMPLATE_DIR = resource_filename('c3smembership', 'templates')
+DEFORM_TEMPLATE_DIR = resource_filename('deform', 'templates')
 
-zpt_renderer = deform.ZPTRendererFactory(
+ZPT_RENDERER = deform.ZPTRendererFactory(
     [
-        my_template_dir,
-        deform_template_dir,
+        MY_TEMPLATE_DIR,
+        DEFORM_TEMPLATE_DIR,
     ],
     translator=translator,
 )
-# the zpt_renderer above is referred to within the demo.ini file by dotted name
 
 DEBUG = False
 LOGGING = True
 
-if LOGGING:  # pragma: no cover
+if LOGGING:
     import logging
     log = logging.getLogger(__name__)
-
-
-#@view_config(renderer='templates/disclaimer.pt',
-#             route_name='disclaimer')
-#def show_disclaimer(request):
-#    """
-#    This view simply shows a disclaimer, contained as text in a template.
-#    """
-#    if hasattr(request, '_REDIRECT_'):
-#        return HTTPFound(location=route_url('disclaimer', request),
-#                         headers=request.response.headers)
-#    return {'foo': 'bar'}  # dummy values: template contains all text
-
-
-#@view_config(renderer='templates/faq.pt',
-#             route_name='faq')
-#def show_faq(request):
-#    """
-#    This view simply shows an FAQ, contained as text in a template.
-#    """
-#    if hasattr(request, '_REDIRECT_'):  # pragma: no cover
-#        return HTTPFound(location=request.route_url('faq'),
-#                         headers=request.response.headers)
-#    return {'foo': 'bar'}  # dummy values: template contains all text
-
-
-#@view_config(renderer='templates/statute.pt',
-#             route_name='statute')
-#def show_statute(request):
-#    """
-#    This view simply shows the statute, contained as text in a template.
-#    """
-#    if hasattr(request, '_REDIRECT_'):  # pragma: no cover
-#        return HTTPFound(location=request.route_url('statute'),
-#                         headers=request.response.headers)
-#    return {'foo': 'bar'}  # dummy values: template contains all text
-
-
-#@view_config(renderer='templates/manifesto.pt',
-#             route_name='manifesto')
-#def show_manifesto(request):
-#    """
-#    This view simply shows the manifesto, contained as text in a template.
-#    """
-#    if hasattr(request, '_REDIRECT_'):  # pragma: no cover
-#        return HTTPFound(location=request.route_url('manifesto'),
-#                         headers=request.response.headers)
-#    return {'foo': 'bar'}  # dummy values: template contains all text
 
 
 @view_config(renderer='templates/success.pt',
@@ -131,17 +73,15 @@ def show_success(request):
     and have an email set to the user for validation.
     """
     #check if user has used the form or 'guessed' this URL
-    if ('appstruct' in request.session):
+    if 'appstruct' in request.session:
         # we do have valid info from the form in the session
         appstruct = request.session['appstruct']
         # delete old messages from the session (from invalid form input)
         request.session.pop_flash('message_above_form')
-        #print("show_success: locale: %s") % appstruct['_LOCALE_']
         return {
             'firstname': appstruct['person']['firstname'],
             'lastname': appstruct['person']['lastname'],
         }
-    # 'else': send user to the form
     return HTTPFound(location=request.route_url('join'))
 
 
@@ -156,9 +96,8 @@ def show_success_pdf(request):
     def success_verify_email below.
     """
     #check if user has used form or 'guessed' this URL
-    if ('appstruct' in request.session):
+    if 'appstruct' in request.session:
         # we do have valid info from the form in the session
-        #print("-- valid session with data found")
         # send mail to accountants // prepare a mailer
         mailer = get_mailer(request)
         # prepare mail
@@ -169,8 +108,6 @@ def show_success_pdf(request):
         mailer.send(the_mail)
 
         return generate_pdf(request.session['appstruct'])
-    # 'else': send user to the form
-    #print("-- no valid session with data found")
     return HTTPFound(location=request.route_url('join'))
 
 
@@ -185,8 +122,7 @@ def success_check_email(request):
     and returns a note to go check mail.
     """
     #check if user has used the form (good) or 'guessed' this URL (bad)
-
-    if ('appstruct' in request.session):
+    if 'appstruct' in request.session:
         # we do have valid info from the form in the session (good)
         appstruct = request.session['appstruct']
         from pyramid_mailer.message import Message
@@ -197,7 +133,6 @@ def success_check_email(request):
             # ToDo: handle excpetion
 
         # XXX TODO: check for locale, choose language for body text
-        #import pdb; pdb.set_trace()
         # build the emails body
         body_lines = (  # a list of lines
             _(u"hello"), ' ', appstruct['person']['firstname'], ' ',
@@ -225,7 +160,6 @@ def success_check_email(request):
             body=the_mail_body
         )
         mailer.send(the_mail)
-        #print(the_mail.body)
 
         # make the session go away
         request.session.invalidate()
@@ -233,30 +167,8 @@ def success_check_email(request):
             'firstname': appstruct['person']['firstname'],
             'lastname': appstruct['person']['lastname'],
         }
-    # 'else': send user to the form
     return HTTPFound(location=request.route_url('join'))
 
-
-# @view_config(
-#     renderer='templates/verify_password.pt',
-#     route_name='verify_password')
-# def verify_password(request):
-#     """
-#     This view is called via links sent in mails to verify mail addresses.
-#     It extracts both email and verification code from the URL
-#     and checks if there is a match in the database.
-#     """
-#     #dbsession = DBSession()
-#     # collect data from the URL/matchdict
-#     user_email = request.matchdict['email']
-#     #print(user_email)
-#     confirm_code = request.matchdict['code']
-#     #print(confirm_code)
-#     # get matching dataset from DB
-#     member = C3sMember.get_by_code(confirm_code)  # returns a member or None
-#     #print(member)
-
-#     return {'foo': 'bar'}
 
 
 @view_config(
@@ -272,35 +184,25 @@ def success_verify_email(request):
     If the password matches, and all is correct,
     the view shows a download link and further info.
     """
-    #dbsession = DBSession()
-    #print('#'*80)
     # collect data from the URL/matchdict
     user_email = request.matchdict['email']
-    #print(user_email)
     confirm_code = request.matchdict['code']
-    #print(confirm_code)
     # if we want to ask the user for her password (through a form)
     # we need to have a url to send the form to
     post_url = '/verify/' + user_email + '/' + confirm_code
 
     if 'submit' in request.POST:
-        #print("the form was submitted")
         request.session.pop_flash('message_above_form')
         request.session.pop_flash('message_above_login')
         # check for password ! ! !
         if 'password' in request.POST:
             _passwd = request.POST['password']
-            #print("The password: %s" % _passwd)
-        #else:
-            # message: missing password!
-        #    print('# message: missing password!')
 
         # get matching dataset from DB
         member = C3sMember.get_by_code(confirm_code)  # returns member or None
 
         if isinstance(member, NoneType):
             # member not found: FAIL!
-            # print("a matching entry for this code was not found.")
             not_found_msg = _(
                 u"Not found. Check verification URL. "
                 "If all seems right, please use the form again.")
@@ -318,19 +220,15 @@ def success_verify_email(request):
             request.session.flash(
                 _(u'Wrong Password!'),
                 'message_above_login')
-        #print("member: %s" % member)
-        #print("passwd correct? %s" % correct)
         # check if info from DB makes sense
         # -member
 
-        if ((member.email == user_email) and correct):
-            #print("-- found member, code matches, password too. COOL!")
+        if member.email == user_email and correct:
             # set the email_is_confirmed flag in the DB for this signee
             member.email_is_confirmed = True
-            #dbsession.flush()
             namepart = member.firstname + member.lastname
             import re
-            PdfFileNamePart = re.sub(  # replace characters
+            pdf_file_name_part = re.sub(  # replace characters
                 '[^a-zA-Z0-9]',  # other than these
                 '_',  # with an underscore
                 namepart)
@@ -348,29 +246,25 @@ def success_verify_email(request):
                 '_LOCALE_': member.locale,
                 'date_of_birth': member.date_of_birth,
                 'date_of_submission': member.date_of_submission,
-                #'activity': set(activities),
-                #'invest_member': u'yes' if member.invest_member else u'no',
                 'membership_type': member.membership_type,
-                'member_of_colsoc': u'yes' if member.member_of_colsoc else u'no',
+                'member_of_colsoc': u'yes' if member.member_of_colsoc \
+                    else u'no',
                 'name_of_colsoc': member.name_of_colsoc,
-                #'opt_band': signee.opt_band,
-                #'opt_URL': signee.opt_URL,
                 'num_shares': member.num_shares,
             }
             request.session['appstruct'] = appstruct
 
             # log this person in, using the session
-            log.info('verified code and password for id %s' % member.id)
+            log.info('verified code and password for id %s', member.id)
             request.session.save()
             return {
                 'firstname': member.firstname,
                 'lastname': member.lastname,
                 'code': member.email_confirm_code,
                 'correct': True,
-                'namepart': PdfFileNamePart,
+                'namepart': pdf_file_name_part,
                 'result_msg': _("Success. Load your PDF!")
             }
-    # else: code did not match OR SOMETHING...
     # just display the form
     request.session.flash(
         _(u"Please enter your password."),
@@ -393,76 +287,31 @@ def join_c3s(request):
     """
     This is the main form view: Join C3S as member
     """
-    #LOGGING = True
-
-    #if LOGGING:  # pragma: no cover
-        #import logging
-        #log = logging.getLogger(__name__)
-        #log.info("join...")
-
     # if another language was chosen by clicking on a flag
     # the add_locale_to_cookie subscriber has planted an attr on the request
     if hasattr(request, '_REDIRECT_'):
-        #print("request._REDIRECT_: " + str(request._REDIRECT_))
 
         _query = request._REDIRECT_
-        #print("_query: " + _query)
         # set language cookie
         request.response.set_cookie('_LOCALE_', _query)
         request._LOCALE_ = _query
         locale_name = _query
-        #print("locale_name (from query_string): " + locale_name)
-        #from pyramid.httpexceptions import HTTPFound
-        #print("XXXXXXXXXXXXXXX ==> REDIRECTING ")
         return HTTPFound(location=request.route_url('join'),
                          headers=request.response.headers)
-    # # if another language was chosen, pick it
-    # if request._REDIRECT_ is not '':
-    #     print("request.query_string: " + str(request.query_string))
-    #     _query = request.query_string
-    #     print("_query: " + _query)
-    #     # set language cookie
-    #     request.response.set_cookie('_LOCALE_', _query)
-    #     request._LOCALE_ = _query
-    #     locale_name = _query
-    #     print("locale_name (from query_string): " + locale_name)
-    #     from pyramid.httpexceptions import HTTPFound
-    #     print("XXXXXXXXXXXXXXX ==> REDIRECTING ")
-    #     return HTTPFound(location=request.route_url('intent'),
-    #                      headers=request.response.headers)
     else:
-        #locale_name = request._LOCALE_
         locale_name = get_locale_name(request)
-        #print("locale_name (from request): " + locale_name)
 
-    # check if user clicked on language symbol to have page translated
-    # #print("request.query_string: " + str(request.query_string))
-    # if 'l' in request.query_string:
-    #     print("request.query_string: " + str(request.query_string))
-    #     print("request.query_string[0]: " + str(request.query_string[0]))
-
-    # from pyramid.httpexceptions import HTTPFound
-    # if (request.query_string == '_LOCALE_=%s' % (locale_name)) or (
-    #     request.query_string == 'l=%s' % (locale_name)):
-    #     # set language cookie
-    #     request.response.set_cookie('_LOCALE_', locale_name)
-    #     return HTTPFound(location=request.route_url('intent'),
-    #                      headers=request.response.headers)
-
-    if DEBUG:  # pragma: no cover
+    if DEBUG:
         print "-- locale_name: " + str(locale_name)
 
     from c3smembership.utils import country_codes
     # set default of Country select widget according to locale
-    LOCALE_COUNTRY_MAPPING = {
+    locale_country_mapping = {
         'de': 'DE',
-        #'da': 'DK',
         'en': 'GB',
-        #'es': 'ES',
-        #'fr': 'FR',
     }
-    country_default = LOCALE_COUNTRY_MAPPING.get(locale_name)
-    if DEBUG:  # pragma: no cover
+    country_default = locale_country_mapping.get(locale_name)
+    if DEBUG:
         print("== locale is :" + str(locale_name))
         print("== choosing :" + str(country_default))
 
@@ -482,7 +331,7 @@ def join_c3s(request):
         )
         email = colander.SchemaNode(
             colander.String(),
-            title=_(u'Email'),
+            title=_(u'Email Address'),
             validator=colander.Email(),
             oid="email",
         )
@@ -490,10 +339,10 @@ def join_c3s(request):
             colander.String(),
             validator=colander.Length(min=5, max=100),
             widget=deform.widget.PasswordWidget(size=20),
-            title=_(u"Password (to protect access to your data)"),
-            description=_("We need a password to protect your data. After "
-                          "verifying your email you will have to enter it."),
-            oid="password",
+            title=_(u'Password (to protect access to your data)'),
+            description=_(u'We need a password to protect your data. After '
+                          u'verifying your email you will have to enter it.'),
+            oid='password',
         )
 
         address1 = colander.SchemaNode(
@@ -503,11 +352,11 @@ def join_c3s(request):
         address2 = colander.SchemaNode(
             colander.String(),
             missing=unicode(''),
-            title=_(u"Address Line 2")
+            title=_(u'Address Line 2')
         )
         postcode = colander.SchemaNode(
             colander.String(),
-            title=_(u'Post Code'),
+            title=_(u'Postal Code'),
             oid="postcode"
         )
         city = colander.SchemaNode(
@@ -600,14 +449,22 @@ def join_c3s(request):
 
         membership_type = colander.SchemaNode(
             colander.String(),
-            title=_(u'I want to become a ... (choose membership type, see C3S SCE statute sec. 4)'),
+            title=_(u'I want to become a ... (choose membership type, '
+                u'see C3S SCE statute sec. 4)'),
             description=_(u'choose the type of membership.'),
             widget=deform.widget.RadioChoiceWidget(
                 values=(
                     (u'normal',
-                     _(u'FULL member. Full members have to be natural persons who register at least three works with C3S they created themselves. This applies to composers, lyricists and remixers. They get a vote.')),
+                     _(u'FULL member. Full members have to be natural '
+                        u'persons who register at least three works with '
+                        u'C3S they created themselves. This applies to '
+                        u'composers, lyricists and remixers. They get a '
+                        u'vote.')),
                     (u'investing',
-                     _(u'INVESTING member. Investing members can be natural or legal entities or private companies that do not register works with C3S. They do not get a vote, but may counsel.'))
+                     _(u'INVESTING member. Investing members can be '
+                        u'natural or legal entities or private companies '
+                        u'that do not register works with C3S. They do '
+                        u'not get a vote, but may counsel.'))
                 ),
             )
         )
@@ -618,7 +475,8 @@ def join_c3s(request):
         #         u'I am at least one of: composer, lyricist, '
         #         'remixer, arranger, producer, DJ (i.e. musician)'),
         #     description=_(
-        #         u'You have to be a musician to become a regular member of C3S SCE.'
+        #         u'You have to be a musician to become a regular member ' + \
+        #             u'of C3S SCE.'
         #         'Or choose to become a supporting member.'),
         #     validator=colander.OneOf([x[0] for x in yes_no]),
         #     widget=deform.widget.RadioChoiceWidget(
@@ -627,8 +485,8 @@ def join_c3s(request):
         # )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
-            title=_(
-                u'Currently, I am a member of (at least) one other collecting society.'),
+            title=_(u'Currently, I am a member of (at least) one other '
+                u'collecting society.'),
             validator=colander.OneOf([x[0] for x in yes_no]),
             widget=deform.widget.RadioChoiceWidget(values=yes_no),
             oid="other_colsoc",
@@ -636,11 +494,11 @@ def join_c3s(request):
         )
         name_of_colsoc = colander.SchemaNode(
             colander.String(),
-            title=_(u'If so, which one(s)? (comma separated)'),
-            description=_(
-                u'Please tell us which collecting societies '
-                'you are a member of. '
-                'If more than one, please separate them by comma(s).'),
+            title=_(u'If so, which one(s)? Please separate multiple '
+                u'collecting societies by comma.'),
+            description=_(u'Please tell us which collecting societies '
+                u'you are a member of. '
+                u'If more than one, please separate them by comma.'),
             missing=unicode(''),
             oid="colsoc_name",
             #validator=colander.All(
@@ -656,17 +514,11 @@ def join_c3s(request):
                       u'to the C3S SCE statute'))
 
         got_statute = colander.SchemaNode(
-            #colander.String(),
             colander.Bool(true_val=u'yes'),
-            title=_(
-                u'An electronic copy of the statute of the '
-                u'C3S SCE has been made available to me. (see link below)'),
-            description=_(
-                u'You must confirm to have access to the statute.'),
-            #widget=deform.widget.CheckboxChoiceWidget(
-            #    values=(('yes', _(u'Yes')),)),
+            title=_(u'An electronic copy of the statute of the '
+                u'C3S SCE has been made available to me (see link below).'),
+            description=_(u'You must confirm to have access to the statute.'),
             widget=deform.widget.CheckboxWidget(),
-            #validator=colander.OneOf(['yes', ]),
             validator=statute_validator,
             required=True,
             label=_('Yes'),
@@ -681,18 +533,19 @@ def join_c3s(request):
         """
         num_shares = colander.SchemaNode(
             colander.Integer(),
-            title=_(u"I want to buy the following number "
-                    u"of Shares (50€ each, up to 3000€, see C3S statute sec. 5)"),
-            description=_(
-                u'You can choose any amount of shares between 1 and 60.'),
+            title=_(u'I want to buy the following number '
+                    u'of Shares (50 € each, up to 3000 €, C3S statute '
+                    u'sec. 5):'),
+            description=_(u'You can choose any amount of shares between 1 '
+                u'and 60.'),
             default="1",
-            widget=deform.widget.TextInputSliderWidget(
+            widget=deform_text_input_slider_widget.TextInputSliderWidget(
                 size=3, css_class='num_shares_input'),
             validator=colander.Range(
                 min=1,
                 max=60,
-                min_err=_(u"You need at least one share of 50 Euro."),
-                max_err=_(u"You may choose 60 shares at most. (3000 Euro)"),
+                min_err=_(u'You need at least one share of 50 €.'),
+                max_err=_(u'You may choose 60 shares at most (3000 €).'),
             ),
             oid="num_shares")
 
@@ -704,15 +557,15 @@ def join_c3s(request):
         - Shares
         """
         person = PersonalData(
-            title=_(u"Personal Data"),
+            title=_(u'Personal Data'),
             #description=_(u"this is a test"),
             #css_class="thisisjustatest"
         )
         membership_info = MembershipInfo(
-            title=_(u"Membership Requirements")
+            title=_(u'Membership Requirements')
         )
         shares = Shares(
-            title=_(u"Shares")
+            title=_(u'Shares')
         )
 
     schema = MembershipForm()
@@ -724,7 +577,7 @@ def join_c3s(request):
             deform.Button('reset', _(u'Reset'))
         ],
         use_ajax=True,
-        renderer=zpt_renderer
+        renderer=ZPT_RENDERER
     )
 
     # if the form has NOT been used and submitted, remove error messages if any
@@ -736,31 +589,21 @@ def join_c3s(request):
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
-            #print("the appstruct from the form: %s \n") % appstruct
-            #for thing in appstruct:
-            #    print("the thing: %s") % thing
-            #    print("type: %s") % type(thing)
 
             # data sanity: if not in collecting society, don't save
             #  collsoc name even if it was supplied through form
             if 'no' in appstruct['membership_info']['member_of_colsoc']:
                 appstruct['membership_info']['name_of_colsoc'] = ''
                 print appstruct['membership_info']['name_of_colsoc']
-                #print '-'*80
 
-        except ValidationFailure, e:
-            #print("the appstruct from the form: %s \n") % appstruct
-            #for thing in appstruct:
-            #    print("the thing: %s") % thing
-            #    print("type: %s") % type(thing)
-            print(e)
-            #message.append(
+        except ValidationFailure as validation_failure:
+            print(validation_failure)
             request.session.flash(
-                _(u"Please note: There were errors, "
-                  "please check the form below."),
+                _(u'Please note: There were errors, '
+                  u'please check the form below.'),
                 'message_above_form',
                 allow_duplicate=False)
-            return{'form': e.render()}
+            return{'form': validation_failure.render()}
 
         def make_random_string():
             """
@@ -815,25 +658,16 @@ def join_c3s(request):
         try:
             dbsession.add(member)
             appstruct['email_confirm_code'] = randomstring
-        except InvalidRequestError, e:  # pragma: no cover
-            print("InvalidRequestError! %s") % e
-        except IntegrityError, ie:  # pragma: no cover
-            print("IntegrityError! %s") % ie
-
-        # send mail to accountants // prepare a mailer
-        #mailer = get_mailer(request)
-        # prepare mail
-        #the_mail = accountant_mail(appstruct)
-        #mailer.send(the_mail)
-        #log.info("NOT sending mail...")
-
-        #return generate_pdf(appstruct)  # would just return a PDF
+        except InvalidRequestError as invalid_request_error:  # pragma: no cover
+            print("InvalidRequestError! %s") % invalid_request_error
+        except IntegrityError as integrity_error:  # pragma: no cover
+            print("IntegrityError! %s") % integrity_error
 
         # redirect to success page, then return the PDF
         # first, store appstruct in session
         request.session['appstruct'] = appstruct
-        request.session['appstruct']['_LOCALE_'] = appstruct['person']['_LOCALE_']
-        #from pyramid.httpexceptions import HTTPFound
+        request.session['appstruct']['_LOCALE_'] = \
+            appstruct['person']['_LOCALE_']
         #
         # empty the messages queue (as validation worked anyways)
         deleted_msg = request.session.pop_flash()
@@ -849,18 +683,9 @@ def join_c3s(request):
         deleted_msg = request.session.pop_flash()
         del deleted_msg
         if ('appstruct' in request.session):
-            #print("form was not submitted, but found appstruct in session.")
             appstruct = request.session['appstruct']
-            #print("the appstruct: %s") % appstruct
             # pre-fill the form with the values from last time
             form.set_appstruct(appstruct)
-            #import pdb
-            #pdb.set_trace()
-            #form = deform.Form(schema,
-            #           buttons=[deform.Button('submit', _(u'Submit'))],
-            #           use_ajax=True,
-            #           renderer=zpt_renderer
-            #           )
 
     html = form.render()
 

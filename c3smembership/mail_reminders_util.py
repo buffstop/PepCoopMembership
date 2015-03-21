@@ -93,7 +93,6 @@ Bank: Ethikbank
 Bei der Überweisung des Geldes für die Genossenschaftsanteile bitte den 
 folgenden Verwendungszweck angeben: {6}
 
-
 Falls Du kein Mitglied mehr werden möchtest, melde Dich bitte unter
 office@c3s.cc. Wenn Deine Überweisung eingegangen ist, erhältst Du eine
 Eingangsbestätigung per E-Mail.
@@ -133,8 +132,8 @@ We are looking forward to welcome you at C3S!
 
 All the best
 
-Eva
-for the team of C3S
+
+the team of C3S
     '''.format(
         _member.firstname,
         _member.lastname,
