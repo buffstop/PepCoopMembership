@@ -331,7 +331,7 @@ def join_c3s(request):
         )
         email = colander.SchemaNode(
             colander.String(),
-            title=_(u'Email'),
+            title=_(u'Email Address'),
             validator=colander.Email(),
             oid="email",
         )
@@ -339,10 +339,10 @@ def join_c3s(request):
             colander.String(),
             validator=colander.Length(min=5, max=100),
             widget=deform.widget.PasswordWidget(size=20),
-            title=_(u"Password (to protect access to your data)"),
-            description=_("We need a password to protect your data. After "
-                          "verifying your email you will have to enter it."),
-            oid="password",
+            title=_(u'Password (to protect access to your data)'),
+            description=_(u'We need a password to protect your data. After '
+                          u'verifying your email you will have to enter it.'),
+            oid='password',
         )
 
         address1 = colander.SchemaNode(
@@ -352,11 +352,11 @@ def join_c3s(request):
         address2 = colander.SchemaNode(
             colander.String(),
             missing=unicode(''),
-            title=_(u"Address Line 2")
+            title=_(u'Address Line 2')
         )
         postcode = colander.SchemaNode(
             colander.String(),
-            title=_(u'Post Code'),
+            title=_(u'Postal Code'),
             oid="postcode"
         )
         city = colander.SchemaNode(
@@ -449,21 +449,21 @@ def join_c3s(request):
 
         membership_type = colander.SchemaNode(
             colander.String(),
-            title=_(u'I want to become a ... (choose membership type, ' + \
+            title=_(u'I want to become a ... (choose membership type, '
                 u'see C3S SCE statute sec. 4)'),
             description=_(u'choose the type of membership.'),
             widget=deform.widget.RadioChoiceWidget(
                 values=(
                     (u'normal',
-                     _(u'FULL member. Full members have to be natural ' + \
-                        u'persons who register at least three works with ' + \
-                        u'C3S they created themselves. This applies to ' + \
-                        u'composers, lyricists and remixers. They get a ' + \
+                     _(u'FULL member. Full members have to be natural '
+                        u'persons who register at least three works with '
+                        u'C3S they created themselves. This applies to '
+                        u'composers, lyricists and remixers. They get a '
                         u'vote.')),
                     (u'investing',
-                     _(u'INVESTING member. Investing members can be ' + \
-                        u'natural or legal entities or private companies ' + \
-                        u'that do not register works with C3S. They do ' + \
+                     _(u'INVESTING member. Investing members can be '
+                        u'natural or legal entities or private companies '
+                        u'that do not register works with C3S. They do '
                         u'not get a vote, but may counsel.'))
                 ),
             )
@@ -485,8 +485,7 @@ def join_c3s(request):
         # )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
-            title=_(
-                u'Currently, I am a member of (at least) one other ' + \
+            title=_(u'Currently, I am a member of (at least) one other '
                 u'collecting society.'),
             validator=colander.OneOf([x[0] for x in yes_no]),
             widget=deform.widget.RadioChoiceWidget(values=yes_no),
@@ -495,11 +494,11 @@ def join_c3s(request):
         )
         name_of_colsoc = colander.SchemaNode(
             colander.String(),
-            title=_(u'If so, which one(s)? (comma separated)'),
-            description=_(
-                u'Please tell us which collecting societies '
-                'you are a member of. '
-                'If more than one, please separate them by comma(s).'),
+            title=_(u'If so, which one(s)? Please separate multiple '
+                u'collecting societies by comma.'),
+            description=_(u'Please tell us which collecting societies '
+                u'you are a member of. '
+                u'If more than one, please separate them by comma.'),
             missing=unicode(''),
             oid="colsoc_name",
             #validator=colander.All(
@@ -516,11 +515,9 @@ def join_c3s(request):
 
         got_statute = colander.SchemaNode(
             colander.Bool(true_val=u'yes'),
-            title=_(
-                u'An electronic copy of the statute of the '
-                u'C3S SCE has been made available to me. (see link below)'),
-            description=_(
-                u'You must confirm to have access to the statute.'),
+            title=_(u'An electronic copy of the statute of the '
+                u'C3S SCE has been made available to me (see link below).'),
+            description=_(u'You must confirm to have access to the statute.'),
             widget=deform.widget.CheckboxWidget(),
             validator=statute_validator,
             required=True,
@@ -536,19 +533,19 @@ def join_c3s(request):
         """
         num_shares = colander.SchemaNode(
             colander.Integer(),
-            title=_(u'I want to buy the following number ' + \
-                    u'of Shares (50€ each, up to 3000€, see C3S statute ' + \
-                        u'sec. 5)'),
-            description=_(
-                u'You can choose any amount of shares between 1 and 60.'),
+            title=_(u'I want to buy the following number '
+                    u'of Shares (50 € each, up to 3000 €, C3S statute '
+                    u'sec. 5):'),
+            description=_(u'You can choose any amount of shares between 1 '
+                u'and 60.'),
             default="1",
             widget=deform_text_input_slider_widget.TextInputSliderWidget(
                 size=3, css_class='num_shares_input'),
             validator=colander.Range(
                 min=1,
                 max=60,
-                min_err=_(u"You need at least one share of 50 Euro."),
-                max_err=_(u"You may choose 60 shares at most. (3000 Euro)"),
+                min_err=_(u'You need at least one share of 50 €.'),
+                max_err=_(u'You may choose 60 shares at most (3000 €).'),
             ),
             oid="num_shares")
 
@@ -560,15 +557,15 @@ def join_c3s(request):
         - Shares
         """
         person = PersonalData(
-            title=_(u"Personal Data"),
+            title=_(u'Personal Data'),
             #description=_(u"this is a test"),
             #css_class="thisisjustatest"
         )
         membership_info = MembershipInfo(
-            title=_(u"Membership Requirements")
+            title=_(u'Membership Requirements')
         )
         shares = Shares(
-            title=_(u"Shares")
+            title=_(u'Shares')
         )
 
     schema = MembershipForm()
@@ -602,8 +599,8 @@ def join_c3s(request):
         except ValidationFailure as validation_failure:
             print(validation_failure)
             request.session.flash(
-                _(u"Please note: There were errors, "
-                  "please check the form below."),
+                _(u'Please note: There were errors, '
+                  u'please check the form below.'),
                 'message_above_form',
                 allow_duplicate=False)
             return{'form': validation_failure.render()}

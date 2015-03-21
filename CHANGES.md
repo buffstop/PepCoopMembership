@@ -34,6 +34,9 @@ Next Release
 
 - Add documentation about internationalization of template and python files.
 
+- Fix several internationalization issues with the membership application
+  formular.
+
 
 
 1.10.2
