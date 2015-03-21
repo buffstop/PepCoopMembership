@@ -37,6 +37,10 @@ Next Release
 - Fix several internationalization issues with the membership application
   formular.
 
+- Add .odt and .pdf for additional shares formular. Fix additional shares
+  formulars and insert lines for people to manually fill in the number of
+  additional shares and the amount to be transferred.
+
 
 
 1.10.2
