@@ -340,7 +340,7 @@ Auf der verlinkten Seite kannst Du separat die Teilnahme für die
 Generalversammlung und das Barcamp bestätigen. Auch Essen und
 (natürlich) ein T-Shirt mit neuem Motiv für die tollen C3S-Tage am Rhein
 kannst Du Dir holen - die T-Shirt-Preise haben wir für die
-Veranstaltungen übrigens heruntergesetzt. 
+Veranstaltungen übrigens heruntergesetzt.
 
 Wenn Du sicher sein möchtest, von Deiner Teilnahme an Barcamp oder
 Generalversammlung ein T-Shirt mit nach Hause zu nehmen, solltest Du es
@@ -649,7 +649,7 @@ On the linked page you can confirm your participation in the general
 assembly and the barcamp separately. You can also book food, and (of
 course) a t-shirt with a new image for the great days with the C3S on
 the banks of the river Rhine -- we have reduced our t-shirt prices for
-these events. 
+these events.
 
 If you want to be sure to take a t-shirt home from either the BarCamp or
 the general assembly, save the date for pre-order: 11th August, 2014.
@@ -720,13 +720,21 @@ Links:
             'Reply-To': 'yes@c3s.cc',
             }
     )
-    #print(message.subject)
-    #print(message.body)
-    mailer = get_mailer(request)
-    mailer.send(message)
+
+    if 'true' in request.registry.settings['testing.mail_to_console']:
+        # ^^ yes, a little ugly, but works; it's a string
+        #print "printing mail"
+        #print(message.subject)
+        #print(message.body)
+        print(message.body.encode('utf-8'))
+    else:
+        #print "sending mail"
+        mailer = get_mailer(request)
+        mailer.send(message)
+
     #_m._token = _looong_token
-    _m.email_invite_flag_bcgv14 = True
-    _m.email_invite_date_bcgv14 = datetime.now()
+    _m.email_invite_flag_bcgv15 = True
+    _m.email_invite_date_bcgv15 = datetime.now()
     return HTTPFound(request.route_url('dashboard',
                                        number=request.cookies['on_page'],
                                        order=request.cookies['order'],
