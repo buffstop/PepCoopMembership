@@ -47,7 +47,7 @@ def shares_edit(request):
     if isinstance(_s, NoneType):
         # entry was not found in database
         return HTTPFound(request.route_url(
-            'membership_listing', number=30, orderby='id', order='asc'))
+            'membership_listing_backend', number=0, orderby='id', order='asc'))
     else:
         appstruct = {}
         appstruct = {
