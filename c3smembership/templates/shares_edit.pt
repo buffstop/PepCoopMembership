@@ -9,12 +9,8 @@
       when you are done.
       Or go <a href="${request.route_url('dashboard_only')}">back to dashboard</a>.
     </p>
-    <h1>Details for Shares #${s.id}</h1>
-    <a href="${request.route_url('shares_edit', id=s.id)}"
-       class="btn btn-warning">
-      bearbeiten</a>
-    <a href="$ off {request.route_url('delete_entry', memberid=member.id)}"
-       class="btn btn-danger">delete</a>
+    <h1>Edit Details for Shares #${s.id}</h1>
+
     <table class="table table-striped">
       <tr>
         <td>id</td>
@@ -65,7 +61,7 @@
       </tr>
     </table>
     
-    <!--! div id="form" tal:content="structure form"/ -->
+    <div id="form" tal:content="structure form"/>
     
     <p>&nbsp;</p>
     <p>&nbsp;</p>

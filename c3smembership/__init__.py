@@ -125,8 +125,11 @@ def main(global_config, **settings):
                      '/memberships/{number}/{orderby}/{order}')
     config.add_route('membership_listing_alphabetical',
                      '/aml')
+    config.add_route('membership_listing_aufstockers',
+                     '/aml_aufstockers')
     # shares
-    config.add_route('detail_shares', '/detail_shares/{id}')
+    config.add_route('shares_detail', '/shares_detail/{id}')
+    config.add_route('shares_edit', '/shares_edit/{id}')
     # membership_certificate
     config.add_route('certificate_mail', '/cert_mail/{id}')
     config.add_route('certificate_pdf', '/cert/{id}/C3S_{name}_{token}.pdf')

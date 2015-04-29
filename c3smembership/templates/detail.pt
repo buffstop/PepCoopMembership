@@ -213,7 +213,7 @@
               <tr tal:repeat="s member.shares">
                 <td>${s.number} shares</td>
                 <td style="white-space:nowrap;">
-                  <a href="${request.route_url('detail_shares', id=s.id)}">
+                  <a href="${request.route_url('shares_detail', id=s.id)}">
                     (<small>${s.date_of_acquisition.strftime('%Y-%m-%d')}</small>)
                   </a>
                 </td>

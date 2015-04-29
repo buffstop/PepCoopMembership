@@ -11,6 +11,42 @@ from c3smembership.models import (
 )
 
 
+@view_config(renderer='templates/aufstockers_list.pt',
+             permission='manage',
+             route_name='membership_listing_aufstockers')
+def member_list_aufstockers_view(request):
+    _order_by = 'lastname'
+    _num = C3sMember.get_number()
+    _all = C3sMember.member_listing(
+        _order_by, how_many=_num, offset=0, order=u'asc')
+    _members = []
+    _count = 0
+    for item in _all:
+        if item.membership_accepted and (len(item.shares) > 1):
+            # check membership number
+            try:
+                assert(item.membership_number is not None)
+            except:
+                print "failed at id {} lastname {}".format(
+                    item.id, item.lastname)
+            # add this item to the list
+            _members.append(item)
+            _count += 1
+    # sort members alphabetically
+    import locale
+    locale.setlocale(locale.LC_ALL, "de_DE.UTF-8")
+
+    _members.sort(key=lambda x: x.firstname, cmp=locale.strcoll)
+    _members.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
+
+    from datetime import date
+    _today = date.today()
+    return {
+        'members': _members,
+        'count': _count,
+        '_today': _today,
+    }
+
 @view_config(renderer='templates/member_list.pt',
              permission='manage',
              route_name='membership_listing_alphabetical')

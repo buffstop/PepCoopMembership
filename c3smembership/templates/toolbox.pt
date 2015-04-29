@@ -44,10 +44,13 @@
          class="btn btn-success">Search for ReferenceCodes</a>
       <a href="${request.route_url('dashboard',number=0, orderby='id', order='asc')}"
          class="btn btn-primary">AfM Dashboard</a>
+      <br />
       <a href="${request.route_url('membership_listing_backend',number=0, orderby='id', order='asc')}"
          class="btn btn-success">Membership List (backend)</a>
       <a href="${request.route_url('membership_listing_alphabetical')}"
          class="btn btn-success">Alphabetical Member List</a>
+      <a href="${request.route_url('membership_listing_aufstockers')}"
+         class="btn btn-success">Alphabetical Aufstockers List</a>
 
     <h3>The Merge Process</h3>
       <a href="${request.route_url('fix_import_crowdfunders')}"
