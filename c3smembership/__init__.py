@@ -130,6 +130,7 @@ def main(global_config, **settings):
     # shares
     config.add_route('shares_detail', '/shares_detail/{id}')
     config.add_route('shares_edit', '/shares_edit/{id}')
+    config.add_route('shares_delete', '/shares_delete/{id}')
     # membership_certificate
     config.add_route('certificate_mail', '/cert_mail/{id}')
     config.add_route('certificate_pdf', '/cert/{id}/C3S_{name}_{token}.pdf')

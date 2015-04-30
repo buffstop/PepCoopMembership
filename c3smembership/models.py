@@ -207,7 +207,7 @@ class Shares(Base):
 
     @classmethod
     def get_by_id(cls, _id):
-        """return one member by id"""
+        """return one package of shares by id"""
         return DBSession.query(cls).filter(cls.id == _id).first()
 
     @classmethod
@@ -218,6 +218,11 @@ class Shares(Base):
         for s in all:
             total += s.number
         return total
+
+    @classmethod
+    def delete_by_id(cls, _id):
+        """delete one package of shares by id"""
+        return DBSession.query(cls).filter(cls.id == _id).delete()
 
 # table for relation between membership and shares
 members_shares = Table(

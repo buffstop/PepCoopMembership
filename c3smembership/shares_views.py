@@ -37,9 +37,9 @@ def shares_detail(request):
         _m_id = _s.members[0].id
         _m_first = _s.members[0].firstname
         _m_last = _s.members[0].lastname
-        print('got it!')
+        # print('got it!')
     except:
-        print('failed!')
+        # print('failed!')
         _m_id = 0
         _m_first = 'Not'
         _m_last = 'Found'
@@ -97,11 +97,12 @@ def shares_edit(request):
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
+            # print("the appstruct from the form: %s \n") % appstruct
+            # for thing in appstruct:
+            #     print("the thing: %s") % thing
+            #     print("type: %s") % type(thing)
+
         except ValidationFailure, e:  # pragma: no cover
-            print("the appstruct from the form: %s \n") % appstruct
-            for thing in appstruct:
-                print("the thing: %s") % thing
-                print("type: %s") % type(thing)
             print(e)
             request.session.flash(
                 _(u"Please note: There were errors, "
@@ -131,7 +132,7 @@ def shares_edit(request):
                     appstruct['date_of_acquisition']))
             _s.date_of_acquisition = appstruct['date_of_acquisition']
         # store appstruct in session
-        #request.session['appstruct'] = appstruct
+        # request.session['appstruct'] = appstruct
 
     else:  # no form submission
         # prepopulate form
@@ -143,3 +144,40 @@ def shares_edit(request):
         's': _s,
         'form': html
     }
+
+
+@view_config(permission='manage',
+             route_name='shares_delete')
+def shares_delete(request):
+    '''
+    staff may delete a package of shares
+    '''
+    _id = request.matchdict['id']
+    from c3smembership.models import Shares
+    # load info from DB -- if possible
+    _s = Shares.get_by_id(_id)
+
+    if isinstance(_s, NoneType):
+        # entry was not found in database
+        request.session.flash(
+            "this shares id {} was not found in the DB.".format(_id),
+            'message_to_staff'
+        )
+        return HTTPFound(request.route_url('toolbox'))
+
+    # print("any members? {}".format(_s.members))
+    if (len(_s.members) > 0):
+        # shares package is still owned
+        request.session.flash(
+            "DID NOT DELETE! "
+            "this shares package {} still has a member owning it.".format(_id),
+            'message_to_staff'
+        )
+        return HTTPFound(request.route_url('toolbox'))
+    else:
+        Shares.delete_by_id(_id)
+        request.session.flash(
+            "the shares package {} was deleted.".format(_id),
+            'message_to_staff'
+        )
+        return HTTPFound(request.route_url('toolbox'))

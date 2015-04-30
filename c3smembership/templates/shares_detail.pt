@@ -13,7 +13,7 @@
     <a href="${request.route_url('shares_edit', id=s.id)}"
        class="btn btn-warning">
       bearbeiten</a>
-    <a href="$ off {request.route_url('delete_entry', memberid=member.id)}"
+    <a href="${request.route_url('shares_delete', id=s.id)}"
        class="btn btn-danger">delete</a>
     <table class="table table-striped">
       <tr>
