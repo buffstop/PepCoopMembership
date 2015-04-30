@@ -25,11 +25,31 @@ def shares_detail(request):
     _s = Shares.get_by_id(request.matchdict['id'])
     if isinstance(_s, NoneType):
         # entry was not found in database
-        return HTTPFound(request.route_url(
-            'membership_listing_alphabetical',
-            number=30, orderby='id', order='asc'))
-    else:
-        return {'s': _s, }
+        request.session.flash(
+            "This shares id was not found in the database!",
+            'message_to_staff'
+        )
+        return HTTPFound(
+            request.route_url('toolbox'))
+
+    # get shares owner if possible
+    try:
+        _m_id = _s.members[0].id
+        _m_first = _s.members[0].firstname
+        _m_last = _s.members[0].lastname
+        print('got it!')
+    except:
+        print('failed!')
+        _m_id = 0
+        _m_first = 'Not'
+        _m_last = 'Found'
+
+    return {
+        's': _s,  # the share
+        'm_id': _m_id,  # the owner
+        'm_first': _m_first,  # the owner
+        'm_last': _m_last,  # the owner
+    }
 
 
 @view_config(renderer='templates/shares_edit.pt',

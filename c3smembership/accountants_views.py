@@ -385,16 +385,6 @@ def member_detail(request):
     has their signature arrived? how about the payment?
     """
     logged_in = authenticated_userid(request)
-    #log.info("detail view.................................................")
-    #print("---- authenticated_userid: " + str(logged_in))
-
-    # this following stanza is overridden by the views permission settings
-    #if logged_in is None:  # not authenticated???
-    #    return HTTPFound(  # go back to login!!!
-    #        location=route_url(
-    #            'login',
-    #            request=request),
-    #    )
 
     memberid = request.matchdict['memberid']
     log.info("member details of id %s checked by %s" % (
@@ -402,10 +392,15 @@ def member_detail(request):
 
     _member = C3sMember.get_by_id(memberid)
 
-    #print(_member)
     if _member is None:  # that memberid did not produce good results
+        request.session.flash(
+            "A Member with id "
+            "{} could not be found in the DB. run for the backups!".format(
+                memberid),
+            'message_to_staff'
+        )
         return HTTPFound(  # back to base
-            request.route_url('dashboard_only'))
+            request.route_url('toolbox'))
 
     class ChangeDetails(colander.MappingSchema):
         """
@@ -438,12 +433,11 @@ def member_detail(request):
             appstruct = form.validate(controls)
         except ValidationFailure, e:  # pragma: no cover
             log.info(e)
-            #print("the appstruct from the form: %s \n") % appstruct
-            #for thing in appstruct:
+            # print("the appstruct from the form: %s \n") % appstruct
+            # for thing in appstruct:
             #    print("the thing: %s") % thing
             #    print("type: %s") % type(thing)
             print(e)
-            #message.append(
             request.session.flash(
                 _(u"Please note: There were errors, "
                   "please check the form below."),
@@ -483,7 +477,7 @@ def member_detail(request):
             'signature_received': _member.signature_received,
             'payment_received': _member.payment_received}
         form.set_appstruct(appstruct)
-        #print("the appstruct: %s") % appstruct
+        # print("the appstruct: %s") % appstruct
     html = form.render()
 
     return {'member': _member,
