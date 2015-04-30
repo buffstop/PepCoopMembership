@@ -134,6 +134,8 @@ def main(global_config, **settings):
     config.add_route('certificate_mail', '/cert_mail/{id}')
     config.add_route('certificate_pdf', '/cert/{id}/C3S_{name}_{token}.pdf')
     config.add_route('certificate_pdf_staff', '/cert/{id}/C3S_{name}.pdf')
+    # annual reports
+    config.add_route('annual_reporting', '/annual_reporting')
     # invite people
     config.add_route('invite_member', '/invite_member/{m_id}')
     # search for people
