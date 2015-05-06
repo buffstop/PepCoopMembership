@@ -26,7 +26,11 @@
       Mitglieder, die im Zeitraum neu aufgenommen wurden: ${num_members} <br />
     </p>
     <p>
-      Anteile, die im Zeitraum gezeichnet wurden: ${num_shares} (im Wert von ${sum_shares} Euro)
+      Anteile, die im Zeitraum aufgenommen wurden: ${num_shares} (im Wert von ${sum_shares} Euro)
+    </p>
+    <p>
+      Anteile, die im Zeitraum bezahlt wurden, die aber noch nicht aufgenommen wurden:
+      ${num_shares_paid_unapproved} (im Wert von ${num_shares_paid_unapproved * 50} Euro)
     </p>
   </tal:block>
 </html>

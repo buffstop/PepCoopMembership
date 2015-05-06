@@ -21,6 +21,10 @@ def annual_report(request):
     """
     return the number of members and shares acquired during a given timeframe
     (start date and end date)
+
+    also show the number of shares paid but not 'approved' yet
+    - as part of a membership or
+    - when additional shares were acquired
     """
     # defaults
     start_date = datetime(date.today().year, 1, 1)  # first day of this year
@@ -83,36 +87,51 @@ def annual_report(request):
     # get memberships
     _order_by = 'lastname'
     _num = C3sMember.get_number()  # count objects in DB
-    _all = C3sMember.member_listing(  # get all
+    _all_members = C3sMember.member_listing(  # get all
         _order_by, how_many=_num, offset=0, order=u'asc')
 
     _members = []  # all the members matching the criteria
-
-    for item in _all:
+    _num_shares_paid_unapproved = 0
+    for m in _all_members:
         if (
-                item.membership_accepted  # unneccessary!?
-                and (item.membership_date >= start_date)
-                and (item.membership_date <= end_date)
+                m.membership_accepted  # unneccessary!?
+                and (m.membership_date >= start_date)
+                and (m.membership_date <= end_date)
         ):
             # add this item to the list
-            _members.append(item)
+            _members.append(m)
             num_members += 1
             # also count the shares
             # for _s in item.shares:
             #    if (_s.date_of_acquisition <= _date):
             #        _count_shares += _s.number
+        elif (
+                (not m.membership_accepted)
+                and (m.payment_received)
+                and (datetime(
+                    m.payment_received_date.year,
+                    m.payment_received_date.month,
+                    m.payment_received_date.day,
+                ) >= start_date)
+                and (datetime(
+                    m.payment_received_date.year,
+                    m.payment_received_date.month,
+                    m.payment_received_date.day,
+                ) <= end_date)):
+            _num_shares_paid_unapproved += m.num_shares
 
     # shares
     _count_shares = 0
     _num_shares_in_db = Shares.get_number()
     for i in range(_num_shares_in_db):
         s = Shares.get_by_id(i+1)
+        if s is not None:
 
-        if (
-                (s.date_of_acquisition >= start_date)
-                and (s.date_of_acquisition <= end_date)
-        ):
-            _count_shares += s.number
+            if (  # shares approved
+                    (s.date_of_acquisition >= start_date)
+                    and (s.date_of_acquisition <= end_date)
+            ):
+                _count_shares += s.number
 
     html = form.render()
 
@@ -129,5 +148,6 @@ def annual_report(request):
         'form': html,
         'num_members': num_members,
         'num_shares': num_shares,
+        'num_shares_paid_unapproved': _num_shares_paid_unapproved,
         'sum_shares': num_shares * 50,
     }
