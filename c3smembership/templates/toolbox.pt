@@ -61,15 +61,27 @@
          class="btn btn-primary">AfM Dashboard</a>
     </p>
     <h3>Members</h3>
+    <h4>HTML</h4>
     <p>
       <a href="${request.route_url('membership_listing_backend',number=0, orderby='id', order='asc')}"
-         class="btn btn-success">Membership List (backend)</a>
+         class="btn btn-success">Membership List (backend/with links)</a>
       <a href="${request.route_url('membership_listing_alphabetical')}"
-         class="btn btn-success">Alphabetical Member List</a>
+         class="btn btn-success">Alphabetical Member List (HTML/without links/for printout)</a>
       <a href="${request.route_url('membership_listing_aufstockers')}"
-         class="btn btn-success">Alphabetical Aufstockers List</a>
+         class="btn btn-success">Alphabetical Aufstockers List
+        (Members with more than one package of shares (HTML with links)
+      </a>
+    </p>
 
-    <h3>The Merge Process</h3>
+    <h4>PDF</h4>
+    <p>
+      <a href="${request.route_url('membership_listing_date_pdf', date=date)}"
+         title="Note: change date in URL as appropriate! Default is today."
+         class="btn btn-success">Alphabetical Member List (PDF)
+      </a>
+    </p>
+
+    <h3>The Merge Process (obsolete)</h3>
       <a href="${request.route_url('fix_import_crowdfunders')}"
          class="btn btn-warning import-takes-time">Fix Import (./crowdfunders.csv)</a>
       because their import was lacking the 'membership_date' data.

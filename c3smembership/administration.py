@@ -86,7 +86,10 @@ def toolbox(request):
     """
     This view shows some options
     """
-    return {'foo': 'bar'}
+    
+    return {
+        'date': date.today().strftime('%Y-%m-%d')
+    }
 
 
 @view_config(renderer='templates/staff.pt',

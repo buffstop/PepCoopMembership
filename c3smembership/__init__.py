@@ -125,6 +125,8 @@ def main(global_config, **settings):
                      '/memberships/{number}/{orderby}/{order}')
     config.add_route('membership_listing_alphabetical',
                      '/aml')
+    config.add_route('membership_listing_date_pdf',
+                     '/aml-{date}.pdf')
     config.add_route('membership_listing_aufstockers',
                      '/aml_aufstockers')
     # shares

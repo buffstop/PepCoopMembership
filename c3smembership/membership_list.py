@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from pyramid.view import view_config
+import os
 from pyramid.httpexceptions import HTTPFound
+from pyramid.response import Response
+from pyramid.view import view_config
+import shutil
+import subprocess
+import tempfile
 
 from c3smembership.models import (
     DBSession,
@@ -46,6 +51,231 @@ def member_list_aufstockers_view(request):
         'count': _count,
         '_today': _today,
     }
+
+
+@view_config(renderer='templates/member_list.pt',
+             permission='manage',
+             route_name='membership_listing_date_pdf')
+def member_list_date_pdf_view(request):
+    """
+    returns the membership list *for a given date* for printout as PDF.
+    the date is supplied in and parsed from the URL, e.g.
+    http://0.0.0.0:6543/aml-2014-12-31.pdf
+
+    The PDF is generated using pdflatex.
+    """
+    try:
+        _date_m = request.matchdict['date']
+        _date = datetime.strptime(_date_m, '%Y-%m-%d')
+        # print("the date: {}".format(_date))
+    except:
+        request.session.flash(
+            'Invalid date! ',
+            'membership_list_errors'
+        )
+        return {
+            'form': 'nope, invalid date!',
+            'count': 'zero',
+            '_today': 'n/a',
+            'members': [],
+        }
+    # query the database
+    _order_by = 'lastname'
+    _num = C3sMember.get_number()
+    _all_members = C3sMember.member_listing(
+        _order_by, how_many=_num, offset=0, order=u'asc')
+
+    # prepare variables
+    _members = []  # the members, filtered
+    _count_members = 0  # count those members
+    _count_shares = 0  # count their shares
+    _count_shares_printed = 0  # cross-check...
+
+    # filter and count memberships and shares
+    for item in _all_members:
+        if (
+                (item.membership_number is not None)
+                and (item.membership_accepted)
+                and (datetime(  # use only Date, not Hours etc.
+                    item.membership_date.year,
+                    item.membership_date.month,
+                    item.membership_date.day,
+                ) <= _date)):
+            # add this item to the filtered list of members
+            _members.append(item)
+            _count_members += 1
+            # also count their shares iff acquired in the timespan
+            for _s in item.shares:
+                if (datetime(
+                        _s.date_of_acquisition.year,
+                        _s.date_of_acquisition.month,
+                        _s.date_of_acquisition.day,
+                ) <= _date):
+                    _count_shares += _s.number
+
+    # sort members alphabetically
+    import locale
+    locale.setlocale(locale.LC_ALL, "de_DE.UTF-8")
+    # ...by fist name
+    _members.sort(key=lambda x: x.firstname, cmp=locale.strcoll)
+    # ...and then by their last name
+    _members.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
+
+    here = os.path.dirname(__file__)
+    latex_header_tex = os.path.abspath(
+        os.path.join(here, '../membership_list_pdflatex/header'))
+    latex_footer_tex = os.path.abspath(
+        os.path.join(here, '../membership_list_pdflatex/footer'))
+
+    # a temporary directory for the latex run
+    _tempdir = tempfile.mkdtemp()
+    # now we prepare a .tex file to be pdflatex'ed
+    latex_file = tempfile.NamedTemporaryFile(
+        suffix='.tex',
+        dir=_tempdir,
+        delete=False,  # directory will be deleted anyways
+    )
+    # and where to store the output
+    pdf_file = tempfile.NamedTemporaryFile(
+        dir=_tempdir,
+        delete=False,  # directory will be deleted anyways
+    )
+    pdf_file.name = latex_file.name.rstrip('.tex')
+    pdf_file.name += '.pdf'
+
+    # construct latex data: header + variables
+    latex_data = '''
+\input{%s}
+\def\\numMembers{%s}
+\def\\numShares{%s}
+\def\\sumShares{%s}
+\def\\today{%s}
+    ''' % (
+        latex_header_tex,
+        _count_members,
+        _count_shares,
+        _count_shares * 50,
+        _date.strftime('%d.%m.%Y'),
+    )
+
+    # add to the latex document
+    latex_data += '''
+\input{%s}''' % latex_footer_tex
+
+    # print '*' * 70
+    # print latex_data
+    # print '*' * 70
+    latex_file.write(latex_data.encode('utf-8'))
+
+    # make table rows per member
+    for m in _members:
+        _address = '''\scriptsize{}'''
+        _address += '''{}'''.format(
+            unicode(m.address1).encode('utf-8'))
+        # if (u'℅' not in m.address2) and m.address2 is not u'':
+        #    print("this is address2: {}".format(
+        #        unicode(m.address2).encode('utf-8')))
+
+        # check for contents of address2:
+        if m.address2 is u'':  # omit if empty
+            # print('no address2 supplied')
+            pass
+        elif u'℅' in m.address2:  # replace deadly signs to appease LaTeX
+            _address += '''\linebreak {}'''.format(
+                unicode(
+                    m.address2.replace(u'℅', 'bei ')
+                ).encode('utf-8'))
+        elif u'&' in m.address2:  # replace deadly signs to appease LaTeX
+            _address += '''\linebreak {}'''.format(
+                unicode(
+                    m.address2.replace(u'&', ' \& ')
+                ).encode('utf-8'))
+        else:  # but DO print address2 if it exists
+            _address += '''\linebreak {}'''.format(
+                unicode(m.address2).encode('utf-8'))
+        # add more...
+        _address += ''' \linebreak {} '''.format(  # postcode
+            unicode(m.postcode).encode('utf-8'))
+        _address += '''{}'''.format(
+            unicode(m.city).encode('utf-8'))  # and city
+        _address += ''' ({})'''.format(
+            unicode(m.country).encode('utf-8'))  # and country
+        # check membership type, prefix membership number
+        # print('membership type: {}'.format(m.membership_type))
+        # if u'investing' in m.membership_type:
+        #    _mship = 'i'
+        # else:
+        #    _mship = 'n'
+        # _mship += m.membership_number
+        _mship = m.membership_number
+        
+        # check shares acquired until $date
+        _acquired_shares_until_date = 0
+        for s in m.shares:
+            if (datetime(
+                s.date_of_acquisition.year,
+                s.date_of_acquisition.month,
+                s.date_of_acquisition.day,
+            ) <= _date):
+                _acquired_shares_until_date += s.number
+                _count_shares_printed += s.number
+
+        latex_file.write(
+            ''' {0} & {1} & {2} & {3} & {4} & {5} & {6} \\\\\hline %
+            '''.format(
+                m.lastname.encode('utf-8'),  # 0
+                ' \\footnotesize ' + m.firstname.encode('utf-8'),  # 1
+                ' \\footnotesize ' + str(_mship),  # 2
+                _address,  # 3
+                ' \\footnotesize ' + m.date_of_birth.strftime(
+                    '%d.%m.%Y'),  # 4
+                ' \\footnotesize ' + m.membership_date.strftime(
+                    '%d.%m.%Y'),  # 5
+                ' \\footnotesize ' + str(_acquired_shares_until_date)  # 6
+            ))
+
+    latex_file.write('''
+%\end{tabular}%
+\end{longtable}%
+\label{LastPage}
+\end{document}
+''')
+    latex_file.seek(0)  # rewind
+    
+    # pdflatex latex_file to pdf_file
+    FNULL = open(os.devnull, 'w')  # hide output here ;-)
+    pdflatex_output = subprocess.call(
+        [
+            'pdflatex',
+            '-output-directory=%s' % _tempdir,
+            latex_file.name
+        ],
+        stdout=FNULL, stderr=subprocess.STDOUT  # hide output
+    )
+    print("the output of pdflatex run: %s" % pdflatex_output)
+
+    # if run was a success, run X times more...
+    if pdflatex_output == 0:
+        for i in range(2):
+            pdflatex_output = subprocess.call(
+                [
+                    'pdflatex',
+                    '-output-directory=%s' % _tempdir,
+                    latex_file.name
+                ],
+                stdout=FNULL, stderr=subprocess.STDOUT  # hide output
+            )
+            print("run #{} finished.".format(i+1))
+
+    # sanity check: did we print exactly as many shares as calculated?
+    assert(_count_shares == _count_shares_printed)
+
+    # return a pdf file
+    response = Response(content_type='application/pdf')
+    response.app_iter = open(pdf_file.name, "r")
+    shutil.rmtree(_tempdir, ignore_errors=True)  # delete temporary directory
+    return response
+
 
 @view_config(renderer='templates/member_list.pt',
              permission='manage',
