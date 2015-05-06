@@ -660,6 +660,16 @@ class C3sMember(Base):
                 num_shares_paid += item.num_shares
         return num_shares_paid
 
+    # workflow: need approval by the board
+    @classmethod
+    def afms_ready_for_approval(cls):
+        return DBSession.query(cls).filter(
+            and_(
+                (cls.membership_accepted == 0),
+                (cls.signature_received),
+                (cls.payment_received),
+            )).all()
+
     # autocomplete
     @classmethod
     def get_matching_codes(cls, prefix):

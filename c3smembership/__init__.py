@@ -111,6 +111,8 @@ def main(global_config, **settings):
     config.add_route('mail_mtype_form', '/mtype/{afmid}')  # mail link to form
     config.add_route('mtype_form', '/mtype/{refcode}/{token}/{email}')  # form
     config.add_route('mtype_thanks', '/mtype_thanks')  # thanks
+    # applications for membership
+    config.add_route('afms_awaiting_approval', '/afms_awaiting_approval')
     # memberships
     config.add_route('flag_duplicates', '/flag_dup')
     config.add_route('merge_duplicates', '/merge_dup')
