@@ -58,7 +58,7 @@
           <th>Aufn.Datum</th>
         </tr>
         <tr tal:repeat="m new_members">
-          <td>${m.id}</td>
+          <td><a href="${request.route_url('detail', memberid=m.id)}">${m.id}</a></td>
           <td>${m.lastname}, ${m.firstname}</td>
           <td>${m.num_shares}</td>
           <td>${m.membership_date}</td>

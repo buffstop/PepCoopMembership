@@ -56,7 +56,7 @@ def annual_report(request):
 
     # if the form has been used and SUBMITTED, check contents
     if 'submit' in request.POST:
-        print("SUBMITTED!")
+        # print("SUBMITTED!")
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
@@ -135,14 +135,23 @@ def annual_report(request):
     # shares
     _count_shares = 0
     _new_shares = []
-    _num_shares_in_db = Shares.get_number()
-    for i in range(_num_shares_in_db):
+    _max_shares_in_db = Shares.get_max_id()
+    # print("found max id {} in shares table".format(_max_shares_in_db))
+    for i in range(_max_shares_in_db+1):
         s = Shares.get_by_id(i+1)
         if s is not None:
 
             if (  # shares approved
-                    (s.date_of_acquisition >= start_date)
-                    and (s.date_of_acquisition <= end_date)
+                    (datetime(
+                        s.date_of_acquisition.year,
+                        s.date_of_acquisition.month,
+                        s.date_of_acquisition.day,
+                    ) >= start_date)
+                    and (datetime(
+                        s.date_of_acquisition.year,
+                        s.date_of_acquisition.month,
+                        s.date_of_acquisition.day,
+                    ) <= end_date)
             ):
                 _count_shares += s.number
                 _new_shares.append(s)
