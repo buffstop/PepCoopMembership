@@ -31,7 +31,7 @@ def annual_report(request):
     end_date = end_date = datetime(date.today().year, 12, 31)  # and last
     appstruct = {
         'startdate': start_date,
-        'enddate': end_date
+        'enddate': end_date,
     }
     num_members = 0
     num_shares = 0
@@ -56,6 +56,7 @@ def annual_report(request):
 
     # if the form has been used and SUBMITTED, check contents
     if 'submit' in request.POST:
+        print("SUBMITTED!")
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
@@ -78,7 +79,16 @@ def annual_report(request):
                   "please check the form below."),
                 'message_above_form',
                 allow_duplicate=False)
-            return{'form': e.render()}
+            return{
+                'form': e.render(),
+                'num_members': 0,
+                'num_shares': 0,
+                'new_members': [],
+                'paid_unapproved_shares': [],
+                'num_shares_paid_unapproved': 0,
+                'sum_shares': 0,
+                'new_shares': [],
+            }
 
     else:  # if form not submitted, preload values
         form.set_appstruct(appstruct)
@@ -92,6 +102,7 @@ def annual_report(request):
 
     _members = []  # all the members matching the criteria
     _num_shares_paid_unapproved = 0
+    _shares_paid_unapproved = []
     for m in _all_members:
         if (
                 m.membership_accepted  # unneccessary!?
@@ -119,9 +130,11 @@ def annual_report(request):
                     m.payment_received_date.day,
                 ) <= end_date)):
             _num_shares_paid_unapproved += m.num_shares
+            _shares_paid_unapproved.append(m)
 
     # shares
     _count_shares = 0
+    _new_shares = []
     _num_shares_in_db = Shares.get_number()
     for i in range(_num_shares_in_db):
         s = Shares.get_by_id(i+1)
@@ -132,6 +145,7 @@ def annual_report(request):
                     and (s.date_of_acquisition <= end_date)
             ):
                 _count_shares += s.number
+                _new_shares.append(s)
 
     html = form.render()
 
@@ -148,6 +162,9 @@ def annual_report(request):
         'form': html,
         'num_members': num_members,
         'num_shares': num_shares,
+        'new_members': _members,
+        'paid_unapproved_shares': _shares_paid_unapproved,
         'num_shares_paid_unapproved': _num_shares_paid_unapproved,
         'sum_shares': num_shares * 50,
+        'new_shares': _new_shares,
     }

@@ -22,15 +22,89 @@
 
     <div id="form" tal:content="structure form"/>
 
+    <h3>tl;dr</h3>
+    <table class="table table-striped">
+      <tr>
+        <th>was</th>
+        <td>stück</td>
+        <td>wert/&euro;</td>
+      </tr>
+      <tr>
+        <td><a href="#new_members">Neumitglieder</a></td>
+        <td>${num_members}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a href="#new_shares">Neue Anteile</a></td>
+        <td>${num_shares}</td>
+        <td>${num_shares * 50}</td>
+      </tr>
+      <tr>
+        <td><a href="#paid_unfinished">bezahlte, aber nicht aufgenommene Anteile</a></td>
+        <td>${num_shares_paid_unapproved}</td>
+        <td>${num_shares_paid_unapproved * 50}</td>
+      </tr>
+    </table>
+
+    <a name="new_members"></a>
+    <h3>Neumitglieder</h3>
     <p>
-      Mitglieder, die im Zeitraum neu aufgenommen wurden: ${num_members} <br />
+      Mitglieder, die im Zeitraum neu aufgenommen wurden: ${num_members}:
+      <table class="table table-striped">
+        <tr>
+          <th>Member id</th>
+          <th>Nachname, Vorname</th>
+          <th>Anteile</th>
+          <th>Aufn.Datum</th>
+        </tr>
+        <tr tal:repeat="m new_members">
+          <td>${m.id}</td>
+          <td>${m.lastname}, ${m.firstname}</td>
+          <td>${m.num_shares}</td>
+          <td>${m.membership_date}</td>
+        </tr>
+      </table>
     </p>
+    <a name="new_shares"></a>
+    <h3>Neuanteile</h3>
     <p>
-      Anteile, die im Zeitraum aufgenommen wurden: ${num_shares} (im Wert von ${sum_shares} Euro)
+      Anteile, die im Zeitraum aufgenommen wurden: ${num_shares} (im Wert von ${sum_shares} Euro):
+      <table class="table table-striped">
+        <tr>
+          <th>shares id</th>
+          <th>Nachname, Vorname</th>
+          <th>Anteile</th>
+          <th>Aufn.Datum</th>
+        </tr>
+        <tr tal:repeat="s new_shares">
+          <td><a href="${request.route_url('shares_detail', id=s.id)}">${s.id}</a></td>
+          <td>${s.members[0].lastname}, ${s.members[0].firstname}</td>
+          <td>${s.number}</td>
+          <td>${s.date_of_acquisition}</td>
+        </tr>
+      </table>
+
     </p>
+    <a name="paid_unfinished"></a>
+    <h3>Bezahlte, unfertige Anteile</h3>
     <p>
       Anteile, die im Zeitraum bezahlt wurden, die aber noch nicht aufgenommen wurden:
-      ${num_shares_paid_unapproved} (im Wert von ${num_shares_paid_unapproved * 50} Euro)
+      ${num_shares_paid_unapproved} (im Wert von ${num_shares_paid_unapproved * 50} Euro):
+
+      <table class="table table-striped">
+        <tr>
+          <th>AfM id</th>
+          <th>Nachname, Vorname</th>
+          <th>Anteile</th>
+          <th>Datum Geldeingang (ca.)</th>
+        </tr>
+        <tr tal:repeat="p paid_unapproved_shares">
+          <td><a href="${request.route_url('detail', memberid=p.id)}">${p.id}</a></td>
+          <td>${p.lastname}, ${p.firstname}</td>
+          <td>${p.num_shares}</td>
+          <td>${p.payment_received_date}</td>
+        </tr>
+      </table>
     </p>
   </tal:block>
 </html>
