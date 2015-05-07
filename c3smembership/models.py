@@ -206,6 +206,13 @@ class Shares(Base):
         return DBSession.query(cls).count()
 
     @classmethod
+    def get_max_id(cls):
+        """return number of entries (by counting rows in table)"""
+        res, = DBSession.query(func.max(cls.id)).first()
+        # print("the result: {}".format(res,))
+        return res
+
+    @classmethod
     def get_by_id(cls, _id):
         """return one package of shares by id"""
         return DBSession.query(cls).filter(cls.id == _id).first()
