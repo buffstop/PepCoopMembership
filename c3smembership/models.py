@@ -172,6 +172,9 @@ class C3sStaff(Base):
 
     @classmethod
     def get_all(cls):
+        """
+        get all staff objects from the database
+        """
         return DBSession.query(cls).all()
 
 
@@ -216,6 +219,11 @@ class Shares(Base):
     def get_by_id(cls, _id):
         """return one package of shares by id"""
         return DBSession.query(cls).filter(cls.id == _id).first()
+
+    @classmethod
+    def get_all(cls):
+        """return all packages of shares"""
+        return DBSession.query(cls).all()
 
     @classmethod
     def get_total_shares(cls):
@@ -406,6 +414,11 @@ class C3sMember(Base):
     def get_by_id(cls, _id):
         """return one member by id"""
         return DBSession.query(cls).filter(cls.id == _id).first()
+
+    @classmethod
+    def get_all(cls):
+        """return all afms and members"""
+        return DBSession.query(cls).all()
 
     @classmethod
     def delete_by_id(cls, _id):

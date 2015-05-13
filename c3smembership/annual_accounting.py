@@ -33,8 +33,6 @@ def annual_report(request):
         'startdate': start_date,
         'enddate': end_date,
     }
-    num_members = 0
-    num_shares = 0
 
     # construct a form
     class DatesForm(colander.Schema):
@@ -88,6 +86,8 @@ def annual_report(request):
                 'num_shares_paid_unapproved': 0,
                 'sum_shares': 0,
                 'new_shares': [],
+                'start_date': start_date,
+                'end_date': end_date,
             }
 
     else:  # if form not submitted, preload values
@@ -95,14 +95,16 @@ def annual_report(request):
 
     # prepare: get information from the database
     # get memberships
-    _order_by = 'lastname'
-    _num = C3sMember.get_number()  # count objects in DB
-    _all_members = C3sMember.member_listing(  # get all
-        _order_by, how_many=_num, offset=0, order=u'asc')
+    _all_members = C3sMember.get_all()
 
+    # prepare filtering and counting
     _members = []  # all the members matching the criteria
+    _num_members = 0
+
     _num_shares_paid_unapproved = 0
     _shares_paid_unapproved = []
+
+    # now filter and count the afms and members
     for m in _all_members:
         if (
                 m.membership_accepted  # unneccessary!?
@@ -111,13 +113,16 @@ def annual_report(request):
         ):
             # add this item to the list
             _members.append(m)
-            num_members += 1
+            _num_members += 1
             # also count the shares
             # for _s in item.shares:
             #    if (_s.date_of_acquisition <= _date):
             #        _count_shares += _s.number
         elif (
-                (not m.membership_accepted)
+                (
+                    (not m.membership_accepted)
+                    or (m.membership_accepted is None)
+                )
                 and (m.payment_received)
                 and (datetime(
                     m.payment_received_date.year,
@@ -135,10 +140,8 @@ def annual_report(request):
     # shares
     _count_shares = 0
     _new_shares = []
-    _max_shares_in_db = Shares.get_max_id()
-    # print("found max id {} in shares table".format(_max_shares_in_db))
-    for i in range(_max_shares_in_db+1):
-        s = Shares.get_by_id(i+1)
+    _all_shares = Shares.get_all()
+    for s in _all_shares:
         if s is not None:
 
             if (  # shares approved
@@ -158,22 +161,20 @@ def annual_report(request):
 
     html = form.render()
 
-    num_shares = _count_shares
-
-    # print("the number of members acquired in this timeframe: {}".format(
-    #     num_members))
-    # print("the number of shares acquired: {}. in Euro: {}".format(
-    #     num_shares,
-    #     num_shares*50,
-    # ))
-
     return {
         'form': html,
-        'num_members': num_members,
-        'num_shares': num_shares,
+        # dates
+        'start_date': start_date,
+        'end_date': end_date,
+        'datetime': datetime,
+        # members
         'new_members': _members,
-        'paid_unapproved_shares': _shares_paid_unapproved,
-        'num_shares_paid_unapproved': _num_shares_paid_unapproved,
-        'sum_shares': num_shares * 50,
+        'num_members': _num_members,
+        # shares
+        'num_shares': _count_shares,
+        'sum_shares': _count_shares * 50,
         'new_shares': _new_shares,
+        # paid but unapproved
+        'num_shares_paid_unapproved': _num_shares_paid_unapproved,
+        'paid_unapproved_shares': _shares_paid_unapproved,
     }
