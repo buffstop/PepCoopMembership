@@ -59,6 +59,9 @@
       <a href="${request.route_url('dashboard',number=0, orderby='id', order='asc')}"
          title="The List of going-to-be-Members / unfinished Applications for Membership"
          class="btn btn-primary">AfM Dashboard</a>
+      <a href="${request.route_url('afms_awaiting_approval')}"
+         title="almost finished Applications for Membership: awaiting approval"
+         class="btn btn-warning">AfMs ready for approval by the board</a>
     </p>
     <h3>Members</h3>
     <h4>HTML</h4>
