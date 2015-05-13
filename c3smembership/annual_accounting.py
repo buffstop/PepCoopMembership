@@ -101,8 +101,8 @@ def annual_report(request):
     _members = []  # all the members matching the criteria
     _num_members = 0
 
-    _num_shares_paid_unapproved = 0
-    _shares_paid_unapproved = []
+    _num_afm_shares_paid_unapproved = 0
+    _afm_shares_paid_unapproved = []
 
     # now filter and count the afms and members
     for m in _all_members:
@@ -118,11 +118,12 @@ def annual_report(request):
             # for _s in item.shares:
             #    if (_s.date_of_acquisition <= _date):
             #        _count_shares += _s.number
-        elif (
+        elif (  # member is not accepted yet
                 (
                     (not m.membership_accepted)
                     or (m.membership_accepted is None)
                 )
+                # but payment has been received during timespan
                 and (m.payment_received)
                 and (datetime(
                     m.payment_received_date.year,
@@ -134,17 +135,20 @@ def annual_report(request):
                     m.payment_received_date.month,
                     m.payment_received_date.day,
                 ) <= end_date)):
-            _num_shares_paid_unapproved += m.num_shares
-            _shares_paid_unapproved.append(m)
+            _num_afm_shares_paid_unapproved += m.num_shares
+            _afm_shares_paid_unapproved.append(m)
 
     # shares
     _count_shares = 0
     _new_shares = []
+    _num_shares_paid_unapproved = 0
+    _shares_paid_unapproved = []
+
     _all_shares = Shares.get_all()
     for s in _all_shares:
         if s is not None:
 
-            if (  # shares approved
+            if (  # shares approved during span
                     (datetime(
                         s.date_of_acquisition.year,
                         s.date_of_acquisition.month,
@@ -158,6 +162,26 @@ def annual_report(request):
             ):
                 _count_shares += s.number
                 _new_shares.append(s)
+
+            elif (  # shares NOT approved before end of span
+                    (datetime(
+                        s.date_of_acquisition.year,
+                        s.date_of_acquisition.month,
+                        s.date_of_acquisition.day,
+                    ) >= end_date)
+                    and (datetime(  # payment received during ...
+                        s.payment_received_date.year,
+                        s.payment_received_date.month,
+                        s.payment_received_date.day,
+                    ) >= start_date)
+                    and (datetime(  # payment received during ...
+                        s.payment_received_date.year,
+                        s.payment_received_date.month,
+                        s.payment_received_date.day,
+                    ) <= end_date)
+            ):
+                _num_shares_paid_unapproved += s.number
+                _shares_paid_unapproved.append(s)
 
     html = form.render()
 
@@ -174,7 +198,10 @@ def annual_report(request):
         'num_shares': _count_shares,
         'sum_shares': _count_shares * 50,
         'new_shares': _new_shares,
-        # paid but unapproved
+        # afm shares paid but unapproved
+        'num_afm_shares_paid_unapproved': _num_afm_shares_paid_unapproved,
+        'afm_paid_unapproved_shares': _afm_shares_paid_unapproved,
+        # other shares paid but unapproved
         'num_shares_paid_unapproved': _num_shares_paid_unapproved,
         'paid_unapproved_shares': _shares_paid_unapproved,
     }

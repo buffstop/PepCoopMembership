@@ -40,7 +40,14 @@
         <td>${num_shares * 50}</td>
       </tr>
       <tr>
-        <td><a href="#paid_unfinished">bezahlte, aber nicht aufgenommene Anteile</a></td>
+        <td><a href="#afms_paid_unfinished">
+            bezahlte, aber nicht aufgenommene Anteile I (AfMs)</a></td>
+        <td>${num_afm_shares_paid_unapproved}</td>
+        <td>${num_afm_shares_paid_unapproved * 50}</td>
+      </tr>
+      <tr>
+        <td><a href="#shares_paid_unfinished">
+            bezahlte, aber nicht aufgenommene Anteile II (Shares)</a></td>
         <td>${num_shares_paid_unapproved}</td>
         <td>${num_shares_paid_unapproved * 50}</td>
       </tr>
@@ -125,11 +132,11 @@
       </table>
 
     </p>
-    <a name="paid_unfinished"></a>
-    <h3>Bezahlte, unfertige Anteile</h3>
+    <a name="afms_paid_unfinished"></a>
+    <h3>Bezahlte, unfertige Anteile I (AfMs)</h3>
     <p>
       Anteile, die im Zeitraum bezahlt wurden, die aber noch nicht aufgenommen wurden:
-      ${num_shares_paid_unapproved} (im Wert von ${num_shares_paid_unapproved * 50} Euro):
+      ${num_afm_shares_paid_unapproved} (im Wert von ${num_afm_shares_paid_unapproved * 50} Euro):
 
       <table class="table table-striped">
         <tr>
@@ -139,14 +146,51 @@
           <th>Anteile</th>
           <th>Datum Geldeingang (ca.)</th>
         </tr>
-        <tr tal:define="global u_num python: 0"  tal:repeat="p paid_unapproved_shares">
-          <span tal:define="global u_num python: u_num + 1">
-            <td tal:content="python: u_num">${u_num}</td>
+        <tr tal:define="global ua_num python: 0"  tal:repeat="p afm_paid_unapproved_shares">
+          <span tal:define="global ua_num python: ua_num + 1">
+            <td tal:content="python: ua_num">${ua_num}</td>
           </span>
           <td><a href="${request.route_url('detail', memberid=p.id)}">${p.id}</a></td>
           <td>${p.lastname}, ${p.firstname}</td>
           <td>${p.num_shares}</td>
           <td>${p.payment_received_date}</td>
+        </tr>
+      </table>
+    </p>
+    <a name="shares_paid_unfinished"></a>
+    <h3>Bezahlte, unfertige Anteile II (Aufstockungen)</h3>
+    <p>
+      Anteile, die im Zeitraum bezahlt wurden, die aber noch nicht aufgenommen wurden:
+      ${num_shares_paid_unapproved} (im Wert von ${num_shares_paid_unapproved * 50} Euro):
+
+      <table class="table table-striped">
+        <tr>
+          <th>lfd. Nr.</th>
+          <th>Shares id</th>
+          <th>Nachname, Vorname</th>
+          <th>Anteile</th>
+          <th>Datum Zahlungseingang</th>
+          <th>Datum Aufnahme</th>
+        </tr>
+        <tr tal:define="global u_num python: 0"  tal:repeat="ps paid_unapproved_shares">
+          <span tal:define="global u_num python: u_num + 1">
+            <td tal:content="python: u_num">${u_num}</td>
+          </span>
+          <td><a href="${request.route_url('shares_detail', id=ps.id)}">${ps.id}</a></td>
+          <td tal:condition="len(ps.members) > 0">
+            ${ps.members[0].lastname}, ${ps.members[0].firstname}</td>
+          <td tal:condition="len(ps.members) == 0">Not Found</td>
+          <td>${ps.number}</td>
+          <td>${ps.payment_received_date}</td>
+          <td>${ps.date_of_acquisition}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>${num_shares_paid_unapproved} (${num_shares_paid_unapproved * 50} &euro;)</td>
+          <td></td>
+          <td></td>
         </tr>
       </table>
     </p>
