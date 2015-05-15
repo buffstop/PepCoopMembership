@@ -160,7 +160,7 @@ def shares_delete(request):
     if isinstance(_s, NoneType):
         # entry was not found in database
         request.session.flash(
-            "this shares id {} was not found in the DB.".format(_id),
+            "This shares package {} was not found in the DB.".format(_id),
             'message_to_staff'
         )
         return HTTPFound(request.route_url('toolbox'))
@@ -170,7 +170,7 @@ def shares_delete(request):
         # shares package is still owned
         request.session.flash(
             "DID NOT DELETE! "
-            "this shares package {} still has a member owning it.".format(_id),
+            "This shares package {} still has a member owning it.".format(_id),
             'message_to_staff'
         )
         return HTTPFound(request.route_url('toolbox'))
