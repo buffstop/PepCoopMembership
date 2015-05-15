@@ -23,6 +23,7 @@ requires = [
     'pyramid_mailer',
     'pyramid_tm',
     'python-gnupg',
+    'repoze.sendmail==4.1',
     'SQLAlchemy',
     'transaction',
     'unicodecsv',
