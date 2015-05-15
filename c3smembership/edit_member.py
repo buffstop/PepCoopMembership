@@ -592,7 +592,7 @@ def edit_member(request):
             #     #_m.shares = [share_pkg]
 
         if appstruct[
-            'membership_info']['entity_type'] == 'legalentity':
+                'membership_info']['entity_type'] == 'legalentity':
             _m.is_legalentity = True
         else:
             _m.is_legalentity = False

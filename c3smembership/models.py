@@ -1,8 +1,5 @@
 # -*- coding: utf-8  -*-
-#import transaction
-#import cryptacular.bcrypt
 from datetime import (
-    #date,
     datetime,
 )
 import cryptacular.bcrypt
@@ -18,16 +15,10 @@ from sqlalchemy import (
     Unicode,
     or_,
     and_,
-    #desc,
-    #asc
 )
-#from sqlalchemy.exc import (
-    #IntegrityError,
-    #OperationalError,
-    #InvalidRequestError
-#)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
+# from sqlalchemy.sql.expression import func
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
@@ -64,7 +55,6 @@ class Group(Base):
         dbsession = DBSession()
         staff_group = dbsession.query(
             cls).filter(cls.name == groupname).first()
-        #print('=== get_staffers_group:' + str(staff_group))
         return staff_group
 
 #    @classmethod
@@ -112,8 +102,8 @@ class C3sStaff(Base):
         self.last_password_change = datetime.now()
         self.email = email
 
-    #@property
-    #def __acl__(self):
+    # @property
+    # def __acl__(self):
     #    return [
     #        (Allow,                           # user may edit herself
     #         self.username, 'editUser'),
@@ -139,17 +129,11 @@ class C3sStaff(Base):
 
     @classmethod
     def get_by_login(cls, login):
-        #dbSession = DBSession()
         return DBSession.query(cls).filter(cls.login == login).first()
 
     @classmethod
     def check_password(cls, login, password):
-        #dbSession = DBSession()
         staffer = cls.get_by_login(login)
-        #if staffer is None:  # ?
-        #    return False
-        #if not staffer:  # ?
-        #    return False
         return crypt.check(staffer.password, password)
 
     # this one is used by RequestWithUserAttribute
@@ -393,7 +377,6 @@ class C3sMember(Base):
         and clicking on a link containing the confirmation code.
         as the code is unique, one record is returned.
         """
-        #dbSession = DBSession  # ()
         return DBSession.query(cls).filter(
             cls.email_confirm_code == email_confirm_code).first()
 
@@ -402,7 +385,6 @@ class C3sMember(Base):
         """
         check if a code is already present
         """
-        #dbSession = DBSession  # ()
         check = DBSession.query(cls).filter(
             cls.email_confirm_code == email_confirm_code).first()
         if check:  # pragma: no cover
@@ -428,16 +410,6 @@ class C3sMember(Base):
         return DBSession.query(cls).filter(cls.id == _id).delete()
 
     # listings
-    #@classmethod
-    #def get_applications(cls, order_by, how_many=10, offset=0, order="asc"):
-    #    '''return the list of applications not yet accepted as members.'''
-    #    return DBSession.query(cls).filter(
-    #        or_(
-    #            cls.membership_accepted == 0,
-    #            cls.membership_accepted == '',
-    #            cls.membership_accepted == None,
-    #    ).all()
-    # see nonmember_listing
     @classmethod
     def get_duplicates(cls):
         '''return the list of duplicates.'''
@@ -447,8 +419,6 @@ class C3sMember(Base):
     @classmethod
     def get_members(cls, order_by, how_many=10, offset=0, order="asc"):
         '''return the list accepted as members.'''
-        #return DBSession.query(cls).filter(
-        #    cls.membership_accepted == 1).all()
         try:
             attr = getattr(cls, order_by)
             order_function = getattr(attr, order)
@@ -579,14 +549,14 @@ class C3sMember(Base):
                 cls.membership_type != 'normal',
                 cls.membership_type != 'investing',
             ).all()
-        #print "how many unknown: {}".format(len(_foo))
+        # print "how many unknown: {}".format(len(_foo))
         _other = {}
         for i in _foo:
             if i.membership_type in _other.keys():
                 _other[i.membership_type] += 1
             else:
                 _other[i.membership_type] = 1
-        #print "the options: {}".format(_other)
+        # print "the options: {}".format(_other)
         return len(_foo)
 
     # listings
@@ -639,8 +609,8 @@ class C3sMember(Base):
         ).order_by(
             order_function()
         ).slice(_offset, _how_many)
-        #print "length of nonmember listing: {}".format(q.count())
-        #print "nonmember listing q: {}".format(q)
+        # print "length of nonmember listing: {}".format(q.count())
+        # print "nonmember listing q: {}".format(q)
         return q.all()
 
     @classmethod
@@ -652,13 +622,13 @@ class C3sMember(Base):
                 cls.membership_accepted == None,
             )
         ).count()
-        #print "length of nonmember listing: {}".format(q)
-        #print "nonmember listing q: {}".format(q)
+        # print "length of nonmember listing: {}".format(q)
+        # print "nonmember listing q: {}".format(q)
         return q
 
     @classmethod
     def get_num_nonmember_listing(cls):
-        #cls.nonmember_listing(order_by='id').count()
+        # cls.nonmember_listing(order_by='id').count()
         return cls.nonmember_listing_count()
 
     # count for statistics
@@ -701,17 +671,12 @@ class C3sMember(Base):
         for item in all:
             if item.email_confirm_code.startswith(prefix):
                 codes.append(item.email_confirm_code)
-        #print("number of items found: %s" % len(codes))
+        # print("number of items found: %s" % len(codes))
         return codes
 
     @classmethod
     def check_password(cls, _id, password):
-        #dbSession = DBSession()
         member = cls.get_by_id(_id)
-        #if staffer is None:  # ?
-        #    return False
-        #if not staffer:  # ?
-        #    return False
         return crypt.check(member.password, password)
 
     # this one is used by RequestWithUserAttribute
@@ -818,10 +783,10 @@ class C3sMember(Base):
         _all = DBSession.query(cls)
         for item in _all:
             if item.country not in _c_dict.keys():
-                #print u"adding {} to the list".format(item.country)
+                # print u"adding {} to the list".format(item.country)
                 _c_dict[item.country] = 1
             else:
-                #print u"found one more entry for {}".format(item.country)
+                # print u"found one more entry for {}".format(item.country)
                 _c_dict[item.country] += 1
         return _c_dict
 

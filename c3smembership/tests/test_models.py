@@ -1,12 +1,12 @@
 # -*- coding: utf-8  -*-
-import os
+# import os
 import unittest
 import transaction
-#from pyramid.config import Configurator
+# from pyramid.config import Configurator
 from pyramid import testing
 from datetime import date
 from sqlalchemy import create_engine
-#from sqlalchemy.exc import IntegrityError
+# from sqlalchemy.exc import IntegrityError
 from c3smembership.models import (
     DBSession,
     Base,
@@ -23,11 +23,11 @@ class C3sMembershipModelTestBase(unittest.TestCase):
         self.config.include('pyramid_mailer.testing')
         try:
             DBSession.remove()
-            #print("removing old DBSession ==============================")
+            # print("removing old DBSession ==============================")
         except:
-            #print("no DBSession to remove ==============================")
+            # print("no DBSession to remove ==============================")
             pass
-        #engine = create_engine('sqlite:///test_models.db')
+        # engine = create_engine('sqlite:///test_models.db')
         engine = create_engine('sqlite:///:memory:')
         self.session = DBSession
         DBSession.configure(bind=engine)  # XXX does influence self.session!?!
@@ -36,7 +36,7 @@ class C3sMembershipModelTestBase(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.session.remove()
-        #os.remove('test_models.db')
+        # os.remove('test_models.db')
 
     def _getTargetClass(self):
         return C3sMember
@@ -61,7 +61,7 @@ class C3sMembershipModelTestBase(unittest.TestCase):
                  name_of_colsoc=u"GEMA",
                  num_shares=u'23',
                  ):
-        #print "type(self.session): " + str(type(self.session))
+        # print "type(self.session): " + str(type(self.session))
         return self._getTargetClass()(  # order of params DOES matter
             firstname, lastname, email,
             password,
@@ -69,12 +69,9 @@ class C3sMembershipModelTestBase(unittest.TestCase):
             city, country, locale,
             date_of_birth, email_is_confirmed, email_confirm_code,
             num_shares,
-            #is_composer, is_lyricist, is_producer, is_remixer, is_dj,
             date_of_submission,
-            #invest_member,
             membership_type,
             member_of_colsoc, name_of_colsoc,
-            #opt_band, opt_URL
         )
 
     def _makeAnotherOne(self,
@@ -139,7 +136,7 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
 
     def test_constructor(self):
         instance = self._makeOne()
-        #print(instance.address1)
+        # print(instance.address1)
         self.assertEqual(instance.firstname, u'SomeFirstnäme', "No match!")
         self.assertEqual(instance.lastname, u'SomeLastnäme', "No match!")
         self.assertEqual(instance.email, u'some@shri.de', "No match!")
@@ -153,22 +150,17 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
 
     def test_get_number(self):
         instance = self._makeOne()
-        #session = DBSession()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
         number_from_DB = myMembershipSigneeClass.get_number()
-        #print number_from_DB
+        # print number_from_DB
         self.assertEqual(number_from_DB, 2)
 
     def test_get_by_code(self):
         instance = self._makeOne()
-        #session = DBSession()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
         instance_from_DB = myMembershipSigneeClass.get_by_code(u'ABCDEFGHIK')
-        #self.session.commit()
-        #self.session.remove()
-        #print instance_from_DB.email
         if DEBUG:
             print "myMembershipSigneeClass: " + str(myMembershipSigneeClass)
             #        print "str(myUserClass.get_by_username('SomeUsername')): "
@@ -180,7 +172,6 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
 
     def test_get_by_id(self):
         instance = self._makeOne()
-        #session = DBSession()
         self.session.add(instance)
         self.session.flush()
         _id = instance.id
@@ -188,9 +179,6 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         _date_of_submission = instance.date_of_submission
         myMembershipSigneeClass = self._getTargetClass()
         instance_from_DB = myMembershipSigneeClass.get_by_id(_id)
-        #self.session.commit()
-        #self.session.remove()
-        #print instance_from_DB.email
         if DEBUG:
             print "myMembershipSigneeClass: " + str(myMembershipSigneeClass)
             #        print "str(myUserClass.get_by_username('SomeUsername')): "
@@ -218,28 +206,23 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
 
     def test_delete_by_id(self):
         instance = self._makeOne()
-        #session = DBSession()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
         instance_from_DB = myMembershipSigneeClass.get_by_id('1')
         del_instance_from_DB = myMembershipSigneeClass.delete_by_id('1')
-        #print
         del_instance_from_DB
         instance_from_DB = myMembershipSigneeClass.get_by_id('1')
         self.assertEqual(None, instance_from_DB)
 
     def test_check_user_or_None(self):
         instance = self._makeOne()
-        #session = DBSession()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
         # get first dataset (id = 1)
         result1 = myMembershipSigneeClass.check_user_or_None('1')
-        #print check_user_or_None
         self.assertEqual(1, result1.id)
         # get invalid dataset
         result2 = myMembershipSigneeClass.check_user_or_None('1234567')
-        #print check_user_or_None
         self.assertEqual(None, result2)
 
     def test_check_for_existing_confirm_code(self):
@@ -249,11 +232,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
 
         result1 = myMembershipSigneeClass.check_for_existing_confirm_code(
             u'ABCDEFGHIK')
-        #print result1  # True
         self.assertEqual(result1, True)
         result2 = myMembershipSigneeClass.check_for_existing_confirm_code(
             u'ABCDEFGHIK0000000000')
-        #print result2  # False
         self.assertEqual(result2, False)
 
     def test_member_listing(self):
@@ -275,12 +256,14 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.session.add(instance2)
         myMembershipSigneeClass = self._getTargetClass()
 
-        #self.assertRaises(myMembershipSigneeClass, member_listing, "foo")
+        # self.assertRaises(myMembershipSigneeClass, member_listing, "foo")
         with self.assertRaises(Exception):
             result1 = myMembershipSigneeClass.member_listing("foo")
-        #self.failUnless(result1[0].firstname == u"SomeFirstnäme")
-        #self.failUnless(result1[1].firstname == u"SomeFirstnäme")
-        #self.failUnless(result1[2].firstname == u"SomeFirstname")
+            if DEBUG:
+                print result1
+        # self.failUnless(result1[0].firstname == u"SomeFirstnäme")
+        # self.failUnless(result1[1].firstname == u"SomeFirstnäme")
+        # self.failUnless(result1[2].firstname == u"SomeFirstname")
 
 
 class TestMemberListing(C3sMembershipModelTestBase):
@@ -299,7 +282,6 @@ class TestMemberListing(C3sMembershipModelTestBase):
         self.class_under_test = self._getTargetClass()
 
     def test_orderByLastname_sortedByLastname(self):
-        #print "now test " * 45
         result = self.class_under_test.member_listing(order_by='lastname')
         self.assertIsNotNone(result)
         self.assertIsNotNone(result[0])
@@ -338,7 +320,7 @@ class TestMemberListing(C3sMembershipModelTestBase):
         self.assertRaises(self.class_under_test.member_listing,
                           order_by='lastname', order=None)
 
-#class MembershipNumberModelTestBase(C3sMembershipModelTestBase):
+# class MembershipNumberModelTestBase(C3sMembershipModelTestBase):
 # XXX TODO
 
 
@@ -353,7 +335,7 @@ class GroupTests(unittest.TestCase):
             DBSession.remove()
         except:
             pass
-        #engine = create_engine('sqlite:///test_model_groups.db')
+        # engine = create_engine('sqlite:///test_model_groups.db')
         engine = create_engine('sqlite://')
         self.session = DBSession
         self.session.configure(bind=engine)
@@ -368,12 +350,9 @@ class GroupTests(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.session.remove()
-        #os.remove('test_model_groups.db')
+        # os.remove('test_model_groups.db')
 
     def test_group(self):
-        #test_group = Group(name=u'testgroup')
-        #self.session.add(test_group)
-
         result = Group.get_staffers_group()
         self.assertEquals(result.__str__(), 'group:staff')
 
@@ -389,7 +368,7 @@ class C3sStaffTests(unittest.TestCase):
             DBSession.remove()
         except:
             pass
-        #engine = create_engine('sqlite:///test_model_staff.db')
+        # engine = create_engine('sqlite:///test_model_staff.db')
         engine = create_engine('sqlite://')
         self.session = DBSession
         self.session.configure(bind=engine)
@@ -404,7 +383,7 @@ class C3sStaffTests(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.session.remove()
-        #os.remove('test_model_staff.db')
+        # os.remove('test_model_staff.db')
 
     def test_staff(self):
         staffer1 = C3sStaff(
@@ -427,10 +406,10 @@ class C3sStaffTests(unittest.TestCase):
 
         self.assertTrue(staffer2.password is not '')
 
-        #print('by id: %s' % C3sStaff.get_by_id(_staffer1_id))
-        #print('by id: %s' % C3sStaff.get_by_id(_cashier1_id))
-        #print('by login: %s' % C3sStaff.get_by_login(u'staffer1'))
-        #print('by login: %s' % C3sStaff.get_by_login(u'cashier1'))
+        # print('by id: %s' % C3sStaff.get_by_id(_staffer1_id))
+        # print('by id: %s' % C3sStaff.get_by_id(_cashier1_id))
+        # print('by login: %s' % C3sStaff.get_by_login(u'staffer1'))
+        # print('by login: %s' % C3sStaff.get_by_login(u'cashier1'))
         self.assertEqual(
             C3sStaff.get_by_id(_staffer1_id),
             C3sStaff.get_by_login(u'staffer1')
@@ -452,12 +431,12 @@ class C3sStaffTests(unittest.TestCase):
         '''test check_user_or_None'''
         res1 = C3sStaff.check_user_or_None(u'staffer2')
         res2 = C3sStaff.check_user_or_None(u'staffer1')
-        #print res1
-        #print res2
+        # print res1
+        # print res2
         self.assertTrue(res1 is not None)
         self.assertTrue(res2 is None)
 
         '''test check_password'''
-        #print(C3sStaff.check_password(cashier1, 'cashierspassword'))
+        # print(C3sStaff.check_password(cashier1, 'cashierspassword'))
         C3sStaff.check_password(u'staffer2', u'staffer2spassword')
-        #self.assert
+        # self.assert

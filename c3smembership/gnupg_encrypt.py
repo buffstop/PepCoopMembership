@@ -9,7 +9,7 @@ import tempfile
 import shutil
 
 DEBUG = False
-#DEBUG = True
+# DEBUG = True
 
 
 def encrypt_with_gnupg(data):
@@ -53,13 +53,9 @@ def encrypt_with_gnupg(data):
     if DEBUG:  # pragma: no cover
         print("=== the list of keys: " + repr(list_of_keys))
 
-    if not 'C3S-Yes!' in str(list_of_keys):
+    if 'C3S-Yes!' not in str(list_of_keys):
         # open and read key file
         # reading public key
-#        pubkey_file = open('keys/C3S-Yes!.asc', 'r')
-#        pubkey_content = pubkey_file.read()
-#        pubkey_file.close()
-
         pubkey_content = """
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.4.11 (GNU/Linux)
