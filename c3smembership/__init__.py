@@ -131,6 +131,8 @@ def main(global_config, **settings):
                      '/aml-{date}.pdf')
     config.add_route('membership_listing_aufstockers',
                      '/aml_aufstockers')
+    # utilities & wizardry
+    config.add_route('plz_dist', '/plz_dist')
     # shares
     config.add_route('shares_detail', '/shares_detail/{id}')
     config.add_route('shares_edit', '/shares_edit/{id}')

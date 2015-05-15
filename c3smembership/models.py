@@ -434,6 +434,28 @@ class C3sMember(Base):
 
     # statistical stuff
     @classmethod
+    def get_postal_codes_de(cls):
+        """return bag (list containing duplicates) of postal codes in DE"""
+        all = DBSession.query(cls).filter(
+            cls.country == 'DE'
+        ).all()
+        postal_codes_de = []
+        for i in all:
+            try:
+                int(i.postcode)
+                len(i.postcode) == 5
+                postal_codes_de.append(i.postcode)
+            except:
+                print("exception at id {}: {}".format(
+                    i.id,
+                    i.postcode)
+                )
+                # pass
+        return postal_codes_de
+
+    # statistical stuff
+
+    @classmethod
     def get_number(cls):
         """return number of submissions (by counting rows in table)"""
         return DBSession.query(cls).count()
