@@ -325,6 +325,9 @@ def member_list_print_view(request):
 
 @view_config(renderer='templates/memberships_list_backend.pt',
              permission='manage',
+             route_name='membership_listing_backend_only')
+@view_config(renderer='templates/memberships_list_backend.pt',
+             permission='manage',
              route_name='membership_listing_backend')
 def membership_listing_backend(request):
     """
@@ -333,7 +336,6 @@ def membership_listing_backend(request):
     the list is HTML with clickable links,
     not good for printout.
     """
-    _message = ''
     try:  # check if page number, orderby and order were supplied with the URL
         _page_to_show = int(request.matchdict['number'])
         _order_by = request.matchdict['orderby']
@@ -393,6 +395,10 @@ def membership_listing_backend(request):
     request.response.set_cookie('m_num_display', value=str(m_num_display))
     request.response.set_cookie('m_order', value=str(_order))
     request.response.set_cookie('m_orderby', value=str(_order_by))
+
+    _message = None
+    if 'message' in request.GET:
+        _message = request.GET['message']
 
     return {
         'members': memberships,

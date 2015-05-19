@@ -118,6 +118,8 @@ def main(global_config, **settings):
                      '/make_crowdfounders_members')
     config.add_route('make_yesser_members',
                      '/make_yesser_members')
+    config.add_route('membership_listing_backend_only',
+                     '/memberships')
     config.add_route('membership_listing_backend',
                      '/memberships/{number}/{orderby}/{order}')
     config.add_route('membership_listing_alphabetical',
@@ -128,6 +130,7 @@ def main(global_config, **settings):
                      '/aml_aufstockers')
     # utilities & wizardry
     config.add_route('plz_dist', '/plz_dist')
+    config.add_route('get_member', '/members/{memberid}')
     # shares
     config.add_route('shares_detail', '/shares_detail/{id}')
     config.add_route('shares_edit', '/shares_edit/{id}')

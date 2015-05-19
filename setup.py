@@ -46,7 +46,7 @@ if sys.version_info[:3] < (2, 5, 0):
     requires.append('pysqlite')
 
 setup(name='c3smembership',
-      version='1.10.1',
+      version='1.10.2',
       description='Membership Form for C3S (form, PDF, email)',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[
