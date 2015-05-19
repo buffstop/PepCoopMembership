@@ -1,4 +1,4 @@
-"""new DB fields for GV and BC 2015
+"""alembic revision autogenerate: new DB fields for GV and BC 2015
 
 Revision ID: 2a6d1059c519
 Revises: 1a6cbb61c557

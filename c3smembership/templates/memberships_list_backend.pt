@@ -103,6 +103,12 @@
              title="sort by id: descending"
              class="glyphicon glyphicon-chevron-down"></a>
         </th>
+        <!-- Reactivated for for next GV. -->
+        <th>
+          BC/GV<br />
+          invitation
+        </th>
+        <!-- -->
         <th>
           certificate
         </th>
@@ -110,7 +116,9 @@
           mtype<br />
           status
         </th>
-        <!-- <th>code</th> -->
+        <th>
+          BC/GV
+        </th>
         <th>
           firstname <br />
           <a href="${request.route_url('membership_listing_backend', number=current, orderby='firstname', order='asc')}"
@@ -145,6 +153,18 @@
           <div tal:condition="member.is_duplicate">
             <a href="$request.route_url('detail', memberid=member.is_duplicate_of)">dup:${member.is_duplicate_of}</div>
         </td>
+        <!-- Reactivated for next GV. -->
+        <td>
+          <a tal:condition="not member.email_invite_flag_bcgv15"
+             href="${request.route_url('invite_member', m_id=member.id)}"
+             title="BC/GV invitation not sent yet"
+             class="btn btn-danger"></a>
+          <a tal:condition="member.email_invite_flag_bcgv15"
+             href="${request.route_url('invite_member', m_id=member.id)}"
+             title="gesendet ${member.email_invite_date_bcgv15.strftime('am %d.%m.%Y um %H:%M')}"
+             class="btn btn-success"></a>
+        </td>
+        <!-- -->
         <td>
           <a tal:condition="not member.certificate_email"
              href="${request.route_url('certificate_mail', id=member.id)}"

@@ -24,7 +24,6 @@ def main(global_config, **settings):
         callback=groupfinder,)
     authz_policy = ACLAuthorizationPolicy()
 
-    #DBSession.configure(bind=engine)
     Base.metadata.bind = engine
 
     config = Configurator(settings=settings,
@@ -59,11 +58,7 @@ def main(global_config, **settings):
                         factory='c3smembership.renderers.CSVRenderer')
     # home is /, the membership application form
     config.add_route('join', '/')
-    # info pages
-    #config.add_route('disclaimer', '/disclaimer')
-    #config.add_route('faq', '/faq')
-    #config.add_route('statute', '/statute')
-    #config.add_route('manifesto', '/manifesto')
+
     # success and further steps
     config.add_route('success', '/success')
     config.add_route('success_check_email', '/check_email')
@@ -73,7 +68,7 @@ def main(global_config, **settings):
     config.add_route(
         'verify_afm_email',
         '/vae/{refcode}/{token}/{email}')  # verify afm email
-    #config.add_route(
+    # config.add_route(
     #    'verify_member_email',
     #    '/vfe/{refcode}/{token}/{email}')  # verify founders mail?
     # routes & views for staff

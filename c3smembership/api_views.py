@@ -9,16 +9,20 @@ api_ver = '0.1dev'
 
 member = Service(name='member', path='/lm', description="load user info")
 
+DEBUG = False
+
 
 def token_does_match(request):
     '''
     a validator to check the token
     '''
     _token = request.headers['X-messaging-token']
-    #print "the api received this: {}".format(_token)
+    if DEBUG:
+        print("the api received this: {}".format(_token))
     if ((_token in request.registry.settings['api_auth_token']) and
             (request.registry.settings['api_auth_token'] in _token)):
-        #print "validator: token: all good!"
+        if DEBUG:
+            print("validator: token: all good!")
         pass
     else:
         request.errors.add('url', 'name', 'Token does not match!')
@@ -36,14 +40,15 @@ def api_userinfo(request):
     '''
     allow api access to load user info (for ticketing)
     '''
-    #print "the refcode received: {}".format(request.validated['refcode'])
+    if DEBUG:
+        print(u"the refcode received: {}".format(request.validated['refcode']))
     _m = C3sMember.get_by_code(request.validated['refcode'])
     if isinstance(_m, NoneType):
         return {
             'firstname': 'None',
             'lastname': 'None',
         }
-    #print "api found member: {} {}".format(_m.firstname, _m.lastname)
+    # print "api found member: {} {}".format(_m.firstname, _m.lastname)
     return {
         'firstname': _m.firstname,
         'lastname': _m.lastname,
