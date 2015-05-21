@@ -320,6 +320,7 @@ class C3sMember(Base):
     email_invite_date_bcgv14 = Column(DateTime(), default=datetime(1970, 1, 1))
     email_invite_flag_bcgv15 = Column(Boolean, default=False)
     email_invite_date_bcgv15 = Column(DateTime(), default=datetime(1970, 1, 1))
+    email_invite_token_bcgv15 = Column(Unicode(255))
     # legal entities
     is_legalentity = Column(Boolean, default=False)
     court_of_law = Column(Unicode(255))
@@ -378,6 +379,18 @@ class C3sMember(Base):
         this is needed when a user returns from reading her email
         and clicking on a link containing the confirmation code.
         as the code is unique, one record is returned.
+        """
+        return DBSession.query(cls).filter(
+            cls.email_confirm_code == email_confirm_code).first()
+
+    @classmethod
+    def get_by_bcgvtoken(cls, email_confirm_code):
+        """
+        find a member by token used for GA and BarCamp
+
+        this is needed when a user returns from reading her email
+        and clicking on a link containing the token.
+        .
         """
         return DBSession.query(cls).filter(
             cls.email_confirm_code == email_confirm_code).first()

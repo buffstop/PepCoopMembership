@@ -42,7 +42,8 @@ def api_userinfo(request):
     '''
     if DEBUG:
         print(u"the refcode received: {}".format(request.validated['refcode']))
-    _m = C3sMember.get_by_code(request.validated['refcode'])
+    # _m = C3sMember.get_by_code(request.validated['refcode'])
+    _m = C3sMember.get_by_bcgvtoken(request.validated['refcode'])
     if isinstance(_m, NoneType):
         return {
             'firstname': 'None',
