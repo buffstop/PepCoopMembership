@@ -64,7 +64,7 @@ Dies ist Dein individueller Link zur Anmeldung:
 
   {0}
 
-Bitte teile uns dort rechtzeitig mit, ob Du teilnnimmst. Wir müssen
+Bitte teile uns dort rechtzeitig mit, ob Du teilnimmst. Wir müssen
 umgehend wissen, ob die Location ausreichend groß ist. Wenn irgend
 möglich, antworte uns daher bitte bis zum 05.06.2015.
 
@@ -85,7 +85,7 @@ Das Team der C3S
 
 Hello {1} {2},
 
-on 11th of March 2015 you received an email inviting you to the BarCamp
+on the 11th of May 2015 you received an email inviting you to the BarCamp
 and general assembly of C3S SCE mbh on the 12th and 13th July of 2015
 in Potsdam.
 
@@ -101,11 +101,11 @@ soon as possible whether the location will be large enough. If possible,
 please respond by July 5th, 2015, at the latest.
 
 On the linked page you can confirm your participation in the general
-assembly and the barcamp separately. You can also book food for the
+assembly and the BarCamp separately. You can also book a meal for the
 day of the BarCamp.
 
 That's all! Let us know your proposals for topics, plan your trip -- and
-we shall meet in Potdam!
+we shall meet in Potsdam!
 
 We are looking forward to seeing you and learning to know your ideas!
 
