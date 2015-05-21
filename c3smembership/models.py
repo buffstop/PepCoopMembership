@@ -384,7 +384,7 @@ class C3sMember(Base):
             cls.email_confirm_code == email_confirm_code).first()
 
     @classmethod
-    def get_by_bcgvtoken(cls, email_confirm_code):
+    def get_by_bcgvtoken(cls, token):
         """
         find a member by token used for GA and BarCamp
 
@@ -393,7 +393,7 @@ class C3sMember(Base):
         .
         """
         return DBSession.query(cls).filter(
-            cls.email_confirm_code == email_confirm_code).first()
+            cls.email_invite_token_bcgv15 == token).first()
 
     @classmethod
     def check_for_existing_confirm_code(cls, email_confirm_code):
