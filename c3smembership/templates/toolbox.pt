@@ -84,6 +84,19 @@
       </a>
     </p>
 
+    <h4>Mail Invitations for GA &amp; BC 2015</h4>
+    <p>
+      <a href="${request.route_url('invite_batch', number=5)}"
+         title="Note: change number in URL as appropriate! Default is 5."
+         class="btn btn-success">Send 5 Invitations
+      </a><br />
+      You may send more than 5 invitations at once by using another number (in the URL):
+      <form method='POST' action="${request.route_url('invite_batch', number='foo')}">
+        <input type='text' name='number'></input>
+        <input type='submit' name='submit'></input>
+      </form>
+    </p>
+
     <h3>The Merge Process (obsolete)</h3>
       <a href="${request.route_url('fix_import_crowdfunders')}"
          class="btn btn-warning import-takes-time">Fix Import (./crowdfunders.csv)</a>

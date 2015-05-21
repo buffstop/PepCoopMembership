@@ -143,6 +143,7 @@ def main(global_config, **settings):
     config.add_route('annual_reporting', '/annual_reporting')
     # invite people
     config.add_route('invite_member', '/invite_member/{m_id}')
+    config.add_route('invite_batch', '/invite_batch/{number}')
     # search for people
     config.add_route('search_people', '/search_people')
     config.add_route('autocomplete_people_search', '/aps/')

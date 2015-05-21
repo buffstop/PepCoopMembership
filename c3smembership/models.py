@@ -405,6 +405,15 @@ class C3sMember(Base):
         return DBSession.query(cls).all()
 
     @classmethod
+    def get_invitees(cls, num):
+        """return a given number of members to invite"""
+        return DBSession.query(cls).filter(
+            and_(
+                cls.membership_accepted == 1,
+                cls.email_invite_flag_bcgv15 == None
+            )).slice(0, num).all()
+
+    @classmethod
     def delete_by_id(cls, _id):
         """delete one member by id
         this will return 1 on success, 0 else

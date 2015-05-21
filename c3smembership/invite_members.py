@@ -16,6 +16,8 @@ from pyramid.httpexceptions import HTTPFound
 from translationstring import TranslationStringFactory
 from types import NoneType
 
+from c3smembership.membership_certificate import make_random_token
+
 deform_templates = resource_filename('deform', 'templates')
 c3smembership_templates = resource_filename(
     'c3smembership', 'templates')
@@ -47,29 +49,7 @@ if LOGGING:  # pragma: no cover
     import logging
     log = logging.getLogger(__name__)
 
-
-@view_config(permission='manage',
-             route_name='invite_member')
-def invite_member_BCGV(request):
-    '''
-    send email to member with link to ticketing
-    '''
-    mid = request.matchdict['m_id']
-    _m = C3sMember.get_by_id(mid)
-    if isinstance(_m, NoneType):
-        request.session.flash(
-            'id not found. no mail sent.',
-            'messages')
-        return HTTPFound(request.route_url('membership_listing_backend',
-                                           number=request.cookies['on_page'],
-                                           order=request.cookies['order'],
-                                           orderby=request.cookies['orderby']))
-
-    _url = (request.registry.settings['ticketing.url'] +
-            '/lu/' + _m.email_confirm_code +
-            '/' + _m.email)
-
-    _body = u'''[english version below]
+invite_mail_template = u'''[english version below]
 
 Hallo {1} {2},
 
@@ -132,7 +112,35 @@ We are looking forward to seeing you and learning to know your ideas!
 
 Your C3S Team
 
-'''.format(
+'''
+
+
+@view_config(permission='manage',
+             route_name='invite_member')
+def invite_member_BCGV(request):
+    '''
+    send email to member with link to ticketing
+    '''
+    mid = request.matchdict['m_id']
+    _m = C3sMember.get_by_id(mid)
+    if isinstance(_m, NoneType):
+        request.session.flash(
+            'id not found. no mail sent.',
+            'messages')
+        return HTTPFound(request.route_url('membership_listing_backend',
+                                           number=request.cookies['on_page'],
+                                           order=request.cookies['order'],
+                                           orderby=request.cookies['orderby']))
+
+    # prepare a random token iff none is set
+    if _m.email_invite_token_bcgv15 is None:
+        _m.email_invite_token_bcgv15 = make_random_token()
+    _url = (
+        request.registry.settings['ticketing.url']
+        + '/lu/' + _m.email_invite_token_bcgv15
+        + '/' + _m.email)
+
+    _body = invite_mail_template.format(
         _url,  # {0}
         _m.firstname,  # {1}
         _m.lastname,  # {2}
@@ -170,3 +178,88 @@ Your C3S Team
                                        order=request.cookies['order'],
                                        orderby=request.cookies['orderby']) +
                      '#member_' + str(_m.id))
+
+
+@view_config(
+    route_name="invite_batch",
+    permission='manage')
+def batch_invite(request):
+    """
+    invite many members at the same time
+    """
+    try:  # how many to process?
+        n = int(request.matchdict['number'])
+    except:
+        n = 5
+    if 'submit' in request.POST:
+        # print("request.POST: {}".format(request.POST))
+        try:
+            n = int(request.POST['number'])
+        except:
+            n = 5
+
+    _invitees = C3sMember.get_invitees(n)
+    # print("got {} invitees".format(len(_invitees)))
+
+    if len(_invitees) == 0:
+        request.session.flash('no invitees left. all done!',
+                              'message_to_staff')
+        return HTTPFound(request.route_url('toolbox'))
+
+    _num_sent = 0
+    _ids_sent = []
+
+    for _m in _invitees:
+        # prepare a random token iff none is set
+        if _m.email_invite_token_bcgv15 is None:
+            _m.email_invite_token_bcgv15 = make_random_token()
+        _url = (
+            request.registry.settings['ticketing.url']
+            + '/lu/' + _m.email_invite_token_bcgv15
+            + '/' + _m.email)
+
+        _body = invite_mail_template.format(
+            _url,  # {0}
+            _m.firstname,  # {1}
+            _m.lastname,  # {2}
+        )
+
+        log.info("mailing event invitation to to member id %s" % _m.id)
+
+        message = Message(
+            subject=(u'[C3S] Invitation to Barcamp and Assembly '
+                     u'/ Einladung zu Barcamp und Generalversammlung'),
+            sender='yes@office.c3s.cc',
+            recipients=[_m.email],
+            body=_body,
+            extra_headers={
+                'Reply-To': 'yes@c3s.cc',
+            }
+        )
+
+        if 'true' in request.registry.settings[
+                'testing.mail_to_console']:
+            # ^^ yes, a little ugly, but works; it's a string
+            # print "printing mail"
+            # print(message.body.encode('utf-8'))
+            pass
+        else:
+            # print "sending mail"
+            mailer = get_mailer(request)
+            mailer.send(message)
+
+        # _m._token = _looong_token
+        _m.email_invite_flag_bcgv15 = True
+        _m.email_invite_date_bcgv15 = datetime.now()
+        if _m.membership_accepted and _m.email_invite_flag_bcgv15:
+            print("YES!!! updated")
+
+        _num_sent += 1
+        _ids_sent.append(_m.id)
+
+    request.session.flash(
+        "sent out {} mails (to members with ids {}".format(
+            _num_sent, _ids_sent),
+        'message_to_staff')
+
+    return HTTPFound(request.route_url('toolbox'))
