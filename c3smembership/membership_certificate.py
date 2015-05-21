@@ -17,6 +17,8 @@ from types import NoneType
 
 from c3smembership.models import C3sMember
 
+DEBUG = False
+
 
 def make_random_token():
     """
@@ -53,10 +55,11 @@ def send_certificate_email(request):
 
     _url = request.route_url('certificate_pdf',
                              id=_m.id, name=_name, token=_m.certificate_token)
-    #print '#'*60
-    #print _m.certificate_token
-    #print _url
-    #print '#'*60
+    if DEBUG:
+        print '#'*60
+        print _m.certificate_token
+        print _url
+        print '#'*60
 
     mailer = get_mailer(request)
     the_message = Message(
@@ -96,11 +99,13 @@ def generate_certificate(request):
 
     try:
         _m = C3sMember.get_by_id(mid)
-        #print _m.firstname
-        #print _m.certificate_token
-        #print type(_m.certificate_token)  # NoneType
-        #print token
-        #print type(token)  # unicode
+
+        if DEBUG:
+            print _m.firstname
+            print _m.certificate_token
+            print type(_m.certificate_token)  # NoneType
+            print token
+            print type(token)  # unicode
         assert(_m.certificate_token is not None)
         assert(str(_m.certificate_token) in str(token))
         assert(str(token) in str(_m.certificate_token))
@@ -108,12 +113,12 @@ def generate_certificate(request):
         from datetime import timedelta
         _2weeks = timedelta(weeks=2)
         token_date = _m.certificate_email_date
-        #print "token_date: {}".format(token_date)
+        # print "token_date: {}".format(token_date)
         present = datetime.now()
         _delta = present - token_date
-        #if (_delta > _2weeks):
+        # if (_delta > _2weeks):
         #    print "more than two weeks!"
-        #else:
+        # else:
         #    print "less than two weeks!"
         assert(_delta < _2weeks)
     except:
@@ -152,13 +157,13 @@ def gen_cert(request, _m):
     # latex header and footer
     latex_header_tex = os.path.abspath(
         os.path.join(here, '../certificate/urkunde_header.tex'))
-    #print("latex header file: %s" % latex_header_tex)
+    # print("latex header file: %s" % latex_header_tex)
     latex_footer_tex = os.path.abspath(
         os.path.join(here, '../certificate/urkunde_footer.tex'))
-    #print("latex footer file: %s" % latex_footer_tex)
-    #print '#'*60
-    #print _m.locale
-    #print '#'*60
+    # print("latex footer file: %s" % latex_footer_tex)
+    # print '#'*60
+    # print _m.locale
+    # print '#'*60
 
     if _m.locale == 'de':
         latex_background_image = os.path.abspath(
@@ -168,19 +173,19 @@ def gen_cert(request, _m):
             os.path.join(here, '../certificate/Urkunde_Hintergrund_EN.pdf'))
     sign_meik = os.path.abspath(
         os.path.join(here, '../certificate/sign_meik.png'))
-    sign_wolfgang = os.path.abspath(
-        os.path.join(here, '../certificate/sign_wolfgang.png'))
+    sign_holger = os.path.abspath(
+        os.path.join(here, '../certificate/sign_holger_la_600.png'))
 
     # a temporary directory for the latex run
     _tempdir = tempfile.mkdtemp()
-    #print("new temporary directory: %s" % _tempdir)
+    # print("new temporary directory: %s" % _tempdir)
 
     latex_file = tempfile.NamedTemporaryFile(
         suffix='.tex',
         dir=_tempdir,
         delete=False,  # directory will be deleted anyways
     )
-    #print "the latex file: {}".format(latex_file.name)
+    # print "the latex file: {}".format(latex_file.name)
 
     # using tempfile
     pdf_file = tempfile.NamedTemporaryFile(
@@ -191,8 +196,8 @@ def gen_cert(request, _m):
     pdf_file.name += '.pdf'
 
     is_founder = True if 'dungHH_' in _m.email_confirm_code else False
-    #print u"email confirm code: {}".format(_m.email_confirm_code)
-    #print u"is a founding member? {}".format(
+    # print u"email confirm code: {}".format(_m.email_confirm_code)
+    # print u"is a founding member? {}".format(
     #    True if 'dungHH_' in _m.email_confirm_code else False)
     # prepare the certificate text
     if _m.locale == 'de':  # german
@@ -255,7 +260,7 @@ def gen_cert(request, _m):
 \def\\txtBlkConfirmDate{%s}
 \def\\signDate{%s}
 \def\signMeik{%s}
-\def\signWolfgang{%s}
+\def\signHolger{%s}
 \def\\txtBlkCEO{%s}
 \def\\txtBlkMembershipNum{%s}
     ''' % (
@@ -275,7 +280,7 @@ def gen_cert(request, _m):
         datetime.strftime(
             date.today(), "%d.%m.%Y") if _m.locale == 'de' else date.today(),
         sign_meik,
-        sign_wolfgang,
+        sign_holger,
         exec_dir,
         mship_num_text,
     )
@@ -307,15 +312,17 @@ def gen_cert(request, _m):
     # finish the latex document
     latex_data += '''
 \input{%s}''' % latex_footer_tex
-    #print '*' * 70
-    #print latex_data
-    #print '*' * 70
+
+    if DEBUG:
+        print '*' * 70
+        print latex_data
+        print '*' * 70
     latex_file.write(latex_data.encode('utf-8'))
     latex_file.seek(0)  # rewind
 
     # pdflatex latex_file to pdf_file
     FNULL = open(os.devnull, 'w')  # hide output here ;-)
-    #pdflatex_output =
+    # pdflatex_output =
     subprocess.call(
         [
             'pdflatex',
@@ -324,16 +331,16 @@ def gen_cert(request, _m):
         ],
         stdout=FNULL, stderr=subprocess.STDOUT  # hide output
     )
-    #print("the output of pdflatex run: %s" % pdflatex_output)
+    # print("the output of pdflatex run: %s" % pdflatex_output)
 
     # debug: open the PDF in a viewer
-    #subprocess.call(
+    # subprocess.call(
     #    [
     #        'evince',
     #        pdf_file.name
     #    ],
     #    stdout=FNULL, stderr=subprocess.STDOUT  # hide output
-    #)
+    # )
 
     # return a pdf file
     response = Response(content_type='application/pdf')
