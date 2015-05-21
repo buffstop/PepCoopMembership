@@ -71,6 +71,15 @@ möglich, antworte uns daher bitte bis zum 05.06.2015.
 Auf der verlinkten Seite kannst Du separat die Teilnahme für die
 Generalversammlung und das Barcamp bestätigen und ggfs. Essen vorbestellen.
 
+Solltet ihr eine Mitfahrgelegenheit nach Potsdam suchen, könnt ihr euch bei
+http://www.matchrider.de kostenlos registrieren. Der Ride Board-Code lautet
+"C3SGV". Alternativ könnt ihr auch unsere Mitfahrgelegenheiten-Liste im
+C3S-Wiki nutzen:
+
+  https://wiki.c3s.cc
+  Name: schwarm
+  Kennwort: letmein
+
 Das wars! Versorge uns mit Themenvorschlägen, plane Deine Fahrt - dann
 sehen wir uns in Potsdam! Bei Fragen kannst Du Dich wie immer an info@c3s.cc
 wenden.
@@ -103,6 +112,14 @@ please respond by June 5th, 2015, at the latest.
 On the linked page you can confirm your participation in the general
 assembly and the BarCamp separately. You can also book a meal for the
 day of the BarCamp.
+
+If you are looking for a ride to Potsdam, you can register for free on
+http://www.matchrider.de . The ride board code is "C3SGV". You can also
+use the list called "Mitfahrgelegenheiten" in our C3S-Wiki.
+
+  https://wiki.c3s.cc
+  username: schwarm
+  keyword: letmein
 
 That's all! Let us know your proposals for topics, plan your trip -- and
 we shall meet in Potsdam!
