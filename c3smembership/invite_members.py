@@ -86,7 +86,7 @@ Das Team der C3S
 Hello {1} {2},
 
 on the 11th of May 2015 you received an email inviting you to the BarCamp
-and general assembly of C3S SCE mbh on the 12th and 13th July of 2015
+and general assembly of C3S SCE mbh on the 12th and 13th June of 2015
 in Potsdam.
 
 If possible, please let us know via this form, whether you
@@ -98,7 +98,7 @@ This is your personal registration link:
 
 Please let us know in time whether you will participate. We must know as
 soon as possible whether the location will be large enough. If possible,
-please respond by July 5th, 2015, at the latest.
+please respond by June 5th, 2015, at the latest.
 
 On the linked page you can confirm your participation in the general
 assembly and the BarCamp separately. You can also book a meal for the
