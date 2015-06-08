@@ -76,16 +76,37 @@ def send_certificate_email(request):
             request=request,
         )
     )
-    mailer.send(the_message)
+    if 'true' in request.registry.settings['testing.mail_to_console']:
+        print('== 8< ======================================================')
+        print(the_message.body)
+        print('====================================================== >8 ==')
+    else:
+        mailer.send(the_message)
     _m.certificate_email = True
     _m.certificate_email_date = datetime.now()
-    return HTTPFound(
-        location=request.route_url(
-            'membership_listing_backend',
-            number=request.cookies['m_on_page'],
-            order=request.cookies['m_order'],
-            orderby=request.cookies['m_orderby']) +
-        '#member_' + str(_m.id))
+
+    if 'detail' in request.referrer:
+        return HTTPFound(
+            location=request.referrer +
+            '#certificate'
+        )
+    else:
+        try:  # iff usefull cookie exists
+            return HTTPFound(
+                location=request.route_url(
+                    'membership_listing_backend',
+                    number=request.cookies['m_on_page'],
+                    order=request.cookies['m_order'],
+                    orderby=request.cookies['m_orderby']) +
+                '#member_' + str(_m.id))
+        except:  # iff no good cookie found
+            return HTTPFound(
+                location=request.route_url(
+                    'membership_listing_backend',
+                    number=0,
+                    order='asc',
+                    orderby='id') +
+                '#member_' + str(_m.id))
 
 
 @view_config(permission='view',
