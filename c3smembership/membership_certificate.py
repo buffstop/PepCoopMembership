@@ -188,7 +188,7 @@ def gen_cert(request, _m):
 
     if _m.locale == 'de':
         latex_background_image = os.path.abspath(
-            os.path.join(here, '../certificate/Urkunde_Hintergrund.pdf'))
+            os.path.join(here, '../certificate/Urkunde_Hintergrund_blank.pdf'))
     else:
         latex_background_image = os.path.abspath(
             os.path.join(here, '../certificate/Urkunde_Hintergrund_EN.pdf'))
@@ -307,7 +307,7 @@ def gen_cert(request, _m):
     )
     if _m.is_legalentity:  # XXX TODO: field of company name
         latex_data += '''
-\def\\company{%s}''' % _m.firstname
+\def\\company{%s}''' % _m.lastname
     if _m.address2 is not u'':  # add address part 2 iff exists
         latex_data += '''
 \def\\addressTwo{%s}''' % _m.address2
