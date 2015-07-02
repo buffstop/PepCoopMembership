@@ -39,6 +39,7 @@ def send_certificate_email(request):
     send a mail to a member with a link
     so the mamber can get her membership certificate
     '''
+    # print request.referrer  # note: will fail in tests
     mid = request.matchdict['id']
     _m = C3sMember.get_by_id(mid)
     if isinstance(_m, NoneType) or not _m.membership_accepted:
@@ -55,7 +56,7 @@ def send_certificate_email(request):
 
     _url = request.route_url('certificate_pdf',
                              id=_m.id, name=_name, token=_m.certificate_token)
-    if DEBUG:
+    if DEBUG:  # pragma: no cover
         print '#'*60
         print _m.certificate_token
         print _url
@@ -76,7 +77,8 @@ def send_certificate_email(request):
             request=request,
         )
     )
-    if 'true' in request.registry.settings['testing.mail_to_console']:
+    if 'true' in request.registry.settings[
+            'testing.mail_to_console']:  # pragma: no cover
         print('== 8< ======================================================')
         print(the_message.body)
         print('====================================================== >8 ==')
@@ -85,7 +87,13 @@ def send_certificate_email(request):
     _m.certificate_email = True
     _m.certificate_email_date = datetime.now()
 
-    if 'detail' in request.referrer:
+    try:
+        if 'detail' in request.referrer:  # pragma: no cover
+            _special_condition = True
+    except:
+        _special_condition = False
+
+    if _special_condition:  # pragma: no cover
         return HTTPFound(
             location=request.referrer +
             '#certificate'
@@ -99,7 +107,7 @@ def send_certificate_email(request):
                     order=request.cookies['m_order'],
                     orderby=request.cookies['m_orderby']) +
                 '#member_' + str(_m.id))
-        except:  # iff no good cookie found
+        except:  # pragma: no cover  # iff no good cookie found
             return HTTPFound(
                 location=request.route_url(
                     'membership_listing_backend',
@@ -121,7 +129,7 @@ def generate_certificate(request):
     try:
         _m = C3sMember.get_by_id(mid)
 
-        if DEBUG:
+        if DEBUG:  # pragma: no cover
             print _m.firstname
             print _m.certificate_token
             print type(_m.certificate_token)  # NoneType
@@ -303,8 +311,13 @@ def gen_cert(request, _m):
         sign_meik,
         sign_holger,
         exec_dir,
-        mship_num_text,
+        mship_num_text
     )
+    if DEBUG:  # pragma: no cover
+        print('#'*60)
+        print(_m.is_legalentity)
+        print(_m.lastname)
+        print('#'*60)
     if _m.is_legalentity:  # XXX TODO: field of company name
         latex_data += '''
 \def\\company{%s}''' % _m.lastname
@@ -334,7 +347,10 @@ def gen_cert(request, _m):
     latex_data += '''
 \input{%s}''' % latex_footer_tex
 
-    if DEBUG:
+    # DEBUG = True
+    if DEBUG:  # pragma: no cover
+        print '*' * 70
+        print('*' * 30, 'latex data: ', '*' * 30)
         print '*' * 70
         print latex_data
         print '*' * 70
