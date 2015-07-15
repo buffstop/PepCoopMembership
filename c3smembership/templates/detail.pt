@@ -251,7 +251,7 @@
           <tr>
             <td>PDF generieren (download)</td>
             <td>
-              <a href="${request.route_url('certificate_pdf_staff', id=member.id, name=member.lastname+member.firstname)}"
+              <a href="${request.route_url('certificate_pdf_staff', id=member.id, name=cert_link)}"
                  title="Mitgliedschaftsurkunde ansehen"
                  class="btn btn-success">PDF generieren und laden</a>
             </td>

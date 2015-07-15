@@ -515,8 +515,24 @@ def member_detail(request):
         form.set_appstruct(appstruct)
         # print("the appstruct: %s") % appstruct
     html = form.render()
+    
+    # make pretty link for certificate download
+    if _member.is_legalentity:
+        _cert_link = _member.lastname
+    else:
+        _cert_link = _member.firstname + _member.lastname
+
+    _cert_link = _cert_link.replace(
+        u'&', u'+').replace(
+        u' ', u'_').replace(
+        u'.', u'').replace(
+        u'ä', u'ae').replace(
+        u'ö', u'oe').replace(
+        u'ü', u'ue').replace(
+        u'.', u'')
 
     return {'member': _member,
+            'cert_link': _cert_link,
             'form': html}
 
 
