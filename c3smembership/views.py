@@ -79,281 +79,6 @@ if LOGGING:  # pragma: no cover
     log = logging.getLogger(__name__)
 
 
-@view_config(renderer='templates/success.pt',
-             route_name='success')
-def show_success(request):
-    """
-    This view shows a success page with the data gathered through the form
-    and a link (button) back to the form
-    in case some data is wrong/needs correction.
-    There is also a button to confirm the dataset
-    and have an email set to the user for validation.
-    """
-    # check if user has used the form or 'guessed' this URL
-    if ('appstruct' in request.session):
-        # we do have valid info from the form in the session
-        appstruct = request.session['appstruct']
-        # delete old messages from the session (from invalid form input)
-        request.session.pop_flash('message_above_form')
-        # print("show_success: locale: %s") % appstruct['_LOCALE_']
-        return {
-            'firstname': appstruct['person']['firstname'],
-            'lastname': appstruct['person']['lastname'],
-        }
-    # 'else': send user to the form
-    return HTTPFound(location=request.route_url('join'))
-
-
-@view_config(route_name='success_pdf')
-def show_success_pdf(request):
-    """
-    Given there is valid information in the session
-    this view sends an encrypted mail to C3S staff with the users data set
-    and returns a PDF for the user.
-
-    It is called after visiting the verification URL/page/view in
-    def success_verify_email below.
-    """
-    # check if user has used form or 'guessed' this URL
-    if ('appstruct' in request.session):
-        # we do have valid info from the form in the session
-        # print("-- valid session with data found")
-        # send mail to accountants // prepare a mailer
-        mailer = get_mailer(request)
-        # prepare mail
-        appstruct = request.session['appstruct']
-        message_recipient = request.registry.settings['c3smembership.mailaddr']
-        appstruct['message_recipient'] = message_recipient
-        the_mail = accountant_mail(appstruct)
-        if 'true' in request.registry.settings['testing.mail_to_console']:
-            print(the_mail.body)
-        else:
-            mailer.send(the_mail)
-
-        return generate_pdf(request.session['appstruct'])
-    # 'else': send user to the form
-    # print("-- no valid session with data found")
-    return HTTPFound(location=request.route_url('join'))
-
-
-@view_config(
-    renderer='templates/check-mail.pt',
-    route_name='success_check_email')
-def success_check_email(request):
-    """
-    This view is called from the page that shows a user her data for correction
-    by clicking a "send email" button.
-    This view then sends out the email with a verification link
-    and returns a note to go check mail.
-    """
-    # check if user has used the form (good) or 'guessed' this URL (bad)
-
-    if ('appstruct' in request.session):
-        # we do have valid info from the form in the session (good)
-        appstruct = request.session['appstruct']
-        from pyramid_mailer.message import Message
-        try:
-            mailer = get_mailer(request)
-        except:
-            return HTTPFound(location=request.route_url('join'))
-            # ToDo: handle excpetion
-
-        # XXX TODO: check for locale, choose language for body text
-        # build the emails body
-        if 'de' in appstruct['person']['_LOCALE_']:
-            the_mail_body = u'''
-hallo {} {}!
-
-bitte benutze diesen Link um deine E-Mail-Adresse zu bestätigen
-und dein PDF herunterzuladen:
-
-   {}/verify/{}/{}
-
-Danke!
-
-Dein C3S Team
-            '''
-        else:
-            the_mail_body = u'''
-hello {} {}!
-
-please use this link to verify your email address
-and download your personalised PDF:
-
-   {}/verify/{}/{}
-
-thanks!
-
-Your C3S team
-            '''
-        the_mail = Message(
-            subject=_("C3S: confirm your email address and load your PDF"),
-            sender="noreply@c3s.cc",
-            recipients=[appstruct['person']['email']],
-            body=the_mail_body.format(
-                appstruct['person']['firstname'],
-                appstruct['person']['lastname'],
-                request.registry.settings['c3smembership.url'],
-                appstruct['person']['email'],
-                appstruct['email_confirm_code']
-            )
-        )
-        if 'true' in request.registry.settings['testing.mail_to_console']:
-            print(the_mail.body)
-        else:
-            mailer.send(the_mail)
-
-        # make the session go away
-        request.session.invalidate()
-        return {
-            'firstname': appstruct['person']['firstname'],
-            'lastname': appstruct['person']['lastname'],
-        }
-    # 'else': send user to the form
-    return HTTPFound(location=request.route_url('join'))
-
-
-# @view_config(
-#     renderer='templates/verify_password.pt',
-#     route_name='verify_password')
-# def verify_password(request):
-#     """
-#     This view is called via links sent in mails to verify mail addresses.
-#     It extracts both email and verification code from the URL
-#     and checks if there is a match in the database.
-#     """
-#     #dbsession = DBSession()
-#     # collect data from the URL/matchdict
-#     user_email = request.matchdict['email']
-#     #print(user_email)
-#     confirm_code = request.matchdict['code']
-#     #print(confirm_code)
-#     # get matching dataset from DB
-#     member = C3sMember.get_by_code(confirm_code)  # returns a member or None
-#     #print(member)
-
-#     return {'foo': 'bar'}
-
-
-@view_config(
-    renderer='templates/verify_password.pt',
-    route_name='verify_email_password')
-def success_verify_email(request):
-    """
-    This view is called via links sent in mails to verify mail addresses.
-    It extracts both email and verification code from the URL.
-    It will ask for a password
-    and checks if there is a match in the database.
-
-    If the password matches, and all is correct,
-    the view shows a download link and further info.
-    """
-    # collect data from the URL/matchdict
-    user_email = request.matchdict['email']
-    confirm_code = request.matchdict['code']
-    # if we want to ask the user for her password (through a form)
-    # we need to have a url to send the form to
-    post_url = '/verify/' + user_email + '/' + confirm_code
-
-    if 'submit' in request.POST:
-        # print("the form was submitted")
-        request.session.pop_flash('message_above_form')
-        request.session.pop_flash('message_above_login')
-        # check for password ! ! !
-        if 'password' in request.POST:
-            _passwd = request.POST['password']
-
-        # get matching dataset from DB
-        member = C3sMember.get_by_code(confirm_code)  # returns member or None
-
-        if isinstance(member, NoneType):
-            # member not found: FAIL!
-            # print("a matching entry for this code was not found.")
-            not_found_msg = _(
-                u"Not found. Check verification URL. "
-                "If all seems right, please use the form again.")
-            return {
-                'correct': False,
-                'namepart': '',
-                'result_msg': not_found_msg,
-            }
-
-        # check if the password is valid
-        try:
-            correct = C3sMember.check_password(member.id, _passwd)
-        except AttributeError:
-            correct = False
-            request.session.flash(
-                _(u'Wrong Password!'),
-                'message_above_login')
-
-        # check if info from DB makes sense
-        # -member
-
-        if ((member.email == user_email) and correct):
-            # print("-- found member, code matches, password too. COOL!")
-            # set the email_is_confirmed flag in the DB for this signee
-            member.email_is_confirmed = True
-            # dbsession.flush()
-            namepart = member.firstname + member.lastname
-            import re
-            PdfFileNamePart = re.sub(  # replace characters
-                '[^a-zA-Z0-9]',  # other than these
-                '_',  # with an underscore
-                namepart)
-
-            appstruct = {
-                'firstname': member.firstname,
-                'lastname': member.lastname,
-                'email': member.email,
-                'email_confirm_code': member.email_confirm_code,
-                'address1': member.address1,
-                'address2': member.address2,
-                'postcode': member.postcode,
-                'city': member.city,
-                'country': member.country,
-                '_LOCALE_': member.locale,
-                'date_of_birth': member.date_of_birth,
-                'date_of_submission': member.date_of_submission,
-                # 'activity': set(activities),
-                # 'invest_member': u'yes' if member.invest_member else u'no',
-                'membership_type': member.membership_type,
-                'member_of_colsoc': u'yes' if member.member_of_colsoc else u'no',
-                'name_of_colsoc': member.name_of_colsoc,
-                # 'opt_band': signee.opt_band,
-                # 'opt_URL': signee.opt_URL,
-                'num_shares': member.num_shares,
-            }
-            request.session['appstruct'] = appstruct
-
-            # log this person in, using the session
-            log.info('verified code and password for id %s' % member.id)
-            request.session.save()
-            return {
-                'firstname': member.firstname,
-                'lastname': member.lastname,
-                'code': member.email_confirm_code,
-                'correct': True,
-                'namepart': PdfFileNamePart,
-                'result_msg': _("Success. Load your PDF!")
-            }
-    # else: code did not match OR SOMETHING...
-    # just display the form
-    request.session.flash(
-        _(u"Please enter your password."),
-        'message_above_login',
-        allow_duplicate=False
-    )
-    return {
-        'post_url': post_url,
-        'firstname': '',
-        'lastname': '',
-        'namepart': '',
-        'correct': False,
-        'result_msg': "something went wrong."
-    }
-
-
 @view_config(renderer='templates/join.pt',
              route_name='join')
 def join_c3s(request):
@@ -838,3 +563,278 @@ def join_c3s(request):
     html = form.render()
 
     return {'form': html}
+
+
+@view_config(renderer='templates/success.pt',
+             route_name='success')
+def show_success(request):
+    """
+    This view shows a success page with the data gathered through the form
+    and a link (button) back to the form
+    in case some data is wrong/needs correction.
+    There is also a button to confirm the dataset
+    and have an email set to the user for validation.
+    """
+    # check if user has used the form or 'guessed' this URL
+    if ('appstruct' in request.session):
+        # we do have valid info from the form in the session
+        appstruct = request.session['appstruct']
+        # delete old messages from the session (from invalid form input)
+        request.session.pop_flash('message_above_form')
+        # print("show_success: locale: %s") % appstruct['_LOCALE_']
+        return {
+            'firstname': appstruct['person']['firstname'],
+            'lastname': appstruct['person']['lastname'],
+        }
+    # 'else': send user to the form
+    return HTTPFound(location=request.route_url('join'))
+
+
+@view_config(
+    renderer='templates/check-mail.pt',
+    route_name='success_check_email')
+def success_check_email(request):
+    """
+    This view is called from the page that shows a user her data for correction
+    by clicking a "send email" button.
+    This view then sends out the email with a verification link
+    and returns a note to go check mail.
+    """
+    # check if user has used the form (good) or 'guessed' this URL (bad)
+
+    if ('appstruct' in request.session):
+        # we do have valid info from the form in the session (good)
+        appstruct = request.session['appstruct']
+        from pyramid_mailer.message import Message
+        try:
+            mailer = get_mailer(request)
+        except:
+            return HTTPFound(location=request.route_url('join'))
+            # ToDo: handle excpetion
+
+        # XXX TODO: check for locale, choose language for body text
+        # build the emails body
+        if 'de' in appstruct['person']['_LOCALE_']:
+            the_mail_body = u'''
+hallo {} {}!
+
+bitte benutze diesen Link um deine E-Mail-Adresse zu bestätigen
+und dein PDF herunterzuladen:
+
+   {}/verify/{}/{}
+
+Danke!
+
+Dein C3S Team
+            '''
+        else:
+            the_mail_body = u'''
+hello {} {}!
+
+please use this link to verify your email address
+and download your personalised PDF:
+
+   {}/verify/{}/{}
+
+thanks!
+
+Your C3S team
+            '''
+        the_mail = Message(
+            subject=_("C3S: confirm your email address and load your PDF"),
+            sender="noreply@c3s.cc",
+            recipients=[appstruct['person']['email']],
+            body=the_mail_body.format(
+                appstruct['person']['firstname'],
+                appstruct['person']['lastname'],
+                request.registry.settings['c3smembership.url'],
+                appstruct['person']['email'],
+                appstruct['email_confirm_code']
+            )
+        )
+        if 'true' in request.registry.settings['testing.mail_to_console']:
+            print(the_mail.body)
+        else:
+            mailer.send(the_mail)
+
+        # make the session go away
+        request.session.invalidate()
+        return {
+            'firstname': appstruct['person']['firstname'],
+            'lastname': appstruct['person']['lastname'],
+        }
+    # 'else': send user to the form
+    return HTTPFound(location=request.route_url('join'))
+
+
+# @view_config(
+#     renderer='templates/verify_password.pt',
+#     route_name='verify_password')
+# def verify_password(request):
+#     """
+#     This view is called via links sent in mails to verify mail addresses.
+#     It extracts both email and verification code from the URL
+#     and checks if there is a match in the database.
+#     """
+#     #dbsession = DBSession()
+#     # collect data from the URL/matchdict
+#     user_email = request.matchdict['email']
+#     #print(user_email)
+#     confirm_code = request.matchdict['code']
+#     #print(confirm_code)
+#     # get matching dataset from DB
+#     member = C3sMember.get_by_code(confirm_code)  # returns a member or None
+#     #print(member)
+
+#     return {'foo': 'bar'}
+
+
+@view_config(
+    renderer='templates/verify_password.pt',
+    route_name='verify_email_password')
+def success_verify_email(request):
+    """
+    This view is called via links sent in mails to verify mail addresses.
+    It extracts both email and verification code from the URL.
+    It will ask for a password
+    and checks if there is a match in the database.
+
+    If the password matches, and all is correct,
+    the view shows a download link and further info.
+    """
+    # collect data from the URL/matchdict
+    user_email = request.matchdict['email']
+    confirm_code = request.matchdict['code']
+    # if we want to ask the user for her password (through a form)
+    # we need to have a url to send the form to
+    post_url = '/verify/' + user_email + '/' + confirm_code
+
+    if 'submit' in request.POST:
+        # print("the form was submitted")
+        request.session.pop_flash('message_above_form')
+        request.session.pop_flash('message_above_login')
+        # check for password ! ! !
+        if 'password' in request.POST:
+            _passwd = request.POST['password']
+
+        # get matching dataset from DB
+        member = C3sMember.get_by_code(confirm_code)  # returns member or None
+
+        if isinstance(member, NoneType):
+            # member not found: FAIL!
+            # print("a matching entry for this code was not found.")
+            not_found_msg = _(
+                u"Not found. Check verification URL. "
+                "If all seems right, please use the form again.")
+            return {
+                'correct': False,
+                'namepart': '',
+                'result_msg': not_found_msg,
+            }
+
+        # check if the password is valid
+        try:
+            correct = C3sMember.check_password(member.id, _passwd)
+        except AttributeError:
+            correct = False
+            request.session.flash(
+                _(u'Wrong Password!'),
+                'message_above_login')
+
+        # check if info from DB makes sense
+        # -member
+
+        if ((member.email == user_email) and correct):
+            # print("-- found member, code matches, password too. COOL!")
+            # set the email_is_confirmed flag in the DB for this signee
+            member.email_is_confirmed = True
+            # dbsession.flush()
+            namepart = member.firstname + member.lastname
+            import re
+            PdfFileNamePart = re.sub(  # replace characters
+                '[^a-zA-Z0-9]',  # other than these
+                '_',  # with an underscore
+                namepart)
+
+            appstruct = {
+                'firstname': member.firstname,
+                'lastname': member.lastname,
+                'email': member.email,
+                'email_confirm_code': member.email_confirm_code,
+                'address1': member.address1,
+                'address2': member.address2,
+                'postcode': member.postcode,
+                'city': member.city,
+                'country': member.country,
+                '_LOCALE_': member.locale,
+                'date_of_birth': member.date_of_birth,
+                'date_of_submission': member.date_of_submission,
+                # 'activity': set(activities),
+                # 'invest_member': u'yes' if member.invest_member else u'no',
+                'membership_type': member.membership_type,
+                'member_of_colsoc': u'yes' if member.member_of_colsoc else u'no',
+                'name_of_colsoc': member.name_of_colsoc,
+                # 'opt_band': signee.opt_band,
+                # 'opt_URL': signee.opt_URL,
+                'num_shares': member.num_shares,
+            }
+            request.session['appstruct'] = appstruct
+
+            # log this person in, using the session
+            log.info('verified code and password for id %s' % member.id)
+            request.session.save()
+            return {
+                'firstname': member.firstname,
+                'lastname': member.lastname,
+                'code': member.email_confirm_code,
+                'correct': True,
+                'namepart': PdfFileNamePart,
+                'result_msg': _("Success. Load your PDF!")
+            }
+    # else: code did not match OR SOMETHING...
+    # just display the form
+    request.session.flash(
+        _(u"Please enter your password."),
+        'message_above_login',
+        allow_duplicate=False
+    )
+    return {
+        'post_url': post_url,
+        'firstname': '',
+        'lastname': '',
+        'namepart': '',
+        'correct': False,
+        'result_msg': "something went wrong."
+    }
+
+
+@view_config(route_name='success_pdf')
+def show_success_pdf(request):
+    """
+    Given there is valid information in the session
+    this view sends an encrypted mail to C3S staff with the users data set
+    and returns a PDF for the user.
+
+    It is called after visiting the verification URL/page/view in
+    def success_verify_email below.
+    """
+    # check if user has used form or 'guessed' this URL
+    if ('appstruct' in request.session):
+        # we do have valid info from the form in the session
+        # print("-- valid session with data found")
+        # send mail to accountants // prepare a mailer
+        mailer = get_mailer(request)
+        # prepare mail
+        appstruct = request.session['appstruct']
+        message_recipient = request.registry.settings['c3smembership.mailaddr']
+        appstruct['message_recipient'] = message_recipient
+        the_mail = accountant_mail(appstruct)
+        if 'true' in request.registry.settings['testing.mail_to_console']:
+            print(the_mail.body)
+        else:
+            mailer.send(the_mail)
+
+        return generate_pdf(request.session['appstruct'])
+    # 'else': send user to the form
+    # print("-- no valid session with data found")
+    return HTTPFound(location=request.route_url('join'))
