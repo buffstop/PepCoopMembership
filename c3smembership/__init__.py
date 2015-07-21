@@ -1,4 +1,6 @@
-
+"""
+This module holds the main method: config and route declarations
+"""
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
