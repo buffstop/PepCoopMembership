@@ -7,6 +7,13 @@
 Welcome to c3sMembership's documentation!
 =========================================
 
+This app handles membership for C3S SCE
+(Cultural Commons Collecting Society SCE mit beschränkter Haftung.
+
+It used to be the form to aquire members now has functionality
+to cater for the whole life cycle of memberships.
+
+
 Contents:
 
 .. toctree::
