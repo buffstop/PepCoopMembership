@@ -8,28 +8,20 @@ This module holds the views for membership acquisition.
 - success_verify_email: verify email address, present PDF link
 - show_success_pdf: let user download her pdf for printout
 """
-from c3smembership.utils import (
-    generate_pdf,
-    accountant_mail,
-)
-from c3smembership.models import (
-    C3sMember,
-    DBSession,
-)
-from types import NoneType
-from pkg_resources import resource_filename
+
 import colander
+from colander import (
+    Invalid,
+    Range,
+)
 from datetime import (
     date,
     datetime,
 )
 import deform
 from deform import ValidationFailure
-from colander import (
-    Invalid,
-    Range,
-)
 
+from pkg_resources import resource_filename
 from pyramid.i18n import (
     get_localizer,
     get_locale_name,
@@ -43,6 +35,18 @@ from sqlalchemy.exc import (
     InvalidRequestError,
 )
 from translationstring import TranslationStringFactory
+from types import NoneType
+
+
+from c3smembership.utils import (
+    generate_pdf,
+    accountant_mail,
+)
+from c3smembership.models import (
+    C3sMember,
+    DBSession,
+)
+
 
 deform_templates = resource_filename('deform', 'templates')
 c3smembership_templates = resource_filename('c3smembership', 'templates')
