@@ -15,6 +15,7 @@ off/
 pyramid.pid
 python-eggs/
 pytz-2014.9-py2.7.egg
+static_docs/
 
 # ignore local test settings
 nosetests.xml

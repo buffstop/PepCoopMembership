@@ -1,4 +1,18 @@
 # -*- coding: utf-8 -*-
+"""
+This module holds functionality to handle Membership Certificates.
+
+- Send out email with individual links.
+- Generate certificate PDFs for users.
+- Generate certificate PDFs for staff.
+
+The actual PDFs are generated using *pdflatex*.
+
+The LaTeX templates for this have been factured out into a private repository,
+because we do not want others to be able to re-create our membership
+certificates and also because there are files contained
+that we do not want to be public, e.g. signatures.
+"""
 from datetime import (
     date,
     datetime
@@ -22,7 +36,7 @@ DEBUG = False
 
 def make_random_token():
     """
-    used as token to allow access to certificate
+    Generate a random token used to allow access to certificate.
     """
     import random
     import string
@@ -36,8 +50,8 @@ def make_random_token():
              route_name='certificate_mail')
 def send_certificate_email(request):
     '''
-    send a mail to a member with a link
-    so the mamber can get her membership certificate
+    Send email to a member with a link
+    so the member can get her membership certificate.
     '''
     # print request.referrer  # note: will fail in tests
     mid = request.matchdict['id']
@@ -121,7 +135,7 @@ def send_certificate_email(request):
              route_name='certificate_pdf')
 def generate_certificate(request):
     '''
-    generate a membership_certificate for a member
+    Generate a membership_certificate for a member.
     '''
     mid = request.matchdict['id']
     token = request.matchdict['token']
@@ -163,7 +177,7 @@ def generate_certificate(request):
              route_name='certificate_pdf_staff')
 def generate_certificate_staff(request):
     '''
-    generate a membership_certificate for staffers
+    Generate a membership_certificate for staffers.
     '''
     mid = request.matchdict['id']
 
@@ -179,7 +193,7 @@ def generate_certificate_staff(request):
 
 def gen_cert(request, _m):
     '''
-    create a membership certificate PDF file using pdflatex
+    Utility function: create a membership certificate PDF file using pdflatex
     '''
     import os
     here = os.path.dirname(__file__)

@@ -19,6 +19,12 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   overview/index
+   code/index
+   models/index
+   tests/index
+   hacking/index
+   deployment/index
    license_texts/index
 
 

@@ -1,5 +1,24 @@
 # -*- coding: utf-8 -*-
+"""
+This module holds functionality to handle the C3S SCEs membership list.
 
+Having and maintaining an alphabetical membership list is one of the
+obligations of an association like the C3S SCE.
+
+The list is available in several formats:
+
+- HTML with clickable links for browsing
+- HTML without links for printout
+- PDF (created with pdflatex) for printout (preferred!)
+
+There are also some historic utility functions for reference:
+
+- Turn founders into members
+- Turn crowdfunders into members
+- Turn form users into members
+- Flag duplicates
+- Merge duplicates
+"""
 from datetime import datetime
 import os
 from pyramid.httpexceptions import HTTPFound

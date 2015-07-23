@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+"""
+This module holds some search functionality:
+
+- Search for People (by lastname, with auto complete)
+- Search for Reference Codes (with auto complete)
+
+Buttons with links to the search views are placed in the toolbox.
+"""
 import colander
 import deform
 
@@ -13,18 +21,17 @@ from c3smembership.models import C3sMember
              permission='manage')
 def search_people(request):
     '''
-    search for people
-    '''
-    '''
-    we use a form with autocomplete to let staff find entries faster
+    Search for people.
+
+    We use a form with autocomplete to let staff find entries faster.
     '''
     # check for input from "find people" form
     if 'code_to_show' in request.POST:
         try:
             _code = request.POST['code_to_show']
-            #print u"_code = {}".format(_code)
+            # print u"_code = {}".format(_code)
             _code_ = _code.split(' ')[0]
-            #print u"_code_ = {}".format(_code_)
+            # print u"_code_ = {}".format(_code_)
             _entry = C3sMember.get_by_code(_code_)
 
             return HTTPFound(
@@ -67,20 +74,19 @@ def search_people(request):
              permission='manage')
 def search_codes(request):
     '''
-    search for codes
-    '''
-    '''
-    we use a form with autocomplete to let staff find entries faster
+    Search for Reference Codes
+
+    We use a form with autocomplete to let staff find entries faster.
     '''
     # check for input from "find people" form
     if 'code_to_show' in request.POST:
         try:
             _code = request.POST['code_to_show']
-            #print u"_code = {}".format(_code)
+            # print u"_code = {}".format(_code)
             _code_ = _code.split(' ')[0]
-            #print u"_code_ = {}".format(_code_)
+            # print u"_code_ = {}".format(_code_)
             _entry = C3sMember.get_by_code(_code_)
-            #print _entry
+            # print _entry
 
             return HTTPFound(
                 location=request.route_url(
@@ -118,3 +124,5 @@ def search_codes(request):
     return {
         'refcodeform': refcodeformhtml,
     }
+    '''
+    '''
