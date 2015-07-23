@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+This module has functionality to let staff do administrative tasks.
+"""
+
 from c3smembership.models import (
     C3sMember,
     C3sStaff,
@@ -67,9 +71,29 @@ if LOGGING:  # pragma: no cover
              route_name='toolbox')
 def toolbox(request):
     """
-    This view shows some options
+    Toolbox: This view shows many options.
+
+    The view is rather minimal, but the template has all the links:
+
+    - Statistics and Reporting
+       - Statistics
+       - Annual Reporting
+       - Postal Codes (TODO)
+    - Search
+       - Search for Codes
+       - Search for People
+    - Applications for Membership
+       - AfM dashboard
+       - AfMs ready for approval by the board
+    - Members List (HTML)
+       - with links -- useful for interaction (like the dashboard)
+       - without links -- useful for printout
+       - Alphabetical Aufstockers List
+    - Members List (PDF)
+    - Import & Export
+    - ...
     """
-    
+
     return {
         'date': date.today().strftime('%Y-%m-%d')
     }
@@ -80,8 +104,10 @@ def toolbox(request):
              route_name='staff')
 def staff_view(request):
     """
-    This view lets admins edit staff/cashier personnel:
-    who may act as cashier etc.?
+    This view lets admins edit staff personnel.
+
+    - edit/change password
+    - delete
     """
     _staffers = C3sStaff.get_all()
 
@@ -216,7 +242,9 @@ your membership tool''' % (staffer.login,
              route_name='delete_afms')
 def delete_afms(request):
     '''
-    delete a bunch of AfMs in one go
+    Delete a bunch of AfMs in one go.
+
+    I wrote this while implementing mass import to ease development 8-)
     '''
     class DeleteAfMRange(colander.MappingSchema):
         first = colander.SchemaNode(
@@ -266,7 +294,10 @@ def delete_afms(request):
              route_name='mail_mail_confirmation')
 def mail_mail_conf(request):
     '''
-    send email to member to confirm her email address by clicking a link
+    Send email to member to confirm her email address by clicking a link.
+
+    Needed for applications that came in solely on paper
+    and were digitalized/entered into DB by staff.
     '''
     afmid = request.matchdict['memberid']
     afm = C3sMember.get_by_id(afmid)
@@ -365,7 +396,10 @@ Best wishes :: The C3S Team
              route_name='verify_afm_email')
 def verify_mailaddress_conf(request):
     '''
-    let member confirm her email address by clicking a link
+    Let a prospective member confirm her email address by clicking a link.
+
+    Needed for applications that came in solely on paper
+    and were digitalized/entered into DB by staff.
     '''
     user_email = request.matchdict['email']
     refcode = request.matchdict['refcode']
@@ -387,7 +421,9 @@ def verify_mailaddress_conf(request):
             'confirmed': False,
             'firstname': afm.firstname,
             'lastname': afm.lastname,
-            'result_msg': 'your token is invalid. please contact office@c3s.cc!',
+            'result_msg': (
+                'your token is invalid. '
+                'please contact office@c3s.cc!'),
         }
 
     try:
@@ -429,7 +465,10 @@ def verify_mailaddress_conf(request):
              route_name='mail_mtype_form')
 def mail_mtype_fixer_link(request):
     '''
-    send email to member to set her membership type details by visiting a form
+    Send email to prospective member
+    to let her set her membership type details by visiting a form.
+
+    Was needed for crowdfunders from startnext: data was missing.
     '''
     afmid = request.matchdict['afmid']
     afm = C3sMember.get_by_id(afmid)
@@ -487,7 +526,9 @@ def mail_mtype_fixer_link(request):
              route_name='mtype_form')
 def membership_status_fixer(request):
     '''
-    let member confirm her email membership details by filling a form
+    Let a prospective member confirm her email address by filling a form.
+
+    Was needed for crowdfunders from startnext: data was missing.
     '''
     user_email = request.matchdict['email']
     refcode = request.matchdict['refcode']
@@ -525,7 +566,8 @@ def membership_status_fixer(request):
             'confirmed': False,
             # 'firstname': afm.firstname,
             # 'lastname': afm.lastname,
-            'result_msg': 'your token is invalid. please contact office@c3s.cc!',
+            'result_msg': ('your token is invalid. '
+                           'please contact office@c3s.cc!'),
         }
 
     try:
@@ -691,6 +733,6 @@ def membership_status_fixer(request):
              route_name='mtype_thanks')
 def membership_status_thanks(request):
     '''
-    say thanks
+    say thanks afterwards.
     '''
     return {'foo': 'bar'}

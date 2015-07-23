@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-import os
+# import os
 import unittest
 import tempfile
 import unicodecsv
@@ -30,19 +30,19 @@ class ImportExportTests(unittest.TestCase):
         try:
             DBSession.close()
             DBSession.remove()
-            #print "closed and removed DBSession"
+            # print "closed and removed DBSession"
         except:
             pass
-            #print "no session to close"
-        #try:
+            # print "no session to close"
+        # try:
         #    os.remove('test_import.db')
         #    #print "deleted old test database"
-        #except:
+        # except:
         #    pass
         #    #print "never mind"
-       # self.session = DBSession()
+        # self.session = DBSession()
         my_settings = {
-            #'sqlalchemy.url': 'sqlite:///test_import.db',
+            # 'sqlalchemy.url': 'sqlite:///test_import.db',
             'sqlalchemy.url': 'sqlite:///:memory:',
             'available_languages': 'da de en es fr',
             'c3smembership.dashboard_number': '30',
@@ -80,9 +80,9 @@ class ImportExportTests(unittest.TestCase):
             try:
                 DBSession.add(accountants_group)
                 DBSession.flush()
-                #print("adding group staff")
+                # print("adding group staff")
             except:
-                #print("could not add group staff.")
+                # print("could not add group staff.")
                 pass
             # staff personnel
             staffer1 = C3sStaff(
@@ -96,7 +96,7 @@ class ImportExportTests(unittest.TestCase):
                 DBSession.add(staffer1)
                 DBSession.flush()
             except:
-                #print("it borked! (rut)")
+                # print("it borked! (rut)")
                 pass
 
         from c3smembership import main
@@ -108,7 +108,7 @@ class ImportExportTests(unittest.TestCase):
     def tearDown(self):
         DBSession.close()
         DBSession.remove()
-        #os.remove('test_import.db')
+        # os.remove('test_import.db')
         testing.tearDown()
 
     def test_import(self):
@@ -117,7 +117,7 @@ class ImportExportTests(unittest.TestCase):
         """
         # try unauthenticated
         res = self.testapp.get('/import_all', status=403)  # 403: forbidden
-        #print res.body
+        # print res.body
         #
         # login
         #
@@ -129,25 +129,24 @@ class ImportExportTests(unittest.TestCase):
         form['password'] = 'berries'
         res2 = form.submit('submit', status=302)
         #
-        #print(res2.body)
+        # print(res2.body)
         # being logged in ...
         res3 = res2.follow()
         res3 = res3.follow()
-        #print '-#-' * 10
-        #print res3.body
+        # print '-#-' * 10
+        # print res3.body
         self.failUnless(
             'Dashboard' in res3.body)
         # now try authenticated
         res = self.testapp.get('/import_all', status=302)
         res2 = res.follow()
-        #print res2.body
+        # print res2.body
 
         # XXX check database contents
         how_many = C3sMember.get_number()
         self.assertTrue(how_many is 3)
         crowd = C3sMember.member_listing(
             "id", how_many=C3sMember.get_number(), order="asc")
-        #import pdb; pdb.set_trace()
         self.assertTrue(u'SomeFirstnäme' in crowd[0].firstname)
         self.assertTrue('Alice' in crowd[1].firstname)
         self.assertTrue(u'Göbel' in crowd[1].lastname)
@@ -248,8 +247,8 @@ class ImportExportTests(unittest.TestCase):
         form['password'] = 'berries'
         res2 = form.submit('submit', status=302)
         #
-        #print('-'*30)
-        #print(res2.body)
+        # print('-'*30)
+        # print(res2.body)
         # being logged in ...
         res3 = res2.follow()
         res3 = res3.follow()
@@ -323,24 +322,24 @@ class ImportExportTests(unittest.TestCase):
                 crowd[0].signature_received_date))
         self.assertFalse(crowd[0].payment_received)
         self.assertTrue(str(r1[21]) in u'False')
-        #print r1[22]
+        # print r1[22]
         # self.assertTrue(
         #     '1970-01-01 00:00:00' in str(crowd[0].payment_received_date))
-        #print r1[23]
+        # print r1[23]
         # self.assertFalse(crowd[0].signature_confirmed)
-        #print r1[24]
+        # print r1[24]
         # self.assertTrue(
         #     '1970-01-01 00:00:00' in str(
         #         crowd[0].signature_confirmed_date))
-        #print r1[25]
+        # print r1[25]
         # self.assertFalse(crowd[0].payment_confirmed)
-        #print r1[26]
+        # print r1[26]
         # self.assertTrue(
         #     '1970-01-01 00:00:00' in str(
         #         crowd[0].payment_confirmed_date))
-        #print r1[27]
+        # print r1[27]
         self.assertTrue('' in r1[27])
-        #self.assertTrue('' in crowd[0].accountant_comment)
+        # self.assertTrue('' in crowd[0].accountant_comment)
 
     def test_import_equals_export(self):
         """
@@ -362,7 +361,7 @@ class ImportExportTests(unittest.TestCase):
             'Dashboard' in res3.body)
         # delete existing entry
         self.assertTrue('Number of data sets: 1' in res3.body)
-        del1 = self.testapp.get('/delete/1', status=302)
+        del1 = self.testapp.get('/delete/1?deletion_confirmed=1', status=302)
         res = del1.follow()
         res = res.follow()
         self.assertTrue('Number of data sets: 0' in res.body)
@@ -377,14 +376,14 @@ class ImportExportTests(unittest.TestCase):
         # remove password hash from import
         with open('import/import.csv', 'r') as import_file:
             _import = import_file.read()
-        #print _import
+        # print _import
         _import = _import.split(';')
         _import_cleaned = ''
         for item in _import:
             if not item.startswith('"$2a$10'):
                 _import_cleaned = ';'.join([_import_cleaned, item.rstrip()])
             else:
-                #print("item found: %s" % item)
+                # print("item found: %s" % item)
                 pass
         _import_cleaned = _import_cleaned.lstrip(';')
         # remove password hash from export
@@ -394,7 +393,7 @@ class ImportExportTests(unittest.TestCase):
             if not item.startswith('"$2a$10'):
                 _export_cleaned = ';'.join([_export_cleaned, item.rstrip()])
             else:
-                #print("item found: %s" % item)
+                # print("item found: %s" % item)
                 pass
         _export_cleaned = _export_cleaned.lstrip(';')
 
@@ -403,8 +402,8 @@ class ImportExportTests(unittest.TestCase):
         _ic = re.sub(r"\r", "", _ic)
         _ec = re.sub(r"\n", "", _export_cleaned)
         _ec = re.sub(r"\r", "", _ec)
-        #print("len(_ic): %s, _ic: %s" % (len(_ic), _ic))
-        #print("len(_ec): %s, _ec: %s" % (len(_ec), _ec))
+        # print("len(_ic): %s, _ic: %s" % (len(_ic), _ic))
+        # print("len(_ec): %s, _ec: %s" % (len(_ec), _ec))
         self.assertTrue(_ec in _ic)
         self.assertTrue(_ic in _ec)
 

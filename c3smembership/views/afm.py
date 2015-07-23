@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-This module holds the views for membership acquisition.
+This module holds the views for membership acquisition,
+aka 'Application for Membership' (afm).
 
 - join_c3s: the membership application form
 - show_success: confirm data supplied
 - success_check_email: send email with link
 - success_verify_email: verify email address, present PDF link
 - show_success_pdf: let user download her pdf for printout
+
+Tests for these functions can be found in
+
+- test_views_webdriver.py:JoinFormTests (webdriver: no coverage)
+- test_views_webdriver.py:EmailVerificationTests (webdriver: no coverage)
+- test_webtest.py (with coverage)
+
 """
 
 import colander
@@ -34,33 +42,35 @@ from sqlalchemy.exc import (
     IntegrityError,
     InvalidRequestError,
 )
-from translationstring import TranslationStringFactory
 from types import NoneType
 
 
-from c3smembership.utils import (
-    generate_pdf,
-    accountant_mail,
-)
 from c3smembership.models import (
     C3sMember,
     DBSession,
 )
+from c3smembership.utils import (
+    generate_pdf,
+    accountant_mail,
+)
+from c3smembership.views import (
+    _,
+)
 
-
-deform_templates = resource_filename('deform', 'templates')
-c3smembership_templates = resource_filename('c3smembership', 'templates')
+deform_templates = resource_filename(
+    'deform', 'c3smembership:templates')
+c3smembership_templates = resource_filename(
+    'c3smembership', 'c3smembership:templates')
 
 my_search_path = (deform_templates, c3smembership_templates)
 
-_ = TranslationStringFactory('c3smembership')
+
+my_template_dir = resource_filename('c3smembership', 'templates/')
+deform_template_dir = resource_filename('deform', 'templates/')
 
 
 def translator(term):
     return get_localizer(get_current_request()).translate(term)
-
-my_template_dir = resource_filename('c3smembership', 'templates/')
-deform_template_dir = resource_filename('deform', 'templates/')
 
 zpt_renderer = deform.ZPTRendererFactory(
     [
@@ -79,7 +89,7 @@ if LOGGING:  # pragma: no cover
     log = logging.getLogger(__name__)
 
 
-@view_config(renderer='templates/join.pt',
+@view_config(renderer='c3smembership:templates/join.pt',
              route_name='join')
 def join_c3s(request):
     """
@@ -565,7 +575,7 @@ def join_c3s(request):
     return {'form': html}
 
 
-@view_config(renderer='templates/success.pt',
+@view_config(renderer='c3smembership:templates/success.pt',
              route_name='success')
 def show_success(request):
     """
@@ -591,7 +601,7 @@ def show_success(request):
 
 
 @view_config(
-    renderer='templates/check-mail.pt',
+    renderer='c3smembership:templates/check-mail.pt',
     route_name='success_check_email')
 def success_check_email(request):
     """
@@ -653,7 +663,12 @@ Your C3S team
             )
         )
         if 'true' in request.registry.settings['testing.mail_to_console']:
-            print(the_mail.body)
+            # print(the_mail.body)
+            log.info(the_mail.body)
+            # just logging, not printing, b/c test fails otherwise:
+            # env/bin/nosetests
+            #    c3smembership/tests/test_views_webdriver.py:
+            #    JoinFormTests.test_form_submission_de
         else:
             mailer.send(the_mail)
 
@@ -690,7 +705,7 @@ Your C3S team
 
 
 @view_config(
-    renderer='templates/verify_password.pt',
+    renderer='c3smembership:templates/verify_password.pt',
     route_name='verify_email_password')
 def success_verify_email(request):
     """

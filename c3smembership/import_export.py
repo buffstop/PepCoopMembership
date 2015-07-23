@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
+"""
+This module has **import** and **export** functionality.
 
+- Import datasets created elsewhere (CSV)
+- Import by retaining database IDs (CSV)
+
+- Export the whole database (CSV)
+- Export all email addresses for Mailman (CSV)
+- Export only the members (CSV)
+"""
 from datetime import datetime
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import authenticated_userid
@@ -29,7 +38,11 @@ if LOGGING:  # pragma: no cover
              route_name='import_all')
 def import_db(request):
     """
-    import the contents of import.csv to the database
+    Import the contents of import.csv to the database.
+
+    This can be useful after returning from an event where
+    another instance of *c3sMembership* was used to aquire new members.
+    New members are merged into the master instance of the database.
     """
     try:  # check if the file exists
         with open('import/import.csv', 'r') as f:
@@ -49,7 +62,7 @@ def import_db(request):
                           quoting=unicodecsv.QUOTE_ALL
                           )
     header = r.next()  # first line is the header.
-    #print("the header: %s" % header)
+    # print("the header: %s" % header)
     # check it for compatibility
     try:
         assert header == [
@@ -71,7 +84,7 @@ def import_db(request):
         print ae
         print "the header of the CSV does not match what we expect"
         return {'message': "header fields mismatch. NOT importing",
-                #'codes': _codes,
+                # 'codes': _codes,
                 }
 
     # remember the codes imported
@@ -88,19 +101,21 @@ def import_db(request):
         except:
             break
         counter += 1
-        #print("=== row %s: %s" % (counter, row))
-        #print("=== DEBUG: row[12] is: %s " % row[12])
-        #print("=== DEBUG: row[15] is: %s " % row[15])
+        # print("=== row %s: %s" % (counter, row))
+        # print("=== DEBUG: row[12] is: %s " % row[12])
+        # print("=== DEBUG: row[15] is: %s " % row[15])
         # DEBUGGING (show datasets):
-        #for i in range(row.__len__()):
+        # for i in range(row.__len__()):
         #    print('%s header: %s row: %s' % (i, header[i], row[i]))
 #
 #
-# (Pdb) for i in range(row.__len__()): print('%s header: %s row: %s' % (i, header[i], row[i]))
+# (Pdb) for i in range(row.__len__()):
+#    print('%s header: %s row: %s' % (i, header[i], row[i]))
 # 0 header: firstname row: Firstnäme
 # 1 header: lastname row: Lastname
 # 2 header: email row: foo@shri.de
-# 3 header: password row: $2a$10$gv8NJbKfuPuOt9GYn1/bxeW3vNLVkPlD3FQEOJ8iioWraMMKX9h4K
+# 3 header: password row:
+#      $2a$10$gv8NJbKfuPuOt9GYn1/bxeW3vNLVkPlD3FQEOJ8iioWraMMKX9h4K
 # 4 header: last_password_change row: 2013-11-14 10:41:14.000425
 # 5 header: address1 row: address one
 # 6 header: address2 row: address two
@@ -126,9 +141,9 @@ def import_db(request):
 # 26 header: payment_confirmed_date row: 2013-12-11 20:19:53.365248
 # 27 header: accountant_comment row:
 
-        #import pdb
-        #pdb.set_trace()
-        #print(row[12] is True)
+        # import pdb
+        # pdb.set_trace()
+        # print(row[12] is True)
 
         import_member = C3sMember(
             firstname=row[0],
@@ -189,7 +204,7 @@ def import_db(request):
                 row[26], '%Y-%m-%d %H:%M:%S.%f')
 
         import_member.accountant_comment = row[27]
-        #print('importing %s now...' % counter)
+        # print('importing %s now...' % counter)
         try:
             dbsession = DBSession
             dbsession.add(import_member)
@@ -202,7 +217,7 @@ def import_db(request):
                 "imported dataset %s" % (import_member.email_confirm_code),
                 'messages',
             )
-            #print('done with %s!' % counter)
+            # print('done with %s!' % counter)
         except ResourceClosedError, rce:  # pragma: no cover
             # XXX can't catch this exception,
             # because it happens somwhere else, later, deeper !?!
@@ -223,15 +238,15 @@ def import_db(request):
             print "stop iteration reached"
             print si
             return {'message': "file found, StopIteration reached."}
-        #except:
+        # except:
         #    print "passing"
         #    pass
 
-    #print("done with all import steps, successful or not!")
+    # print("done with all import steps, successful or not!")
     return HTTPFound(
         request.route_url('dashboard_only'))
-                # _codes.append(row[13])
-                # print("the codes: %s" % str(_codes))
+    # _codes.append(row[13])
+    # print("the codes: %s" % str(_codes))
 
     # except StopIteration, si:
     #     print si
@@ -246,8 +261,11 @@ def import_db(request):
              route_name='import_with_ids')
 def import_db_with_ids(request):
     """
-    import the contents of import.csv to the database
-    and retain the given ids
+    Import the contents of import.csv to the database
+    and **retain the given ids**.
+
+    This is a special case.
+    Can be useful when restoring datasets from backups.
     """
     try:  # check if the file exists
         with open('import/import.csv', 'r') as f:
@@ -268,7 +286,7 @@ def import_db_with_ids(request):
                           quoting=unicodecsv.QUOTE_ALL
                           )
     header = r.next()  # first line is the header.
-    #print("the header: %s" % header)
+    # print("the header: %s" % header)
     # check it for compatibility
     try:
         expected_header = [
@@ -296,7 +314,7 @@ def import_db_with_ids(request):
         print "got:"
         print header
         return {'message': "header fields mismatch. NOT importing",
-                #'codes': _codes,
+                # 'codes': _codes,
                 }
 
     # remember the codes imported
@@ -372,7 +390,7 @@ def import_db_with_ids(request):
                 row[27], '%Y-%m-%d %H:%M:%S.%f')
 
         import_member.accountant_comment = row[28]
-        #print('importing %s now...' % counter)
+        # print('importing %s now...' % counter)
         from types import NoneType
         try:
             _id = row[0]
@@ -385,7 +403,7 @@ def import_db_with_ids(request):
             # well, we found an entry, so we just add a new id at the end
             print "this id seems to have been taken."
             return {'message': "header fields mismatch. NOT importing"}
-            #pass
+            # pass
 
         try:
             dbsession = DBSession
@@ -395,7 +413,7 @@ def import_db_with_ids(request):
                 "%s imported dataset %s" % (
                     authenticated_userid(request),
                     import_member.email_confirm_code))
-            #print('done with %s!' % counter)
+            # print('done with %s!' % counter)
         except ResourceClosedError, rce:
             # XXX can't catch this exception,
             # because it happens somwhere else, later, deeper !?!
@@ -416,11 +434,11 @@ def import_db_with_ids(request):
             print "stop iteration reached"
             print si
             return {'message': "file found, StopIteration reached."}
-        #except:
+        # except:
         #    print "passing"
         #    pass
 
-    #print("done with all import steps, successful or not!")
+    # print("done with all import steps, successful or not!")
     return HTTPFound(
         request.route_url('dashboard_only'))
 
@@ -475,7 +493,7 @@ def export_db(request):
              route_name='export_yes_emails')
 def export_yes_emails(request):
     """
-    export the database to a CSV file
+    Export the members email addresses to a CSV file.
     """
     datasets = C3sMember.member_listing(
         "id", how_many=C3sMember.get_number(), order='asc')
@@ -494,7 +512,7 @@ def export_yes_emails(request):
              route_name='export_members')
 def export_memberships(request):
     """
-    export the database to a CSV file
+    Export the database to a CSV file.
     """
     _num = C3sMember.get_number()
     datasets = C3sMember.get_members(
@@ -502,17 +520,17 @@ def export_memberships(request):
     header = ['firstname', 'lastname', 'email',
               'address1', 'address2', 'postcode', 'city', 'country',
               'locale', 'date_of_birth',
-              #'email_is_confirmed',
+              # 'email_is_confirmed',
               'email_confirm_code',
               'membership_date',
               'num_shares',  # 'date_of_submission',
-              #'shares list (number+date)',
+              # 'shares list (number+date)',
               'membership_type',
               'member_of_colsoc', 'name_of_colsoc',
               'signature_received', 'signature_received_date',
               'payment_received', 'payment_received_date',
-              #'signature_confirmed', 'signature_confirmed_date',
-              #'payment_confirmed', 'payment_confirmed_date',
+              # 'signature_confirmed', 'signature_confirmed_date',
+              # 'payment_confirmed', 'payment_confirmed_date',
               'accountant_comment',
               'is_legalentity',
               'court of law',
@@ -524,18 +542,18 @@ def export_memberships(request):
             (m.firstname, m.lastname, m.email,
              m.address1, m.address2, m.postcode, m.city, m.country,
              m.locale, m.date_of_birth,
-             #m.email_is_confirmed,
+             # m.email_is_confirmed,
              m.email_confirm_code,
              m.membership_date,
              m.num_shares,
-             #m.date_of_submission,
-             #'+'.join(str(s.id)+'('+str(s.number)+')' for s in m.shares),
+             # m.date_of_submission,
+             # '+'.join(str(s.id)+'('+str(s.number)+')' for s in m.shares),
              m.membership_type,
              m.member_of_colsoc, m.name_of_colsoc,
              m.signature_received, m.signature_received_date,
              m.payment_received, m.payment_received_date,
-             #m.signature_confirmed, m.signature_confirmed_date,
-             #m.payment_confirmed, m.payment_confirmed_date,
+             # m.signature_confirmed, m.signature_confirmed_date,
+             # m.payment_confirmed, m.payment_confirmed_date,
              m.accountant_comment,
              m.is_legalentity,
              m.court_of_law,

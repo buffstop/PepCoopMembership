@@ -1,3 +1,22 @@
+"""
+    The Annual Report shows a bunch of numbers and lists:
+
+    - the number of members and
+    - the number of shares
+
+    ... acquired during a given timeframe.
+
+    The default timeframe is the current year,
+    but start date and end date can be specified to 'debug' other periods, too.
+
+    The report also shows the number of (and a list of)
+    shares paid but not 'approved' yet
+
+    - as part of a membership or
+    - when additional shares were acquired
+
+"""
+
 import colander
 from datetime import date
 from datetime import datetime
@@ -13,18 +32,14 @@ from c3smembership.views import _
 
 
 @view_config(
-    renderer='templates/annual_report.pt',
+    renderer='c3smembership:templates/annual_report.pt',
     permission='manage',
     route_name='annual_reporting'
 )
 def annual_report(request):
     """
-    return the number of members and shares acquired during a given timeframe
-    (start date and end date)
+    Sift, sort, count and calculate data for the report of a given timeframe.
 
-    also show the number of shares paid but not 'approved' yet
-    - as part of a membership or
-    - when additional shares were acquired
     """
     # defaults
     start_date = datetime(date.today().year, 1, 1)  # first day of this year

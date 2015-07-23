@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+This module holds GnuPG functionality for c3sMembership.
+
+GnuPG is used to encrypt email to staff
+
+- when new applications for membership arrive
+- for data export (e.g. CSV)
+"""
 #
 # you need python-gnupg, so
 # bin/pip install python-gnupg

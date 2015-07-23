@@ -1,8 +1,17 @@
 #!/bin/env/python
 # -*- coding: utf-8 -*-
+"""
+This module holds tests for the webapp, webtest-style, see
+http://webtest.readthedocs.org/en/latest/
+
+There are two 'areas' covered:
+
+- AccountantsFunctionalTests: for functionality accountants use
+- FunctionalTests: for the basic parts of the webapp, i18n, ...
+"""
 # http://docs.pylonsproject.org/projects/pyramid/dev/narr/testing.html
 #                                            #creating-functional-tests
-import os
+# import os
 import unittest
 from pyramid import testing
 from c3smembership.models import (
@@ -29,19 +38,19 @@ class AccountantsFunctionalTests(unittest.TestCase):
         try:
             DBSession.close()
             DBSession.remove()
-            #print "closed and removed DBSession"
+            # print "closed and removed DBSession"
         except:
             pass
-            #print "no session to close"
-        #try:
+            # print "no session to close"
+        # try:
         #    os.remove('test_webtest_accountants.db')
         #    #print "deleted old test database"
-        #except:
+        # except:
         #    pass
         #    #print "never mind"
         # self.session = DBSession()
         my_settings = {
-            #'sqlalchemy.url': 'sqlite:///test_webtest_accountants.db',
+            # 'sqlalchemy.url': 'sqlite:///test_webtest_accountants.db',
             'sqlalchemy.url': 'sqlite:///:memory:',
             'available_languages': 'da de en es fr',
             'c3smembership.dashboard_number': '30'}
@@ -57,7 +66,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
             try:
                 DBSession.add(accountants_group)
                 DBSession.flush()
-                #print("adding group staff")
+                # print("adding group staff")
             except:
                 print("could not add group staff.")
                 # pass
@@ -84,7 +93,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
     def tearDown(self):
         DBSession.close()
         DBSession.remove()
-        #os.remove('test_webtest_accountants.db')
+        # os.remove('test_webtest_accountants.db')
         testing.tearDown()
 
     def _insert_members(self):
@@ -184,7 +193,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
         # being logged in ...
         res4 = res3.follow()
         res4 = res4.follow()
-        #print(res4.body)
+        # print(res4.body)
         self.failUnless(
             'Dashboard' in res4.body)
         # now that we are logged in,
@@ -193,7 +202,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
         # so yes: that was a redirect
         res6 = res5.follow()
         res6 = res6.follow()
-        #print(res4.body)
+        # print(res4.body)
         self.failUnless(
             'Dashboard' in res6.body)
         # choose number of applications shown
@@ -228,15 +237,14 @@ class AccountantsFunctionalTests(unittest.TestCase):
 
         form = resX.forms[0]
         form['num_to_show'] = "mooo"  # post a string: no good
-        resY = form.submit('submit', status=200)
+        res7 = form.submit('submit', status=200)
 
-        #import pdb; pdb.set_trace()
         # member details
         #
         # now look at some members details with nonexistant id
         res7 = self.testapp.get('/detail/5000', status=302)
         res7a = res7.follow()
-        res7a = res7a.follow()
+        # res7a = res7a.follow()
         self.failUnless('Dashboard' in res7a.body)
 
         # now look at some members details
@@ -249,7 +257,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
         resD2a = self.testapp.get('/switch_sig/1', status=302)  # # # # # OFF
         resD2b = resD2a.follow()  # we are taken to the dashboard
         resD2b = self.testapp.get('/detail/1', status=200)
-        #print resD2b.body
+        # print resD2b.body
         self.assertTrue(
             "Eingang bestätigen" not in resD2b.body)
         resD2a = self.testapp.get('/switch_sig/1', status=302)  # # # # # ON
@@ -273,7 +281,8 @@ class AccountantsFunctionalTests(unittest.TestCase):
         ####################################################################
         # delete an entry
         _num = C3sMember.get_number()
-        resDel2 = self.testapp.get('/delete/1', status=302)
+        resDel2 = self.testapp.get(
+            '/delete/1?deletion_confirmed=1', status=302)
         _num2 = C3sMember.get_number()
         self.assertTrue(int(_num2) + 1 == int(_num))
         resDel3 = resDel2.follow()
@@ -286,7 +295,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
         self.failUnless('login' in res10.body)
 
     def test_dashboard_orderByIdAsc_dashboardOrdered(self):
-        res = self._login()
+        res2 = self._login()
         res2 = self.testapp.get('/dashboard/0/id/asc')
         pq = self._get_pyquery(res2.body)
         # column-order: id code firstname lastname
@@ -295,7 +304,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
         self.assertEqual('1', id_.text())
 
     def test_dashboard_orderByIdDesc_dashboardOrdered(self):
-        res = self._login()
+        res2 = self._login()
         res2 = self.testapp.get('/dashboard/0/id/desc')
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
@@ -303,30 +312,30 @@ class AccountantsFunctionalTests(unittest.TestCase):
         self.assertEqual('3', id_.text())
 
     def test_dashboard_orderByFirstnameAsc_dashboardOrdered(self):
-        res = self._login()
+        res2 = self._login()
         res2 = self.testapp.get('/dashboard/0/firstname/asc')
-        #print res2.body
+        # print res2.body
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
-        #print "the first row: {}".format(first_member_row)
-        first_name = first_member_row('td:nth-child(4)')
-        #print "the first name: {}".format(first_name)
+        # print "the first row: {}".format(first_member_row)
+        first_name = first_member_row('td:nth-child(3)')
+        # print "the first name: {}".format(first_name)
         self.assertEqual(u'AAASomeFirstnäme', first_name.text())
 
     def test_dashboard_orderByFirstnameDesc_dashboardOrdered(self):
-        res = self._login()
+        res2 = self._login()
         res2 = self.testapp.get('/dashboard/0/firstname/desc')
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
-        first_name = first_member_row('td:nth-child(4)')
+        first_name = first_member_row('td:nth-child(3)')
         self.assertEqual(u'SomeFirstnäme', first_name.text())
 
     def test_dashboard_orderByLastnameAsc_dashboardOrdered(self):
-        res = self._login()
+        res2 = self._login()
         res2 = self.testapp.get('/dashboard/0/lastname/asc')
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
-        last_name = first_member_row('td:nth-child(5)')
+        last_name = first_member_row('td:nth-child(4)')
         self.assertEqual(u'AAASomeLastnäme', last_name.text())
 
     def test_dashboard_orderByLastnameDesc_dashboardOrdered(self):
@@ -334,23 +343,25 @@ class AccountantsFunctionalTests(unittest.TestCase):
         res2 = self.testapp.get('/dashboard/0/lastname/desc')
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
-        last_name = first_member_row('td:nth-child(5)')
+        last_name = first_member_row('td:nth-child(4)')
         self.assertEqual(u'XXXSomeLastnäme', last_name.text())
 
     def test_dashboard_afterDelete_sameOrderAsBefore(self):
         self._login()
-        self.testapp.get('/dashboard/0/lastname/asc')  # To set cookie with order and orderby
-        resdel = self.testapp.get('/delete/3')  # Delete member with lastname AAASomeLastnäme
+        self.testapp.get(
+            '/dashboard/0/lastname/asc')  # To set cookie with order & orderby
+        # Delete member with lastname AAASomeLastnäme
+        resdel = self.testapp.get('/delete/3?deletion_confirmed=1')
         resdel = resdel.follow()
         resdel = resdel.follow()
         pq = self._get_pyquery(resdel.body)
         first_member_row = pq('tr:nth-child(2)')
-        last_name = first_member_row('td:nth-child(5)')
+        last_name = first_member_row('td:nth-child(4)')
         self.assertEqual(u'SomeLastnäme', last_name.text())
 
     def test_dashboard_afterDelete_messageShown(self):
         self._login()
-        resdel = self.testapp.get('/delete/1')
+        resdel = self.testapp.get('/delete/1?deletion_confirmed=1')
         resdel = resdel.follow()
         resdel = resdel.follow()
         pq = self._get_pyquery(resdel.body)
@@ -444,11 +455,11 @@ class AccountantsFunctionalTests(unittest.TestCase):
         self.failUnless('Code finden' in res.body)
         # now use existing code
         form = res.forms[0]
-        #print form.fields
+        # print form.fields
         form['code_to_show'] = 'ABCDEFGBAZ'
-        #print form['code_to_show'].value
+        # print form['code_to_show'].value
         res2 = form.submit()
-        #print res2.body
+        # print res2.body
         res = res2.follow()
         self.failUnless('Details for Member Application' in res.body)
         self.failUnless('ABCDEFGBAZ' in res.body)
@@ -475,15 +486,16 @@ class AccountantsFunctionalTests(unittest.TestCase):
         self.failUnless('Personen finden' in res.body)
         # now use existing code
         form = res.forms[0]
-        #print form.fields
+        # print form.fields
         form['code_to_show'] = u'XXXSomeLastnäme'
-        #print form['code_to_show'].value
+        # print form['code_to_show'].value
         res = form.submit()
-        #print res.body
-        #res = res2.follow()
-        #self.failUnless('Details for Member Application' in res.body)
-        #self.failUnless('ABCDEFGBAZ' in res.body)
+        # print res.body
+        # res = res2.follow()
+        # self.failUnless('Details for Member Application' in res.body)
+        # self.failUnless('ABCDEFGBAZ' in res.body)
         # XXX FIXME
+
     def test_dashboard_regenerate_pdf(self):
         """
         load the dashboard and regenerate a PDF
@@ -559,22 +571,23 @@ class FunctionalTests(unittest.TestCase):
         try:
             DBSession.close()
             DBSession.remove()
-            #print("removed old DBSession ===================================")
+            # print("removed old DBSession ==============================")
         except:
-            #print("no DBSession to remove ==================================")
+            # print("no DBSession to remove =============================")
             pass
-        #try:
+        # try:
         #    os.remove('test_webtest_functional.db')
         #    #print "deleted old test database"
-        #except:
+        # except:
         #    pass
         #    #print "never mind"
 
         my_settings = {
-            #'sqlalchemy.url': 'sqlite:///test_webtest_functional.db',
+            # 'sqlalchemy.url': 'sqlite:///test_webtest_functional.db',
             'sqlalchemy.url': 'sqlite:///:memory:',
             'available_languages': 'da de en es fr',
-            'c3smembership.mailaddr': 'c@c3s.cc'}
+            'c3smembership.mailaddr': 'c@c3s.cc',
+            'testing.mail_to_console': 'false'}
         engine = engine_from_config(my_settings)
         DBSession.configure(bind=engine)
         self.session = DBSession  # ()
@@ -614,7 +627,7 @@ class FunctionalTests(unittest.TestCase):
     def tearDown(self):
         self.session.close()
         self.session.remove()
-        #os.remove('test_webtest_functional.db')
+        # os.remove('test_webtest_functional.db')
 
     def test_base_template(self):
         """load the front page, check string exists"""
@@ -671,7 +684,7 @@ class FunctionalTests(unittest.TestCase):
             '/', status=200,
             headers={
                 'Accept-Language': 'de-DE'})
-        #print(res.body) #  if you want to see the pages source
+        # print(res.body) #  if you want to see the pages source
         self.failUnless(
             'Mitgliedschaftsantrag für die' in res.body)
         self.failUnless(
@@ -685,7 +698,7 @@ class FunctionalTests(unittest.TestCase):
             '/', status=200,
             headers={
                 'Accept-Language': 'en'})
-        #print(res.body) #  if you want to see the pages source
+        # print(res.body) #  if you want to see the pages source
         self.failUnless(
             "I want to become"
             in res.body)
@@ -719,7 +732,7 @@ class FunctionalTests(unittest.TestCase):
             '/', status=200,
             headers={
                 'Accept-Language': 'af, cn'})  # ask for missing languages
-        #print res.body
+        # print res.body
         self.failUnless('Application for Membership' in res.body)
 
 #############################################################################
@@ -730,10 +743,10 @@ class FunctionalTests(unittest.TestCase):
         res = self.testapp.reset()
         res = self.testapp.get('/?_LOCALE_=en', status=200)
         form = res.form
-        #print(form.fields)
-        #print(form.fields.values())
+        # print(form.fields)
+        # print(form.fields.values())
         form['firstname'] = 'John'
-        #form['address2'] = 'some address part'
+        # form['address2'] = 'some address part'
         res2 = form.submit('submit')
         self.failUnless(
             'There was a problem with your submission' in res2.body)
@@ -741,11 +754,11 @@ class FunctionalTests(unittest.TestCase):
     def test_form_lang_de(self):
         """load the join form, check german string exists"""
         res = self.testapp.get('/?de', status=302)
-        #print(res)
+        # print(res)
         self.failUnless('The resource was found at' in res.body)
         # we are being redirected...
         res2 = res.follow()
-        #print(res2)
+        # print(res2)
         # test for german translation of template text (lingua_xml)
         self.failUnless(
             'Mitgliedschaftsantrag für die' in res2.body)
@@ -774,7 +787,7 @@ class FunctionalTests(unittest.TestCase):
         self.failUnless('The resource was found at' in res.body)
         # we are being redirected...
         res1 = res.follow()
-        #print(res1)
+        # print(res1)
         self.failUnless(
             'Application for Membership of ' in str(
                 res1.body),
@@ -809,59 +822,10 @@ class FunctionalTests(unittest.TestCase):
         # print res2.body
         self.failUnless(
             'C3S_SCE_AFM_SomeFirstn_meSomeLastn_me.pdf' in res2.body)
-#        import pdb
-#        pdb.set_trace()
-            #'Your Email has been confirmed, Firstnäme Lastname!' in res.body)
-        #res2 = self.testapp.get(
+        # 'Your Email has been confirmed, Firstnäme Lastname!' in res.body)
+        # res2 = self.testapp.get(
         #    '/C3S_SCE_AFM_Firstn_meLastname.pdf', status=200)
-        #self.failUnless(len(res2.body) > 70000)
-
-###########################################################################
-# checking the disclaimer
-
-    # def test_disclaimer_en(self):
-    #     """load the disclaimer in english (via query_string),
-    #     check english string exists"""
-    #     res = self.testapp.reset()
-    #     res = self.testapp.get('/disclaimer?en', status=302)
-    #     self.failUnless('The resource was found at' in res.body)
-    #     # we are being redirected...
-    #     res1 = res.follow()
-    #     self.failUnless(
-    #         'you may order your data to be deleted at any time' in str(
-    #             res1.body),
-    #         'expected string was not found in web UI')
-
-    # def test_disclaimer_de(self):
-    #     """load the disclaimer in german (via query_string),
-    #     check german string exists"""
-    #     res = self.testapp.reset()
-    #     res = self.testapp.get('/disclaimer?de', status=302)
-    #     self.failUnless('The resource was found at' in res.body)
-    #     # we are being redirected...
-    #     res1 = res.follow()
-    #     self.failUnless(
-    #         'Datenschutzerkl' in str(
-    #             res1.body),
-    #         'expected string was not found in web UI')
-
-    # def test_disclaimer_LOCALE_en(self):
-    #     """load the disclaimer in english, check english string exists"""
-    #     res = self.testapp.reset()
-    #     res = self.testapp.get('/disclaimer?_LOCALE_=en', status=200)
-    #     self.failUnless(
-    #         'you may order your data to be deleted at any time' in str(
-    #             res.body),
-    #         'expected string was not found in web UI')
-
-    # def test_disclaimer_LOCALE_de(self):
-    #     """load the disclaimer in german, check german string exists"""
-    #     res = self.testapp.reset()
-    #     res = self.testapp.get('/disclaimer?_LOCALE_=de', status=200)
-    #     self.failUnless(
-    #         'Datenschutzerkl' in str(
-    #             res.body),
-    #         'expected string was not found in web UI')
+        # self.failUnless(len(res2.body) > 70000)
 
     def test_success_wo_data_en(self):
         """load the success page in english (via query_string),
@@ -871,7 +835,7 @@ class FunctionalTests(unittest.TestCase):
         self.failUnless('The resource was found at' in res.body)
         # we are being redirected...
         res1 = res.follow()
-        #print(res1)
+        # print(res1)
         self.failUnless(  # check text on page redirected to
             'Please fill out the form' in str(
                 res1.body),
@@ -889,142 +853,11 @@ class FunctionalTests(unittest.TestCase):
         self.failUnless('The resource was found at' in res.body)
         # we are being redirected...
         res1 = res.follow()
-        #print(res1)
+        # print(res1)
         self.failUnless(  # check text on page redirected to
             'Please fill out the form' in str(
                 res1.body),
             'expected string was not found in web UI')
-
-    # def test_success_w_data(self):
-    #     """
-    #     load the form, fill the form, (in one go via POST request)
-    #     check for redirection, push button to send verification mail,
-    #     check for 'mail was sent' message
-    #     """
-    #     res = self.testapp.reset()
-    #     res = self.testapp.get('/', status=200)
-    #     form = res.form
-    #     print '*'*80
-    #     print '*'*80
-    #     print '*'*80
-    #     print form.fields
-    #     res = self.testapp.post(
-    #         '/',  # where the form is served
-    #         {
-    #             'submit': True,
-    #             'firstname': 'TheFirstName',
-    #             'lastname': 'TheLastName',
-    #             'date_of_birth': '1987-06-05',
-    #             'address1': 'addr one',
-    #             'address2': 'addr two',
-    #             'postcode': '98765 xyz',
-    #             'city': 'Devilstown',
-    #             'country': 'AF',
-    #             'email': 'email@example.com',
-    #             'password': 'berries',
-    #             'num_shares': '42',
-    #             '_LOCALE_': 'en',
-    #             #'activity': set(
-    #             #    [
-    #             #        u'composer',
-    #             #        #u'dj'
-    #             #    ]
-    #             #),
-    #             'invest_member': 'yes',
-    #             'member_of_colsoc': 'yes',
-    #             'name_of_colsoc': 'schmoo',
-    #             #'opt_band': 'yes band',
-    #             #'opt_URL': 'http://yes.url',
-    #             #'noticed_dataProtection': 'yes'
-    #             'num_shares': '23',
-    #         },
-    #         #status=302,  # expect redirection to success page
-    #         status=200,  # expect redirection to success page
-    #     )
-
-    #     print(res.body)
-    #     self.failUnless('The resource was found at' in res.body)
-    #     # we are being redirected...
-    #     res2 = res.follow()
-    #     self.failUnless('Success' in res2.body)
-    #     #print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
-    #     #print res2.body
-    #     #print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-    #     self.failUnless('TheFirstName' in res2.body)
-    #     self.failUnless('TheLastName' in res2.body)
-    #     self.failUnless('1987-06-05' in res2.body)
-    #     self.failUnless('addr one' in res2.body)
-    #     self.failUnless('addr two' in res2.body)
-    #     self.failUnless('Devilstown' in res2.body)
-    #     self.failUnless('email@example.com' in res2.body)
-    #     self.failUnless('schmoo' in res2.body)
-
-    #     # now check for the "mail was sent" confirmation
-    #     res3 = self.testapp.post(
-    #         '/check_email',
-    #         {
-    #             'submit': True,
-    #             'value': "send mail"
-    #         }
-    #     )
-    #     #print(res3)
-    #     self.failUnless(
-    #         'An email was sent, TheFirstName TheLastName!' in res3.body)
-
-#     def test_success_and_reedit(self):
-#         """
-#         submit form, check success, re-edit: are the values pre-filled?
-#         """
-#         res = self.testapp.reset()
-#         res = self.testapp.get('/', status=200)
-#         form = res.form
-#         form['firstname'] = 'TheFirstNäme'
-#         form['lastname'] = 'TheLastNäme'
-#         form['address1'] = 'addr one'
-#         form['address2'] = 'addr two'
-#         res2 = form.submit('submit')
-#         print res2.body
-# #                'submit': True,
-# #                'date_of_birth': '1987-06-05',
-# #                'address2': 'addr two',
-# #                'postcode': '98765 xyz',
-# #                'city': 'Devilstöwn',
-# #                'email': 'email@example.com',
-# #                'num_shares': '23',
-# #                '_LOCALE_': 'en',
-# #                #'activity': set(
-#                 #    [
-#                 #        'composer',
-#                 #        #u'dj'
-#                 #    ]
-#                 #),
-# #                'country': 'AF',
-# #                'membership_type': 'investing',
-# #                'member_of_colsoc': 'yes',
-# #                'name_of_colsoc': 'schmoö',
-#                 #'opt_band': 'yes bänd',
-#                 #'opt_URL': 'http://yes.url',
-#                 #'noticed_dataProtection': 'yes'
-
-# #            },
-# #            status=302,  # expect redirection to success page
-# #        )
-
-    #    print(res.body)
-    #     self.failUnless('The resource was found at' in res.body)
-    #     # we are being redirected...
-    #     res2 = res.follow()
-    #     self.failUnless('Success' in res2.body)
-    #     #print("success page: \n%s") % res2.body
-    #     #self.failUnless(u'TheFirstNäme' in (res2.body))
-
-    #     # go back to the form and check the pre-filled values
-    #     res3 = self.testapp.get('/')
-    #     #print(res3.body)
-    #     #print("edit form: \n%s") % res3.body
-    #     self.failUnless('TheFirstNäme' in res3.body)
-    #     form = res3.form
-    #     self.failUnless(form['firstname'].value == u'TheFirstNäme')
 
     def test_email_confirmation(self):
         """
@@ -1037,7 +870,7 @@ class FunctionalTests(unittest.TestCase):
         form = res.form
         form['password'] = 'arandompassword'
         res2 = form.submit('submit')
-        #print res2.body
+        # print res2.body
         self.failUnless("Load your PDF..." in res2.body)
         self.failUnless(
             "/C3S_SCE_AFM_SomeFirstn_meSomeLastn_me.pdf" in res2.body)
@@ -1046,8 +879,8 @@ class FunctionalTests(unittest.TestCase):
             '/C3S_SCE_AFM_SomeFirstn_meSomeLastn_me.pdf',
             status=200
         )
-        #print("length of result: %s") % len(res3.body)
-        #print("body result: %s") % (res3.body)  # ouch, PDF content!
+        # print("length of result: %s") % len(res3.body)
+        # print("body result: %s") % (res3.body)  # ouch, PDF content!
         self.failUnless(80000 < len(res3.body) < 150000)  # check pdf size
 
     def test_email_confirmation_wrong_mail(self):
@@ -1057,7 +890,7 @@ class FunctionalTests(unittest.TestCase):
         res = self.testapp.reset()
         res = self.testapp.get(
             '/verify/NOTEXISTS@shri.de/ABCDEFGHIJ', status=200)
-        #print(res.body)
+        # print(res.body)
         self.failUnless("Please enter your password." in res.body)
         # XXX this test shows nothing interesting
 
@@ -1067,7 +900,7 @@ class FunctionalTests(unittest.TestCase):
         """
         res = self.testapp.reset()
         res = self.testapp.get('/verify/foo@shri.de/WRONGCODE', status=200)
-        #print(res.body)
+        # print(res.body)
         self.failUnless("Please enter your password." in res.body)
 
     def test_success_check_email(self):
@@ -1080,4 +913,3 @@ class FunctionalTests(unittest.TestCase):
 
         res2 = res.follow()
         self.failUnless("Please fill out the form" in res2.body)
-

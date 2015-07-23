@@ -1,4 +1,36 @@
 # -*- coding: utf-8 -*-
+"""
+This module has functionality to invite members to C3S events
+like the General Assembly and BarCamp.
+
+- Email templates (en/de)
+- Check and send email (view)
+- Batch invite n members (view)
+
+The first use was for the C3S HQ inauguration party in 02.2014.
+It was then reused for
+
+- BarCamp and General Assembly 2014
+- BarCamp and General Assembly 2015
+
+How it works
+------------
+
+We send an email to the members from our membership database -- this app.
+The templates for those emails
+(english/german depending on members locale) can be prepared here.
+
+For convenience, staff can invite n members at the same time.
+
+Combination with c3sPartyTicketing
+----------------------------------
+
+Invitation emails are usually prepped with links
+to the C3S ticketing system (*c3sPartyTicketing*).
+That other webapp can be configured to fetch information
+about the relevant C3S member from this app via API call,
+see the relevant module.
+"""
 from c3smembership.models import (
     C3sMember,
 )
@@ -136,7 +168,7 @@ Your C3S Team
              route_name='invite_member')
 def invite_member_BCGV(request):
     '''
-    send email to member with link to ticketing
+    Send email to member with link to ticketing.
     '''
     mid = request.matchdict['m_id']
     _m = C3sMember.get_by_id(mid)
@@ -202,7 +234,9 @@ def invite_member_BCGV(request):
     permission='manage')
 def batch_invite(request):
     """
-    invite many members at the same time
+    Batch invite n members at the same time.
+
+    The number (n) is configurable, defaults to 5.
     """
     try:  # how many to process?
         n = int(request.matchdict['number'])

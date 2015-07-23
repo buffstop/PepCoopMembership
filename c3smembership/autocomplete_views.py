@@ -1,3 +1,15 @@
+"""
+This module holds two view functions used by the Search pages
+featuring autocomplete (see toolbox):
+
+- Search for People
+- Search for Codes
+
+When these forms are used to find an application either by code or by lastname,
+the given prefix (the alphanumeric characters) is sent to the relevant view,
+which then returnd JSON to power the autocomplete functionality.
+"""
+
 from pyramid.view import view_config
 from c3smembership.models import C3sMember
 

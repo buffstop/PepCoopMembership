@@ -1,4 +1,11 @@
 # -*- coding: utf-8  -*-
+"""
+This module holds the database models for c3sMembership.
+
+Tests for the code is in tests/test_models.py
+and throughout the other bits of code.
+"""
+
 from datetime import (
     datetime,
 )
@@ -38,7 +45,11 @@ def hash_password(password):
 
 class Group(Base):
     """
-    groups aka roles for users
+    The table of Groups.
+
+    aka roles for users.
+
+    Users in group 'staff' may do things others may not.
     """
     __tablename__ = 'groups'
     id = Column(Integer, primary_key=True, nullable=False)

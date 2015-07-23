@@ -1,3 +1,6 @@
+"""
+This module holds functionality to administer a members shares.
+"""
 import colander
 import deform
 from deform import ValidationFailure
@@ -20,7 +23,7 @@ if LOGGING:  # pragma: no cover
              route_name='shares_detail')
 def shares_detail(request):
     '''
-    show details about a package of shares
+    Show details about a package of shares.
     '''
     _s = Shares.get_by_id(request.matchdict['id'])
     if isinstance(_s, NoneType):
@@ -57,7 +60,7 @@ def shares_detail(request):
              route_name='shares_edit')
 def shares_edit(request):
     '''
-    edit details about a package of shares
+    Edit details of a package of shares.
     '''
     # print(request.matchdict['id'])
     from c3smembership.models import Shares
@@ -150,7 +153,7 @@ def shares_edit(request):
              route_name='shares_delete')
 def shares_delete(request):
     '''
-    staff may delete a package of shares
+    Staff may delete a package of shares.
     '''
     _id = request.matchdict['id']
     from c3smembership.models import Shares

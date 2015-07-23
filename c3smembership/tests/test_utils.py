@@ -1,5 +1,5 @@
 # -*- coding: utf-8  -*-
-#import os
+# import os
 import unittest
 import transaction
 from datetime import date
@@ -25,12 +25,12 @@ class TestUtilities(unittest.TestCase):
         try:
             DBSession.close()
             DBSession.remove()
-            #print("removing old DBSession ==============================")
+            # print("removing old DBSession ==============================")
         except:
-            #print("no DBSession to remove ==============================")
+            # print("no DBSession to remove ==============================")
             pass
         from sqlalchemy import create_engine
-        #engine = create_engine('sqlite:///test_utils.db')
+        # engine = create_engine('sqlite:///test_utils.db')
         engine = create_engine('sqlite:///:memory:')
         DBSession.configure(bind=engine)
         self.session = DBSession  # ()
@@ -67,14 +67,14 @@ class TestUtilities(unittest.TestCase):
         DBSession.close()
         DBSession.remove()
         testing.tearDown()
-        #os.remove('test_utils.db')
+        # os.remove('test_utils.db')
 
     def test_generate_pdf_en(self):
         """
         Test pdf generation
         and resulting pdf size
         """
-        from c3smembership.views import generate_pdf
+        from c3smembership.utils import generate_pdf
 
         mock_appstruct = {
             'firstname': u'Anne',
@@ -107,7 +107,7 @@ class TestUtilities(unittest.TestCase):
 
                 self.assertEquals(result.content_type,
                                   'application/pdf')
-                #print("size of pdf: " + str(len(result.body)))
+                # print("size of pdf: " + str(len(result.body)))
                 # check pdf size
                 self.assertTrue(120000 > len(result.body) > 50000)
 
@@ -122,7 +122,7 @@ class TestUtilities(unittest.TestCase):
         Test pdf generation
         and resulting pdf size
         """
-        from c3smembership.views import generate_pdf
+        from c3smembership.utils import generate_pdf
 
         mock_appstruct = {
             'firstname': u'Anne',
@@ -153,8 +153,8 @@ class TestUtilities(unittest.TestCase):
 
                 self.assertEquals(result.content_type,
                                   'application/pdf')
-                #print("size of pdf: " + str(len(result.body)))
-                #print(result)
+                # print("size of pdf: " + str(len(result.body)))
+                # print(result)
                 # check pdf size
                 self.assertTrue(120000 > len(result.body) > 50000)
 
@@ -190,8 +190,8 @@ class TestUtilities(unittest.TestCase):
 #         from datetime import date
 #         today = date.today().strftime("%Y-%m-%d")
 #         expected_result = today + ',pending...,
-#Jöhn,Doe,devnull@c3s.cc,1234567890,In the Middle,Of Nowhere,
-#12345,My Town,de,investing,1987-06-05,j,GEMA FöTT,25\r\n'
+# Jöhn,Doe,devnull@c3s.cc,1234567890,In the Middle,Of Nowhere,
+# 12345,My Town,de,investing,1987-06-05,j,GEMA FöTT,25\r\n'
 #         # note the \r\n at the end: that is line-ending foo!
 
 #         #print("type of today: %s ") % type(today)
