@@ -7,8 +7,8 @@ Core Application
 
 c3sMembership -- Membership Application and Database
 
-Copyright (c) 2015 Cultural Commons Collecting Society SCE mbH (C3S SCE) and
-contributors.
+Copyright (c) 2015 Cultural Commons Collecting Society SCE mit 
+beschränkter Haftung (C3S SCE) and contributors.
 
 
 Code
