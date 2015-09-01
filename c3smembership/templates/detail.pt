@@ -110,9 +110,21 @@
 
       </table>
       
+      <a name="membership_info"></a>
       <h3>Membership Info</h3>
 
       <table class="table table-striped">
+        <tr tal:condition="member.signature_received and member.payment_received and not member.membership_accepted">
+          <td>ready for membership!</td>
+          <td><!--! turn application into a member -->
+            <div tal:condition="member.signature_received
+                                and member.payment_received">
+              <a href="${request.route_url('make_member',
+                       afm_id=member.id)}"
+                 class="btn btn-success">make member</a>
+            </div>
+          </td>
+        </tr>
 	<tr>
           <td>entity type</td>
 	  <td>${u'Körperschaft' if member.is_legalentity else 'Person'}</td>
@@ -230,7 +242,13 @@
         <table class="table table-striped">
 	  <tr>
             <td>
-              Versand Mitgliedsbescheinigungs-Email
+              Versand Mitgliedsbescheinigungs-Email<br/>
+              <small>
+                Ein Klick hier setzt ein (neues) Token und versendet eine Email mit Link.<br />
+                Der Link enthält auch das Token, ohne welches KEIN pdf generiert wird.<br />
+                Ausserdem wird überprüft, ob das Token älter ist als 14 Tage; in dem fall gibt es KEIN PDF.
+              </small>
+
             </td>
             <td>
               <a tal:condition="not member.certificate_email"
@@ -241,11 +259,6 @@
                  href="${request.route_url('certificate_mail', id=member.id)}"
                  title="gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}"
                  class="btn btn-success">gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}</a>
-              <small>
-                Ein Klick hier setzt ein (neues) Token und versendet eine Email mit Link.<br />
-                Der Link enthält auch das Token, ohne welches KEIN pdf generiert wird.<br />
-                Ausserdem wird überprüft, ob das Token älter ist als 14 Tage; in dem fall gibt es KEIN PDF.
-              </small>
             </td>
           </tr>
           <tr>
@@ -258,5 +271,98 @@
           </tr>
         </table>
       </div>
+      <!-- membership dues -->
+      <div tal:condition="member.membership_accepted">
+        <a name="dues15"></a>
+        <h3 id="certificate">Membership Dues</h3>
+        <table class="table table-striped">
+	  <tr>
+            <td>
+              Versand Mitgliedsbeitrags-Email (Rechnung/Aufforderung)<br/>
+              <small>
+                Ein Klick hier berechnet den Mitgliedsbeitrag,<br/>
+                setzt ein (neues) Token und versendet eine Email,<br/>
+                bei normalen Mitgliedern mit Link auf die Rechnung.<br/>
+                Der versandte Link enthält das Token, ohne welches KEIN pdf generiert wird.
+              </small>
+
+            </td>
+            <td>
+              <a tal:condition="not member.dues15_invoice"
+                 href="${request.route_url('send_dues_invoice_email', member_id=member.id)}"
+                 title="dues invoice not sent yet"
+                 class="btn btn-warning">
+                Noch nicht berechnet und verschickt. <br/>
+                Jetzt berechnen &amp; versenden: Klick!</a>
+              <a tal:condition="member.dues15_invoice"
+                 href="${request.route_url('send_dues_invoice_email', member_id=member.id)}"
+                 title="gesendet ${member.dues15_invoice_date.strftime('am %d.%m.%Y um %H:%M')}"
+                 class="btn btn-success">gesendet ${member.dues15_invoice_date.strftime('am %d.%m.%Y um %H:%M')}. Klicken zum wiederholten versenden.</a>
+            </td>
+          </tr>
+          <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice">
+            <td>PDF generieren (download)</td>
+            <td>
+              <a href="${request.route_url('make_dues_invoice_pdf', email=member.email, code=member.dues15_token)}"
+                 title="Mitgliedschaftsbeitragsrechnung ansehen"
+                 class="btn btn-success">PDF generieren und laden</a>
+            </td>
+          </tr>
+          <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice">
+            <td>Ermäßigung/Erlass<br/>
+              <small>
+                Hier siehst Du den errechneten Mitgliedsbeitrag.<br/>
+                Du kannst im Falle eines Antrags auf Ermäßigung einen neuen Betrag festsetzen -- auch 0 Euro.<br/>
+                Daraufhin wird die alte Rechnung storniert.
+                Das Mitglied erhält eine E-Mail.<br/>
+                Diese enthält Links auf die Storno-Rechnung
+                und eine neue geänderte Rechnung.
+              </small>
+            </td>
+            <td>
+              <table>
+                <tr>
+                  <td><small>müsste zahlen:</small></td>
+                  <td>${member.dues15_start}</td>
+                </tr>
+                <tr>
+                  <td><small>berechn. Beitrag: &nbsp;</small></td>
+                  <td>${member.dues15_amount} Euro</td>
+                </tr>
+                <tr>
+                  <td><small>ermäßigter Beitrag: &nbsp;</small></td>
+                  <td>${member.dues15_amount_reduced} Euro</td>
+                </tr>
+              </table>
+              <p>
+                
+                <form class="form-inline"
+                      action="${request.route_url('dues15_reduction', member_id=member.id)}"
+                      method="post">
+                  <label>ermäßigen auf:</label> 
+                     <input type="text"
+                           class="form-control"
+                           title="foo"
+                           name="amount"
+                           value="${member.dues15_amount_reduced or member.dues15_amount}">
+                    <input name="submit" type="submit"
+                           class="btn btn-primary"
+                           value="Reduce Dues.">
+                </form>
+              </p>
+              <p class="lead alert alert-danger">
+                <span  color="red" tal:repeat="error request.session.pop_flash('dues15_message_to_staff')">
+                  ${error}
+                </span>
+              </p>              
+              <p>
+                see also <a href="${request.route_url('dues15_listing')}"
+                            class="btn btn-primary">Dues15 Invoices Listing</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
   </tal:block>
 </html>

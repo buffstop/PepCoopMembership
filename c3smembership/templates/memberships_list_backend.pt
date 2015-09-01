@@ -115,8 +115,8 @@
         </th>
         <!-- Reactivated for for next GV. -->
         <th>
-          BC/GV<br />
-          invitation
+          dues<br />
+          invoice
         </th>
         <!-- -->
         <th>
@@ -165,13 +165,13 @@
         </td>
         <!-- Reactivated for next GV. -->
         <td>
-          <a tal:condition="not member.email_invite_flag_bcgv15"
-             href="${request.route_url('invite_member', m_id=member.id)}"
-             title="BC/GV invitation not sent yet"
+          <a tal:condition="member.dues15_invoice is False"
+             href="${request.route_url('send_dues_invoice_email', member_id=member.id)}"
+             title="dues invoice not sent yet. Click to send!"
              class="btn btn-danger"></a>
-          <a tal:condition="member.email_invite_flag_bcgv15"
-             href="${request.route_url('invite_member', m_id=member.id)}"
-             title="gesendet ${member.email_invite_date_bcgv15.strftime('am %d.%m.%Y um %H:%M')}"
+          <a tal:condition="member.dues15_invoice is True"
+             href="${request.route_url('send_dues_invoice_email', member_id=member.id)}"
+             title="gesendet ${member.dues15_invoice_date.strftime('am %d.%m.%Y um %H:%M')}"
              class="btn btn-success"></a>
         </td>
         <!-- -->

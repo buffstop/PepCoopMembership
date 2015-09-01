@@ -340,7 +340,18 @@ class C3sMember(Base):
     certificate_email = Column(Boolean, default=False)
     certificate_token = Column(Unicode(10))
     certificate_email_date = Column(DateTime())
-
+    # membership fees aka dues, for 2015
+    dues15_invoice = Column(Boolean, default=False)  # sent?
+    dues15_invoice_date = Column(DateTime())  # when?
+    dues15_invoice_no = Column(Integer())  # lfd. nummer
+    dues15_token = Column(Unicode(10))
+    dues15_start = Column(Unicode(255))
+    dues15_amount = Column(Integer())  # calculated: how much to pay
+    dues15_amount_paid = Column(Integer())  # actually paid
+    dues15_paid_date = Column(DateTime())  # paid when?
+    dues15_reduced = Column(Boolean, default=False)  # was reduced?
+    dues15_amount_reduced = Column(Unicode(10))  # ..to amount
+    
     def __init__(self, firstname, lastname, email, password,
                  address1, address2, postcode, city, country, locale,
                  date_of_birth, email_is_confirmed, email_confirm_code,
@@ -419,9 +430,31 @@ class C3sMember(Base):
             return False
 
     @classmethod
+    def check_for_existing_dues15_token(cls, dues_token):
+        """
+        check if a dues token is already present
+        """
+        check = DBSession.query(cls).filter(
+            cls.dues15_token == dues_token).first()
+        if check:  # pragma: no cover
+            return True
+        else:
+            return False
+
+    @classmethod
     def get_by_id(cls, _id):
         """return one member by id"""
         return DBSession.query(cls).filter(cls.id == _id).first()
+
+    @classmethod
+    def get_by_email(cls, _email):
+        """return one or more members by email (a list!)"""
+        return DBSession.query(cls).filter(cls.email == _email).all()
+
+    @classmethod
+    def get_by_dues15_token(cls, _code):
+        """return one member by fee token"""
+        return DBSession.query(cls).filter(cls.dues15_token == _code).first()
 
     @classmethod
     def get_all(cls):
@@ -436,6 +469,26 @@ class C3sMember(Base):
                 cls.membership_accepted == 1,
                 cls.email_invite_flag_bcgv15 == None
             )).slice(0, num).all()
+
+    @classmethod
+    def get_dues_invoicees(cls, num):
+        """return a given number of members to send dues invoices to"""
+        return DBSession.query(cls).filter(
+            and_(
+                cls.membership_accepted == 1,
+                cls.dues15_invoice == 0
+            )).slice(0, num).all()
+
+    @classmethod
+    def get_max_dues15_invoice_no(cls):
+        """return maximum of given invoice numbers"""
+        res, = DBSession.query(func.max(cls.dues15_invoice_no)).first()
+        # print("the result: {}".format(res,))
+        # print(DBSession.query(func.max(cls.dues15_invoice_no)).first())
+
+        if res is None:
+            return 0
+        return res
 
     @classmethod
     def delete_by_id(cls, _id):
@@ -863,6 +916,64 @@ class C3sMember(Base):
                 names[_key] = _key
         return names
 
+
+class Dues15Invoice(Base):
+    """
+    this table stores the invoices for the 2015 version of dues.
+    we need this for bookkeeping,
+    because whenever a member is granted a reduction of her dues,
+    the old one canceled by a reversal invoice
+    and a new invoice must be issued.
+
+    edge case: if reduced to 0, no new invoice needed.
+    """
+    __tablename__ = 'dues15invoices'
+    id = Column(Integer, primary_key=True)
+    # this invoice
+    invoice_no = Column(Integer())
+    invoice_no_string = Column(Unicode(255))
+    invoice_date = Column(DateTime())
+    invoice_amount = Column(Unicode(255))
+    is_cancelled = Column(Boolean, default=False)
+    is_reversal = Column(Boolean, default=False)
+    cancelled_date = Column(DateTime())
+    # person reference
+    member_id = Column(Integer())
+    membership_no = Column(Integer())
+    email = Column(Unicode(255))
+    token = Column(Unicode(255))
+    # referrals
+    preceding_invoice_no = Column(Integer(), default=None)
+    succeeding_invoice_no = Column(Integer(), default=None)
+    
+    def __init__(self,
+                 invoice_no,
+                 invoice_no_string,
+                 invoice_date,
+                 invoice_amount,
+                 member_id,
+                 membership_no,
+                 email,
+                 token,
+                 ):
+        self.invoice_no = invoice_no
+        self.invoice_no_string = invoice_no_string
+        self.invoice_date = invoice_date
+        self.invoice_amount = invoice_amount
+        self.member_id = member_id
+        self.membership_no = membership_no
+        self.email = email
+        self.token = token
+
+    @classmethod
+    def get_all(cls):
+        """return all dues15 invoices"""
+        return DBSession.query(cls).all()
+
+    @classmethod
+    def get_by_invoice_no(cls, _no):
+        """return one invoice by invoice number"""
+        return DBSession.query(cls).filter(cls.invoice_no == _no).first()
 
 # # table for relation between membership and shares
 # membership_shares = Table(
