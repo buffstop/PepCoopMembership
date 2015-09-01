@@ -332,12 +332,20 @@ def switch_sig(request):
         )
     )
 
-    return HTTPFound(
-        request.route_url(
-            'dashboard',
-            number=dashboard_page, order=order, orderby=order_by)
-        + '#member_' + str(_member.id)
-    )
+    if 'dashboard' in request.referrer:
+        return HTTPFound(
+            request.route_url(
+                'dashboard',
+                number=dashboard_page, order=order, orderby=order_by)
+            + '#member_' + str(_member.id)
+        )
+    else:
+        return HTTPFound(
+            request.route_url(
+                'detail',
+                memberid=_member.id)
+            + '#membership_info'
+        )
 
 
 @view_config(permission='manage',
@@ -415,12 +423,20 @@ def switch_pay(request):
             _member.payment_received
         )
     )
-    return HTTPFound(
-        request.route_url(
-            'dashboard',
-            number=dashboard_page, order=order, orderby=order_by
-        ) + '#member_' + str(_member.id)
-    )
+    if 'dashboard' in request.referrer:
+        return HTTPFound(
+            request.route_url(
+                'dashboard',
+                number=dashboard_page, order=order, orderby=order_by)
+            + '#member_' + str(_member.id)
+        )
+    else:
+        return HTTPFound(
+            request.route_url(
+                'detail',
+                memberid=_member.id)
+            + '#membership_info'
+        )
 
 
 @view_config(renderer='json',
