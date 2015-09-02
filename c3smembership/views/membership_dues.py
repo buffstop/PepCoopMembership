@@ -777,7 +777,8 @@ def dues15_reduce(request):
         request.route_url(
             'make_dues_invoice_no_pdf',
             email=_m.email,
-            code=_m.dues15_token
+            code=_m.dues15_token,
+            i=_new_invoice_no + 1
         )
     )
 
