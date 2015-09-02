@@ -191,19 +191,20 @@ def send_dues_invoice_email(request, m_id=None):
         _m.dues15_start = dues_start
         _m.dues15_amount = dues_amount
 
-        # store some more info about invoice in invoice table
-        _i = Dues15Invoice(
-            invoice_no=_m.dues15_invoice_no,
-            invoice_no_string=(
-                u'C3S-dues2015-' + str(_m.dues15_invoice_no).zfill(4)),
-            invoice_date=_m.dues15_invoice_date,
-            invoice_amount=u'' + _m.dues15_amount,
-            member_id=_m.id,
-            membership_no=_m.membership_number,
-            email=_m.email,
-            token=_m.dues15_token,
-        )
-        DBSession.add(_i)
+        if 'normal' in _m.membership_type:  # only for normal members
+            # store some more info about invoice in invoice table
+            _i = Dues15Invoice(
+                invoice_no=_m.dues15_invoice_no,
+                invoice_no_string=(
+                    u'C3S-dues2015-' + str(_m.dues15_invoice_no).zfill(4)),
+                invoice_date=_m.dues15_invoice_date,
+                invoice_amount=u'' + _m.dues15_amount,
+                member_id=_m.id,
+                membership_no=_m.membership_number,
+                email=_m.email,
+                token=_m.dues15_token,
+            )
+            DBSession.add(_i)
         DBSession.flush()
 
     # now: prepare that email
