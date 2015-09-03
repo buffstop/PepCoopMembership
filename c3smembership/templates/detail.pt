@@ -303,7 +303,10 @@
           <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice">
             <td>PDF generieren (download)</td>
             <td>
-              <a href="${request.route_url('make_dues_invoice_pdf', email=member.email, code=member.dues15_token)}"
+              <a href="${request.route_url('make_dues_invoice_no_pdf',
+                       email=member.email,
+                       code=member.dues15_token,
+                       i=str(_m.dues15_invoice_no).zfill(4))}"
                  title="Mitgliedschaftsbeitragsrechnung ansehen"
                  class="btn btn-success">PDF generieren und laden</a>
             </td>

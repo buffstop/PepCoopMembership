@@ -390,8 +390,8 @@ def send_dues_invoice_batch(request):
 #     return HTTPFound(request.route_url('toolbox'))
 
 
-# @view_config(route_name='make_dues_invoice_pdf')
-# def make_dues_invoice_pdf(request):
+# @view_config(route_name='make_dues_invoice_pdf')  # retired!
+# def make_dues_invoice_pdf(request):  # retired! use make_dues_invoice_no_pdf
 #     """
 #     Superseeded by make_dues_invoice_no_pdf
 #

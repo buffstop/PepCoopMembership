@@ -138,8 +138,8 @@ def main(global_config, **settings):
     config.add_route('send_dues_invoice_batch', '/dues_invoice_batch')
     config.add_route('send_dues_receipt_mail',
                      '/dues_receipt_mail/{member_id}')
-    config.add_route('make_dues_invoice_pdf',
-                     '/dues_invoice/{email}/{code}/invoice.pdf')
+    # config.add_route('make_dues_invoice_pdf',  # retired! use route below!
+    #                 '/dues_invoice/{email}/{code}/invoice.pdf')
     config.add_route('make_dues_invoice_no_pdf',
                      '/dues_invoice_no/{email}/{code}/C3S-dues15-{i}.pdf')
     config.add_route('dues15_reduction',
