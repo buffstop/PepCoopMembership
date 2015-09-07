@@ -118,7 +118,6 @@ demnach 50,- Euro.
 Da Du investierendes Mitglied bist, bist Du vom Mitgliedsbeitrag
 befreit. Du würdest der C3S aber sehr helfen, wenn Du dennoch freiwillig
 einen Beitrag leisten würdest.
-
 {3}
 Wenn Du uns unterstützen möchtest, überweise Deine freiwillige
 Zuwendung auf folgendes Konto:
@@ -158,7 +157,6 @@ Euro.
 Since you are an investing member, you are exempt from this payment.
 However, your voluntary contribution would be highly appreciated as a
 tremendous help for the C3S.
-
 {3}
 If you want to support us, please transfer your voluntary contribution
 to the following account:
@@ -186,7 +184,6 @@ a) bis zu einem Jahresumsatz i. H. v. 100.000 Euro
 b) bis zu einem Jahresumsatz i. H. v. 200.000 Euro
    pro Jahr 200 Euro
 c) bei höherem Jahresumsatz ist die Höhe entsprechend anzupassen.
-
 """
 
 # additional english snippet for *investing* members that are *legal entities*
@@ -197,7 +194,6 @@ adding a supportive contribution of the following amount:
 a) up to a yearly turnover of 100.000 Euro: 100 Euro per year
 b) up to a yearly turnover of 200.000 Euro: 200 Euro per year
 c) with higher turnover: raise fee accordingly.
-
 """
 
 
