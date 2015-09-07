@@ -945,8 +945,9 @@ def make_reversal_invoice_pdf(request):
     try:
         assert(_inv.token == _code)
     except:
+        # print(u"Token did not match!")
         request.session.flash(
-            u"No invoice found!",
+            u"Token did not match!",
             'message_to_user'  # message queue for user
         )
         return HTTPFound(request.route_url('error_page'))
@@ -955,6 +956,7 @@ def make_reversal_invoice_pdf(request):
     try:
         assert(_inv.is_reversal)
     except:
+        # print(u"No reversal invoice found!")
         request.session.flash(
             u"No reversal invoice found!",
             'message_to_user'  # message queue for user
@@ -1011,7 +1013,8 @@ def make_storno_pdf_pdflatex(_member, _inv=None):
     (_path, _filename) = os.path.split(receipt_pdf.name)
     _filename = os.path.splitext(_filename)[0]
 
-    _invoice_no = str(_inv.invoice_no).zfill(4)
+    _invoice_no = str(_inv.invoice_no).zfill(4) + '-S'
+    _invoice_date = _inv.invoice_date.strftime('%d. %m. %Y')
     # print("got invoice no from db: {}".format(_invoice_no))
     # print("got locale from db: {}".format(_member.locale))
     # set variables for tex command
@@ -1024,10 +1027,11 @@ def make_storno_pdf_pdflatex(_member, _inv=None):
         'personalCity': _member.city,
         'personalMShipNo': _member.membership_number,
         'invoiceNo': _invoice_no,
+        'invoiceDate': _invoice_date,
         # 'duesStart': dues_start,
         'duesAmount': _inv.invoice_amount,
         'origInvoiceRef': ('C3S-dues2015-' +
-                           str(_inv.preceding_invoice_no).zfill(4) + '-S'),
+                           str(_inv.preceding_invoice_no).zfill(4)),
         'lang': 'de',
         'pdfBackground': bg_pdf,
     }
