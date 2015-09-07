@@ -24,7 +24,7 @@
         <th>preced.</th>
         <th>succ.</th>
       </tr>
-      <!--! loop over the list of applications for membership -->
+      <!--! loop over the list of invoices -->
       <tr tal:repeat="i invoices"
           tal:attributes="id python: 'invoice_{0}'.format(i.id)">
         <td>${i.id}</td>

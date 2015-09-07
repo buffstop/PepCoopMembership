@@ -11,7 +11,7 @@
         <a href="${request.route_url('dashboard_only')}"
            class="btn btn-success"
            >back to dashboard</a>
-        or the 
+        or the
         <a href="${request.route_url('membership_listing_backend', number=0, orderby='id', order='asc')}"
            class="btn btn-success"
            >memberships</a>.
@@ -70,7 +70,7 @@
 	  <td>${member.date_of_birth}</td>
         </tr>
       </table>
-      
+
       <h3>Membership Meta</h3>
       <table class="table table-striped">
 	<tr>
@@ -104,12 +104,21 @@
         </tr>
 	<tr>
           <td>
+          <a name="cancel"></a>kündigung erklärt?</td>
+	  <td>$ off {member.account_canceled}</td>
+        </tr>
+	<tr tal:condition="True or member.account_canceled">
+          <td>account cancellation date</td>
+	  <td>$ off {member.account_canceled_date}</td>
+        </tr>
+	<tr>
+          <td>
           <a name="comment"></a>staff comment</td>
 	  <td>${member.accountant_comment}</td>
         </tr>
 
       </table>
-      
+
       <a name="membership_info"></a>
       <h3>Membership Info</h3>
 
@@ -231,7 +240,7 @@
                 </td>
               </tr>
             </table>
-          </div>          
+          </div>
 
           </td>
         </tr>
@@ -306,7 +315,7 @@
               <a href="${request.route_url('make_dues_invoice_no_pdf',
                        email=member.email,
                        code=member.dues15_token,
-                       i=str(_m.dues15_invoice_no).zfill(4))}"
+                       i=str(member.dues15_invoice_no).zfill(4))}"
                  title="Mitgliedschaftsbeitragsrechnung ansehen"
                  class="btn btn-success">PDF generieren und laden</a>
             </td>
@@ -334,15 +343,18 @@
                 </tr>
                 <tr>
                   <td><small>ermäßigter Beitrag: &nbsp;</small></td>
-                  <td>${member.dues15_amount_reduced} Euro</td>
+                  <td tal:condition="not member.dues15_reduced">
+                    kein Antrag gestellt</td>
+                  <td tal:condition="member.dues15_reduced">
+                    ${member.dues15_amount_reduced} Euro</td>
                 </tr>
               </table>
               <p>
-                
+
                 <form class="form-inline"
                       action="${request.route_url('dues15_reduction', member_id=member.id)}"
                       method="post">
-                  <label>ermäßigen auf:</label> 
+                  <label>ermäßigen auf:</label>
                      <input type="text"
                            class="form-control"
                            title="foo"
@@ -357,11 +369,64 @@
                 <span  color="red" tal:repeat="error request.session.pop_flash('dues15_message_to_staff')">
                   ${error}
                 </span>
-              </p>              
+              </p>
               <p>
                 see also <a href="${request.route_url('dues15_listing')}"
                             class="btn btn-primary">Dues15 Invoices Listing</a>
               </p>
+            </td>
+          </tr>
+          <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice">
+            <td>Rechnungen<br/>
+              <small>
+                Hier siehst Du die erstellten Rechnungen für dieses Mitglied.<br/>
+              </small>
+            </td>
+            <td>
+              <table class="table table-striped" rules="rows"><!--! the actual table  -->
+                <tr class="table-striped">
+                  <th>id</th>
+                  <th>invoice no</th>
+                  <th>invoice string<br/>download PDF</th>
+                  <th>date</th>
+                  <th>amount</th>
+                  <th>valid or<br/>cancelled?</th>
+                  <th>preced.</th>
+                  <th>succ.</th>
+                </tr>
+                <!--! loop over the list of invoices -->
+                <tr tal:repeat="i invoices"
+                    tal:attributes="id python: 'invoice_{0}'.format(i.id)">
+                  <td>${i.id}</td>
+                  <td><a title="${i.invoice_no}">${i.invoice_no}</a></td>
+                  <td>
+                    <!-- if this invoice is a normal invoice -->
+                    <a tal:condition="not i.is_reversal"
+                       href="${request.route_url('make_dues_invoice_no_pdf',
+                             i=str(i.invoice_no).zfill(4),
+                             email=i.email,
+                             code=i.token)}"
+                       title="download ${i.invoice_no_string}.pdf">
+                      ${i.invoice_no_string}
+                    </a>
+                    <!-- if this invoice is a REVERSAL INVOICE -->
+                    <a  tal:condition="i.is_reversal"
+                        href="${request.route_url('make_reversal_invoice_pdf',
+                              no=str(i.invoice_no).zfill(4),
+                              email=i.email,
+                              code=i.token)}"
+                        title="download ${i.invoice_no_string}-S.pdf">
+                      ${i.invoice_no_string}
+                    </a>
+                  </td>
+                  <td>${i.invoice_date.strftime('%d.%m.%Y %H:%M')}</td>
+                  <td>${i.invoice_amount}</td>
+                  <td>${'cancelled' if i.is_cancelled else 'valid'}</td>
+                  <td>${i.preceding_invoice_no}</td>
+                  <td>${i.succeeding_invoice_no}</td>
+                </tr>
+              </table>
+              <!--! end of table -->
             </td>
           </tr>
         </table>

@@ -17,6 +17,7 @@ from c3smembership.models import (
     C3sMember,
     C3sStaff,
     # DBSession,
+    Dues15Invoice,
 )
 from c3smembership.utils import generate_pdf
 from c3smembership.mail_utils import (
@@ -585,9 +586,13 @@ def member_detail(request):
         u'ü', u'ue').replace(
         u'.', u'')
 
+    # get the members invoices from the DB
+    _invoices = Dues15Invoice.get_by_membership_no(_member.membership_number)
+
     return {
         'member': _member,
         'cert_link': _cert_link,
+        'invoices': _invoices,
         # 'form': html
     }
 
