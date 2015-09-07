@@ -33,7 +33,7 @@ Bitte überweise den Betrag auf folgendes Konto der C3S SCE:
 
 Gebe bei der Überweisung des Mitgliedsbeitrags bitte unbedingt den oben
 genannten Verwendungszweck an, damit die Zahlung zweifelsfrei Dir
-zugeordnet werden kann:
+zugeordnet werden kann.
 
 Die Rechnung findest Du unter folgendem Link:
 
