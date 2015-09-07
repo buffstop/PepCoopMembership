@@ -5,27 +5,27 @@ dues_invoice_mailbody_normal_de = u'''
 
 Hallo {0} {1},
 
-am 16.07.2015 hat die außerordentliche Mitgliederversammlung der C3S SCE eine
-vorläufige Beitragsordnung erlassen, weil uns sonst die finanzielle Basis
-fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
+am 16.07.2015 hat die außerordentliche Mitgliederversammlung der C3S SCE
+eine vorläufige Beitragsordnung erlassen, weil uns sonst die finanzielle
+Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
-Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
-demnach 50,- Euro für das ganze Jahr 2015.
+Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt demnach
+50,- Euro für das ganze Jahr 2015.
 
-Dein Mitgliedsbeitrag {5} beträgt demnach {3} Euro.
+Dein Mitgliedsbeitrag ab {5} beträgt also {3} Euro.
 
-Bitte überweise {3} Euro auf folgendes Konto der C3S SCE:
+Bitte überweise den Betrag auf folgendes Konto der C3S SCE:
 
   Verwendungszweck: {2}
   IBAN: DE79 8309 4495 0003 2643 78
   BIC: GENODEF1ETK
   Bank: Ethikbank
 
-Bei der Überweisung des Mitgliedsbeitrags bitte den folgenden Verwendungszweck
-angeben, damit die Zahlung zweifelsfrei Dir zugeordnet werden kann:
-{2}
+Gebe bei der Überweisung des Mitgliedsbeitrags bitte unbedingt den oben
+genannten Verwendungszweck an, damit die Zahlung zweifelsfrei Dir
+zugeordnet werden kann:
 
 Die Rechnung findest Du unter folgendem Link:
 
@@ -42,20 +42,22 @@ Dein C3S Team
 # {2}: referral code: C3S-dues2015-ABCDEFGH
 # {3}: dues, maybe partial, depending on entry date
 # {4}: link to invoice PDF
-# {5}: dues start quarter, e.g. "ab Quartal 2"
+# {5}: dues start quarter, e.g. "Quartal 2"
 
 # english template for *normal* members; see placeholder list below!
 dues_invoice_mailbody_normal_en = u'''[english version below]
 
 Hello {0} {1},
 
-On July 16th, 2015, the extraordinary general assembly of the C3S has issued
-temporary membership contribution rules, in order to secure the financial
-basis for the continuation of our common project:
+On July 16th, 2015, the extraordinary general assembly of the C3S has
+issued temporary membership contribution rules, in order to secure the
+financial basis for the continuation of our common project:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
-For 2015, the membership dues for active members will therefore be 50,- Euro.
+For 2015, the membership dues for active members will therefore be 50,-
+Euro. They will be less if you joined later than in the first quarter
+2015.
 
 Please transfer {3} Euro to the following account of the C3S SCE:
 
@@ -65,7 +67,7 @@ Please transfer {3} Euro to the following account of the C3S SCE:
   Bank: Ethikbank
 
 In order to enable the proper allocation of your membership dues, please
-add the following purpose: {2}
+add the above-mentioned purpose.
 
 You will find the invoice here:
 
@@ -89,9 +91,9 @@ dues_invoice_mailbody_investing_de = u'''
 
 Hallo {0} {1},
 
-am 16.07.2015 hat die außerordentliche Mitgliederversammlung der C3S SCE eine
-vorläufige Beitragsordnung erlassen, weil uns sonst die finanzielle Basis
-fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
+am 16.07.2015 hat die außerordentliche Mitgliederversammlung der C3S SCE
+eine vorläufige Beitragsordnung erlassen, weil uns sonst die finanzielle
+Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
@@ -99,8 +101,8 @@ Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
 demnach 50,- Euro.
 
 Da Du investierendes Mitglied bist, bist Du vom Mitgliedsbeitrag
-befreit. Du würdest der C3S aber sehr helfen, wenn Du dennoch
-freiwillig einen Beitrag leisten würdest.
+befreit. Du würdest der C3S aber sehr helfen, wenn Du dennoch freiwillig
+einen Beitrag leisten würdest.
 
 Wenn Du uns unterstützen möchtest, überweise Deine freiwillige
 Zuwendung auf folgendes Konto:
@@ -109,7 +111,6 @@ Zuwendung auf folgendes Konto:
   IBAN: DE79 8309 4495 0003 2643 78
   BIC: GENODEF1ETK
   Bank: Ethikbank
-
 
 Vielen Dank für Deinen Support!
 
@@ -127,22 +128,23 @@ dues_invoice_mailbody_investing_en = u'''
 
 Hello {0} {1},
 
-On July 16th, 2015, the extraordinary general assembly of the C3S has issued
-temporary membership contribution rules, in order to secure the financial basis
-for the continuation of our common project:
+On July 16th, 2015, the extraordinary general assembly of the C3S has
+issued temporary membership contribution rules, in order to secure the
+financial basis for the continuation of our common project:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
-For 2015, the membership dues for active members will therefore be 50,- Euro.
+For 2015, the membership dues for active members will therefore be 50,-
+Euro.
 
 Since you are an investing member, you are exempt from this payment.
 However, your voluntary contribution would be highly appreciated as a
 tremendous help for the C3S.
 
-If you want to support us, please transfer your voluntary contribution to the
-following account:
+If you want to support us, please transfer your voluntary contribution
+to the following account:
 
-  Purpose:
+  Purpose: {2}
   IBAN: DE79 8309 4495 0003 2643 78
   BIC: GENODEF1ETK
   Bank: Ethikbank
@@ -174,8 +176,8 @@ c) bei höherem Jahresumsatz ist die Höhe entsprechend anzupassen.
 
 # additional english snippet for *investing* members that are *legal entities*
 dues_legalentities_en = u"""
-For legal entities there is a recommendation to exceed the basic fee
-by adding a supportive contribution of the following amount:
+For legal entities there is a recommendation to exceed the basic fee by
+adding a supportive contribution of the following amount:
 
 a) up to a yearly turnover of 100.000 Euro: 100 Euro per year
 b) up to a yearly turnover of 200.000 Euro: 200 Euro per year
@@ -239,6 +241,7 @@ Die Storno-Rechnung zu Deiner ersten Beitragsrechnung findest Du hier:
   {5}
 
 Vielen Dank für Deinen Support!
+
 Dein C3S Team
 '''
 
@@ -285,6 +288,7 @@ Die Storno-Rechnung zu deiner Beitragsrechnung findest du hier:
   {2}
 
 Beste Grüße
+
 Dein C3S Team
 """
 
@@ -296,10 +300,11 @@ You have applied for exemption from your membership contributions.
 
 We therefore exempt you from the payment of your dues.
 
-You will find the reverse invoice of your membership dues invoice here:
+You will find the reversal invoice of your membership dues invoice here:
 
   {2}
 
 With best wishes
+
 Your C3S team
 """
