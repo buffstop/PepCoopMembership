@@ -64,29 +64,47 @@ def make_random_string():
         ) for x in range(10))
 
 
-def calculate_partial_dues(member):
+def calculate_partial_dues15(member):
     """
-    helper function:
-    calculate dues depending on quarter of entry date
+    helper function: calculate
+    * codified start quarter (q1, q2, q3, q4) and
+    * dues
+    depending on members entry date
     """
-    loc = member.locale
     if member.membership_date < datetime(2015, 4, 1):
         # first quarter of 2015 or earlier
-        _start = u"ganzes Jahr" if 'de' in loc else u"whole year"
+        _start = u"q1_2015"
         _amount = "50"
     elif member.membership_date < datetime(2015, 7, 1):
-        # second quarter of 2015 or earlier
-        _start = u"ab Quartal 2" if 'de' in loc else u"from 2nd quarter"
+        # second quarter of 2015
+        _start = u"q2_2015"
         _amount = "37,50"
     elif member.membership_date < datetime(2015, 10, 1):
-        # third quarter of 2015 or earlier
-        _start = u"ab Quartal 3" if 'de' in loc else u"from 3rd quarter"
+        # third quarter of 2015
+        _start = u"q3_2015"
         _amount = "25"
     elif member.membership_date >= datetime(2015, 10, 1):
-        # third quarter of 2015 or earlier
-        _start = u"ab Quartal 4" if 'de' in loc else u"from 4th quarter"
+        # third quarter of 2015
+        _start = u"q4_2015"
         _amount = "12,50"
     return (_start, _amount)
+
+
+def string_start_quarter(member):
+    """
+    helper function: produce translated string for quarter of entry date
+    depending on members locale
+    """
+    loc = member.locale
+    if 'q1_2015' in member.dues15_start:  # first quarter of 2015 or earlier
+        _s = u"Quartal 1" if 'de' in loc else "1st quarter"
+    elif 'q2_2015' in member.dues15_start:  # second quarter of 2015
+        _s = u"Quartal 2" if 'de' in loc else u"2nd quarter"
+    elif 'q3_2015' in member.dues15_start:  # third quarter of 2015
+        _s = u"Quartal 3" if 'de' in loc else u"3rd quarter"
+    elif 'q4_2015' in member.dues15_start:  # third quarter of 2015
+        _s = u"Quartal 4" if 'de' in loc else u"4th quarter"
+    return _s
 
 
 @view_config(
@@ -176,7 +194,7 @@ def send_dues_invoice_email(request, m_id=None):
             DBSession.flush()  # save dataset to DB
 
         # calculate dues amount (maybe partial, depending on quarter)
-        dues_start, dues_amount = calculate_partial_dues(_m)
+        dues_start, dues_amount = calculate_partial_dues15(_m)
 
         '''
         now we have enough info to update the member info
@@ -221,6 +239,7 @@ def send_dues_invoice_email(request, m_id=None):
         else:
             _mail_subject = u"Membership contributions C3S SCE - invoice"
             _mail_template = dues_invoice_mailbody_normal_en
+        _start_quarter = string_start_quarter(_m)
         # prepare invoice URL
         _invoice_url = (
             request.route_url(
@@ -241,7 +260,7 @@ def send_dues_invoice_email(request, m_id=None):
                 _i.invoice_no_string,  # {2}
                 _m.dues15_amount,  # {3}
                 _invoice_url,  # {4}
-                _m.dues15_start,  # {5}
+                _start_quarter,  # {5}
             ),
             extra_headers={
                 'Reply-To': 'yes@c3s.cc',
@@ -267,7 +286,7 @@ def send_dues_invoice_email(request, m_id=None):
             body=_mail_template.format(
                 _m.firstname,  # {0}
                 _m.lastname,  # {1}
-                'C3S-dues2015-' + str(_m.dues15_invoice_no).zfill(4),  # {2}
+                'C3S-dues2015-FZ-' + str(_m.membership_number),  # {2}
                 _dues_legalentities if _m.is_legalentity else '',  # {3}
             ),
             extra_headers={
@@ -476,6 +495,17 @@ def make_dues_invoice_no_pdf(request):
             'message_to_user'  # message queue for user
         )
         return HTTPFound(request.route_url('error_page'))
+
+    # sanity check: invoice must not be reversal
+    try:
+        assert(not _inv.is_reversal)
+    except:
+        request.session.flash(
+            u"Token did not match!",
+            'message_to_user'  # message queue for user
+        )
+        return HTTPFound(request.route_url('error_page'))
+
     # return a pdf file
     pdf_file = make_dues_pdf_pdflatex(_m, _inv)
     response = Response(content_type='application/pdf')
@@ -536,17 +566,17 @@ def make_dues_pdf_pdflatex(_member, _inv=None):
     # print("_inv: {}".format(_inv))
     # print("_inv.invoice_no: {}".format(_inv.invoice_no))
 
-    if _inv is None:  # maybe exclude from tests?
+    if _inv is not None:
+        # use invoice no from URL
+        _invoice_no = str(_inv.invoice_no).zfill(4)
+        # print("got invoice no from URL: {}".format(_invoice_no))
+        _invoice_date = _inv.invoice_date.strftime('%d. %m. %Y')
+    else:
         # this branch is deprecated, because we always supply an invoice number
         # use invoice no from member record
         _invoice_no = str(_member.dues15_invoice_no).zfill(4)
         _invoice_date = _member.dues15_invoice_date
         # print("got invoice no from db: {}".format(_invoice_no))
-    else:
-        # use invoice no from URL
-        _invoice_no = str(_inv.invoice_no).zfill(4)
-        # print("got invoice no from URL: {}".format(_invoice_no))
-        _invoice_date = _inv.invoice_date.strftime('%d. %m. %Y')
 
     # print("member.dues15_reduced is {}".format(_member.dues15_reduced))
     # print("member.dues15_amount_reduced is {}".format(
@@ -563,7 +593,7 @@ def make_dues_pdf_pdflatex(_member, _inv=None):
         'personalMShipNo': _member.membership_number,
         'invoiceNo': str(_invoice_no).zfill(4),  # leading zeroes!
         'invoiceDate': _invoice_date,
-        'duesStart': _member.dues15_start,
+        'duesStart': string_start_quarter(_member),
         'duesAmount': _inv.invoice_amount,
         # _member.dues15_amount_reduced if (
         #     _member.dues15_reduced) else _member.dues15_amount,
@@ -681,10 +711,28 @@ def dues15_reduce(request):
         return HTTPFound(request.route_url('error_page'))
 
     # sanity checks
-    if _reduced_amount == _m.dues15_amount_reduced:
+    # print("the current amount: {}".format(_m.dues15_amount_reduced))
+
+    # print("the amount to reduce to: {}".format(_reduced_amount))
+    # print("the amount to reduce to: type: {}".format(type(_reduced_amount)))
+
+    if (not _m.dues15_reduced and (
+            (_reduced_amount in str(_m.dues15_amount)) and
+            (str(_m.dues15_amount) in _reduced_amount))):
+        request.session.flash(
+            u"Dieser Beitrag ist der default-Beitrag!",
+            'dues15_message_to_staff'  # message queue for staff
+        )
+        return HTTPFound(
+            request.route_url('detail', memberid=_m.id)
+            + '#dues15')
+
+    if (
+            (_reduced_amount in str(_m.dues15_amount_reduced)) and
+            (str(_m.dues15_amount_reduced) in _reduced_amount)):
         request.session.flash(
             u"Auf diesen Beitrag wurde schon reduziert!",
-            'dues15_message_to_staff'  # message queue for user
+            'dues15_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
             request.route_url('detail', memberid=_m.id)
@@ -734,7 +782,7 @@ def dues15_reduce(request):
     _new_invoice = Dues15Invoice(
         invoice_no=_new_invoice_no + 1,
         invoice_no_string=(
-            'C3S-dues2015-' + str(_new_invoice_no + 1).zfill(4)),
+            u'C3S-dues2015-' + str(_new_invoice_no + 1).zfill(4)),
         invoice_date=datetime.today(),
         invoice_amount=u'' + str(_reduced_amount),
         member_id=_m.id,
@@ -768,10 +816,10 @@ def dues15_reduce(request):
     # prepare invoice URLs
     _reversal_url = (
         request.route_url(
-            'make_dues_invoice_no_pdf',
+            'make_reversal_invoice_pdf',
             email=_m.email,
             code=_m.dues15_token,
-            i=_reversal_invoice.invoice_no
+            no=str(_reversal_invoice.invoice_no).zfill(4)
         )
     )
     _invoice_url = (
@@ -779,7 +827,7 @@ def dues15_reduce(request):
             'make_dues_invoice_no_pdf',
             email=_m.email,
             code=_m.dues15_token,
-            i=_new_invoice_no + 1
+            i=str(_new_invoice_no + 1).zfill(4)
         )
     )
 
@@ -791,11 +839,10 @@ def dues15_reduce(request):
             body=_mail_template.format(
                 _m.firstname,  # {0}
                 _m.lastname,  # {1}
+                _m.dues15_amount_reduced,  # {3}
                 'C3S-dues2015-' + str(_m.dues15_invoice_no).zfill(4),  # {2}
-                # 'C3S-dues2015-' + str(_m.dues15_invoice_no),  # {2}
-                _m.dues15_amount,  # {3}
-                _reversal_url,  # {4}
-                _invoice_url,  # {5}
+                _invoice_url,  # {4}
+                _reversal_url,  # {5}
             ),
             extra_headers={
                 'Reply-To': 'yes@c3s.cc',
@@ -872,6 +919,16 @@ def make_reversal_invoice_pdf(request):
     except:
         request.session.flash(
             u"No invoice found!",
+            'message_to_user'  # message queue for user
+        )
+        return HTTPFound(request.route_url('error_page'))
+
+    # sanity check: reversal invoice token must be reversal
+    try:
+        assert(_inv.is_reversal)
+    except:
+        request.session.flash(
+            u"No reversal invoice found!",
             'message_to_user'  # message queue for user
         )
         return HTTPFound(request.route_url('error_page'))
