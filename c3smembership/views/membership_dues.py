@@ -698,6 +698,7 @@ def dues15_reduce(request):
     """
     _m_id = request.matchdict['member_id']
     _reduced_amount = request.POST['amount']
+    _is_exemption = False  # sane default
 
     try:
         _m = C3sMember.get_by_id(_m_id)
@@ -717,8 +718,8 @@ def dues15_reduce(request):
     # print("the amount to reduce to: type: {}".format(type(_reduced_amount)))
 
     if (not _m.dues15_reduced and (
-            (_reduced_amount in str(_m.dues15_amount)) and
-            (str(_m.dues15_amount) in _reduced_amount))):
+            (str(_reduced_amount) in str(_m.dues15_amount)) and
+            (str(_m.dues15_amount) in str(_reduced_amount)))):
         request.session.flash(
             u"Dieser Beitrag ist der default-Beitrag!",
             'dues15_message_to_staff'  # message queue for staff
@@ -728,8 +729,8 @@ def dues15_reduce(request):
             + '#dues15')
 
     if (
-            (_reduced_amount in str(_m.dues15_amount_reduced)) and
-            (str(_m.dues15_amount_reduced) in _reduced_amount)):
+            (str(_reduced_amount) in str(_m.dues15_amount_reduced)) and
+            (str(_m.dues15_amount_reduced) in str(_reduced_amount))):
         request.session.flash(
             u"Auf diesen Beitrag wurde schon reduziert!",
             'dues15_message_to_staff'  # message queue for staff
