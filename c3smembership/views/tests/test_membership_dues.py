@@ -23,70 +23,50 @@ def _initTestingDB():
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
-        member1 = C3sMember(  # german
-            firstname=u'SomeFirstnäme',
-            lastname=u'SomeLastnäme',
-            email=u'some@shri.de',
-            address1=u"addr one",
-            address2=u"addr two",
+        normal_de = C3sMember(  # german normal
+            firstname=u'Ada Musiziert',
+            lastname=u'Traumhaft ÄÖÜ',
+            email=u'devNull@c3s.cc',
+            address1=u"ada addr one",
+            address2=u"ada addr two",
             postcode=u"12345",
-            city=u"Footown Mäh",
+            city=u"Foostadt Ada",
             country=u"Foocountry",
             locale=u"de",
             date_of_birth=date.today(),
             email_is_confirmed=False,
-            email_confirm_code=u'ABCDEFGFOO',
-            password=u'arandompassword',
+            email_confirm_code=u'NORMAL_DE1',
+            password=u'adasrandompassword',
             date_of_submission=date.today(),
             membership_type=u'normal',
             member_of_colsoc=True,
             name_of_colsoc=u"GEMA",
             num_shares=u'23',
         )
-        member2 = C3sMember(  # english
-            firstname=u'AAASomeFirstnäme',
-            lastname=u'XXXSomeLastnäme',
-            email=u'some2@shri.de',
-            address1=u"addr one",
-            address2=u"addr two",
+        normal_en = C3sMember(  # english normal
+            firstname=u'James',
+            lastname=u'Musician',
+            email=u'dummy@c3s.cc',
+            address1=u"james addr 1",
+            address2=u"james appartment 2",
             postcode=u"12345",
-            city=u"Footown Mäh",
-            country=u"Foocountry",
+            city=u"Jamestown",
+            country=u"Jamescountry",
             locale=u"en",
             date_of_birth=date.today(),
             email_is_confirmed=False,
-            email_confirm_code=u'ABCDEFGBAR',
-            password=u'arandompassword',
+            email_confirm_code=u'NORMAL_DE',
+            password=u'jamesrandompassword',
             date_of_submission=date.today(),
             membership_type=u'normal',
             member_of_colsoc=True,
-            name_of_colsoc=u"GEMA",
+            name_of_colsoc=u"",
             num_shares=u'2',
         )
-        founding_member3 = C3sMember(  # english
-            firstname=u'BBBSomeFirstnäme',
-            lastname=u'YYYSomeLastnäme',
-            email=u'some3@shri.de',
-            address1=u"addr one",
-            address2=u"addr two",
-            postcode=u"12345",
-            city=u"Footown Mäh",
-            country=u"Foocountry",
-            locale=u"en",
-            date_of_birth=date.today(),
-            email_is_confirmed=False,
-            email_confirm_code=u'ABCBARdungHH_',
-            password=u'anotherrandompassword',
-            date_of_submission=date.today(),
-            membership_type=u'normal',
-            member_of_colsoc=True,
-            name_of_colsoc=u"GEMA",
-            num_shares=u'2',
-        )
-        member4 = C3sMember(  # german investing
-            firstname=u'AAASomeFirstnäme4',
-            lastname=u'XXXSomeLastnäme4',
-            email=u'some4@shri.de',
+        investing_de = C3sMember(  # german investing
+            firstname=u'Herman',
+            lastname=u'Investorius',
+            email=u'dummy@c3s.cc',
             address1=u"addr one4",
             address2=u"addr two4",
             postcode=u"12344",
@@ -95,7 +75,7 @@ def _initTestingDB():
             locale=u"de",
             date_of_birth=date.today(),
             email_is_confirmed=False,
-            email_confirm_code=u'ABCDEFGBA4',
+            email_confirm_code=u'INVESTING_DE',
             password=u'arandompasswor4',
             date_of_submission=date.today(),
             membership_type=u'investing',
@@ -103,10 +83,10 @@ def _initTestingDB():
             name_of_colsoc=u"GEMA",
             num_shares=u'60',
         )
-        member5 = C3sMember(  # english investing
-            firstname=u'AAASomeFirstnäme5',
-            lastname=u'XXXSomeLastnäme5',
-            email=u'some5@shri.de',
+        investing_en = C3sMember(  # english investing
+            firstname=u'Britany',
+            lastname=u'Investing',
+            email=u'dummy@c3s.cc',
             address1=u"aone5",
             address2=u"atwo5",
             postcode=u"12355",
@@ -115,7 +95,7 @@ def _initTestingDB():
             locale=u"en",
             date_of_birth=date.today(),
             email_is_confirmed=False,
-            email_confirm_code=u'ABCDEFGBA5',
+            email_confirm_code=u'INVESTING_EN',
             password=u'arandompasswor5',
             date_of_submission=date.today(),
             membership_type=u'investing',
@@ -123,11 +103,52 @@ def _initTestingDB():
             name_of_colsoc=u"GEMA",
             num_shares=u'60',
         )
-        DBSession.add(member1)
-        DBSession.add(member2)
-        DBSession.add(founding_member3)
-        DBSession.add(member4)
-        DBSession.add(member5)
+        legal_entity_de = C3sMember(  # english investing legal entity
+            firstname=u'Deutscher',
+            lastname=u'Musikverlag',
+            email=u'verlag@compa.ny',
+            address1=u"foo bulevard",
+            address2=u"123-345",
+            postcode=u"98765",
+            city=u"Foo",
+            country=u"Bar",
+            locale=u"en",
+            date_of_birth=date.today(),
+            email_is_confirmed=False,
+            email_confirm_code=u'VERLAG_DE',
+            password=u'arandompasswor6',
+            date_of_submission=date.today(),
+            membership_type=u'investing',
+            member_of_colsoc=False,
+            name_of_colsoc=u"",
+            num_shares=u'60',
+        )
+        legal_entity_en = C3sMember(  # english investing legal entity
+            firstname=u'Francoise',
+            lastname=u'Company',
+            email=u'foo@compa.ny',
+            address1=u"foo bulevard",
+            address2=u"123-345",
+            postcode=u"98765",
+            city=u"Foo",
+            country=u"Bar",
+            locale=u"en",
+            date_of_birth=date.today(),
+            email_is_confirmed=False,
+            email_confirm_code=u'COMPANY_EN',
+            password=u'arandompasswor6',
+            date_of_submission=date.today(),
+            membership_type=u'investing',
+            member_of_colsoc=False,
+            name_of_colsoc=u"",
+            num_shares=u'60',
+        )
+        DBSession.add(normal_de)
+        DBSession.add(normal_en)
+        DBSession.add(investing_de)
+        DBSession.add(investing_en)
+        DBSession.add(legal_entity_en)
+        DBSession.add(legal_entity_de)
 
     return DBSession
 
@@ -156,34 +177,75 @@ class TestViews(unittest.TestCase):
         res = make_random_string()
         assert len(res) == 10
 
-    def test_calculate_partial_dues(self):
-        from c3smembership.views.membership_dues import calculate_partial_dues
+    def test_calculate_partial_dues15(self):
+        from c3smembership.views.membership_dues import (
+            calculate_partial_dues15)
         member = C3sMember.get_by_id(1)
-        res = calculate_partial_dues(member)
+        res = calculate_partial_dues15(member)
         # print res
         # print member.membership_date
-        assert res == (u'ganzes Jahr', '50')
+        assert res == (u'q1_2015', '50')
 
         # english member
         member_en = C3sMember.get_by_id(2)
-        res = calculate_partial_dues(member_en)
+        res = calculate_partial_dues15(member_en)
         # print res
-        assert res == (u'whole year', '50')
+        assert res == (u'q1_2015', '50')
 
         member_en.membership_date = datetime(2015, 6, 1)
-        res = calculate_partial_dues(member_en)
+        res = calculate_partial_dues15(member_en)
         # print res
-        assert res == (u'from 2nd quarter', '37,50')
+        assert res == (u'q2_2015', '37,50')
 
         member_en.membership_date = datetime(2015, 9, 1)
-        res = calculate_partial_dues(member_en)
+        res = calculate_partial_dues15(member_en)
         # print res
-        assert res == (u'from 3rd quarter', '25')
+        assert res == (u'q3_2015', '25')
 
         member_en.membership_date = datetime(2015, 11, 1)
-        res = calculate_partial_dues(member_en)
+        res = calculate_partial_dues15(member_en)
         # print res
-        assert res == (u'from 4th quarter', '12,50')
+        assert res == (u'q4_2015', '12,50')
+
+    def test_string_start_quarter(self):
+        from c3smembership.views.membership_dues import (
+            string_start_quarter)
+        member = C3sMember.get_by_id(1)
+
+        member.dues15_start = 'q1_2015'
+        res = string_start_quarter(member)
+        # print res
+        assert('Quartal 1' in res)
+        member.dues15_start = 'q2_2015'
+        res = string_start_quarter(member)
+        # print res
+        assert('Quartal 2' in res)
+        member.dues15_start = 'q3_2015'
+        res = string_start_quarter(member)
+        # print res
+        assert('Quartal 3' in res)
+        member.dues15_start = 'q4_2015'
+        res = string_start_quarter(member)
+        # print res
+        assert('Quartal 4' in res)
+
+        member.locale = u'en'
+        member.dues15_start = 'q1_2015'
+        res = string_start_quarter(member)
+        # print res
+        assert('1st quarter' in res)
+        member.dues15_start = 'q2_2015'
+        res = string_start_quarter(member)
+        # print res
+        assert('2nd quarter' in res)
+        member.dues15_start = 'q3_2015'
+        res = string_start_quarter(member)
+        # print res
+        assert('3rd quarter' in res)
+        member.dues15_start = 'q4_2015'
+        res = string_start_quarter(member)
+        # print res
+        assert('4th quarter' in res)
 
     def test_send_dues_invoice_email_via_HTTP(self):
         """
@@ -272,26 +334,33 @@ class TestViews(unittest.TestCase):
         self.config.add_route('toolbox', '/toolbox')
 
         # have to accept their membersip first
-        m1 = C3sMember.get_by_id(1)
+        m1 = C3sMember.get_by_id(1)  # normal member
         m1.membership_accepted = True
-        m2 = C3sMember.get_by_id(2)
+        m2 = C3sMember.get_by_id(2)  # normal member
         m2.membership_accepted = True
-        m3 = C3sMember.get_by_id(3)
+        m3 = C3sMember.get_by_id(3)  # normal member
         m3.membership_accepted = True
-        m4 = C3sMember.get_by_id(4)
+        m4 = C3sMember.get_by_id(4)  # investing member
         m4.membership_accepted = True
-        m5 = C3sMember.get_by_id(5)
+        m5 = C3sMember.get_by_id(5)  # investing member
         m5.membership_accepted = True
+
+        # check number of invoices: should be 0
+        _number_of_invoices_before_batch = len(Dues15Invoice.get_all())
+        # print("_number_of_invoices_before_batch: {}".format(
+        #    _number_of_invoices_before_batch))
+        assert(_number_of_invoices_before_batch == 0)
 
         req = testing.DummyRequest()
         req.referrer = 'detail'
         res = send_dues_invoice_batch(req)
         # print res
 
-        # check number of invoices
-        _number_of_invoices_4 = len(Dues15Invoice.get_all())
-        # print("_number_of_invoices_4: {}".format(_number_of_invoices_4))
-        assert(_number_of_invoices_4 == 5)
+        # check number of invoices: should be 3
+        _number_of_invoices_batch = len(Dues15Invoice.get_all())
+        # print("number of invoices after batch: {}".format(
+        #    _number_of_invoices_batch))
+        assert(_number_of_invoices_batch == 2)
 
         # try to post a number for batch processing
         req_post = testing.DummyRequest(
@@ -303,6 +372,7 @@ class TestViews(unittest.TestCase):
         )
 
         res = send_dues_invoice_batch(req_post)
+
         assert(
             'sent out 5 mails (to members with ids [1, 2, 3, 4, 5])' in
             req.session.pop_flash('message_to_staff'))
@@ -318,9 +388,11 @@ class TestViews(unittest.TestCase):
         req2.matchdict = {
             'email': m1.email,
             'code': m1.dues15_token + 'false!!!',  # must fail
-            'i': '0001',
+            'i': u'0001',
         }
+
         res = make_dues_invoice_no_pdf(req2)
+
         assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
         assert('error_page' in res.headers['Location'])  # but error
 
@@ -328,19 +400,19 @@ class TestViews(unittest.TestCase):
         req2.matchdict = {
             'email': m1.email,
             'code': m1.dues15_token,
-            'i': '1234',  # must fail
+            'i': u'1234',  # must fail
         }
         res = make_dues_invoice_no_pdf(req2)
         assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
         assert('error_page' in res.headers['Location'])  # but error
 
         # wrong invoice token: must fail!
-        i3 = Dues15Invoice.get_by_invoice_no(3)
-        i3.token = 'not_matching'
+        i2 = Dues15Invoice.get_by_invoice_no(2)
+        i2.token = u'not_matching'
         req2.matchdict = {
-            'email': m3.email,
-            'code': m3.dues15_token,
-            'i': '3',  # must fail
+            'email': m2.email,
+            'code': m2.dues15_token,
+            'i': u'3',  # must fail
         }
         res = make_dues_invoice_no_pdf(req2)
         assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
@@ -350,7 +422,7 @@ class TestViews(unittest.TestCase):
         req2.matchdict = {
             'email': m1.email,
             'code': m1.dues15_token,
-            'i': '0001',
+            'i': u'0001',
         }
         res = make_dues_invoice_no_pdf(req2)
         # m1.
@@ -374,7 +446,7 @@ class TestViews(unittest.TestCase):
         #       <c3smembership.models.Dues15Invoice object at 0x7f95df761c90>,
         #       <c3smembership.models.Dues15Invoice object at 0x7f95df761c10>],
         #   '_today': datetime.date(2015, 9, 1)}
-        assert(resp_list['count'] == 5)
+        assert(resp_list['count'] == 2)
 
         """
         test reduction of dues
@@ -403,7 +475,7 @@ class TestViews(unittest.TestCase):
         assert(  # two new invoices must have been issued
             (_number_of_invoices_before_reduction + 2)
             == _number_of_invoices_after_reduction)
-        assert(_number_of_invoices_after_reduction == 7)
+        assert(_number_of_invoices_after_reduction == 4)
         assert('detail' in res_reduce.headers['Location'])  # 302 to detail p.
         assert(_m1_amount_reduced != m1.dues15_amount_reduced)  # changed!
         assert(m1.dues15_amount_reduced == 42)  # changed to 42!
@@ -420,7 +492,7 @@ class TestViews(unittest.TestCase):
         req2.matchdict = {
             'email': m1.email,
             'code': m1.dues15_token + 'false!!!',  # must fail
-            'no': '0006',
+            'no': u'0006',
         }
         res = make_reversal_invoice_pdf(req2)
         assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
@@ -430,19 +502,19 @@ class TestViews(unittest.TestCase):
         req2.matchdict = {
             'email': m1.email,
             'code': m1.dues15_token,
-            'no': '1234',  # must fail
+            'no': u'1234',  # must fail
         }
         res = make_reversal_invoice_pdf(req2)
         assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
         assert('error_page' in res.headers['Location'])  # but error
 
         # wrong invoice token: must fail!
-        i3 = Dues15Invoice.get_by_invoice_no(3)
-        i3.token = 'not_matching'
+        i2 = Dues15Invoice.get_by_invoice_no('2')
+        i2.token = u'not_matching'
         req2.matchdict = {
-            'email': m3.email,
-            'code': m3.dues15_token,
-            'no': '3',  # must fail
+            'email': m2.email,
+            'code': m2.dues15_token,
+            'no': u'2',  # must fail
         }
         res = make_reversal_invoice_pdf(req2)
         assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
@@ -452,7 +524,7 @@ class TestViews(unittest.TestCase):
         req2.matchdict = {
             'email': m1.email,
             'code': m1.dues15_token,
-            'no': '0001',
+            'no': u'0001',
         }
         res = make_reversal_invoice_pdf(req2)
         # m1.
