@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
 
 # german template for *normal* members; see placeholder list below!
+#
+# format strings:
+# {0}: first name
+# {1}: last name
+# {2}: referral code: C3S-dues2015-ABCDEFGH
+# {3}: dues, maybe partial, depending on entry date
+# {4}: link to invoice PDF
+# {5}: dues start quarter, e.g. "Quartal 2"
 dues_invoice_mailbody_normal_de = u'''
 
 Hallo {0} {1},
@@ -36,6 +44,9 @@ Vielen Dank für Deinen Support!
 Dein C3S Team
 
 '''
+
+# english template for *normal* members; see placeholder list below!
+#
 # format strings:
 # {0}: first name
 # {1}: last name
@@ -43,8 +54,6 @@ Dein C3S Team
 # {3}: dues, maybe partial, depending on entry date
 # {4}: link to invoice PDF
 # {5}: dues start quarter, e.g. "Quartal 2"
-
-# english template for *normal* members; see placeholder list below!
 dues_invoice_mailbody_normal_en = u'''[english version below]
 
 Hello {0} {1},
@@ -87,6 +96,12 @@ Your C3S team
 
 
 # german template for *investing* members; see placeholder list below!
+#
+# format strings:
+# {0}: first name
+# {1}: last name
+# {2}: referral code: C3S-dues2015-ABCDEFGH
+# {3}: only for investing legal entities: additional snippet
 dues_invoice_mailbody_investing_de = u'''
 
 Hallo {0} {1},
@@ -104,6 +119,7 @@ Da Du investierendes Mitglied bist, bist Du vom Mitgliedsbeitrag
 befreit. Du würdest der C3S aber sehr helfen, wenn Du dennoch freiwillig
 einen Beitrag leisten würdest.
 
+{3}
 Wenn Du uns unterstützen möchtest, überweise Deine freiwillige
 Zuwendung auf folgendes Konto:
 
@@ -117,13 +133,15 @@ Vielen Dank für Deinen Support!
 Dein C3S Team
 
 '''
+
+
+# english template for *investing* members; see placeholder list below!
+#
 # format strings:
 # {0}: first name
 # {1}: last name
 # {2}: referral code: C3S-dues2015-ABCDEFGH
-
-
-# english template for *investing* members; see placeholder list below!
+# {3}: only for investing legal entities: additional snippet
 dues_invoice_mailbody_investing_en = u'''
 
 Hello {0} {1},
@@ -141,6 +159,7 @@ Since you are an investing member, you are exempt from this payment.
 However, your voluntary contribution would be highly appreciated as a
 tremendous help for the C3S.
 
+{3}
 If you want to support us, please transfer your voluntary contribution
 to the following account:
 
@@ -154,10 +173,6 @@ Many thanks for your support!
 Your C3S team
 
 '''
-# format strings:
-# {0}: first name
-# {1}: last name
-# {2}: referral code: C3S-dues2015-ABCDEFGH
 
 
 # additional german snippet for *investing* members that are *legal entities*
@@ -187,6 +202,11 @@ c) with higher turnover: raise fee accordingly.
 
 
 # # template for transferral receipt email
+# #
+# # # format strings:
+# # # 0: first name
+# # # 1: last name
+# # # 2: receipt link / URL
 # dues_receipt_mail_de = u"""
 # [english version below]
 
@@ -207,12 +227,17 @@ c) with higher turnover: raise fee accordingly.
 # Your C3S Team
 
 # """
-# # # format strings:
-# # # 0: first name
-# # # 1: last name
-# # # 2: receipt link / URL
 
 
+# *german* email template for reduction of dues
+#
+# format strings:
+# {0}: first name
+# {1}: last name
+# {2}: dues amount
+# {3}: referral code: C3S-dues2015-ABCDEFGH
+# {4}: new invoice url
+# {5}: reversal invoice url
 dues_update_reduction_de = u'''
 
 Hallo {0} {1},
@@ -246,6 +271,15 @@ Dein C3S Team
 '''
 
 
+# *english* email template for reduction of dues
+#
+# format strings:
+# {0}: first name
+# {1}: last name
+# {2}: dues amount
+# {3}: referral code: C3S-dues2015-ABCDEFGH
+# {4}: new invoice url
+# {5}: reversal invoice url
 dues_update_reduction_en = u'''
 Hello {0} {1},
 
@@ -276,6 +310,13 @@ Many thanks for your support!
 Your C3S team
 '''
 
+
+# *german* email template for exemption of dues
+#
+# format strings:
+# {0}: first name
+# {1}: last name
+# {2}: reversal invoice url
 dues_exemption_de = u"""
 Hallo {0} {1},
 
@@ -292,6 +333,13 @@ Beste Grüße
 Dein C3S Team
 """
 
+
+# *german* email template for exemption of dues
+#
+# format strings:
+# {0}: first name
+# {1}: last name
+# {2}: reversal invoice url
 dues_exemption_en = u"""
 
 Hello {0} {1},
