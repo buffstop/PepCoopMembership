@@ -430,18 +430,6 @@ class C3sMember(Base):
             return False
 
     @classmethod
-    def check_for_existing_dues15_token(cls, dues_token):
-        """
-        check if a dues token is already present
-        """
-        check = DBSession.query(cls).filter(
-            cls.dues15_token == dues_token).first()
-        if check:  # pragma: no cover
-            return True
-        else:
-            return False
-
-    @classmethod
     def get_by_id(cls, _id):
         """return one member by id"""
         return DBSession.query(cls).filter(cls.id == _id).first()
@@ -478,17 +466,6 @@ class C3sMember(Base):
                 cls.membership_accepted == 1,
                 cls.dues15_invoice == 0
             )).slice(0, num).all()
-
-    @classmethod
-    def get_max_dues15_invoice_no(cls):
-        """return maximum of given invoice numbers"""
-        res, = DBSession.query(func.max(cls.dues15_invoice_no)).first()
-        # print("the result: {}".format(res,))
-        # print(DBSession.query(func.max(cls.dues15_invoice_no)).first())
-
-        if res is None:
-            return 0
-        return res
 
     @classmethod
     def delete_by_id(cls, _id):
@@ -945,7 +922,7 @@ class Dues15Invoice(Base):
     # referrals
     preceding_invoice_no = Column(Integer(), default=None)
     succeeding_invoice_no = Column(Integer(), default=None)
-    
+
     def __init__(self,
                  invoice_no,
                  invoice_no_string,
@@ -979,6 +956,28 @@ class Dues15Invoice(Base):
     def get_by_membership_no(cls, _no):
         """return all invoices of one member by membership number"""
         return DBSession.query(cls).filter(cls.membership_no == _no).all()
+
+    @classmethod
+    def get_max_invoice_no(cls):
+        """return maximum of given invoice numbers"""
+        res, = DBSession.query(func.max(cls.id)).first()
+        # print("the result: {}".format(res,))
+
+        if res is None:
+            return 0
+        return res
+
+    @classmethod
+    def check_for_existing_dues15_token(cls, dues_token):
+        """
+        check if a dues token is already present
+        """
+        check = DBSession.query(cls).filter(
+            cls.token == dues_token).first()
+        if check:  # pragma: no cover
+            return True
+        else:
+            return False
 
 # # table for relation between membership and shares
 # membership_shares = Table(

@@ -174,7 +174,7 @@ def send_dues_invoice_email(request, m_id=None):
         # make dues token and ...
         randomstring = make_random_string()
         # check if dues token is already used
-        while (C3sMember.check_for_existing_dues15_token(randomstring)):
+        while (Dues15Invoice.check_for_existing_dues15_token(randomstring)):
             # create a new one, if the new one already exists in the database
             randomstring = make_random_string()  # pragma: no cover
 
@@ -186,7 +186,7 @@ def send_dues_invoice_email(request, m_id=None):
         except:
             # ... or we create a new one and save it
             # get max invoice no from db
-            _max_invoice_no = C3sMember.get_max_dues15_invoice_no()
+            _max_invoice_no = Dues15Invoice.get_max_invoice_no()
             # print("got max invoice no {}".format(_max_invoice_no))
             # use the next free number, save it to db
             _new_invoice_no = int(_max_invoice_no) + 1
@@ -740,7 +740,7 @@ def dues15_reduce(request):
             + '#dues15')
 
     # prepare: get highest invoice no from db
-    _max_invoice_no = C3sMember.get_max_dues15_invoice_no()
+    _max_invoice_no = Dues15Invoice.get_max_invoice_no()
 
     # things to be done:
     # * change dues amount for that member
@@ -921,6 +921,7 @@ def make_reversal_invoice_pdf(request):
         assert _m.dues15_token == _code
 
     except:
+        # print(u"This member and token did not match!")
         request.session.flash(
             u"This member and token did not match!",
             'message_to_user'  # message queue for user
@@ -933,8 +934,9 @@ def make_reversal_invoice_pdf(request):
         # pdb.set_trace()
         assert _inv is not None
     except:
+        # print(u"No invoice found!")
         request.session.flash(
-            u"Token did not match!",
+            u"No invoice found!",
             'message_to_user'  # message queue for user
         )
         return HTTPFound(request.route_url('error_page'))
