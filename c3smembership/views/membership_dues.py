@@ -863,7 +863,7 @@ def dues15_reduce(request):
         # now send member a mail!
         update = Message(
             subject=_mail_subject,
-            sender='yes@c3s.cc',
+            sender='yes@office.c3s.cc',
             recipients=[_m.email],
             body=_mail_template.format(
                 _m.firstname,  # {0}
