@@ -268,6 +268,7 @@ def send_dues_invoice_email(request, m_id=None):
         )
     elif 'investing' in _m.membership_type:
         # choose subject, body template and snippet depending on language
+        # print("the locale: {}".format(_m.locale))
         if 'de' in _m.locale:
             _mail_subject = (u"Mitgliedsbeiträge C3S SCE – "
                              u"Bitte um Unterstützung")
@@ -466,6 +467,7 @@ def make_dues_invoice_no_pdf(request):
     try:
         _m = C3sMember.get_by_dues15_token(_code)
         # print _m
+        assert _m is not None
         assert _m.dues15_token == _code
         assert _m.email == _email
     except:
@@ -571,7 +573,7 @@ def make_dues_pdf_pdflatex(_member, _inv=None):
         _invoice_no = str(_inv.invoice_no).zfill(4)
         # print("got invoice no from URL: {}".format(_invoice_no))
         _invoice_date = _inv.invoice_date.strftime('%d. %m. %Y')
-    else:
+    else:  # pragma: no cover
         # this branch is deprecated, because we always supply an invoice number
         # use invoice no from member record
         _invoice_no = str(_member.dues15_invoice_no).zfill(4)
@@ -704,7 +706,7 @@ def dues15_reduce(request):
         _m = C3sMember.get_by_id(_m_id)
         assert _m.membership_accepted
         assert 'investing' not in _m.membership_type
-    except:
+    except:  # pragma: no cover
         request.session.flash(
             u"No member OR not accepted OR not normal member",
             'message_to_user'  # message queue for user
@@ -955,6 +957,8 @@ def make_reversal_invoice_pdf(request):
     # sanity check: reversal invoice token must be reversal
     try:
         assert(_inv.is_reversal)
+        # print("invoice #{} is a reversal: {}".format(
+        #    _inv.invoice_no, _inv.is_reversal))
     except:
         # print(u"No reversal invoice found!")
         request.session.flash(

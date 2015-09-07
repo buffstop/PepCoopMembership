@@ -329,6 +329,7 @@ class TestViews(unittest.TestCase):
         # from pyramid_mailer import get_mailer
         from c3smembership.views.membership_dues import send_dues_invoice_batch
         self.config.add_route('make_dues_invoice_no_pdf', '/')
+        self.config.add_route('make_reversal_invoice_pdf', '/')
         self.config.add_route('detail', '/detail/')
         self.config.add_route('error_page', '/error_page')
         self.config.add_route('toolbox', '/toolbox')
@@ -418,6 +419,42 @@ class TestViews(unittest.TestCase):
         assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
         assert('error_page' in res.headers['Location'])  # but error
 
+        #######################################################################
+        # one more edge case:
+        # check _inv.token must match code, or else!!!
+        # first, set inv_code to something wrong:
+        i1 = Dues15Invoice.get_by_invoice_no(1)
+        _old_i1_token = i1.token
+        i1.token = u'not_right'
+        req2.matchdict = {
+            'email': m1.email,
+            'code': m1.dues15_token,
+            'i': u'0001',
+        }
+        res = make_dues_invoice_no_pdf(req2)
+        assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
+        assert('error_page' in res.headers['Location'])  # but error
+        # reset it to what was there before
+        i1.token = _old_i1_token
+        #######################################################################
+        # one more edge case:
+        # check this invoice is not a reversal, or else no PDF!!!
+        # first, set is_reversal to something wrong:
+        i1 = Dues15Invoice.get_by_invoice_no(1)
+        _old_i1_reversal_status = i1.is_reversal  # False
+        i1.is_reversal = True
+        req2.matchdict = {
+            'email': m1.email,
+            'code': m1.dues15_token,
+            'i': u'0001',
+        }
+        res = make_dues_invoice_no_pdf(req2)
+        assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
+        assert('error_page' in res.headers['Location'])  # but error
+        # reset it to what was there before
+        i1.is_reversal = _old_i1_reversal_status
+        #######################################################################
+
         # retry with valid token:
         req2.matchdict = {
             'email': m1.email,
@@ -451,21 +488,26 @@ class TestViews(unittest.TestCase):
         """
         test reduction of dues
         """
-        # req_detail1 = testing.DummyRequest()
-        # req_detail1.matchdict['memberid'] = 1
-        # from c3smembership.accountants_views import member_detail
-        # resp_detail1 = member_detail(req_detail1)
-        # print('#'*60)
-        # print resp_detail1
-        # print('#'*60)
-
         _m1_amount_reduced = m1.dues15_amount_reduced
         _number_of_invoices_before_reduction = len(Dues15Invoice.get_all())
         from c3smembership.views.membership_dues import dues15_reduce
+
+        # try to reduce to the given default amount (edge case coverage)
         req_reduce = testing.DummyRequest(
             post={
                 'submit': True,
-                'amount': 42
+                'amount': 50,
+                # lots of values missing
+            },
+        )
+        req_reduce.matchdict['member_id'] = 1
+        res_reduce = dues15_reduce(req_reduce)
+
+        # now try a valid reduction
+        req_reduce = testing.DummyRequest(
+            post={
+                'submit': True,
+                'amount': 42,
                 # lots of values missing
             },
         )
@@ -480,6 +522,51 @@ class TestViews(unittest.TestCase):
         assert(_m1_amount_reduced != m1.dues15_amount_reduced)  # changed!
         assert(m1.dues15_amount_reduced == 42)  # changed to 42!
 
+        #############################################################
+        # try to reduce to the same amount again (edge case coverage)
+        req_reduce = testing.DummyRequest(
+            post={
+                'submit': True,
+                'amount': 42,
+                # lots of values missing
+            },
+        )
+        req_reduce.matchdict['member_id'] = 1
+        res_reduce = dues15_reduce(req_reduce)
+        #############################################################
+        # try to reduce to zero (edge case coverage)
+        req_reduce = testing.DummyRequest(
+            post={
+                'submit': True,
+                'amount': 0,
+                # lots of values missing
+            },
+        )
+        req_reduce.matchdict['member_id'] = 1
+        res_reduce = dues15_reduce(req_reduce)
+        #############################################################
+        # try to reduce to zero with english member (edge case coverage)
+        # how to do this if you already reduced to zero? reduce to more first!
+        req_reduce = testing.DummyRequest(
+            post={
+                'submit': True,
+                'amount': 1,
+                # lots of values missing
+            },
+        )
+        req_reduce.matchdict['member_id'] = 1
+        res_reduce = dues15_reduce(req_reduce)
+        m1.locale = u'en'
+        req_reduce = testing.DummyRequest(
+            post={
+                'submit': True,
+                'amount': 0,
+                # lots of values missing
+            },
+        )
+        req_reduce.matchdict['member_id'] = 1
+        res_reduce = dues15_reduce(req_reduce)
+        #############################################################
         """
         test reversal invoice PDF generation
         """
@@ -520,14 +607,27 @@ class TestViews(unittest.TestCase):
         assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
         assert('error_page' in res.headers['Location'])  # but error
 
+        ######################################################################
+        # wrong invoice type (not a reversal): must fail! (edge case coverage)
+        assert(not i2.is_reversal)  # i2 is not a reversal
+        i2.token = m2.dues15_token  # we give it a valid token
+        req2.matchdict = {
+            'email': m2.email,
+            'code': m2.dues15_token,
+            'no': u'0002',
+        }
+        res = make_reversal_invoice_pdf(req2)
+        assert('application/pdf' not in res.headers['Content-Type'])  # no PDF
+        assert('error_page' in res.headers['Location'])  # but error
+        ######################################################################
+
         # retry with valid token:
         req2.matchdict = {
             'email': m1.email,
             'code': m1.dues15_token,
-            'no': u'0001',
+            'no': u'0003',
         }
         res = make_reversal_invoice_pdf(req2)
-        # m1.
         # print("length of the result: {}".format(len(res.body)))
         # print("headers of the result: {}".format((res.headers)))
         assert(60000 < len(res.body) < 80000)
