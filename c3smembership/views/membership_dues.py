@@ -692,7 +692,7 @@ def dues15_reduce(request):
 
     * change payable amount for member
     * cancel old invoice by issuing a cancellation
-    * issue a new invoice with the new amount
+    * issue a new invoice with the new amount (if new amount != 0)
 
     this will only work for *normal* members.
     """
@@ -779,40 +779,47 @@ def dues15_reduce(request):
     DBSession.flush()
     _old_invoice.succeeding_invoice_no = _new_invoice_no
 
-    _new_invoice = Dues15Invoice(
-        invoice_no=_new_invoice_no + 1,
-        invoice_no_string=(
-            u'C3S-dues2015-' + str(_new_invoice_no + 1).zfill(4)),
-        invoice_date=datetime.today(),
-        invoice_amount=u'' + str(_reduced_amount),
-        member_id=_m.id,
-        membership_no=_m.membership_number,
-        email=_m.email,
-        token=_m.dues15_token,
-    )
-    _new_invoice.preceding_invoice_no = _reversal_invoice.invoice_no
-    _reversal_invoice.succeeding_invoice_no = _new_invoice_no + 1
-    DBSession.add(_new_invoice)
+    # check if reduction to zero
+    if int(_reduced_amount) == 0:
+        _is_exemption = True
+    
+    if not _is_exemption:
+        _new_invoice = Dues15Invoice(
+            invoice_no=_new_invoice_no + 1,
+            invoice_no_string=(
+                u'C3S-dues2015-' + str(_new_invoice_no + 1).zfill(4)),
+            invoice_date=datetime.today(),
+            invoice_amount=u'' + str(_reduced_amount),
+            member_id=_m.id,
+            membership_no=_m.membership_number,
+            email=_m.email,
+            token=_m.dues15_token,
+        )
+        _new_invoice.preceding_invoice_no = _reversal_invoice.invoice_no
+        _reversal_invoice.succeeding_invoice_no = _new_invoice_no + 1
+        DBSession.add(_new_invoice)
 
-    # in the members record, store the current invoice no
-    _m.dues15_invoice_no = _new_invoice_no + 1
+        # in the members record, store the current invoice no
+        _m.dues15_invoice_no = _new_invoice_no + 1
 
-    DBSession.flush()  # persist newer invoices
-    # print("reversal invoice id: {}".format(_reversal_invoice.id))
-    # print("the new invoice id: {}".format(_new_invoice.id))
+        DBSession.flush()  # persist newer invoices
+        # print("reversal invoice id: {}".format(_reversal_invoice.id))
+        # print("the new invoice id: {}".format(_new_invoice.id))
 
-    # print("created reversal invoice with no {} and id {}".format(
-    #     _reversal_invoice.invoice_no, _reversal_invoice.id,))
-    # print("created new invoice with no {} and id {}".format(
-    #    _new_invoice.invoice_no, _new_invoice.id,))
+        # print("created reversal invoice with no {} and id {}".format(
+        #     _reversal_invoice.invoice_no, _reversal_invoice.id,))
+        # print("created new invoice with no {} and id {}".format(
+        #    _new_invoice.invoice_no, _new_invoice.id,))
 
     # choose subject and body template depending on language
     if 'de' in _m.locale:
         _mail_subject = u"Mitgliedsbeiträge C3S SCE - Rechnungsupdate"
-        _mail_template = dues_update_reduction_de
+        _mail_template = dues_update_reduction_de if (
+            not _is_exemption) else dues_exemption_de
     else:
         _mail_subject = u"Membership contributions C3S SCE - invoice update"
-        _mail_template = dues_update_reduction_en
+        _mail_template = dues_update_reduction_en if (
+            not _is_exemption) else dues_exemption_en
     # prepare invoice URLs
     _reversal_url = (
         request.route_url(
@@ -822,19 +829,38 @@ def dues15_reduce(request):
             no=str(_reversal_invoice.invoice_no).zfill(4)
         )
     )
-    _invoice_url = (
-        request.route_url(
-            'make_dues_invoice_no_pdf',
-            email=_m.email,
-            code=_m.dues15_token,
-            i=str(_new_invoice_no + 1).zfill(4)
-        )
-    )
 
-    # now send member a mail!
-    update = Message(
+    if _is_exemption:
+        # now send member a mail!
+        update = Message(
             subject=_mail_subject,
             sender='yes@office.c3s.cc',
+            recipients=[_m.email],
+            body=_mail_template.format(
+                _m.firstname,  # {0}
+                _m.lastname,  # {1}
+                _reversal_url,  # {2}
+            ),
+            extra_headers={
+                'Reply-To': 'yes@c3s.cc',
+            }
+        )
+        request.session.flash('exemption email was sent to user!',
+                              'dues15_message_to_staff')
+    else:
+        _invoice_url = (
+            request.route_url(
+                'make_dues_invoice_no_pdf',
+                email=_m.email,
+                code=_m.dues15_token,
+                i=str(_new_invoice_no + 1).zfill(4)
+            )
+        )
+
+        # now send member a mail!
+        update = Message(
+            subject=_mail_subject,
+            sender='yes@c3s.cc',
             recipients=[_m.email],
             body=_mail_template.format(
                 _m.firstname,  # {0}
@@ -847,10 +873,9 @@ def dues15_reduce(request):
             extra_headers={
                 'Reply-To': 'yes@c3s.cc',
             }
-
-    )
-    request.session.flash('update email was sent to user!',
-                          'dues15_message_to_staff')
+        )
+        request.session.flash('update email was sent to user!',
+                              'dues15_message_to_staff')
 
     # print to console or send mail
     if 'true' in request.registry.settings['testing.mail_to_console']:
