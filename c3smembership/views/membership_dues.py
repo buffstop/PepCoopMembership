@@ -273,11 +273,13 @@ def send_dues_invoice_email(request, m_id=None):
             _mail_subject = (u"Mitgliedsbeiträge C3S SCE – "
                              u"Bitte um Unterstützung")
             _mail_template = dues_invoice_mailbody_investing_de
-            _dues_legalentities = dues_legalentities_de
+            if _m.is_legalentity:
+                _mail_template = dues_legalentities_de
         else:
             _mail_subject = u"Membership C3S SCE – a call for support"
             _mail_template = dues_invoice_mailbody_investing_en
-            _dues_legalentities = dues_legalentities_en
+            if _m.is_legalentity:
+                _mail_template = dues_legalentities_en
 
         # construct a message to send
         message = Message(
@@ -285,15 +287,15 @@ def send_dues_invoice_email(request, m_id=None):
             sender='yes@office.c3s.cc',
             recipients=[_m.email],
             body=_mail_template.format(
-                _m.firstname,  # {0}
-                _m.lastname,  # {1}
+                _m.firstname,  # {0} representative
+                _m.lastname,  # {1}  name legal entity
                 'C3S-dues2015-FZ-' + str(_m.membership_number),  # {2}
-                _dues_legalentities if _m.is_legalentity else '',  # {3}
+                #_dues_legalentities if _m.is_legalentity else '',  # {3}
             ),
             extra_headers={
                 'Reply-To': 'yes@c3s.cc',
             }
-        )
+      )
 
     # print to console or send mail
     if 'true' in request.registry.settings['testing.mail_to_console']:
