@@ -127,9 +127,6 @@
           status
         </th>
         <th>
-          BC/GV
-        </th>
-        <th>
           firstname <br />
           <a href="${request.route_url('membership_listing_backend', number=current, orderby='firstname', order='asc')}"
              title="sort by firstname: ascending"
