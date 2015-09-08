@@ -101,7 +101,7 @@ Your C3S team
 # {0}: first name
 # {1}: last name
 # {2}: referral code: C3S-dues2015-ABCDEFGH
-# {3}: only for investing legal entities: additional snippet
+# {3}: only for investing legal entities: additional snippet # deleted!
 dues_invoice_mailbody_investing_de = u'''
 
 Hallo {0} {1},
@@ -118,7 +118,7 @@ demnach 50,- Euro.
 Da Du investierendes Mitglied bist, bist Du vom Mitgliedsbeitrag
 befreit. Du würdest der C3S aber sehr helfen, wenn Du dennoch freiwillig
 einen Beitrag leisten würdest.
-{3}
+
 Wenn Du uns unterstützen möchtest, überweise Deine freiwillige
 Zuwendung auf folgendes Konto:
 
@@ -157,7 +157,7 @@ Euro.
 Since you are an investing member, you are exempt from this payment.
 However, your voluntary contribution would be highly appreciated as a
 tremendous help for the C3S.
-{3}
+
 If you want to support us, please transfer your voluntary contribution
 to the following account:
 
@@ -172,28 +172,89 @@ Your C3S team
 
 '''
 
+# german template for *investing* members which are legal entities; see placeholder list below!
+#
+# format strings:
+# {0}: first name
+# {1}: last name
+# {2}: referral code: C3S-dues2015-ABCDEFGH
 
 # additional german snippet for *investing* members that are *legal entities*
 dues_legalentities_de = u"""
-Für juristische Personen wird empfohlen,
-über den Grundbetrag hinaus einen Förderbeitrag
-in folgender Höhe zu entrichten:
+Hallo {0},
+
+am 16.07.2015 hat die außerordentliche Mitgliederversammlung der C3S SCE
+eine vorläufige Beitragsordnung erlassen, weil uns sonst die finanzielle
+Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
+
+  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
+
+Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
+demnach 50,- Euro.
+
+Da {1} investierendes Mitglied ist, seit Ihr vom 
+Mitgliedsbeitrag befreit. Ihr würdet der C3S aber sehr helfen, wenn Ihr dennoch
+freiwillig einen Beitrag leisten würdet.
+
+Für juristische Personen wird empfohlen, über den Grundbetrag hinaus
+einen Förderbeitrag in folgender Höhe zu entrichten:
 
 a) bis zu einem Jahresumsatz i. H. v. 100.000 Euro
    pro Jahr 100 Euro
 b) bis zu einem Jahresumsatz i. H. v. 200.000 Euro
    pro Jahr 200 Euro
 c) bei höherem Jahresumsatz ist die Höhe entsprechend anzupassen.
+
+Wenn Ihr uns unterstützen möchtest, überweist Eure freiwillige
+Zuwendung auf folgendes Konto:
+
+  Verwendungszweck: {2}
+  IBAN: DE79 8309 4495 0003 2643 78
+  BIC: GENODEF1ETK
+  Bank: Ethikbank
+
+Vielen Dank für Euren Support!
+
+Dein C3S Team
+
 """
 
 # additional english snippet for *investing* members that are *legal entities*
 dues_legalentities_en = u"""
+Hello {0},
+
+On July 16th, 2015, the extraordinary general assembly of the C3S has
+issued temporary membership contribution rules, in order to secure the
+financial basis for the continuation of our common project:
+
+  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
+
+For 2015, the membership dues for active members will therefore be 50,-
+Euro.
+
+Since {1} is an investing member, you are exempt from this 
+payment.
+However, your voluntary contribution would be highly appreciated as a
+tremendous help for the C3S.
+
 For legal entities there is a recommendation to exceed the basic fee by
 adding a supportive contribution of the following amount:
 
 a) up to a yearly turnover of 100.000 Euro: 100 Euro per year
 b) up to a yearly turnover of 200.000 Euro: 200 Euro per year
 c) with higher turnover: raise fee accordingly.
+
+If you want to support us, please transfer your voluntary contribution
+to the following account:
+
+  Purpose: {2}
+  IBAN: DE79 8309 4495 0003 2643 78
+  BIC: GENODEF1ETK
+  Bank: Ethikbank
+
+Many thanks for your support!
+
+Your C3S team
 """
 
 
