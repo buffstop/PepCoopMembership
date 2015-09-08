@@ -263,7 +263,7 @@ def send_dues_invoice_email(request, m_id=None):
                 _start_quarter,  # {5}
             ),
             extra_headers={
-                'Reply-To': 'yes@c3s.cc',
+                'Reply-To': 'office@c3s.cc',
             }
         )
     elif 'investing' in _m.membership_type:
@@ -293,7 +293,7 @@ def send_dues_invoice_email(request, m_id=None):
                 #_dues_legalentities if _m.is_legalentity else '',  # {3}
             ),
             extra_headers={
-                'Reply-To': 'yes@c3s.cc',
+                'Reply-To': 'office@c3s.cc',
             }
       )
 
@@ -847,7 +847,7 @@ def dues15_reduce(request):
                 _reversal_url,  # {2}
             ),
             extra_headers={
-                'Reply-To': 'yes@c3s.cc',
+                'Reply-To': 'office@c3s.cc',
             }
         )
         request.session.flash('exemption email was sent to user!',
@@ -876,7 +876,7 @@ def dues15_reduce(request):
                 _reversal_url,  # {5}
             ),
             extra_headers={
-                'Reply-To': 'yes@c3s.cc',
+                'Reply-To': 'office@c3s.cc',
             }
         )
         request.session.flash('update email was sent to user!',
