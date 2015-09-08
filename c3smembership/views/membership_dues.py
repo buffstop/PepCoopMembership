@@ -174,7 +174,7 @@ def send_dues_invoice_email(request, m_id=None):
         # make dues token and ...
         randomstring = make_random_string()
         # check if dues token is already used
-        while (C3sMember.check_for_existing_dues15_token(randomstring)):
+        while (Dues15Invoice.check_for_existing_dues15_token(randomstring)):
             # create a new one, if the new one already exists in the database
             randomstring = make_random_string()  # pragma: no cover
 
@@ -186,7 +186,7 @@ def send_dues_invoice_email(request, m_id=None):
         except:
             # ... or we create a new one and save it
             # get max invoice no from db
-            _max_invoice_no = C3sMember.get_max_dues15_invoice_no()
+            _max_invoice_no = Dues15Invoice.get_max_invoice_no()
             # print("got max invoice no {}".format(_max_invoice_no))
             # use the next free number, save it to db
             _new_invoice_no = int(_max_invoice_no) + 1
@@ -268,6 +268,7 @@ def send_dues_invoice_email(request, m_id=None):
         )
     elif 'investing' in _m.membership_type:
         # choose subject, body template and snippet depending on language
+        # print("the locale: {}".format(_m.locale))
         if 'de' in _m.locale:
             _mail_subject = (u"Mitgliedsbeiträge C3S SCE – "
                              u"Bitte um Unterstützung")
@@ -466,6 +467,7 @@ def make_dues_invoice_no_pdf(request):
     try:
         _m = C3sMember.get_by_dues15_token(_code)
         # print _m
+        assert _m is not None
         assert _m.dues15_token == _code
         assert _m.email == _email
     except:
@@ -571,7 +573,7 @@ def make_dues_pdf_pdflatex(_member, _inv=None):
         _invoice_no = str(_inv.invoice_no).zfill(4)
         # print("got invoice no from URL: {}".format(_invoice_no))
         _invoice_date = _inv.invoice_date.strftime('%d. %m. %Y')
-    else:
+    else:  # pragma: no cover
         # this branch is deprecated, because we always supply an invoice number
         # use invoice no from member record
         _invoice_no = str(_member.dues15_invoice_no).zfill(4)
@@ -698,12 +700,13 @@ def dues15_reduce(request):
     """
     _m_id = request.matchdict['member_id']
     _reduced_amount = request.POST['amount']
+    _is_exemption = False  # sane default
 
     try:
         _m = C3sMember.get_by_id(_m_id)
         assert _m.membership_accepted
         assert 'investing' not in _m.membership_type
-    except:
+    except:  # pragma: no cover
         request.session.flash(
             u"No member OR not accepted OR not normal member",
             'message_to_user'  # message queue for user
@@ -717,8 +720,8 @@ def dues15_reduce(request):
     # print("the amount to reduce to: type: {}".format(type(_reduced_amount)))
 
     if (not _m.dues15_reduced and (
-            (_reduced_amount in str(_m.dues15_amount)) and
-            (str(_m.dues15_amount) in _reduced_amount))):
+            (str(_reduced_amount) in str(_m.dues15_amount)) and
+            (str(_m.dues15_amount) in str(_reduced_amount)))):
         request.session.flash(
             u"Dieser Beitrag ist der default-Beitrag!",
             'dues15_message_to_staff'  # message queue for staff
@@ -728,8 +731,8 @@ def dues15_reduce(request):
             + '#dues15')
 
     if (
-            (_reduced_amount in str(_m.dues15_amount_reduced)) and
-            (str(_m.dues15_amount_reduced) in _reduced_amount)):
+            (str(_reduced_amount) in str(_m.dues15_amount_reduced)) and
+            (str(_m.dues15_amount_reduced) in str(_reduced_amount))):
         request.session.flash(
             u"Auf diesen Beitrag wurde schon reduziert!",
             'dues15_message_to_staff'  # message queue for staff
@@ -739,7 +742,7 @@ def dues15_reduce(request):
             + '#dues15')
 
     # prepare: get highest invoice no from db
-    _max_invoice_no = C3sMember.get_max_dues15_invoice_no()
+    _max_invoice_no = Dues15Invoice.get_max_invoice_no()
 
     # things to be done:
     # * change dues amount for that member
@@ -860,7 +863,7 @@ def dues15_reduce(request):
         # now send member a mail!
         update = Message(
             subject=_mail_subject,
-            sender='yes@c3s.cc',
+            sender='yes@office.c3s.cc',
             recipients=[_m.email],
             body=_mail_template.format(
                 _m.firstname,  # {0}
@@ -920,6 +923,7 @@ def make_reversal_invoice_pdf(request):
         assert _m.dues15_token == _code
 
     except:
+        # print(u"This member and token did not match!")
         request.session.flash(
             u"This member and token did not match!",
             'message_to_user'  # message queue for user
@@ -932,8 +936,9 @@ def make_reversal_invoice_pdf(request):
         # pdb.set_trace()
         assert _inv is not None
     except:
+        # print(u"No invoice found!")
         request.session.flash(
-            u"Token did not match!",
+            u"No invoice found!",
             'message_to_user'  # message queue for user
         )
         return HTTPFound(request.route_url('error_page'))
@@ -942,8 +947,9 @@ def make_reversal_invoice_pdf(request):
     try:
         assert(_inv.token == _code)
     except:
+        # print(u"Token did not match!")
         request.session.flash(
-            u"No invoice found!",
+            u"Token did not match!",
             'message_to_user'  # message queue for user
         )
         return HTTPFound(request.route_url('error_page'))
@@ -951,7 +957,10 @@ def make_reversal_invoice_pdf(request):
     # sanity check: reversal invoice token must be reversal
     try:
         assert(_inv.is_reversal)
+        # print("invoice #{} is a reversal: {}".format(
+        #    _inv.invoice_no, _inv.is_reversal))
     except:
+        # print(u"No reversal invoice found!")
         request.session.flash(
             u"No reversal invoice found!",
             'message_to_user'  # message queue for user
@@ -1008,7 +1017,8 @@ def make_storno_pdf_pdflatex(_member, _inv=None):
     (_path, _filename) = os.path.split(receipt_pdf.name)
     _filename = os.path.splitext(_filename)[0]
 
-    _invoice_no = str(_inv.invoice_no).zfill(4)
+    _invoice_no = str(_inv.invoice_no).zfill(4) + '-S'
+    _invoice_date = _inv.invoice_date.strftime('%d. %m. %Y')
     # print("got invoice no from db: {}".format(_invoice_no))
     # print("got locale from db: {}".format(_member.locale))
     # set variables for tex command
@@ -1021,10 +1031,11 @@ def make_storno_pdf_pdflatex(_member, _inv=None):
         'personalCity': _member.city,
         'personalMShipNo': _member.membership_number,
         'invoiceNo': _invoice_no,
+        'invoiceDate': _invoice_date,
         # 'duesStart': dues_start,
         'duesAmount': _inv.invoice_amount,
         'origInvoiceRef': ('C3S-dues2015-' +
-                           str(_inv.preceding_invoice_no).zfill(4) + '-S'),
+                           str(_inv.preceding_invoice_no).zfill(4)),
         'lang': 'de',
         'pdfBackground': bg_pdf,
     }
