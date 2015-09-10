@@ -54,6 +54,8 @@ def send_certificate_email(request):
     so the member can get her membership certificate.
     '''
     # print request.referrer  # note: will fail in tests
+    _special_condition = False  # for redirects to referrer
+
     mid = request.matchdict['id']
     _m = C3sMember.get_by_id(mid)
     if isinstance(_m, NoneType) or not _m.membership_accepted:
@@ -105,7 +107,7 @@ def send_certificate_email(request):
         if 'detail' in request.referrer:  # pragma: no cover
             _special_condition = True
     except:
-        _special_condition = False
+        pass
 
     if _special_condition:  # pragma: no cover
         return HTTPFound(
