@@ -219,7 +219,7 @@ def main(argv=sys.argv):
             name_of_colsoc=u"GEMA",
             num_shares=u'60',
         )
-        legal_entity_de = C3sMember(  # english investing legal entity
+        legal_entity_de = C3sMember(  # german investing legal entity
             firstname=u'Deutscher',
             lastname=u'Musikverlag',
             email=u'verlag@compa.ny',
@@ -228,7 +228,7 @@ def main(argv=sys.argv):
             postcode=u"98765",
             city=u"Foo",
             country=u"Bar",
-            locale=u"en",
+            locale=u"de",
             date_of_birth=date(1987, 3, 6),
             email_is_confirmed=False,
             email_confirm_code=u'VERLAG_DE',
@@ -263,8 +263,11 @@ def main(argv=sys.argv):
         DBSession.add(normal_en)
         DBSession.add(investing_de)
         DBSession.add(investing_en)
-        DBSession.add(legal_entity_en)
+        legal_entity_de.is_legalentity = True
         DBSession.add(legal_entity_de)
+        legal_entity_en.is_legalentity = True
+        DBSession.add(legal_entity_en)
+
 
         # even more members
         # import random
