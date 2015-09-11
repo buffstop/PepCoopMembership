@@ -54,7 +54,7 @@ Dein C3S Team
 # {3}: dues, maybe partial, depending on entry date
 # {4}: link to invoice PDF
 # {5}: dues start quarter, e.g. "Quartal 2"
-dues_invoice_mailbody_normal_en = u'''[english version below]
+dues_invoice_mailbody_normal_en = u'''
 
 Hello {0} {1},
 
