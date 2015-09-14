@@ -62,7 +62,7 @@ On July 16th, 2015, the extraordinary general assembly of the C3S has
 issued temporary membership contribution rules, in order to secure the
 financial basis for the continuation of our common project:
 
-  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
+  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
 For 2015, the membership dues for active members will therefore be 50,-
 Euro. They will be less if you joined later than in the first quarter
@@ -149,7 +149,7 @@ On July 16th, 2015, the extraordinary general assembly of the C3S has
 issued temporary membership contribution rules, in order to secure the
 financial basis for the continuation of our common project:
 
-  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
+  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
 For 2015, the membership dues for active members will therefore be 50,-
 Euro.
@@ -228,7 +228,7 @@ On July 16th, 2015, the extraordinary general assembly of the C3S has
 issued temporary membership contribution rules, in order to secure the
 financial basis for the continuation of our common project:
 
-  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
+  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
 For 2015, the membership dues for active members will therefore be 50,-
 Euro.
