@@ -800,3 +800,36 @@ class TestDues15Views(unittest.TestCase):
         # print("headers of the result: {}".format((res.headers)))
         assert(60000 < len(res.body) < 80000)
         assert('application/pdf' in res.headers['Content-Type'])
+
+    def test_dues15_notice(self):
+        """
+        test the dues15 notice view -- acknowledge incoming payments
+        """
+        self.config.add_route('detail', '/detail/')
+        self.config.add_route('make_dues_invoice_no_pdf', '/')
+        # prepare test candidate
+        m1 = C3sMember.get_by_id(1)  # german normal member
+        m1.membership_accepted = True
+        from c3smembership.views.membership_dues import send_dues_invoice_email
+        req0 = testing.DummyRequest(
+            matchdict={'member_id': m1.id})
+        req0.referrer = 'detail'
+        resp0 = send_dues_invoice_email(req0)
+        resp0  # tame flymake
+
+        # here comes the request to test
+        req = testing.DummyRequest(
+            matchdict={'member_id': 1},
+            POST={
+                'amount': m1.dues15_amount,
+                'payment_date': '2015-09-11',
+            }
+        )
+
+        from c3smembership.views.membership_dues import dues15_notice
+
+        res = dues15_notice(req)
+        self.assertEqual(m1.dues15_paid, True)
+        self.assertEqual(m1.dues15_amount_paid, D('50'))
+        self.assertEqual(m1.dues15_paid_date,
+                         datetime(2015, 9, 11, 0, 0))

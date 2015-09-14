@@ -1128,3 +1128,71 @@ def make_storno_pdf_pdflatex(_member, _inv=None):
     #    os.unlink(_log)
 
     return receipt_pdf
+
+
+@view_config(
+    route_name='dues15_notice',
+    permission='manage')
+def dues15_notice(request):
+    """
+    notice of arrival for transferral of dues
+    """
+    DEBUG = True
+
+    # member: sanity checks
+    try:
+        _m_id = request.matchdict['member_id']
+        _m = C3sMember.get_by_id(_m_id)  # is in database
+        assert _m.membership_accepted  # is a member
+        assert 'investing' not in _m.membership_type  # is normal member
+    except:  # pragma: no cover
+        request.session.flash(
+            u"No member OR not accepted OR not normal member",
+            'dues15notice_message_to_staff'  # message queue for staff
+        )
+        return HTTPFound(
+            request.route_url('detail', memberid=_m.id)
+            + '#dues15')
+
+    # sanity check: the given amount is a positive decimal
+    try:
+        _paid_amount = D(request.POST['amount'])
+        assert not _paid_amount.is_signed()
+        if DEBUG:
+            print("DEBUG: payment of {}".format(_paid_amount))
+    except:  # pragma: no cover
+        request.session.flash(
+            (u"Invalid amount to pay: '{}' "
+             u"Use the dot ('.') as decimal mark, e.g. '23.42'".format(
+                 request.POST['amount'])),
+            'dues15notice_message_to_staff'  # message queue for user
+        )
+        return HTTPFound(
+            request.route_url('detail', memberid=_m.id)
+            + '#dues15')
+
+    # sanity check: the given date is a valid date
+    try:
+        _paid_date = datetime.strptime(
+            request.POST['payment_date'], '%Y-%m-%d')
+
+        if DEBUG:
+            print("DEBUG: payment received on {}".format(_paid_date))
+    except:  # pragma: no cover
+        request.session.flash(
+            (u"Invalid date for payment: '{}' "
+             u"Use YYYY-MM-DD, e.g. '2015-09-11'".format(
+                 request.POST['payment_date'])),
+            'dues15notice_message_to_staff'  # message queue for user
+        )
+        return HTTPFound(
+            request.route_url('detail', memberid=_m.id)
+            + '#dues15')
+
+    # persist info about payment
+    _m.dues15_paid = True
+    _m.dues15_amount_paid = _paid_amount
+    _m.dues15_paid_date = _paid_date
+
+    return HTTPFound(
+        request.route_url('detail', memberid=_m.id) + '#dues15')

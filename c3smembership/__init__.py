@@ -146,7 +146,9 @@ def main(global_config, **settings):
                      '/dues15_reduction/{member_id}')
     config.add_route('make_reversal_invoice_pdf',
                      '/dues_reversal/{email}/{code}/C3S-dues15-{no}-S.pdf')
+    config.add_route('dues15_notice', '/dues15_notice/{member_id}')
     config.add_route('dues15_listing', '/dues15_listing')
+
     # utilities & wizardry
     config.add_route('plz_dist', '/plz_dist')
     config.add_route('get_member', '/members/{memberid}')

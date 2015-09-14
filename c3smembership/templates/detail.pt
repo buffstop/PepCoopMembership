@@ -379,10 +379,63 @@
               </p>
             </td>
           </tr>
+
+          <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice and not member.dues15_paid">
+            <td>Zahlungseingang<br/>
+              <small>
+                Hier kann der Zahlungseingang mit Datum vermerkt werden.
+              </small>
+            </td>
+            <td>
+              <p>
+                <form class="form-inline"
+                      action="${request.route_url('dues15_notice', member_id=member.id)}"
+                      method="post">
+                  <label>Betrag eingegangen:</label>
+                     <input type="text"
+                           class="form-control"
+                           title="foo"
+                           name="amount"
+                           value="enter value here, e.g. 23.42">
+                     Eingangsdatum (yyyy-mm-dd):
+                     <input name="payment_date" type="text">
+                     <input name="submit" type="submit"
+                            class="btn btn-primary"
+                            value="Zahlungseingang bestätigen.">
+                </form>
+              </p>
+              <p tal:define="messages request.session.pop_flash('dues15notice_message_to_staff')"
+                    tal:condition="messages"
+                    tal:attributes="class 'alert alert-danger'">
+                <span color="red"
+                      tal:repeat="message messages">
+                  ${message}
+                </span><br />
+              </p>
+            </td>
+          </tr>
+
+          <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice and member.dues15_paid">
+            <td>Zahlungseingang<br/>
+              <small>
+                Hier ist der Zahlungseingang mit Datum vermerkt.
+              </small>
+            </td>
+            <td>
+              <table class="table table-striped">
+                <tr>
+                  <td>Betrag eingegangen:</td><td>${member.dues15_amount_paid}</td>
+                </tr><tr>
+                  <td>Eingangsdatum:</td><td>${member.dues15_paid_date}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
           <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice">
             <td>Rechnungen<br/>
               <small>
                 Hier siehst Du die erstellten Rechnungen für dieses Mitglied.<br/>
+                Falls vorhanden in der letzten Zeile auch einen Zahlungseingang.
               </small>
             </td>
             <td>
@@ -397,8 +450,10 @@
                   <th>preced.</th>
                   <th>succ.</th>
                 </tr>
+
                 <!--! loop over the list of invoices -->
-                <tr tal:repeat="i invoices"
+                <tr tal:define="global i_saldo python:0"
+                    tal:repeat="i invoices"
                     tal:attributes="id python: 'invoice_{0}'.format(i.id)">
                   <td>${i.id}</td>
                   <td><a title="${i.invoice_no}">${i.invoice_no}</a></td>
@@ -423,10 +478,32 @@
                     </a>
                   </td>
                   <td>${i.invoice_date.strftime('%d.%m.%Y %H:%M')}</td>
-                  <td>${i.invoice_amount}</td>
+                  <td tal:define="global i_saldo python: D(i_saldo) + D(i.invoice_amount)">
+                    ${i.invoice_amount}</td>
                   <td>${'cancelled' if i.is_cancelled else 'valid'}</td>
                   <td>${i.preceding_invoice_no}</td>
                   <td>${i.succeeding_invoice_no}</td>
+                </tr>
+                <tr tal:condition="member.dues15_paid">
+                  <td>n/a</td>
+                  <td>--</td>
+                  <td>Zahlungseingang</td>
+                  <td>${member.dues15_paid_date}</td>
+                  <td tal:define="global i_saldo python: D(i_saldo) - D(member.dues15_amount_paid)">
+                    ${member.dues15_amount_paid}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>SALDO: ${i_saldo}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                 </tr>
               </table>
               <!--! end of table -->
