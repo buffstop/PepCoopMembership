@@ -172,7 +172,8 @@ Your C3S team
 
 '''
 
-# german template for *investing* members which are legal entities; see placeholder list below!
+# german template for *investing* members which are legal entities;
+# see placeholder list below!
 #
 # format strings:
 # {0}: first name
@@ -192,7 +193,7 @@ Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
 Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
 demnach 50,- Euro.
 
-Da {1} investierendes Mitglied ist, seit Ihr vom 
+Da {1} investierendes Mitglied ist, seit Ihr vom
 Mitgliedsbeitrag befreit. Ihr würdet der C3S aber sehr helfen, wenn Ihr dennoch
 freiwillig einen Beitrag leisten würdet.
 
@@ -232,7 +233,7 @@ financial basis for the continuation of our common project:
 For 2015, the membership dues for active members will therefore be 50,-
 Euro.
 
-Since {1} is an investing member, you are exempt from this 
+Since {1} is an investing member, you are exempt from this
 payment.
 However, your voluntary contribution would be highly appreciated as a
 tremendous help for the C3S.
