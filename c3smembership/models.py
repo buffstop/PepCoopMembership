@@ -9,6 +9,7 @@ and throughout the other bits of code.
 from datetime import (
     datetime,
 )
+from decimal import Decimal as D
 import cryptacular.bcrypt
 
 from sqlalchemy import (
@@ -32,7 +33,10 @@ from sqlalchemy.orm import (
     relationship,
     synonym
 )
+import sqlalchemy.types as types
+
 from zope.sqlalchemy import ZopeTransactionExtension
+
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
@@ -41,6 +45,24 @@ crypt = cryptacular.bcrypt.BCRYPTPasswordManager()
 
 def hash_password(password):
     return unicode(crypt.encode(password))
+
+
+class SqliteNumeric(types.TypeDecorator):
+    impl = types.String
+
+    def load_dialect_impl(self, dialect):
+        return dialect.type_descriptor(types.VARCHAR(100))
+
+    def process_bind_param(self, value, dialect):
+        return str(value)
+
+    def process_result_value(self, value, dialect):
+        return D(value)
+
+# can overwrite the imported type name
+# @note: the TypeDecorator does not guarantie the scale and precision.
+# you can do this with separate checks
+Numeric = SqliteNumeric
 
 
 class Group(Base):
@@ -97,6 +119,7 @@ class C3sStaff(Base):
     __tablename__ = 'staff'
     id = Column(Integer, primary_key=True)
     login = Column(Unicode(255), unique=True)
+    '''- every user has a login name.'''
     _password = Column('password', Unicode(60))
     last_password_change = Column(
         DateTime,
@@ -269,6 +292,7 @@ class C3sMember(Base):
     last_password_change = Column(
         DateTime,
         default=func.current_timestamp())
+    # pass_reset_token = Column(Unicode(255))
     address1 = Column(Unicode(255))
     address2 = Column(Unicode(255))
     postcode = Column(Unicode(255))
@@ -346,11 +370,15 @@ class C3sMember(Base):
     dues15_invoice_no = Column(Integer())  # lfd. nummer
     dues15_token = Column(Unicode(10))
     dues15_start = Column(Unicode(255))
-    dues15_amount = Column(Integer())  # calculated: how much to pay
-    dues15_amount_paid = Column(Integer())  # actually paid
+    dues15_amount = Column(
+        Numeric(12, 2), nullable=False, default=0)  # calculated
+    dues15_paid = Column(Boolean, default=False)
+    dues15_amount_paid = Column(
+        Numeric(12, 2), nullable=False, default=0)
     dues15_paid_date = Column(DateTime())  # paid when?
     dues15_reduced = Column(Boolean, default=False)  # was reduced?
-    dues15_amount_reduced = Column(Unicode(10))  # ..to amount
+    dues15_amount_reduced = Column(
+        Numeric(12, 2), nullable=False, default=0)  # ..to x
     
     def __init__(self, firstname, lastname, email, password,
                  address1, address2, postcode, city, country, locale,
@@ -901,7 +929,7 @@ class Dues15Invoice(Base):
     this table stores the invoices for the 2015 version of dues.
     we need this for bookkeeping,
     because whenever a member is granted a reduction of her dues,
-    the old one canceled by a reversal invoice
+    the old invoice is canceled by a reversal invoice
     and a new invoice must be issued.
 
     edge case: if reduced to 0, no new invoice needed.
@@ -909,10 +937,10 @@ class Dues15Invoice(Base):
     __tablename__ = 'dues15invoices'
     id = Column(Integer, primary_key=True)
     # this invoice
-    invoice_no = Column(Integer())
-    invoice_no_string = Column(Unicode(255))
+    invoice_no = Column(Integer(), unique=True)
+    invoice_no_string = Column(Unicode(255), unique=True)
     invoice_date = Column(DateTime())
-    invoice_amount = Column(Unicode(255))
+    invoice_amount = Column(Numeric(12, 2), nullable=False, default=0)
     is_cancelled = Column(Boolean, default=False)
     is_reversal = Column(Boolean, default=False)
     cancelled_date = Column(DateTime())
@@ -961,7 +989,7 @@ class Dues15Invoice(Base):
 
     @classmethod
     def get_max_invoice_no(cls):
-        """return maximum of given invoice numbers"""
+        """ return maximum of given invoice numbers or 0"""
         res, = DBSession.query(func.max(cls.id)).first()
         # print("the result: {}".format(res,))
 

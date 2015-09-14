@@ -359,16 +359,19 @@
                            class="form-control"
                            title="foo"
                            name="amount"
-                           value="${member.dues15_amount_reduced or member.dues15_amount}">
+                           value="enter value here, e.g. 23.42">
                     <input name="submit" type="submit"
                            class="btn btn-primary"
                            value="Reduce Dues.">
                 </form>
               </p>
-              <p class="lead alert alert-danger">
-                <span  color="red" tal:repeat="error request.session.pop_flash('dues15_message_to_staff')">
-                  ${error}
-                </span>
+              <p tal:define="messages request.session.pop_flash('dues15_message_to_staff')"
+                    tal:condition="messages"
+                    tal:attributes="class 'alert alert-danger'">
+                <span color="red"
+                      tal:repeat="message messages">
+                  ${message}
+                </span><br />
               </p>
               <p>
                 see also <a href="${request.route_url('dues15_listing')}"

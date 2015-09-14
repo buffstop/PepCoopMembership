@@ -13,6 +13,7 @@ This module holds code for membership dues functionality.
   - send email with update: reversal invoice and new invoice
 """
 from datetime import datetime
+from decimal import Decimal as D
 import os
 # import envoy
 import subprocess
@@ -78,7 +79,7 @@ def calculate_partial_dues15(member):
     elif member.membership_date < datetime(2015, 7, 1):
         # second quarter of 2015
         _start = u"q2_2015"
-        _amount = "37,50"
+        _amount = "37.50"
     elif member.membership_date < datetime(2015, 10, 1):
         # third quarter of 2015
         _start = u"q3_2015"
@@ -86,7 +87,7 @@ def calculate_partial_dues15(member):
     elif member.membership_date >= datetime(2015, 10, 1):
         # third quarter of 2015
         _start = u"q4_2015"
-        _amount = "12,50"
+        _amount = "12.50"
     return (_start, _amount)
 
 
@@ -290,12 +291,11 @@ def send_dues_invoice_email(request, m_id=None):
                 _m.firstname,  # {0} representative
                 _m.lastname,  # {1}  name legal entity
                 'C3S-dues2015-FZ-' + str(_m.membership_number),  # {2}
-                #_dues_legalentities if _m.is_legalentity else '',  # {3}
             ),
             extra_headers={
                 'Reply-To': 'office@c3s.cc',
             }
-      )
+        )
 
     # print to console or send mail
     if 'true' in request.registry.settings['testing.mail_to_console']:
@@ -311,6 +311,8 @@ def send_dues_invoice_email(request, m_id=None):
                 'detail',
                 memberid=_m.id) +
             '#dues15')
+    if 'toolbox' in request.referrer:
+        return HTTPFound(request.route_url('toolbox'))
     else:
         return HTTPFound(request.route_url(  # pragma: no cover
             'membership_listing_backend',
@@ -351,6 +353,7 @@ def send_dues_invoice_batch(request):
 
     _num_sent = 0
     _ids_sent = []
+    request.referrer = 'toolbox'
 
     for _m in _invoicees:
 
@@ -677,6 +680,8 @@ def dues15_listing(request):
     _dues15_invoices = Dues15Invoice.get_all()
     from datetime import date
     _today = date.today()
+    # import pdb
+    # pdb.set_trace()  # figure out type of invoice_amount
 
     return {
         'count': len(_dues15_invoices),
@@ -700,30 +705,54 @@ def dues15_reduce(request):
 
     this will only work for *normal* members.
     """
-    _m_id = request.matchdict['member_id']
-    _reduced_amount = request.POST['amount']
-    _is_exemption = False  # sane default
+    DEBUG = True
 
+    # member: sanity checks
     try:
-        _m = C3sMember.get_by_id(_m_id)
-        assert _m.membership_accepted
-        assert 'investing' not in _m.membership_type
+        _m_id = request.matchdict['member_id']
+        _m = C3sMember.get_by_id(_m_id)  # is in database
+        assert _m.membership_accepted  # is a member
+        assert 'investing' not in _m.membership_type  # is normal member
     except:  # pragma: no cover
         request.session.flash(
             u"No member OR not accepted OR not normal member",
-            'message_to_user'  # message queue for user
+            'dues15_message_to_staff'  # message queue for staff
         )
-        return HTTPFound(request.route_url('error_page'))
+        return HTTPFound(
+            request.route_url('detail', memberid=_m.id)
+            + '#dues15')
 
-    # sanity checks
-    # print("the current amount: {}".format(_m.dues15_amount_reduced))
+    # sanity check: the given amount is a positive decimal
+    try:
+        _reduced_amount = D(request.POST['amount'])
+        assert not _reduced_amount.is_signed()
+        if DEBUG:
+            print("DEBUG: reduction to {}".format(_reduced_amount))
+    except:  # pragma: no cover
+        request.session.flash(
+            (u"Invalid amount to reduce to: '{}' "
+             u"Use the dot ('.') as decimal mark, e.g. '23.42'".format(
+                 request.POST['amount'])),
+            'dues15_message_to_staff'  # message queue for user
+        )
+        return HTTPFound(
+            request.route_url('detail', memberid=_m.id)
+            + '#dues15')
 
-    # print("the amount to reduce to: {}".format(_reduced_amount))
-    # print("the amount to reduce to: type: {}".format(type(_reduced_amount)))
+    if DEBUG:
+        print("DEBUG: _m.dues15_amount: {}".format(
+            _m.dues15_amount))
+        print("DEBUG: type(_m.dues15_amount): {}".format(
+            type(_m.dues15_amount)))
+        print("DEBUG: _m.dues15_reduced: {}".format(
+            _m.dues15_reduced))
+        print("DEBUG: _m.dues15_amount_reduced: {}".format(
+            _m.dues15_amount_reduced))
+        print("DEBUG: type(_m.dues15_amount_reduced): {}".format(
+            type(_m.dues15_amount_reduced)))
 
     if (not _m.dues15_reduced and (
-            (str(_reduced_amount) in str(_m.dues15_amount)) and
-            (str(_m.dues15_amount) in str(_reduced_amount)))):
+            _m.dues15_amount == _reduced_amount)):
         request.session.flash(
             u"Dieser Beitrag ist der default-Beitrag!",
             'dues15_message_to_staff'  # message queue for staff
@@ -732,9 +761,7 @@ def dues15_reduce(request):
             request.route_url('detail', memberid=_m.id)
             + '#dues15')
 
-    if (
-            (str(_reduced_amount) in str(_m.dues15_amount_reduced)) and
-            (str(_m.dues15_amount_reduced) in str(_reduced_amount))):
+    if _reduced_amount == _m.dues15_amount_reduced:
         request.session.flash(
             u"Auf diesen Beitrag wurde schon reduziert!",
             'dues15_message_to_staff'  # message queue for staff
@@ -751,9 +778,6 @@ def dues15_reduce(request):
     # * cancel old invoice by issuing a reversal invoice
     # * issue a new invoice with the new amount
 
-    _current_amount = _m.dues15_amount_reduced if (
-        _m.dues15_amount_reduced is not None) else _m.dues15_amount
-
     _m.dues15_reduced = True
     _m.dues15_amount_reduced = _reduced_amount
     request.session.flash('reduction to {}'.format(_reduced_amount),
@@ -761,6 +785,8 @@ def dues15_reduce(request):
 
     _old_invoice = Dues15Invoice.get_by_invoice_no(_m.dues15_invoice_no)
     _old_invoice.is_cancelled = True
+
+    _reversal_invoice_amount = -D(_old_invoice.invoice_amount)
 
     # prepare reversal invoice number
     _new_invoice_no = _max_invoice_no + 1
@@ -770,7 +796,7 @@ def dues15_reduce(request):
         invoice_no_string=(
             u'C3S-dues2015-' + str(_new_invoice_no).zfill(4)) + '-S',
         invoice_date=datetime.today(),
-        invoice_amount=u'-' + str(_current_amount),
+        invoice_amount=_reversal_invoice_amount.to_eng_string(),
         member_id=_m.id,
         membership_no=_m.membership_number,
         email=_m.email,
@@ -784,11 +810,19 @@ def dues15_reduce(request):
     DBSession.flush()
     _old_invoice.succeeding_invoice_no = _new_invoice_no
 
+    # check if this is an exemption (reduction to zero)
+    _is_exemption = False  # sane default
     # check if reduction to zero
-    if int(_reduced_amount) == 0:
+    if _reduced_amount.is_zero():
         _is_exemption = True
-    
-    if not _is_exemption:
+        if DEBUG:
+            print("this was an exemption:  reduction to zero")
+    else:
+        if DEBUG:
+            print("this was a reduction to {}".format(_reduced_amount))
+
+    if not _is_exemption:  # only for reductions, not for exemptions:
+        # create new invoice
         _new_invoice = Dues15Invoice(
             invoice_no=_new_invoice_no + 1,
             invoice_no_string=(
@@ -918,11 +952,12 @@ def make_reversal_invoice_pdf(request):
     #     _email, _code, _no))
 
     try:
-        _m = C3sMember.get_by_email(_email)[0]
+        _m = C3sMember.get_by_dues15_token(_code)
         # print _m
         # print('_m.dues15_token: {}'.format(
         #     _m.dues15_token))
         assert _m.dues15_token == _code
+        assert _m.email == _email
 
     except:
         # print(u"This member and token did not match!")
@@ -983,10 +1018,9 @@ def make_reversal_invoice_pdf(request):
 def make_storno_pdf_pdflatex(_member, _inv=None):
     """
     This function uses pdflatex to create a PDF
-    as reversal invoice: cancel and balance out a formar invoice.
+    as reversal invoice: cancel and balance out a former invoice.
     """
-
-    DEBUG = True
+    DEBUG = False
 
     pdflatex_dir = os.path.abspath(
         os.path.join(
@@ -1079,15 +1113,12 @@ def make_storno_pdf_pdflatex(_member, _inv=None):
         stdout=FNULL, stderr=subprocess.STDOUT,
         cwd=pdflatex_dir
     )
-
-    if DEBUG:
-        # print("status code: ".format(r.status_code))
-        # print("std out: {}".format(r.std_out))
-        # print("std err: {}".format(r.std_err))
-        # print("the output: {}".format(pdflatex_output))
-        pdflatex_output
-        pass
-
+    pdflatex_output
+    # print("status code: ".format(r.status_code))
+    # print("std out: {}".format(r.std_out))
+    # print("std err: {}".format(r.std_err))
+    # print("the output: {}".format(pdflatex_output))
+    
     # cleanup
     _aux = os.path.join(_path, _filename+'.aux')
     if os.path.isfile(_aux):

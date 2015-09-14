@@ -475,6 +475,8 @@ def member_detail(request):
     Mostly all the info about an application or membership
     in the database can be seen here.
     """
+    from decimal import Decimal as D
+    # import decimal
     logged_in = authenticated_userid(request)
 
     memberid = request.matchdict['memberid']
@@ -590,6 +592,7 @@ def member_detail(request):
     _invoices = Dues15Invoice.get_by_membership_no(_member.membership_number)
 
     return {
+        'D': D,
         'member': _member,
         'cert_link': _cert_link,
         'invoices': _invoices,

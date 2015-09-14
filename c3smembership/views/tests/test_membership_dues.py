@@ -156,7 +156,7 @@ def _initTestingDB():
     return DBSession
 
 
-class TestViews(unittest.TestCase):
+class TestDues15Views(unittest.TestCase):
     """
     very basic tests for the main views
     """
@@ -198,7 +198,7 @@ class TestViews(unittest.TestCase):
         member_en.membership_date = datetime(2015, 6, 1)
         res = calculate_partial_dues15(member_en)
         # print res
-        assert res == (u'q2_2015', '37,50')
+        assert res == (u'q2_2015', '37.50')
 
         member_en.membership_date = datetime(2015, 9, 1)
         res = calculate_partial_dues15(member_en)
@@ -208,7 +208,7 @@ class TestViews(unittest.TestCase):
         member_en.membership_date = datetime(2015, 11, 1)
         res = calculate_partial_dues15(member_en)
         # print res
-        assert res == (u'q4_2015', '12,50')
+        assert res == (u'q4_2015', '12.50')
 
     def test_string_start_quarter(self):
         from c3smembership.views.membership_dues import (
@@ -250,7 +250,7 @@ class TestViews(unittest.TestCase):
         # print res
         assert('4th quarter' in res)
 
-    def test_send_dues_invoice_email_via_HTTP(self):
+    def test_send_dues_invoice_email_single(self):
         """
         test the send_dues_invoice_email view
         """
@@ -313,7 +313,7 @@ class TestViews(unittest.TestCase):
 
         """
         what if we call that function (and send email) twice?
-        can we test that no second invoice is created in DB?
+        test that no second invoice is created in DB.
         """
         req3 = testing.DummyRequest()
         req3.matchdict = {
@@ -323,6 +323,108 @@ class TestViews(unittest.TestCase):
         res3 = send_dues_invoice_email(req3)
         self.assertTrue(res3.status_code == 302)
         self.assertTrue('http://example.com/' in res3.headers['Location'])
+
+        """
+        check for email texts
+        """
+        self.assertEqual(len(mailer.outbox), 2)
+        self.assertTrue(
+            (u'Dein Mitgliedsbeitrag ab Quartal 1 beträgt also 50 Euro.')
+            in mailer.outbox[0].body)
+        # print(mailer.outbox[0].body)
+        self.assertTrue(
+            (u'Dein Mitgliedsbeitrag ab Quartal 1 beträgt also 50 Euro.')
+            in mailer.outbox[1].body)
+        # print(mailer.outbox[1].body)
+
+        """
+        send email to
+        * english member,
+        * investing members (de/en),
+        * legal entities (de/en)
+        """
+        # english normal #####################################################
+        m2 = C3sMember.get_by_id(2)
+        m2.membership_accepted = True
+        req_en_normal = testing.DummyRequest()
+        req_en_normal.matchdict = {
+            'member_id': '2',
+        }
+        req_en_normal.referrer = 'detail'
+        res_en_normal = send_dues_invoice_email(req_en_normal)
+        self.assertTrue(res_en_normal.status_code == 302)
+        self.assertEqual(len(mailer.outbox), 3)
+        # print(mailer.outbox[2].body)
+        self.assertTrue(
+            (u'Please transfer 50 Euro')
+            in mailer.outbox[2].body)
+
+        # german investing ###################################################
+        m3 = C3sMember.get_by_id(3)
+        m3.membership_accepted = True
+        req_de_investing = testing.DummyRequest()
+        req_de_investing.matchdict = {
+            'member_id': '3',
+        }
+        req_de_investing.referrer = 'detail'
+        res_de_investing = send_dues_invoice_email(req_de_investing)
+        self.assertTrue(res_de_investing.status_code == 302)
+        self.assertEqual(len(mailer.outbox), 4)
+        # print(mailer.outbox[3].body)
+        self.assertTrue(
+            (u'Da Du investierendes Mitglied bist')
+            in mailer.outbox[3].body)
+
+        # english investing ##################################################
+        m4 = C3sMember.get_by_id(4)
+        m4.membership_accepted = True
+        req_en_investing = testing.DummyRequest()
+        req_en_investing.matchdict = {
+            'member_id': '4',
+        }
+        req_en_investing.referrer = 'detail'
+        res_en_investing = send_dues_invoice_email(req_en_investing)
+        self.assertTrue(res_en_investing.status_code == 302)
+        self.assertEqual(len(mailer.outbox), 5)
+        # print(mailer.outbox[4].body)
+        self.assertTrue(
+            (u'Since you are an investing member')
+            in mailer.outbox[4].body)
+
+        # german legal entity ################################################
+        m5 = C3sMember.get_by_id(5)
+        m5.membership_accepted = True
+        req_de_legalentity = testing.DummyRequest()
+        req_de_legalentity.matchdict = {
+            'member_id': '5',
+        }
+        req_de_legalentity.referrer = 'detail'
+        res_de_legalentity = send_dues_invoice_email(req_de_legalentity)
+        self.assertTrue(res_de_legalentity.status_code == 302)
+        self.assertEqual(len(mailer.outbox), 6)
+        # print(mailer.outbox[5].body)
+        self.assertTrue(
+            (u'')
+            in mailer.outbox[5].body)
+
+        # english legal entity ###############################################
+        m6 = C3sMember.get_by_id(6)
+        m6.membership_accepted = True
+        req_en_legalentity = testing.DummyRequest()
+        req_en_legalentity.matchdict = {
+            'member_id': '6',
+        }
+        req_en_legalentity.referrer = 'detail'
+        res_en_legalentity = send_dues_invoice_email(req_en_legalentity)
+        self.assertTrue(res_en_legalentity.status_code == 302)
+        self.assertEqual(len(mailer.outbox), 7)
+        # print(mailer.outbox[6].body)
+        self.assertTrue(
+            (u'Da Musikverlag investierendes Mitglied ist')
+            in mailer.outbox[6].body)
+        self.assertTrue(
+            (u'Für juristische Personen wird empfohlen')
+            in mailer.outbox[6].body)
 
     def test_send_dues_invoice_email_via_BATCH(self):
         """
@@ -338,15 +440,17 @@ class TestViews(unittest.TestCase):
         self.config.add_route('toolbox', '/toolbox')
 
         # have to accept their membersip first
-        m1 = C3sMember.get_by_id(1)  # normal member
+        m1 = C3sMember.get_by_id(1)  # german normal member
         m1.membership_accepted = True
-        m2 = C3sMember.get_by_id(2)  # normal member
+        m2 = C3sMember.get_by_id(2)  # english normal member
         m2.membership_accepted = True
-        m3 = C3sMember.get_by_id(3)  # normal member
+        m3 = C3sMember.get_by_id(3)  # german investing member
         m3.membership_accepted = True
-        m4 = C3sMember.get_by_id(4)  # investing member
+        m4 = C3sMember.get_by_id(4)  # english investing member
         m4.membership_accepted = True
-        m5 = C3sMember.get_by_id(5)  # investing member
+        m5 = C3sMember.get_by_id(5)  # german investing member
+        m5.membership_accepted = True
+        m5 = C3sMember.get_by_id(6)  # english investing member
         m5.membership_accepted = True
 
         # check number of invoices: should be 0
@@ -356,11 +460,11 @@ class TestViews(unittest.TestCase):
         assert(_number_of_invoices_before_batch == 0)
 
         req = testing.DummyRequest()
-        req.referrer = 'detail'
+        req.referrer = 'toolbox'
         res = send_dues_invoice_batch(req)
         # print res
 
-        # check number of invoices: should be 3
+        # check number of invoices: should be 2
         _number_of_invoices_batch = len(Dues15Invoice.get_all())
         # print("number of invoices after batch: {}".format(
         #    _number_of_invoices_batch))
@@ -374,11 +478,22 @@ class TestViews(unittest.TestCase):
                 # lots of values missing
             },
         )
-
+        req.referrer = 'toolbox'
         res = send_dues_invoice_batch(req_post)
 
         assert(
             'sent out 5 mails (to members with ids [1, 2, 3, 4, 5])' in
+            req.session.pop_flash('message_to_staff'))
+
+        # try to batch-send once more:
+        # this will respond with a redirect and tell
+        # that there are no invitees left
+        res2 = send_dues_invoice_batch(req)
+        # print res2
+        self.assertEquals(res2.status, '302 Found')
+        self.assertEquals(res2.status_code, 302)
+        assert(
+            'no invoicees left. all done!' in
             req.session.pop_flash('message_to_staff'))
 
         """
@@ -488,11 +603,45 @@ class TestViews(unittest.TestCase):
         #   '_today': datetime.date(2015, 9, 1)}
         assert(resp_list['count'] == 2)
 
+    def test_dues15_reduce(self):
+        """
+        test the dues15_reduce functionality
+        """
+        # have to accept their membersip first
+        m1 = C3sMember.get_by_id(1)  # german normal member
+        m1.membership_accepted = True
+        m2 = C3sMember.get_by_id(2)  # english normal member
+        m2.membership_accepted = True
+        m3 = C3sMember.get_by_id(3)  # german investing member
+        m3.membership_accepted = True
+        m4 = C3sMember.get_by_id(4)  # english investing member
+        m4.membership_accepted = True
+        m5 = C3sMember.get_by_id(5)  # german investing member
+        m5.membership_accepted = True
+        m5 = C3sMember.get_by_id(6)  # english investing member
+        m5.membership_accepted = True
+
+        self.config.add_route('make_dues_invoice_no_pdf', '/')
+        self.config.add_route('make_reversal_invoice_pdf', '/')
+        self.config.add_route('detail', '/detail/')
+        self.config.add_route('error_page', '/error_page')
+        self.config.add_route('toolbox', '/toolbox')
+        req = testing.DummyRequest()
+        req.referrer = 'toolbox'
+        from c3smembership.views.membership_dues import send_dues_invoice_batch
+        # send out invoices. this is a prerequisite for reductions
+        res = send_dues_invoice_batch(req)
+        res
         """
         test reduction of dues
         """
         _m1_amount_reduced = m1.dues15_amount_reduced
+
         _number_of_invoices_before_reduction = len(Dues15Invoice.get_all())
+        print("_number_of_invoices_before_reduction: {}".format(
+            _number_of_invoices_before_reduction))
+        self.assertEqual(len(Dues15Invoice.get_all()), 2)
+
         from c3smembership.views.membership_dues import dues15_reduce
 
         # try to reduce to the given default amount (edge case coverage)
@@ -500,30 +649,45 @@ class TestViews(unittest.TestCase):
             post={
                 'submit': True,
                 'amount': 50,
-                # lots of values missing
             },
         )
         req_reduce.matchdict['member_id'] = 1
         res_reduce = dues15_reduce(req_reduce)
+        
+        self.assertEqual(len(Dues15Invoice.get_all()), 2)
+
 
         # now try a valid reduction
         req_reduce = testing.DummyRequest(
             post={
                 'submit': True,
                 'amount': 42,
-                # lots of values missing
             },
         )
         req_reduce.matchdict['member_id'] = 1
         res_reduce = dues15_reduce(req_reduce)
+
         _number_of_invoices_after_reduction = len(Dues15Invoice.get_all())
-        assert(  # two new invoices must have been issued
-            (_number_of_invoices_before_reduction + 2)
+        print("_number_of_invoices_after_reduction: {}".format(
+            _number_of_invoices_after_reduction))
+
+        assert(  # one new invoice must have been issued
+            (_number_of_invoices_before_reduction + 1)
             == _number_of_invoices_after_reduction)
-        assert(_number_of_invoices_after_reduction == 4)
+        assert(_number_of_invoices_after_reduction == 3)
         assert('detail' in res_reduce.headers['Location'])  # 302 to detail p.
         assert(_m1_amount_reduced != m1.dues15_amount_reduced)  # changed!
         assert(m1.dues15_amount_reduced == 42)  # changed to 42!
+
+        # check the invoice created
+        _rev_inv = Dues15Invoice.get_by_invoice_no(
+            _number_of_invoices_before_reduction + 1)
+        _new_inv = Dues15Invoice.get_by_invoice_no(
+            _number_of_invoices_before_reduction + 2)
+        print(_rev_inv.invoice_amount)
+        print(type(_rev_inv.invoice_amount))
+        assert(_rev_inv.invoice_amount == D('-50'))
+        assert(_new_inv.invoice_amount == D('42'))
 
         #############################################################
         # try to reduce to the same amount again (edge case coverage)
@@ -538,6 +702,7 @@ class TestViews(unittest.TestCase):
         res_reduce = dues15_reduce(req_reduce)
         #############################################################
         # try to reduce to zero (edge case coverage)
+        print("------------- reduction to zero ahead!!!")
         req_reduce = testing.DummyRequest(
             post={
                 'submit': True,
