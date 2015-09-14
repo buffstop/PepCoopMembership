@@ -405,17 +405,18 @@ class C3sMember(Base):
         return DBSession.query(cls).filter(
             cls.email_confirm_code == email_confirm_code).first()
 
-    @classmethod
-    def get_by_bcgvtoken(cls, token):
-        """
-        find a member by token used for GA and BarCamp
+    # retired (not used any more)
+    # @classmethod
+    # def get_by_bcgvtoken(cls, token):
+    #     """
+    #     find a member by token used for GA and BarCamp
 
-        this is needed when a user returns from reading her email
-        and clicking on a link containing the token.
-        .
-        """
-        return DBSession.query(cls).filter(
-            cls.email_invite_token_bcgv15 == token).first()
+    #     this is needed when a user returns from reading her email
+    #     and clicking on a link containing the token.
+    #     .
+    #     """
+    #     return DBSession.query(cls).filter(
+    #         cls.email_invite_token_bcgv15 == token).first()
 
     @classmethod
     def check_for_existing_confirm_code(cls, email_confirm_code):
@@ -449,14 +450,15 @@ class C3sMember(Base):
         """return all afms and members"""
         return DBSession.query(cls).all()
 
-    @classmethod
-    def get_invitees(cls, num):
-        """return a given number of members to invite"""
-        return DBSession.query(cls).filter(
-            and_(
-                cls.membership_accepted == 1,
-                cls.email_invite_flag_bcgv15 == None
-            )).slice(0, num).all()
+    # retired: not needed as of now
+    # @classmethod
+    # def get_invitees(cls, num):
+    #    """return a given number of members to invite"""
+    #    return DBSession.query(cls).filter(
+    #        and_(
+    #            cls.membership_accepted == 1,
+    #            cls.email_invite_flag_bcgv15 == None
+    #        )).slice(0, num).all()
 
     @classmethod
     def get_dues_invoicees(cls, num):
