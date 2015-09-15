@@ -272,16 +272,14 @@ Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
 demnach 50,- Euro.
 
 Da {1} investierendes Mitglied ist, seit Ihr vom
-Mitgliedsbeitrag befreit. Ihr würdet der C3S aber sehr helfen, wenn Ihr dennoch
-freiwillig einen Beitrag leisten würdet.
+Mitgliedsbeitrag befreit. Ihr würdet der C3S aber sehr helfen, wenn Ihr 
+dennoch freiwillig einen Beitrag leisten würdet.
 
 Für juristische Personen wird empfohlen, über den Grundbetrag hinaus
 einen Förderbeitrag in folgender Höhe zu entrichten:
 
-a) bis zu einem Jahresumsatz i. H. v. 100.000 Euro
-   pro Jahr 100 Euro
-b) bis zu einem Jahresumsatz i. H. v. 200.000 Euro
-   pro Jahr 200 Euro
+a) bis zu einem Jahresumsatz i. H. v. 100.000 Euro pro Jahr 100 Euro
+b) bis zu einem Jahresumsatz i. H. v. 200.000 Euro pro Jahr 200 Euro
 c) bei höherem Jahresumsatz ist die Höhe entsprechend anzupassen.
 
 Wenn Ihr uns unterstützen möchtest, überweist Eure freiwillige
