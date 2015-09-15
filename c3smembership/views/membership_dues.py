@@ -531,7 +531,7 @@ def make_invoice_pdf_pdflatex(_member, _inv=None):
     if _i_no is suplied, the relevant invoice number is produced
     """
 
-    DEBUG = True
+    DEBUG = False
 
     # directory of pdf and tex files
     # pdflatex_dir = tempfile.mkdtemp()
@@ -573,7 +573,7 @@ def make_invoice_pdf_pdflatex(_member, _inv=None):
     # print('#*'*60)
     # print("_inv: {}".format(_inv))
     # print("_inv.invoice_no: {}".format(_inv.invoice_no))
-    
+
     # on invoice, print start quarter or "reduced". prepare string:
     if (
             (_inv.is_cancelled is False) and
@@ -715,7 +715,7 @@ def dues15_reduction(request):
 
     this will only work for *normal* members.
     """
-    DEBUG = True
+    DEBUG = False
 
     # member: sanity checks
     try:
@@ -763,11 +763,11 @@ def dues15_reduction(request):
 
     # if already reduced to 0 (i.e. dues exepmted), in case of
     # change to higher value do not issue a reversal invoice!
-    #TODO
+    # XXX: TODO, if needed.
 
     # check the reduction amount: same as default calculated amount?
-    if (not _m.dues15_reduced and (
-            _m.dues15_amount == _reduced_amount)):
+    if ((_m.dues15_reduced is False) and (
+            D(_m.dues15_amount) == _reduced_amount)):
         request.session.flash(
             u"Dieser Beitrag ist der default-Beitrag!",
             'dues15_message_to_staff'  # message queue for staff
@@ -831,10 +831,10 @@ def dues15_reduction(request):
     if _reduced_amount.is_zero():
         _is_exemption = True
         if DEBUG:
-            print("this iss an exemption: reduction to zero")
+            print("this is an exemption: reduction to zero")
     else:
         if DEBUG:
-            print("this iss a reduction to {}".format(_reduced_amount))
+            print("this is a reduction to {}".format(_reduced_amount))
 
     if _is_exemption:  # only for reductions, not for exemptions:
         _m.dues15_balanced = True
@@ -1040,7 +1040,6 @@ def make_reversal_pdf_pdflatex(_member, _inv=None):
     This function uses pdflatex to create a PDF
     as reversal invoice: cancel and balance out a former invoice.
     """
-    DEBUG = False
 
     pdflatex_dir = os.path.abspath(
         os.path.join(
@@ -1138,7 +1137,7 @@ def make_reversal_pdf_pdflatex(_member, _inv=None):
     # print("std out: {}".format(r.std_out))
     # print("std err: {}".format(r.std_err))
     # print("the output: {}".format(pdflatex_output))
-    
+
     # cleanup
     _aux = os.path.join(_path, _filename+'.aux')
     if os.path.isfile(_aux):
@@ -1157,7 +1156,7 @@ def dues15_notice(request):
     """
     notice of arrival for transferral of dues
     """
-    DEBUG = True
+    DEBUG = False
 
     # member: sanity checks
     try:
@@ -1214,7 +1213,13 @@ def dues15_notice(request):
     _m.dues15_amount_paid = _paid_amount
     _m.dues15_paid_date = _paid_date
 
-    if _paid_amount == _m.dues15_balance:
+    # if DEBUG:
+    #     print("the amount paid: {}".format(_paid_amount))
+    #     print("the amount paid: TYPE: {}".format(type(_paid_amount)))
+    #     print("the members balance: {}".format(_m.dues15_balance))
+    #     print("the members balance: TYPE: {}".format(
+    #         type(_m.dues15_balance)))
+    if _paid_amount == D(_m.dues15_balance):
         _m.dues15_balance = D('0')
         _m.dues15_balanced = True
 

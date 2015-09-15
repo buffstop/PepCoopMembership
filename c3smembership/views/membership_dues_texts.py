@@ -22,7 +22,7 @@ Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
 Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt demnach
 50,- Euro für das ganze Jahr 2015.
 
-Dein Mitgliedsbeitrag ab {5} beträgt also {3} Euro.
+Dein Mitgliedsbeitrag {5} beträgt also {3} Euro.
 
 Bitte überweise den Betrag auf folgendes Konto der C3S SCE:
 
