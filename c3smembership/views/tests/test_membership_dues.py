@@ -259,7 +259,7 @@ class TestDues15Views(unittest.TestCase):
         ** to accepted member
         ** to non-existing member (wrong id)
         ** to same member (just send email, don't create new invoice)
-        
+
         ... and also check email texts for
         * german normal member
         * english normal member
@@ -665,7 +665,7 @@ class TestDues15Views(unittest.TestCase):
         req_reduce.matchdict['member_id'] = 1  # do it for member with id 1
 
         res_reduce = dues15_reduction(req_reduce)  # call reduce on her
-        
+
         self.assertEqual(len(Dues15Invoice.get_all()), 2)  # no new invoice
 
         # now try a valid reduction
@@ -679,13 +679,13 @@ class TestDues15Views(unittest.TestCase):
         res_reduce = dues15_reduction(req_reduce)
 
         _number_of_invoices_after_reduction = len(Dues15Invoice.get_all())
-        print("_number_of_invoices_after_reduction: {}".format(
-            _number_of_invoices_after_reduction))
+        # print("_number_of_invoices_after_reduction to 42: {}".format(
+        #    _number_of_invoices_after_reduction))
 
-        assert(  # one new invoice must have been issued
-            (_number_of_invoices_before_reduction + 1)
+        assert(  # two new invoices must have been issued
+            (_number_of_invoices_before_reduction + 2)
             == _number_of_invoices_after_reduction)
-        assert(_number_of_invoices_after_reduction == 3)
+        assert(_number_of_invoices_after_reduction == 4)
         assert('detail' in res_reduce.headers['Location'])  # 302 to detail p.
         assert(_m1_amount_reduced != m1.dues15_amount_reduced)  # changed!
         assert(m1.dues15_amount_reduced == 42)  # changed to 42!
@@ -695,8 +695,8 @@ class TestDues15Views(unittest.TestCase):
             _number_of_invoices_before_reduction + 1)
         _new_inv = Dues15Invoice.get_by_invoice_no(
             _number_of_invoices_before_reduction + 2)
-        print(_rev_inv.invoice_amount)
-        print(type(_rev_inv.invoice_amount))
+        # print(_rev_inv.invoice_amount)
+        # print(type(_rev_inv.invoice_amount))
         assert(_rev_inv.invoice_amount == D('-50'))
         assert(_new_inv.invoice_amount == D('42'))
 
@@ -713,7 +713,7 @@ class TestDues15Views(unittest.TestCase):
         res_reduce = dues15_reduction(req_reduce)
         #############################################################
         # try to reduce to zero (edge case coverage)
-        print("------------- reduction to zero ahead!!!")
+        # print("------------- reduction to zero ahead!!!")
         req_reduce = testing.DummyRequest(
             post={
                 'submit': True,
@@ -836,10 +836,10 @@ class TestDues15Views(unittest.TestCase):
                 'payment_date': '2015-09-11',
             }
         )
-
         from c3smembership.views.membership_dues import dues15_notice
 
         res = dues15_notice(req)
+        res  # tame flymake
         self.assertEqual(m1.dues15_paid, True)
         self.assertEqual(m1.dues15_amount_paid, D('50'))
         self.assertEqual(m1.dues15_paid_date,
