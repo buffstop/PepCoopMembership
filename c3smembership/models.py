@@ -368,17 +368,22 @@ class C3sMember(Base):
     dues15_invoice = Column(Boolean, default=False)  # sent?
     dues15_invoice_date = Column(DateTime())  # when?
     dues15_invoice_no = Column(Integer())  # lfd. nummer
-    dues15_token = Column(Unicode(10))
-    dues15_start = Column(Unicode(255))
-    dues15_amount = Column(
-        Numeric(12, 2), nullable=False, default=0)  # calculated
-    dues15_paid = Column(Boolean, default=False)
-    dues15_amount_paid = Column(
-        Numeric(12, 2), nullable=False, default=0)
-    dues15_paid_date = Column(DateTime())  # paid when?
+    dues15_token = Column(Unicode(10))  # access token
+    dues15_start = Column(Unicode(255))  # a string, 2015 quarter of membership
+    dues15_amount = Column(  # calculated amount member has to pay by default
+        Numeric(12, 2), nullable=False, default=D('NaN'))
     dues15_reduced = Column(Boolean, default=False)  # was reduced?
-    dues15_amount_reduced = Column(
-        Numeric(12, 2), nullable=False, default=0)  # ..to x
+    dues15_amount_reduced = Column(  # the amount reduced to
+        Numeric(12, 2), nullable=False, default=D('NaN'))  # ..to x
+    # balance
+    dues15_balance = Column(  # the amount to be settled
+        Numeric(12, 2), nullable=False, default=D('NaN'))
+    dues15_balanced = Column(Boolean, default=False)  # was balanced?
+    # payment
+    dues15_paid = Column(Boolean, default=False)  # payment flag
+    dues15_amount_paid = Column(  # how much paid?
+        Numeric(12, 2), nullable=False, default=D('NaN'))
+    dues15_paid_date = Column(DateTime())  # paid when?
     
     def __init__(self, firstname, lastname, email, password,
                  address1, address2, postcode, city, country, locale,
@@ -940,10 +945,14 @@ class Dues15Invoice(Base):
     invoice_no = Column(Integer(), unique=True)
     invoice_no_string = Column(Unicode(255), unique=True)
     invoice_date = Column(DateTime())
-    invoice_amount = Column(Numeric(12, 2), nullable=False, default=0)
+    invoice_amount = Column(Numeric(12, 2), nullable=False, default=D('NaN'))
+    # has it been superseeded by reversal?
     is_cancelled = Column(Boolean, default=False)
-    is_reversal = Column(Boolean, default=False)
     cancelled_date = Column(DateTime())
+    # is it a reversal?
+    is_reversal = Column(Boolean, default=False)
+    # is it a reduction (or even more than default)?
+    is_altered = Column(Boolean, default=False)
     # person reference
     member_id = Column(Integer())
     membership_no = Column(Integer())

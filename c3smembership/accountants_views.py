@@ -49,7 +49,10 @@ from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.url import route_url
 from translationstring import TranslationStringFactory
-from datetime import datetime
+from datetime import (
+    datetime,
+    date,
+)
 # from sqlalchemy.exc import (
 #    IntegrityError,
 #    ResourceClosedError,
@@ -592,6 +595,7 @@ def member_detail(request):
     _invoices = Dues15Invoice.get_by_membership_no(_member.membership_number)
 
     return {
+        'today': date.today().strftime('%Y-%m-%d'),
         'D': D,
         'member': _member,
         'cert_link': _cert_link,

@@ -320,6 +320,7 @@
                  class="btn btn-success">PDF generieren und laden</a>
             </td>
           </tr>
+          <!-- reduction / exemption -->
           <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice">
             <td>Ermäßigung/Erlass<br/>
               <small>
@@ -351,7 +352,8 @@
               </table>
               <p>
 
-                <form class="form-inline"
+                <form tal:condition="not member.dues15_balanced" 
+                      class="form-inline"
                       action="${request.route_url('dues15_reduction', member_id=member.id)}"
                       method="post">
                   <label>ermäßigen auf:</label>
@@ -359,7 +361,7 @@
                            class="form-control"
                            title="foo"
                            name="amount"
-                           value="enter value here, e.g. 23.42">
+                           value="enter value here, e.g. 23.42 or 0 for exemptions">
                     <input name="submit" type="submit"
                            class="btn btn-primary"
                            value="Reduce Dues.">
@@ -379,8 +381,12 @@
               </p>
             </td>
           </tr>
-
-          <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice and not member.dues15_paid">
+          <!-- payments for dues -->
+          <!-- case one: not paid yet -->
+          <tr tal:condition="'investing' not in member.membership_type
+                             and member.dues15_invoice
+                             and not member.dues15_paid
+                             and not member.dues15_balanced">
             <td>Zahlungseingang<br/>
               <small>
                 Hier kann der Zahlungseingang mit Datum vermerkt werden.
@@ -396,9 +402,12 @@
                            class="form-control"
                            title="foo"
                            name="amount"
-                           value="enter value here, e.g. 23.42">
+                           value="enter value here, e.g. 23.42"><br />
                      Eingangsdatum (yyyy-mm-dd):
-                     <input name="payment_date" type="text">
+                     <input name="payment_date"
+                            class="form-control"
+                            type="text"
+                            value="${today}"><br />
                      <input name="submit" type="submit"
                             class="btn btn-primary"
                             value="Zahlungseingang bestätigen.">
@@ -414,8 +423,11 @@
               </p>
             </td>
           </tr>
-
-          <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice and member.dues15_paid">
+          <!-- case two: already paid OR dues exempted-->
+          <tr tal:condition="'investing' not in member.membership_type
+                             and member.dues15_invoice
+                             and member.dues15_paid
+                             or member.dues15_balanced">
             <td>Zahlungseingang<br/>
               <small>
                 Hier ist der Zahlungseingang mit Datum vermerkt.
@@ -431,31 +443,34 @@
               </table>
             </td>
           </tr>
+          <!-- invoices of this member -->
           <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice">
             <td>Rechnungen<br/>
               <small>
                 Hier siehst Du die erstellten Rechnungen für dieses Mitglied.<br/>
-                Falls vorhanden in der letzten Zeile auch einen Zahlungseingang.
+                Falls vorhanden in der vorletzten Zeile (über SALDO) auch einen Zahlungseingang.
               </small>
             </td>
             <td>
               <table class="table table-striped" rules="rows"><!--! the actual table  -->
                 <tr class="table-striped">
-                  <th>id</th>
+                  <!-- th>id</th -->
                   <th>invoice no</th>
-                  <th>invoice string<br/>download PDF</th>
+                  <th>invoice string<br/>(download PDF)</th>
                   <th>date</th>
                   <th>amount</th>
                   <th>valid or<br/>cancelled?</th>
-                  <th>preced.</th>
-                  <th>succ.</th>
+                  <th>normal or<br/>reversal?</th>
+                  <th>default or<br/>altered?</th>
+                  <!-- th>preced.</th -->
+                  <!-- th>succ.</th -->
                 </tr>
 
                 <!--! loop over the list of invoices -->
                 <tr tal:define="global i_saldo python:0"
                     tal:repeat="i invoices"
                     tal:attributes="id python: 'invoice_{0}'.format(i.id)">
-                  <td>${i.id}</td>
+                  <!-- td>${i.id}</td -->
                   <td><a title="${i.invoice_no}">${i.invoice_no}</a></td>
                   <td>
                     <!-- if this invoice is a normal invoice -->
@@ -480,15 +495,16 @@
                   <td>${i.invoice_date.strftime('%d.%m.%Y %H:%M')}</td>
                   <td tal:define="global i_saldo python: D(i_saldo) + D(i.invoice_amount)">
                     ${i.invoice_amount}</td>
-                  <td>${'cancelled' if i.is_cancelled else 'valid'}</td>
-                  <td>${i.preceding_invoice_no}</td>
-                  <td>${i.succeeding_invoice_no}</td>
+                  <td>${'reversed by %s' % i.succeeding_invoice_no if i.is_cancelled else ''}</td>
+                  <td>${'reverses %s' % i.preceding_invoice_no if i.is_reversal else ''}</td>
+                  <td>${'altered' if i.is_altered else ''}</td>
+                  <!-- td>${i.preceding_invoice_no}</td -->
+                  <!-- td>${i.succeeding_invoice_no}</td -->
                 </tr>
                 <tr tal:condition="member.dues15_paid">
                   <td>n/a</td>
-                  <td>--</td>
                   <td>Zahlungseingang</td>
-                  <td>${member.dues15_paid_date}</td>
+                  <td>${member.dues15_paid_date.strftime('%Y-%m-%d')}</td>
                   <td tal:define="global i_saldo python: D(i_saldo) - D(member.dues15_amount_paid)">
                     ${member.dues15_amount_paid}</td>
                   <td></td>
@@ -497,10 +513,9 @@
                 </tr>
                 <tr>
                   <td></td>
+                  <td>SALDO: </td>
                   <td></td>
-                  <td></td>
-                  <td></td>
-                  <td>SALDO: ${i_saldo}</td>
+                  <td>${i_saldo}</td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -508,6 +523,15 @@
               </table>
               <!--! end of table -->
             </td>
+          </tr>
+          <tr>
+            <td>Saldo Mitgliedskonto </td>
+            <td tal:condition="not member.dues15_balanced"
+                tal:attributes="class 'alert alert-danger'">
+              offener Betrag: ${member.dues15_balance}</td>
+            <td tal:condition="member.dues15_balanced"
+                tal:attributes="class 'alert alert-success'">
+              ausgeglichen: ${member.dues15_balance}</td>
           </tr>
         </table>
       </div>

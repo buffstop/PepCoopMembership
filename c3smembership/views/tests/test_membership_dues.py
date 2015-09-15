@@ -253,6 +253,21 @@ class TestDues15Views(unittest.TestCase):
     def test_send_dues_invoice_email_single(self):
         """
         test the send_dues_invoice_email view
+
+        * calculate invoice amount and send invoice email
+        ** to not accepted member
+        ** to accepted member
+        ** to non-existing member (wrong id)
+        ** to same member (just send email, don't create new invoice)
+        
+        ... and also check email texts for
+        * german normal member
+        * english normal member
+        * german investing member
+        * english investing member
+        * german investing legal entity
+        * english investing legal entity
+
         """
         from pyramid_mailer import get_mailer
         from c3smembership.views.membership_dues import send_dues_invoice_email
@@ -275,7 +290,7 @@ class TestDues15Views(unittest.TestCase):
         # member 1 not accepted by the board. problem!
 
         _number_of_invoices_2 = len(Dues15Invoice.get_all())
-        assert(_number_of_invoices == _number_of_invoices_2)
+        assert(_number_of_invoices == _number_of_invoices_2 == 0)
         # print("_number_of_invoices: {}".format(_number_of_invoices))
 
         m1 = C3sMember.get_by_id(1)
@@ -323,7 +338,8 @@ class TestDues15Views(unittest.TestCase):
         res3 = send_dues_invoice_email(req3)
         self.assertTrue(res3.status_code == 302)
         self.assertTrue('http://example.com/' in res3.headers['Location'])
-
+        _number_of_invoices_4 = len(Dues15Invoice.get_all())
+        self.assertEqual(_number_of_invoices_3, _number_of_invoices_4)
         """
         check for email texts
         """
@@ -603,23 +619,15 @@ class TestDues15Views(unittest.TestCase):
         #   '_today': datetime.date(2015, 9, 1)}
         assert(resp_list['count'] == 2)
 
-    def test_dues15_reduce(self):
+    def test_dues15_reduction(self):
         """
-        test the dues15_reduce functionality
+        test the dues15_reduction functionality
         """
         # have to accept their membersip first
         m1 = C3sMember.get_by_id(1)  # german normal member
         m1.membership_accepted = True
         m2 = C3sMember.get_by_id(2)  # english normal member
         m2.membership_accepted = True
-        m3 = C3sMember.get_by_id(3)  # german investing member
-        m3.membership_accepted = True
-        m4 = C3sMember.get_by_id(4)  # english investing member
-        m4.membership_accepted = True
-        m5 = C3sMember.get_by_id(5)  # german investing member
-        m5.membership_accepted = True
-        m5 = C3sMember.get_by_id(6)  # english investing member
-        m5.membership_accepted = True
 
         self.config.add_route('make_dues_invoice_no_pdf', '/')
         self.config.add_route('make_reversal_invoice_pdf', '/')
@@ -635,27 +643,30 @@ class TestDues15Views(unittest.TestCase):
         """
         test reduction of dues
         """
-        _m1_amount_reduced = m1.dues15_amount_reduced
-
+        # pre-check
+        self.assertFalse(m1.dues15_reduced)  # not reduced yet!
+        _m1_amount_reduced = m1.dues15_amount_reduced  # is Decimal('0')
         _number_of_invoices_before_reduction = len(Dues15Invoice.get_all())
-        print("_number_of_invoices_before_reduction: {}".format(
-            _number_of_invoices_before_reduction))
+        # print("_number_of_invoices_before_reduction: {}".format(
+        #    _number_of_invoices_before_reduction))
+        # we have 2 invoices as of now
         self.assertEqual(len(Dues15Invoice.get_all()), 2)
+        # import the function under test
+        from c3smembership.views.membership_dues import dues15_reduction
 
-        from c3smembership.views.membership_dues import dues15_reduce
-
-        # try to reduce to the given default amount (edge case coverage)
-        req_reduce = testing.DummyRequest(
+        # try to reduce to the given calculated amount (edge case coverage)
+        # this will not work, produce no new invoices
+        req_reduce = testing.DummyRequest(  # prepare request
             post={
                 'submit': True,
                 'amount': 50,
             },
         )
-        req_reduce.matchdict['member_id'] = 1
-        res_reduce = dues15_reduce(req_reduce)
-        
-        self.assertEqual(len(Dues15Invoice.get_all()), 2)
+        req_reduce.matchdict['member_id'] = 1  # do it for member with id 1
 
+        res_reduce = dues15_reduction(req_reduce)  # call reduce on her
+        
+        self.assertEqual(len(Dues15Invoice.get_all()), 2)  # no new invoice
 
         # now try a valid reduction
         req_reduce = testing.DummyRequest(
@@ -665,7 +676,7 @@ class TestDues15Views(unittest.TestCase):
             },
         )
         req_reduce.matchdict['member_id'] = 1
-        res_reduce = dues15_reduce(req_reduce)
+        res_reduce = dues15_reduction(req_reduce)
 
         _number_of_invoices_after_reduction = len(Dues15Invoice.get_all())
         print("_number_of_invoices_after_reduction: {}".format(
@@ -699,7 +710,7 @@ class TestDues15Views(unittest.TestCase):
             },
         )
         req_reduce.matchdict['member_id'] = 1
-        res_reduce = dues15_reduce(req_reduce)
+        res_reduce = dues15_reduction(req_reduce)
         #############################################################
         # try to reduce to zero (edge case coverage)
         print("------------- reduction to zero ahead!!!")
@@ -711,7 +722,7 @@ class TestDues15Views(unittest.TestCase):
             },
         )
         req_reduce.matchdict['member_id'] = 1
-        res_reduce = dues15_reduce(req_reduce)
+        res_reduce = dues15_reduction(req_reduce)
         #############################################################
         # try to reduce to zero with english member (edge case coverage)
         # how to do this if you already reduced to zero? reduce to more first!
@@ -723,7 +734,7 @@ class TestDues15Views(unittest.TestCase):
             },
         )
         req_reduce.matchdict['member_id'] = 1
-        res_reduce = dues15_reduce(req_reduce)
+        res_reduce = dues15_reduction(req_reduce)
         m1.locale = u'en'
         req_reduce = testing.DummyRequest(
             post={
@@ -733,7 +744,7 @@ class TestDues15Views(unittest.TestCase):
             },
         )
         req_reduce.matchdict['member_id'] = 1
-        res_reduce = dues15_reduce(req_reduce)
+        res_reduce = dues15_reduction(req_reduce)
         #############################################################
         """
         test reversal invoice PDF generation

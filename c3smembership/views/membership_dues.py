@@ -98,13 +98,13 @@ def string_start_quarter(member):
     """
     loc = member.locale
     if 'q1_2015' in member.dues15_start:  # first quarter of 2015 or earlier
-        _s = u"Quartal 1" if 'de' in loc else "1st quarter"
+        _s = u"ab Quartal 1" if 'de' in loc else "from 1st quarter"
     elif 'q2_2015' in member.dues15_start:  # second quarter of 2015
-        _s = u"Quartal 2" if 'de' in loc else u"2nd quarter"
+        _s = u"ab Quartal 2" if 'de' in loc else u"from 2nd quarter"
     elif 'q3_2015' in member.dues15_start:  # third quarter of 2015
-        _s = u"Quartal 3" if 'de' in loc else u"3rd quarter"
+        _s = u"ab Quartal 3" if 'de' in loc else u"from 3rd quarter"
     elif 'q4_2015' in member.dues15_start:  # third quarter of 2015
-        _s = u"Quartal 4" if 'de' in loc else u"4th quarter"
+        _s = u"ab Quartal 4" if 'de' in loc else u"from 4th quarter"
     return _s
 
 
@@ -203,14 +203,15 @@ def send_dues_invoice_email(request, m_id=None):
         '''
         # store some info in DB/member table
         _m.dues15_invoice = True
-        _m.dues15_invoice_no = _new_invoice_no
+        _m.dues15_invoice_no = _new_invoice_no  # irrelevant for investing
         _m.dues15_invoice_date = datetime.now()
-        # _m.dues15_invoice_no ???
         _m.dues15_token = randomstring
         _m.dues15_start = dues_start
-        _m.dues15_amount = dues_amount
+        _m.dues15_balanced = False  # they have not paid yet.
 
         if 'normal' in _m.membership_type:  # only for normal members
+            _m.dues15_amount = dues_amount  # what they have to pay (calc'ed)
+            _m.dues15_balance = dues_amount  # what they actually have to pay
             # store some more info about invoice in invoice table
             _i = Dues15Invoice(
                 invoice_no=_m.dues15_invoice_no,
@@ -459,7 +460,7 @@ def make_dues_invoice_no_pdf(request):
     Create invoice PDFs on-the-fly.
 
     This view checks supplied information (in URL) against info in database
-    and OBreturns
+    and returns
     - an error message OR
     - a PDF as receipt
     """
@@ -514,14 +515,14 @@ def make_dues_invoice_no_pdf(request):
         return HTTPFound(request.route_url('error_page'))
 
     # return a pdf file
-    pdf_file = make_dues_pdf_pdflatex(_m, _inv)
+    pdf_file = make_invoice_pdf_pdflatex(_m, _inv)
     response = Response(content_type='application/pdf')
     pdf_file.seek(0)  # rewind to beginning
     response.app_iter = open(pdf_file.name, "r")
     return response
 
 
-def make_dues_pdf_pdflatex(_member, _inv=None):
+def make_invoice_pdf_pdflatex(_member, _inv=None):
     """
     This function uses pdflatex to create a PDF
     as receipt for the members membership dues.
@@ -572,6 +573,14 @@ def make_dues_pdf_pdflatex(_member, _inv=None):
     # print('#*'*60)
     # print("_inv: {}".format(_inv))
     # print("_inv.invoice_no: {}".format(_inv.invoice_no))
+    
+    # on invoice, print start quarter or "reduced". prepare string:
+    if (
+            (_inv.is_cancelled is False) and
+            (_inv.is_reversal is False) and
+            (_inv.preceding_invoice_no is not None)):
+        _is_altered_str = u'angepasst' if (
+            'de' in _member.locale) else u'altered'
 
     if _inv is not None:
         # use invoice no from URL
@@ -600,7 +609,8 @@ def make_dues_pdf_pdflatex(_member, _inv=None):
         'personalMShipNo': _member.membership_number,
         'invoiceNo': str(_invoice_no).zfill(4),  # leading zeroes!
         'invoiceDate': _invoice_date,
-        'duesStart': string_start_quarter(_member),
+        'duesStart':  _is_altered_str if (
+            _inv.is_altered) else string_start_quarter(_member),
         'duesAmount': _inv.invoice_amount,
         # _member.dues15_amount_reduced if (
         #     _member.dues15_reduced) else _member.dues15_amount,
@@ -695,7 +705,7 @@ def dues15_listing(request):
     permission='manage',
     renderer='c3smembership:templates/dues15_list.pt'
 )
-def dues15_reduce(request):
+def dues15_reduction(request):
     """
     reduce a members dues upon valid request to do so.
 
@@ -751,6 +761,11 @@ def dues15_reduce(request):
         print("DEBUG: type(_m.dues15_amount_reduced): {}".format(
             type(_m.dues15_amount_reduced)))
 
+    # if already reduced to 0 (i.e. dues exepmted), in case of
+    # change to higher value do not issue a reversal invoice!
+    #TODO
+
+    # check the reduction amount: same as default calculated amount?
     if (not _m.dues15_reduced and (
             _m.dues15_amount == _reduced_amount)):
         request.session.flash(
@@ -816,12 +831,16 @@ def dues15_reduce(request):
     if _reduced_amount.is_zero():
         _is_exemption = True
         if DEBUG:
-            print("this was an exemption:  reduction to zero")
+            print("this iss an exemption: reduction to zero")
     else:
         if DEBUG:
-            print("this was a reduction to {}".format(_reduced_amount))
+            print("this iss a reduction to {}".format(_reduced_amount))
 
-    if not _is_exemption:  # only for reductions, not for exemptions:
+    if _is_exemption:  # only for reductions, not for exemptions:
+        _m.dues15_balanced = True
+        _m.dues15_balance = D('0')
+    else:
+        _m.dues15_balance = _reduced_amount
         # create new invoice
         _new_invoice = Dues15Invoice(
             invoice_no=_new_invoice_no + 1,
@@ -834,6 +853,7 @@ def dues15_reduce(request):
             email=_m.email,
             token=_m.dues15_token,
         )
+        _new_invoice.is_altered = True
         _new_invoice.preceding_invoice_no = _reversal_invoice.invoice_no
         _reversal_invoice.succeeding_invoice_no = _new_invoice_no + 1
         DBSession.add(_new_invoice)
@@ -1008,14 +1028,14 @@ def make_reversal_invoice_pdf(request):
     # print('#'*60)
 
     # return a pdf file
-    pdf_file = make_storno_pdf_pdflatex(_m, _inv)
+    pdf_file = make_reversal_pdf_pdflatex(_m, _inv)
     response = Response(content_type='application/pdf')
     pdf_file.seek(0)  # rewind to beginning
     response.app_iter = open(pdf_file.name, "r")
     return response
 
 
-def make_storno_pdf_pdflatex(_member, _inv=None):
+def make_reversal_pdf_pdflatex(_member, _inv=None):
     """
     This function uses pdflatex to create a PDF
     as reversal invoice: cancel and balance out a former invoice.
@@ -1193,6 +1213,10 @@ def dues15_notice(request):
     _m.dues15_paid = True
     _m.dues15_amount_paid = _paid_amount
     _m.dues15_paid_date = _paid_date
+
+    if _paid_amount == _m.dues15_balance:
+        _m.dues15_balance = D('0')
+        _m.dues15_balanced = True
 
     return HTTPFound(
         request.route_url('detail', memberid=_m.id) + '#dues15')
