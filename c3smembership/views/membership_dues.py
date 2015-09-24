@@ -1219,9 +1219,8 @@ def dues15_notice(request):
     #     print("the members balance: {}".format(_m.dues15_balance))
     #     print("the members balance: TYPE: {}".format(
     #         type(_m.dues15_balance)))
-    if _paid_amount == D(_m.dues15_balance):
-        _m.dues15_balance = D('0')
-        _m.dues15_balanced = True
+    _m.dues15_balance = _m.dues15_balance - _paid_amount
+    _m.dues15_balanced = _m.dues15_balance == D('0')
 
     return HTTPFound(
         request.route_url('detail', memberid=_m.id) + '#dues15')
