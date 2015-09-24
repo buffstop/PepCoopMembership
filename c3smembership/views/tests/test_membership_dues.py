@@ -828,19 +828,49 @@ class TestDues15Views(unittest.TestCase):
         resp0 = send_dues_invoice_email(req0)
         resp0  # tame flymake
 
+        partial_payment_amount = D('10')
+
         # here comes the request to test
-        req = testing.DummyRequest(
+        req1 = testing.DummyRequest(
             matchdict={'member_id': 1},
             POST={
-                'amount': m1.dues15_amount,
+                'amount': partial_payment_amount,
                 'payment_date': '2015-09-11',
             }
         )
         from c3smembership.views.membership_dues import dues15_notice
+        res1 = dues15_notice(req1)
+        res1  # tame flymake
 
-        res = dues15_notice(req)
-        res  # tame flymake
+        # After the partial payment, some amount has been paid
         self.assertEqual(m1.dues15_paid, True)
-        self.assertEqual(m1.dues15_amount_paid, D('50'))
+        # it has been the partial payment amount
+        self.assertEqual(m1.dues15_amount_paid, partial_payment_amount)
         self.assertEqual(m1.dues15_paid_date,
                          datetime(2015, 9, 11, 0, 0))
+        # the balance is the original amount subtracted by the partial payment
+        self.assertEqual(m1.dues15_balance, D(m1.dues15_amount) - partial_payment_amount)
+        # and the account is not balanced.
+        self.assertEqual(m1.dues15_balanced, False)
+
+        # here comes the request to test
+        req2 = testing.DummyRequest(
+            matchdict={'member_id': 1},
+            POST={
+                'amount': D(m1.dues15_amount) - partial_payment_amount,
+                'payment_date': '2015-09-13',
+            }
+        )
+        res2 = dues15_notice(req2)
+        res2  # tame flymake
+
+        # After the final payment, some amount has been paid
+        self.assertEqual(m1.dues15_paid, True)
+        # it has been the full amount
+        self.assertEqual(m1.dues15_amount_paid, D('50'))
+        self.assertEqual(m1.dues15_paid_date,
+                         datetime(2015, 9, 13, 0, 0))
+        # the balance is 0
+        self.assertEqual(m1.dues15_balance, D('0'))
+        # and the account is balanced.
+        self.assertEqual(m1.dues15_balanced, True)

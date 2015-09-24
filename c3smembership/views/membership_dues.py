@@ -14,6 +14,7 @@ This module holds code for membership dues functionality.
 """
 from datetime import datetime
 from decimal import Decimal as D
+import math
 import os
 # import envoy
 import subprocess
@@ -1210,7 +1211,9 @@ def dues15_notice(request):
 
     # persist info about payment
     _m.dues15_paid = True
-    _m.dues15_amount_paid = _paid_amount
+    if math.isnan(_m.dues15_amount_paid):
+        _m.dues15_amount_paid = D('0')
+    _m.dues15_amount_paid = _m.dues15_amount_paid + _paid_amount
     _m.dues15_paid_date = _paid_date
 
     # if DEBUG:
@@ -1219,8 +1222,8 @@ def dues15_notice(request):
     #     print("the members balance: {}".format(_m.dues15_balance))
     #     print("the members balance: TYPE: {}".format(
     #         type(_m.dues15_balance)))
-    _m.dues15_balance = _m.dues15_balance - _paid_amount
-    _m.dues15_balanced = _m.dues15_balance == D('0')
+    _m.dues15_balance = D(_m.dues15_balance) - _paid_amount
+    _m.dues15_balanced = D(_m.dues15_balance) == D('0')
 
     return HTTPFound(
         request.route_url('detail', memberid=_m.id) + '#dues15')
