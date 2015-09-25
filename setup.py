@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+CHANGES = open(os.path.join(here, 'CHANGES.md')).read()
 
 requires = [
     'alembic',  # migrate the database when introducing new fields
@@ -23,7 +23,7 @@ requires = [
     'pyramid_mailer',
     'pyramid_tm',
     'python-gnupg',
-    'repoze.sendmail==4.1',
+    'repoze.sendmail>=4.1',
     'SQLAlchemy',
     'transaction',
     'unicodecsv',

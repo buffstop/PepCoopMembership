@@ -9,7 +9,7 @@ and throughout the other bits of code.
 from datetime import (
     datetime,
 )
-from decimal import Decimal as D
+from decimal import Decimal
 import cryptacular.bcrypt
 
 from sqlalchemy import (
@@ -46,23 +46,27 @@ crypt = cryptacular.bcrypt.BCRYPTPasswordManager()
 def hash_password(password):
     return unicode(crypt.encode(password))
 
-
-class SqliteNumeric(types.TypeDecorator):
+# TODO: Use standard SQLAlchemy Decimal when a database is used which supports
+# it.
+class SqliteDecimal(types.TypeDecorator):
     impl = types.String
 
     def load_dialect_impl(self, dialect):
         return dialect.type_descriptor(types.VARCHAR(100))
 
     def process_bind_param(self, value, dialect):
-        return str(value)
+        if value is not None:
+            return str(value)
+        else:
+            return None
 
     def process_result_value(self, value, dialect):
-        return D(value)
+        if value is not None and value != '':
+            return Decimal(value)
+        else:
+            return None
 
-# can overwrite the imported type name
-# @note: the TypeDecorator does not guarantie the scale and precision.
-# you can do this with separate checks
-Numeric = SqliteNumeric
+DatabaseDecimal = SqliteDecimal
 
 
 class Group(Base):
@@ -371,18 +375,18 @@ class C3sMember(Base):
     dues15_token = Column(Unicode(10))  # access token
     dues15_start = Column(Unicode(255))  # a string, 2015 quarter of membership
     dues15_amount = Column(  # calculated amount member has to pay by default
-        Numeric(12, 2), nullable=False, default=D('NaN'))
+        DatabaseDecimal(12, 2), default=Decimal('NaN'))
     dues15_reduced = Column(Boolean, default=False)  # was reduced?
     dues15_amount_reduced = Column(  # the amount reduced to
-        Numeric(12, 2), nullable=False, default=D('NaN'))  # ..to x
+        DatabaseDecimal(12, 2), default=Decimal('NaN'))  # ..to x
     # balance
     dues15_balance = Column(  # the amount to be settled
-        Numeric(12, 2), nullable=False, default=D('NaN'))
+        DatabaseDecimal(12, 2), default=Decimal('NaN'))
     dues15_balanced = Column(Boolean, default=False)  # was balanced?
     # payment
     dues15_paid = Column(Boolean, default=False)  # payment flag
     dues15_amount_paid = Column(  # how much paid?
-        Numeric(12, 2), nullable=False, default=D('NaN'))
+        DatabaseDecimal(12, 2), default=Decimal('NaN'))
     dues15_paid_date = Column(DateTime())  # paid when?
     
     def __init__(self, firstname, lastname, email, password,
@@ -945,7 +949,7 @@ class Dues15Invoice(Base):
     invoice_no = Column(Integer(), unique=True)
     invoice_no_string = Column(Unicode(255), unique=True)
     invoice_date = Column(DateTime())
-    invoice_amount = Column(Numeric(12, 2), nullable=False, default=D('NaN'))
+    invoice_amount = Column(DatabaseDecimal(12, 2), default=Decimal('NaN'))
     # has it been superseeded by reversal?
     is_cancelled = Column(Boolean, default=False)
     cancelled_date = Column(DateTime())
