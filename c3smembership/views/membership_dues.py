@@ -208,11 +208,9 @@ def send_dues_invoice_email(request, m_id=None):
         _m.dues15_invoice_date = datetime.now()
         _m.dues15_token = randomstring
         _m.dues15_start = dues_start
-        _m.dues15_balanced = False  # they have not paid yet.
 
         if 'normal' in _m.membership_type:  # only for normal members
-            _m.dues15_amount = dues_amount  # what they have to pay (calc'ed)
-            _m.dues15_balance = dues_amount  # what they actually have to pay
+            _m.set_dues15_amount(dues_amount)
             # store some more info about invoice in invoice table
             _i = Dues15Invoice(
                 invoice_no=_m.dues15_invoice_no,
@@ -794,8 +792,7 @@ def dues15_reduction(request):
     # * cancel old invoice by issuing a reversal invoice
     # * issue a new invoice with the new amount
 
-    _m.dues15_reduced = True
-    _m.dues15_amount_reduced = _reduced_amount
+    _m.set_dues15_reduced_amount(_reduced_amount)
     request.session.flash('reduction to {}'.format(_reduced_amount),
                           'dues15_message_to_staff')
 
@@ -837,11 +834,7 @@ def dues15_reduction(request):
         if DEBUG:
             print("this is a reduction to {}".format(_reduced_amount))
 
-    if _is_exemption:  # only for reductions, not for exemptions:
-        _m.dues15_balanced = True
-        _m.dues15_balance = D('0')
-    else:
-        _m.dues15_balance = _reduced_amount
+    if not _is_exemption:
         # create new invoice
         _new_invoice = Dues15Invoice(
             invoice_no=_new_invoice_no + 1,
@@ -1210,20 +1203,7 @@ def dues15_notice(request):
             + '#dues15')
 
     # persist info about payment
-    _m.dues15_paid = True
-    if math.isnan(_m.dues15_amount_paid):
-        _m.dues15_amount_paid = D('0')
-    _m.dues15_amount_paid = _m.dues15_amount_paid + _paid_amount
-    _m.dues15_paid_date = _paid_date
-
-    # if DEBUG:
-    #     print("the amount paid: {}".format(_paid_amount))
-    #     print("the amount paid: TYPE: {}".format(type(_paid_amount)))
-    #     print("the members balance: {}".format(_m.dues15_balance))
-    #     print("the members balance: TYPE: {}".format(
-    #         type(_m.dues15_balance)))
-    _m.dues15_balance = D(_m.dues15_balance) - _paid_amount
-    _m.dues15_balanced = D(_m.dues15_balance) == D('0')
+    _m.set_dues15_payment(_paid_amount, _paid_date)
 
     return HTTPFound(
         request.route_url('detail', memberid=_m.id) + '#dues15')

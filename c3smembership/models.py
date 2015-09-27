@@ -11,6 +11,7 @@ from datetime import (
 )
 from decimal import Decimal
 import cryptacular.bcrypt
+import math
 
 from sqlalchemy import (
     Table,
@@ -25,8 +26,8 @@ from sqlalchemy import (
     and_,
 )
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.sql import func
-# from sqlalchemy.sql.expression import func
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
@@ -94,14 +95,6 @@ class Group(Base):
             cls).filter(cls.name == groupname).first()
         return staff_group
 
-#    @classmethod
-#    def get_Users_group(cls, groupname="User"):
-#        """Choose the right group for users"""
-#        dbsession = DBSession()
-#        users_group = dbsession.query(
-#            cls).filter(cls.name == groupname).first()
-#        print('=== get_Users_group:' + str(users_group))
-#        return users_group
 
 
 # table for relation between staffers and groups
@@ -139,18 +132,6 @@ class C3sStaff(Base):
         self.password = password
         self.last_password_change = datetime.now()
         self.email = email
-
-    # @property
-    # def __acl__(self):
-    #    return [
-    #        (Allow,                           # user may edit herself
-    #         self.username, 'editUser'),
-    #        #'user:%s' % self.username, 'editUser'),
-    #        (Allow,                           # accountant group may edit
-    #         'group:accountants', ('view', 'editUser')),
-    #        (Allow,                           # admin group may edit
-    #         'group:admins', ('view', 'editUser')),
-    #    ]
 
     def _get_password(self):
         return self._password
@@ -234,7 +215,6 @@ class Shares(Base):
     def get_max_id(cls):
         """return number of entries (by counting rows in table)"""
         res, = DBSession.query(func.max(cls.id)).first()
-        # print("the result: {}".format(res,))
         return res
 
     @classmethod
@@ -377,16 +357,16 @@ class C3sMember(Base):
     dues15_amount = Column(  # calculated amount member has to pay by default
         DatabaseDecimal(12, 2), default=Decimal('NaN'))
     dues15_reduced = Column(Boolean, default=False)  # was reduced?
-    dues15_amount_reduced = Column(  # the amount reduced to
-        DatabaseDecimal(12, 2), default=Decimal('NaN'))  # ..to x
+    _dues15_amount_reduced = Column('dues15_amount_reduced',  # the amount reduced to
+        DatabaseDecimal(12, 2), default=Decimal('NaN'))  # ..to xs
     # balance
-    dues15_balance = Column(  # the amount to be settled
-        DatabaseDecimal(12, 2), default=Decimal('NaN'))
-    dues15_balanced = Column(Boolean, default=False)  # was balanced?
+    _dues15_balance = Column('dues15_balance',  # the amount to be settled
+        DatabaseDecimal(12, 2), default=Decimal('0'))
+    dues15_balanced = Column(Boolean, default=True)  # was balanced?
     # payment
     dues15_paid = Column(Boolean, default=False)  # payment flag
     dues15_amount_paid = Column(  # how much paid?
-        DatabaseDecimal(12, 2), default=Decimal('NaN'))
+        DatabaseDecimal(12, 2), default=Decimal('0'))
     dues15_paid_date = Column(DateTime())  # paid when?
     
     def __init__(self, firstname, lastname, email, password,
@@ -429,6 +409,27 @@ class C3sMember(Base):
 
     password = property(_get_password, _set_password)
     password = synonym('_password', descriptor=password)
+
+    @hybrid_property
+    def dues15_balance(self):
+        return self._dues15_balance
+
+    @dues15_balance.setter
+    def dues15_balance(self, dues15_balance):
+        self._dues15_balance = dues15_balance
+        self.dues15_balanced = self._dues15_balance == Decimal('0')
+
+    @hybrid_property
+    def dues15_amount_reduced(self):
+        return self._dues15_amount_reduced
+
+    @dues15_amount_reduced.setter
+    def dues15_amount_reduced(self, dues15_amount_reduced):
+        self._dues15_amount_reduced = dues15_amount_reduced
+        self.dues15_reduced = \
+            not math.isnan(self.dues15_amount_reduced) \
+            and \
+            self.dues15_amount_reduced != self.dues15_amount
 
     @classmethod
     def get_by_code(cls, email_confirm_code):
@@ -564,42 +565,6 @@ class C3sMember(Base):
         """return number of submissions (by counting rows in table)"""
         return DBSession.query(cls).count()
 
-    # @classmethod
-    # def get_num_empty_slots(cls):
-    #     """
-    #     return number of submissions (by counting rows in table)
-    #     awefully broken, needs fixing XXX
-    #     """
-    #     _all = DBSession.query(cls).all()
-    #     print len(_all)
-    #     _count = 0
-    #     _found = []
-    #     _range = [i for i in range(1, 1119)]
-    #     max_id = 0
-    #     print "_range: {}".format(_range)
-    #     for i in _all:
-    #         #print (i.id)
-    #         assert(i.id is not None)
-    #         if i.id > max_id:
-    #             max_id = i.id
-    #         _count += 1
-    #         if i.id in _range:
-    #             #print "removing {}".format(i.id)
-    #             _range.remove(i.id)
-    #             _found.extend([i.id])
-
-    #     print "max_id: {}".format(max_id)
-    #     print "loop finished. count is {}. len(_range) is {}. type: {}".format(
-    #         _count, len(_range), type(_range))
-    #     #print "_range: {}".format(_range)
-    #     #print "_found: {}".format(_found)
-    #     _diff = [x for x in _range if (x not in _found)]
-    #     #print "_range - _found: {}".format(
-    #         _diff)
-    #     print "number of unused ids: {}".format(len(_diff))
-    #     #from sqlalchemy import func
-    #     #print "the max: {}".format(DBSession.query(func.max(cls.id)))
-    #     return _count
 
     @classmethod
     def get_num_members_accepted(cls):
@@ -675,14 +640,12 @@ class C3sMember(Base):
                 cls.membership_type != 'normal',
                 cls.membership_type != 'investing',
             ).all()
-        # print "how many unknown: {}".format(len(_foo))
         _other = {}
         for i in _foo:
             if i.membership_type in _other.keys():
                 _other[i.membership_type] += 1
             else:
                 _other[i.membership_type] = 1
-        # print "the options: {}".format(_other)
         return len(_foo)
 
     # listings
@@ -735,8 +698,6 @@ class C3sMember(Base):
         ).order_by(
             order_function()
         ).slice(_offset, _how_many)
-        # print "length of nonmember listing: {}".format(q.count())
-        # print "nonmember listing q: {}".format(q)
         return q.all()
 
     @classmethod
@@ -748,13 +709,10 @@ class C3sMember(Base):
                 cls.membership_accepted == None,
             )
         ).count()
-        # print "length of nonmember listing: {}".format(q)
-        # print "nonmember listing q: {}".format(q)
         return q
 
     @classmethod
     def get_num_nonmember_listing(cls):
-        # cls.nonmember_listing(order_by='id').count()
         return cls.nonmember_listing_count()
 
     # count for statistics
@@ -797,7 +755,6 @@ class C3sMember(Base):
         for item in all:
             if item.email_confirm_code.startswith(prefix):
                 codes.append(item.email_confirm_code)
-        # print("number of items found: %s" % len(codes))
         return codes
 
     @classmethod
@@ -877,7 +834,6 @@ class C3sMember(Base):
             cls.membership_number != None).all()
         _list = []
         for i in nrs:
-            #print "-- {} -- {}".format(i, i[0])
             _list.append(int(i[0]))
         try:
             _max = max(_list)
@@ -909,10 +865,8 @@ class C3sMember(Base):
         _all = DBSession.query(cls)
         for item in _all:
             if item.country not in _c_dict.keys():
-                # print u"adding {} to the list".format(item.country)
                 _c_dict[item.country] = 1
             else:
-                # print u"found one more entry for {}".format(item.country)
                 _c_dict[item.country] += 1
         return _c_dict
 
@@ -931,6 +885,34 @@ class C3sMember(Base):
                     item.lastname + ', ' + item.firstname)
                 names[_key] = _key
         return names
+
+    def set_dues15_payment(self, paid_amount, paid_date):
+        if math.isnan(self.dues15_amount_paid):
+            dues15_amount_paid = Decimal('0')
+        else:
+            dues15_amount_paid = self.dues15_amount_paid
+
+        self.dues15_paid = True
+        self.dues15_amount_paid = dues15_amount_paid + paid_amount
+        self.dues15_paid_date = paid_date
+        self.dues15_balance = self.dues15_balance - paid_amount
+
+    def set_dues15_amount(self, dues_amount):
+        if math.isnan(self.dues15_amount):
+            dues15_amount = Decimal('0')
+        else:
+            dues15_amount = self.dues15_amount
+
+        self.dues15_balance = self.dues15_balance - dues15_amount + Decimal(dues_amount)  # what they actually have to pay
+        self.dues15_amount = dues_amount  # what they have to pay (calc'ed)
+
+    def set_dues15_reduced_amount(self, reduced_amount):
+        if reduced_amount != self.dues15_amount:
+            previous_amount_in_balance = self.dues15_amount_reduced if self.dues15_reduced else self.dues15_amount
+            self.dues15_balance = self.dues15_balance - previous_amount_in_balance + reduced_amount
+            self.dues15_amount_reduced = reduced_amount
+        else:
+            self.dues15_amount_reduced = Decimal('NaN')
 
 
 class Dues15Invoice(Base):
@@ -1004,7 +986,6 @@ class Dues15Invoice(Base):
     def get_max_invoice_no(cls):
         """ return maximum of given invoice numbers or 0"""
         res, = DBSession.query(func.max(cls.id)).first()
-        # print("the result: {}".format(res,))
 
         if res is None:
             return 0
@@ -1021,159 +1002,3 @@ class Dues15Invoice(Base):
             return True
         else:
             return False
-
-# # table for relation between membership and shares
-# membership_shares = Table(
-#     'membership_shares', Base.metadata,
-#     Column(
-#         'membership_id', Integer, ForeignKey('memberships.id'),
-#         primary_key=True, nullable=False),
-#     Column(
-#         'shares_id', Integer, ForeignKey('shares.id'),
-#         primary_key=True, nullable=False)
-# )
-
-
-# class Membership(Base):
-#     '''
-#     the database of memberships
-
-#     single submissions of the form are to be merged here
-#     '''
-#     __tablename__ = 'memberships'
-#     id = Column(Integer, primary_key=True)
-#     # personal information
-#     firstname = Column(Unicode(255))
-#     lastname = Column(Unicode(255))
-#     email = Column(Unicode(255))
-#     _password = Column('password', Unicode(60))
-#     last_password_change = Column(
-#         DateTime,
-#         default=func.current_timestamp())
-#     address1 = Column(Unicode(255))
-#     address2 = Column(Unicode(255))
-#     postcode = Column(Unicode(255))
-#     city = Column(Unicode(255))
-#     country = Column(Unicode(255))
-#     locale = Column(Unicode(255))
-#     date_of_birth = Column(Date(), nullable=False)
-#     email_is_confirmed = Column(Boolean, default=False)
-#     email_confirmed_date = Column(
-#         DateTime(), default=datetime(1970, 1, 1))
-#     email_confirm_code = Column(Unicode(255), unique=True)
-#     # shares
-#     shares = relationship(
-#         Shares,
-#         secondary=membership_shares,
-#         backref="memberships"
-#     )
-#     #num_shares = Column(Integer())
-#         # XXX TODO: check for number <= max_shares
-#     date_of_membership = Column(DateTime(), nullable=False)
-#     accountant_comment = Column(Unicode(255))
-#     # membership information
-#     membership_type = Column(Unicode(255))
-#     member_of_colsoc = Column(Boolean, default=False)
-#     name_of_colsoc = Column(Unicode(255))
-
-#     def __init__(self, firstname, lastname, email, password,
-#                  address1, address2, postcode, city, country, locale,
-#                  date_of_birth, email_is_confirmed,
-#                  membership_type, member_of_colsoc, name_of_colsoc,
-#                  date_of_membership=datetime.now(),
-#                  ):
-#         self.firstname = firstname
-#         self.lastname = lastname
-#         self.email = email
-#         self.password = password
-#         self.last_password_change = datetime.now()
-#         self.address1 = address1
-#         self.address2 = address2
-#         self.postcode = postcode
-#         self.city = city
-#         self.country = country
-#         self.locale = locale
-#         self.date_of_birth = date_of_birth
-#         self.email_is_confirmed = email_is_confirmed
-#         self.date_of_membership = date_of_membership
-#         self.membership_type = membership_type
-#         self.member_of_colsoc = member_of_colsoc
-#         if self.member_of_colsoc is True:
-#             self.name_of_colsoc = name_of_colsoc
-#         else:
-#             self.name_of_colsoc = u''
-
-#     def _get_password(self):
-#         return self._password
-
-#     def _set_password(self, password):
-#         self._password = hash_password(password)
-
-#     password = property(_get_password, _set_password)
-#     password = synonym('_password', descriptor=password)
-
-#     def get_num_shares(self):
-#         num = 0
-#         for s in self.shares:
-#             num += s.number
-#         return num
-
-#     num_shares = property(get_num_shares)
-
-#     @classmethod
-#     def get_number(cls):
-#         """return number of members (by counting rows in table)"""
-#         return DBSession.query(cls).count()
-
-#     @classmethod
-#     def get_by_id(cls, _id):
-#         """return one member by id"""
-#         return DBSession.query(cls).filter(cls.id == _id).first()
-
-#     # @classmethod
-#     # def num_ms_nat(cls):
-#     #     'number of memberships of natural persons'
-#     #     return DBSession.query(cls).filter(
-#     #         cls.membership_type == 'normal').first()
-
-#     # @classmethod
-#     # def num_ms_jur(cls):
-#     #     'number of memberships of natural persons'
-#     #     return DBSession.query(cls).filter(
-#     #              cls.membership_type == 'normal').first()
-#     @classmethod
-#     def num_ms_norm(cls):
-#         'number of memberships of natural persons'
-#         return DBSession.query(cls).filter(
-#             cls.membership_type == u'normal').count()
-
-#     @classmethod
-#     def num_ms_invest(cls):
-#         'number of memberships of natural persons'
-#         return DBSession.query(cls).filter(
-#             cls.membership_type == u'investing').count()
-
-#     @classmethod
-#     def membership_listing(
-#             cls, order_by, how_many=10, offset=0, order="asc"):
-#         try:
-#             attr = getattr(cls, order_by)
-#             order_function = getattr(attr, order)
-#         except:
-#             raise Exception("Invalid order_by ({0}) or order value "
-#                             "({1})".format(order_by, order))
-#         _how_many = int(offset) + int(how_many)
-#         _offset = int(offset)
-#         q = DBSession.query(cls).order_by(order_function())\
-#                                 .slice(_offset, _how_many)
-#         return q
-
-#     @classmethod
-#     def get_same_lastnames(cls, name):  # XXX todo: similar
-#         """return list of members with same lastnames"""
-#         return DBSession.query(cls).filter(cls.lastname == name).slice(0, 10)
-
-#     @classmethod
-#     def get_same_email(cls, mail):  # XXX todo: similar
-#         """return list of members with same email"""
-#         return DBSession.query(cls).filter(cls.email == mail).slice(0, 10)
