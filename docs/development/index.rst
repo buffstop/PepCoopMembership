@@ -29,7 +29,7 @@ executed in the folder which contains the alembic.ini configuration file.
 
 Like GIT, Alembic identifies the version of a database by a hash value. It
 stores the current version of the database inside the database in the
-table alembic_versions. The table contains a single column and a single row
+table *alembic_version*. The table contains a single column and a single row
 with the hash value identifying the database's version.
 
 There are three important steps to consider when changing the data model.
