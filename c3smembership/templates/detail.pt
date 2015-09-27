@@ -21,100 +21,100 @@
       <a href="${request.route_url('edit', _id=member.id)}" class="btn btn-warning">edit</a>
       <a href="${request.route_url('delete_entry', memberid=member.id)}" class="btn btn-danger">delete</a>
       <table class="table table-striped">
-	<tr>
+        <tr>
           <td>code</td>
-	  <td>${member.email_confirm_code}</td>
+          <td>${member.email_confirm_code}</td>
         </tr>
-	<tr>
+        <tr>
           <td>firstname</td>
-	  <td>${member.firstname}</td>
+          <td>${member.firstname}</td>
         </tr>
-	<tr>
+        <tr>
           <td>lastname</td>
-	  <td>${member.lastname}</td>
+          <td>${member.lastname}</td>
         </tr>
-	<tr>
+        <tr>
           <td>email</td>
-	  <td><a href="mailto:${member.email}">${member.email}</a></td>
+          <td><a href="mailto:${member.email}">${member.email}</a></td>
         </tr>
-	<tr>
+        <tr>
           <td>email confirmed?</td>
-	  <td>${python: u'Yes' if member.email_is_confirmed else u'No.'}</td>
+          <td>${python: u'Yes' if member.email_is_confirmed else u'No.'}</td>
         </tr>
-	<tr>
+        <tr>
           <td>address1</td>
-	  <td>${member.address1}</td>
+          <td>${member.address1}</td>
         </tr>
-	<tr>
+        <tr>
           <td>address2</td>
-	  <td>${member.address2}</td>
+          <td>${member.address2}</td>
         </tr>
-	<tr>
+        <tr>
           <td>postcode</td>
-	  <td>${member.postcode}</td>
+          <td>${member.postcode}</td>
         </tr>
-	<tr>
+        <tr>
           <td>city</td>
-	  <td>${member.city}</td>
+          <td>${member.city}</td>
         </tr>
-	<tr>
+        <tr>
           <td>country</td>
-	  <td>${member.country}</td>
+          <td>${member.country}</td>
         </tr>
-	<tr>
+        <tr>
           <td>locale</td>
-	  <td>${member.locale}</td>
+          <td>${member.locale}</td>
         </tr>
-	<tr>
+        <tr>
           <td>date_of_birth</td>
-	  <td>${member.date_of_birth}</td>
+          <td>${member.date_of_birth}</td>
         </tr>
       </table>
 
       <h3>Membership Meta</h3>
       <table class="table table-striped">
-	<tr>
+        <tr>
           <td>membership_accepted</td>
-	  <td>
+          <td>
             ${'Yes' if member.membership_accepted else 'No'}
           </td>
         </tr>
-	<tr>
-	<tr tal:condition="member.membership_accepted">
+        <tr>
+        <tr tal:condition="member.membership_accepted">
           <td>membership_number</td>
-	  <td>
+          <td>
             ${member.membership_number}
           </td>
         </tr>
-	<tr tal:condition="member.membership_accepted">
+        <tr tal:condition="member.membership_accepted">
           <td>membership_date</td>
-	  <td>${member.membership_date}</td>
+          <td>${member.membership_date}</td>
         </tr>
-	<tr>
+        <tr>
           <td>is_duplicate ?</td>
-	  <td>${'Yes' if member.is_duplicate else 'No/Unknown'}</td>
+          <td>${'Yes' if member.is_duplicate else 'No/Unknown'}</td>
         </tr>
-	<tr tal:condition="member.is_duplicate">
+        <tr tal:condition="member.is_duplicate">
           <td>is duplicate of</td>
-	  <td>
+          <td>
             <a href="${request.route_url('detail', memberid=member.is_duplicate_of)}">
               ${member.is_duplicate_of}
             </a>
           </td>
         </tr>
-	<tr>
+        <tr>
           <td>
           <a name="cancel"></a>kündigung erklärt?</td>
-	  <td>$ off {member.account_canceled}</td>
+          <td>$ off {member.account_canceled}</td>
         </tr>
-	<tr tal:condition="True or member.account_canceled">
+        <tr tal:condition="True or member.account_canceled">
           <td>account cancellation date</td>
-	  <td>$ off {member.account_canceled_date}</td>
+          <td>$ off {member.account_canceled_date}</td>
         </tr>
-	<tr>
+        <tr>
           <td>
           <a name="comment"></a>staff comment</td>
-	  <td>${member.accountant_comment}</td>
+          <td>${member.accountant_comment}</td>
         </tr>
 
       </table>
@@ -134,27 +134,27 @@
             </div>
           </td>
         </tr>
-	<tr>
+        <tr>
           <td>entity type</td>
-	  <td>${u'Körperschaft' if member.is_legalentity else 'Person'}</td>
+          <td>${u'Körperschaft' if member.is_legalentity else 'Person'}</td>
         </tr>
-	<tr>
+        <tr>
           <td>membership type</td>
-	  <td>${member.membership_type}</td>
+          <td>${member.membership_type}</td>
         </tr>
-	<tr>
+        <tr>
           <td>member_of_colsoc</td>
-	  <td>${'Yes' if member.member_of_colsoc else 'No'}</td>
+          <td>${'Yes' if member.member_of_colsoc else 'No'}</td>
         </tr>
-	<tr>
+        <tr>
           <td>name_of_colsoc</td>
-	  <td>${member.name_of_colsoc}</td>
+          <td>${member.name_of_colsoc}</td>
         </tr>
-	<tr>
+        <tr>
           <td>date_of_submission</td>
-	  <td>${member.date_of_submission.strftime('%Y-%m-%d')}</td>
+          <td>${member.date_of_submission.strftime('%Y-%m-%d')}</td>
         </tr>
-	<tr>
+        <tr>
           <td>signature received?</td>
           <td>
             <div tal:condition="not member.signature_received">
@@ -183,16 +183,16 @@
             </div>
           </td>
         </tr>
-	<tr tal:condition="member.signature_received">
+        <tr tal:condition="member.signature_received">
           <td>signature reception date</td><td>${member.signature_received_date}</td>
         </tr>
-	<tr>
+        <tr>
           <td>signature confirmed (mail sent)?</td><td>${member.signature_confirmed or "No"}</td>
         </tr>
-	<tr tal:condition="member.signature_confirmed">
+        <tr tal:condition="member.signature_confirmed">
           <td>signature confirmation date</td><td>${member.signature_confirmed_date}</td>
         </tr>
-	<tr>
+        <tr>
           <td>payment received?</td>
           <td>
             <div tal:condition="not member.payment_received">
@@ -214,19 +214,19 @@
             </div>
           </td>
         </tr>
-	<tr tal:condition="member.payment_received">
+        <tr tal:condition="member.payment_received">
           <td>payment reception date</td>
           <td>${member.payment_received_date}</td>
         </tr>
-	<tr>
+        <tr>
           <td>payment confirmed?</td><td>${member.payment_confirmed or "No"}</td>
         </tr>
-	<tr tal:condition="member.payment_confirmed">
+        <tr tal:condition="member.payment_confirmed">
           <td>payment confirmation date</td><td>${member.payment_confirmed_date}</td>
         </tr>
-	<tr>
+        <tr>
           <td># shares</td>
-	  <td>
+          <td>
             total: ${member.num_shares}<br />
             ${len(member.shares)} package(s):
           <div>
@@ -249,7 +249,7 @@
       <div tal:condition="member.membership_accepted">
         <h3 id="certificate">Membership Certificate</h3>
         <table class="table table-striped">
-	  <tr>
+          <tr>
             <td>
               Versand Mitgliedsbescheinigungs-Email<br/>
               <small>
@@ -285,7 +285,7 @@
         <a name="dues15"></a>
         <h3 id="certificate">Membership Dues</h3>
         <table class="table table-striped">
-	  <tr>
+          <tr>
             <td>
               Versand Mitgliedsbeitrags-Email (Rechnung/Aufforderung)<br/>
               <small>
