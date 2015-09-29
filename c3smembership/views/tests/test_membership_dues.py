@@ -668,6 +668,20 @@ class TestDues15Views(unittest.TestCase):
 
         self.assertEqual(len(Dues15Invoice.get_all()), 2)  # no new invoice
 
+        # try to raise above the calculated amount
+        # this will not work, produce no new invoices
+        req_reduce = testing.DummyRequest(
+            post={
+                'submit': True,
+                'amount': 5000,
+            },
+        )
+        req_reduce.matchdict['member_id'] = 1  # do it for member with id 1
+
+        res_reduce = dues15_reduction(req_reduce)  # call reduce on her
+
+        self.assertEqual(len(Dues15Invoice.get_all()), 2)  # no new invoice
+
         # now try a valid reduction
         req_reduce = testing.DummyRequest(
             post={
