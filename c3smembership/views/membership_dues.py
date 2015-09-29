@@ -65,6 +65,15 @@ def make_random_string():
             string.ascii_uppercase
         ) for x in range(10))
 
+def get_transfer_purpose(invoice, member):
+    if 'de' in member.locale:
+        purpose_template = u'{0}, Mitglied Nr. {1}'
+    else:
+        purpose_template = u'{0}, member no. {1}'
+    return purpose_template.format(
+        invoice.invoice_no_string,
+        member.membership_number)
+
 
 def calculate_partial_dues15(member):
     """
@@ -258,7 +267,7 @@ def send_dues_invoice_email(request, m_id=None):
             body=_mail_template.format(
                 _m.firstname,  # {0}
                 _m.lastname,  # {1}
-                _i.invoice_no_string,  # {2}
+                get_transfer_purpose(_i, _m),  # {2}
                 _m.dues15_amount,  # {3}
                 _invoice_url,  # {4}
                 _start_quarter,  # {5}
