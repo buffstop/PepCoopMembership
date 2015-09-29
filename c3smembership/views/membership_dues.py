@@ -84,20 +84,20 @@ def calculate_partial_dues15(member):
     """
     if member.membership_date < datetime(2015, 4, 1):
         # first quarter of 2015 or earlier
-        _start = u"q1_2015"
-        _amount = "50"
+        _start = u'q1_2015'
+        _amount = D('50')
     elif member.membership_date < datetime(2015, 7, 1):
         # second quarter of 2015
-        _start = u"q2_2015"
-        _amount = "37.50"
+        _start = u'q2_2015'
+        _amount = D('37.50')
     elif member.membership_date < datetime(2015, 10, 1):
         # third quarter of 2015
-        _start = u"q3_2015"
-        _amount = "25"
+        _start = u'q3_2015'
+        _amount = D('25')
     elif member.membership_date >= datetime(2015, 10, 1):
         # third quarter of 2015
-        _start = u"q4_2015"
-        _amount = "12.50"
+        _start = u'q4_2015'
+        _amount = D('12.50')
     return (_start, _amount)
 
 
@@ -226,7 +226,7 @@ def send_dues_invoice_email(request, m_id=None):
                 invoice_no_string=(
                     u'C3S-dues2015-' + str(_m.dues15_invoice_no).zfill(4)),
                 invoice_date=_m.dues15_invoice_date,
-                invoice_amount=u'' + _m.dues15_amount,
+                invoice_amount=u'' + str(_m.dues15_amount),
                 member_id=_m.id,
                 membership_no=_m.membership_number,
                 email=_m.email,
@@ -268,7 +268,7 @@ def send_dues_invoice_email(request, m_id=None):
                 _m.firstname,  # {0}
                 _m.lastname,  # {1}
                 get_transfer_purpose(_i, _m),  # {2}
-                _m.dues15_amount,  # {3}
+                str(_m.dues15_amount),  # {3}
                 _invoice_url,  # {4}
                 _start_quarter,  # {5}
             ),
@@ -775,7 +775,7 @@ def dues15_reduction(request):
 
     # check the reduction amount: same as default calculated amount?
     if ((_m.dues15_reduced is False) and (
-            D(_m.dues15_amount) == _reduced_amount)):
+            _m.dues15_amount == _reduced_amount)):
         request.session.flash(
             u"Dieser Beitrag ist der default-Beitrag!",
             'dues15_message_to_staff'  # message queue for staff
@@ -936,7 +936,7 @@ def dues15_reduction(request):
             body=_mail_template.format(
                 _m.firstname,  # {0}
                 _m.lastname,  # {1}
-                _m.dues15_amount_reduced,  # {3}
+                str(_m.dues15_amount_reduced),  # {3}
                 'C3S-dues2015-' + str(_m.dues15_invoice_no).zfill(4),  # {2}
                 _invoice_url,  # {4}
                 _reversal_url,  # {5}
