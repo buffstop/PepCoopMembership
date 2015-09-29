@@ -793,6 +793,15 @@ def dues15_reduction(request):
             request.route_url('detail', memberid=_m.id)
             + '#dues15')
 
+    if _reduced_amount > _m.dues15_amount:
+        request.session.flash(
+            u"Beitrag darf nicht über den berechneten Wert gesetzt werden.",
+            'dues15_message_to_staff'  # message queue for staff
+        )
+        return HTTPFound(
+            request.route_url('detail', memberid=_m.id)
+            + '#dues15')
+
     # prepare: get highest invoice no from db
     _max_invoice_no = Dues15Invoice.get_max_invoice_no()
 
