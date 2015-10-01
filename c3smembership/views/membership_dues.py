@@ -299,7 +299,7 @@ def send_dues_invoice_email(request, m_id=None):
             body=_mail_template.format(
                 _m.firstname,  # {0} representative
                 _m.lastname,  # {1}  name legal entity
-                'C3S-dues2015-FZ-' + str(_m.membership_number),  # {2}
+                'C3S-FZ-' + str(_m.membership_number),  # {2}
             ),
             extra_headers={
                 'Reply-To': 'office@c3s.cc',
