@@ -793,9 +793,11 @@ def dues15_reduction(request):
             request.route_url('detail', memberid=_m.id)
             + '#dues15')
 
-    if _reduced_amount > _m.dues15_amount:
+    if _m.dues15_reduced and _reduced_amount > _m.dues15_amount_reduced or \
+            _reduced_amount > _m.dues15_amount:
         request.session.flash(
-            u"Beitrag darf nicht über den berechneten Wert gesetzt werden.",
+            u'Beitrag darf nicht über den berechneten oder bereits' + \
+            'reduzierten Wert gesetzt werden.',
             'dues15_message_to_staff'  # message queue for staff
         )
         return HTTPFound(

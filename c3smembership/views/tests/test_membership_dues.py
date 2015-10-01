@@ -654,6 +654,7 @@ class TestDues15Views(unittest.TestCase):
         # import the function under test
         from c3smembership.views.membership_dues import dues15_reduction
 
+        #############################################################
         # try to reduce to the given calculated amount (edge case coverage)
         # this will not work, produce no new invoices
         req_reduce = testing.DummyRequest(  # prepare request
@@ -668,12 +669,13 @@ class TestDues15Views(unittest.TestCase):
 
         self.assertEqual(len(Dues15Invoice.get_all()), 2)  # no new invoice
 
-        # try to raise above the calculated amount
+        #############################################################
+        # try to reduce above the given calculated amount
         # this will not work, produce no new invoices
-        req_reduce = testing.DummyRequest(
+        req_reduce = testing.DummyRequest(  # prepare request
             post={
                 'submit': True,
-                'amount': 5000,
+                'amount': 500,
             },
         )
         req_reduce.matchdict['member_id'] = 1  # do it for member with id 1
@@ -682,6 +684,7 @@ class TestDues15Views(unittest.TestCase):
 
         self.assertEqual(len(Dues15Invoice.get_all()), 2)  # no new invoice
 
+        #############################################################
         # now try a valid reduction
         req_reduce = testing.DummyRequest(
             post={
@@ -693,8 +696,6 @@ class TestDues15Views(unittest.TestCase):
         res_reduce = dues15_reduction(req_reduce)
 
         _number_of_invoices_after_reduction = len(Dues15Invoice.get_all())
-        # print("_number_of_invoices_after_reduction to 42: {}".format(
-        #    _number_of_invoices_after_reduction))
 
         assert(  # two new invoices must have been issued
             (_number_of_invoices_before_reduction + 2)
@@ -713,6 +714,25 @@ class TestDues15Views(unittest.TestCase):
         # print(type(_rev_inv.invoice_amount))
         assert(_rev_inv.invoice_amount == D('-50'))
         assert(_new_inv.invoice_amount == D('42'))
+
+        # we have 4 invoices as of now
+        self.assertEqual(len(Dues15Invoice.get_all()), 4)
+
+        #############################################################
+        # now try to raise above the previous reduction
+        req_reduce = testing.DummyRequest(
+            post={
+                'submit': True,
+                'amount': 50,
+            },
+        )
+        req_reduce.matchdict['member_id'] = 1
+        res_reduce = dues15_reduction(req_reduce)
+
+        _number_of_invoices_after_reduction = len(Dues15Invoice.get_all())
+
+        # no new invoices were created, we still have 4 invoices
+        self.assertEqual(len(Dues15Invoice.get_all()), 4)
 
         #############################################################
         # try to reduce to the same amount again (edge case coverage)
