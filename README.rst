@@ -11,10 +11,7 @@ form submission data is used to populate a pdf with form fields (using fdf
 and pdftk) and the resulting PDF is ready for download.
 
 Another special feature of this app is internationalisation (i18n), making
-the form available in several languages. You can help translate this app on
-transifex: https://www.transifex.com/projects/p/... tba .../
-
-Help via screencast is available: http://translate.c3s.cc
+the form available in several languages.
 
 
 
