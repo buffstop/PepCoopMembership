@@ -725,7 +725,7 @@ def dues15_reduction(request):
     """
     DEBUG = False
 
-    # member: sanity checks
+   # member: sanity checks
     try:
         _m_id = request.matchdict['member_id']
         _m = C3sMember.get_by_id(_m_id)  # is in database
@@ -769,9 +769,18 @@ def dues15_reduction(request):
         print("DEBUG: type(_m.dues15_amount_reduced): {}".format(
             type(_m.dues15_amount_reduced)))
 
-    # if already reduced to 0 (i.e. dues exepmted), in case of
-    # change to higher value do not issue a reversal invoice!
-    # XXX: TODO, if needed.
+    # The hidden input 'confirmed' must have the value 'yes' which is set by
+    # the confirmation dialog.
+    reduction_confirmed = request.POST['confirmed']
+    if reduction_confirmed != 'yes':
+        request.session.flash(
+            u'Die Reduktion wurde nicht bestätigt.',
+            'dues15_message_to_staff'  # message queue for staff
+        )
+        return HTTPFound(
+            request.route_url('detail', memberid=_m.id)
+            + '#dues15')
+
 
     # check the reduction amount: same as default calculated amount?
     if ((_m.dues15_reduced is False) and (

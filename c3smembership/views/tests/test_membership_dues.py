@@ -659,6 +659,7 @@ class TestDues15Views(unittest.TestCase):
         # this will not work, produce no new invoices
         req_reduce = testing.DummyRequest(  # prepare request
             post={
+                'confirmed': 'yes',
                 'submit': True,
                 'amount': 50,
             },
@@ -674,6 +675,7 @@ class TestDues15Views(unittest.TestCase):
         # this will not work, produce no new invoices
         req_reduce = testing.DummyRequest(  # prepare request
             post={
+                'confirmed': 'yes',
                 'submit': True,
                 'amount': 500,
             },
@@ -685,9 +687,23 @@ class TestDues15Views(unittest.TestCase):
         self.assertEqual(len(Dues15Invoice.get_all()), 2)  # no new invoice
 
         #############################################################
-        # now try a valid reduction
+        # valid reduction but without confirmation
         req_reduce = testing.DummyRequest(
             post={
+                'confirmed': 'no',
+                'submit': True,
+                'amount': 42,
+            },
+        )
+        req_reduce.matchdict['member_id'] = 1
+        res_reduce = dues15_reduction(req_reduce)
+        self.assertEqual(len(Dues15Invoice.get_all()), 2)  # no new invoice
+
+        #############################################################
+        # valid reduction
+        req_reduce = testing.DummyRequest(
+            post={
+                'confirmed': 'yes',
                 'submit': True,
                 'amount': 42,
             },
@@ -722,6 +738,7 @@ class TestDues15Views(unittest.TestCase):
         # now try to raise above the previous reduction
         req_reduce = testing.DummyRequest(
             post={
+                'confirmed': 'yes',
                 'submit': True,
                 'amount': 50,
             },
@@ -738,6 +755,7 @@ class TestDues15Views(unittest.TestCase):
         # try to reduce to the same amount again (edge case coverage)
         req_reduce = testing.DummyRequest(
             post={
+                'confirmed': 'yes',
                 'submit': True,
                 'amount': 42,
                 # lots of values missing
@@ -750,6 +768,7 @@ class TestDues15Views(unittest.TestCase):
         # print("------------- reduction to zero ahead!!!")
         req_reduce = testing.DummyRequest(
             post={
+                'confirmed': 'yes',
                 'submit': True,
                 'amount': 0,
                 # lots of values missing
@@ -762,6 +781,7 @@ class TestDues15Views(unittest.TestCase):
         # how to do this if you already reduced to zero? reduce to more first!
         req_reduce = testing.DummyRequest(
             post={
+                'confirmed': 'yes',
                 'submit': True,
                 'amount': 1,
                 # lots of values missing
@@ -772,6 +792,7 @@ class TestDues15Views(unittest.TestCase):
         m1.locale = u'en'
         req_reduce = testing.DummyRequest(
             post={
+                'confirmed': 'yes',
                 'submit': True,
                 'amount': 0,
                 # lots of values missing
