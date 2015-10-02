@@ -17,7 +17,7 @@
         <th>invoice string<br/>download PDF</th>
         <th>date</th>
         <th>amount</th>
-        <th>valid or<br/>cancelled?</th>
+        <th>was<br/>cancelled</th>
         <th>reversal<br/>invoice?</th>
         <th>member id</th>
         <th>membership no</th>
@@ -52,7 +52,7 @@
         </td>
         <td>${i.invoice_date.strftime('%d.%m.%Y %H:%M')}</td>
         <td>${i.invoice_amount}</td>
-        <td>${'cancelled' if i.is_cancelled else 'valid'}</td>
+        <td>${'yes' if i.is_cancelled else 'no'}</td>
         <td>${'reversal' if i.is_reversal else 'normal'}</td>
         <td><a href="${request.route_url('detail',
                      memberid=i.member_id) + '#dues15'}"
