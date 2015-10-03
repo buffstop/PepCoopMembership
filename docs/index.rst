@@ -13,6 +13,7 @@ Contents:
    :maxdepth: 3
    :numbered:
 
+   requirements/index
    development/index
    license_texts/index
 
