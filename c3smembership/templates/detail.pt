@@ -10,7 +10,7 @@
         $().ready(function() {
             $("#dues15_reduce_submit").click(function(event) {
                 reduction_amount = $("#dues15_form input[name='amount']").val();
-                answer = confirm("Are you sure you want to reduce the dues to " + reduction_amount + "?");
+                answer = confirm("Are you sure you want to reduce the dues for ${member.firstname} ${member.lastname} to " + reduction_amount + "?");
                 if(answer) {
                     $("#dues15_form input[name='confirmed']").val("yes");
                 } else {
@@ -382,7 +382,7 @@
                            class="form-control"
                            title="foo"
                            name="amount"
-                           value="enter value here, e.g. 23.42 or 0 for exemptions">
+                           value="">
                     <input id="dues15_reduce_submit"
                            type="submit"
                            name="submit"
