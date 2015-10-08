@@ -482,8 +482,8 @@
                   <th>invoice string<br/>(download PDF)</th>
                   <th>date</th>
                   <th>amount</th>
-                  <th>valid or<br/>cancelled?</th>
-                  <th>normal or<br/>reversal?</th>
+                  <th>was<br/>reversed?</th>
+                  <th>is<br/>reversal?</th>
                   <th>default or<br/>altered?</th>
                   <!-- th>preced.</th -->
                   <!-- th>succ.</th -->
