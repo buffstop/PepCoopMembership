@@ -24,6 +24,27 @@ Danke für Deinen Beitrag zur C3S!
 Liebe Grüße,
 
 Das C3S-Team
+
+-- 
+      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
+      ::: dein beitrag zu fairer bezahlung für musiker :::
+      :::            https://sustain.c3s.cc            :::
+      ::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+                      :
+              C3S SCE : Cultural Commons Collecting Society
+                      : SCE mit beschränkter Haftung
+                      : Heyestraße 194 : 40625 Düsseldorf : Germany
+                      : https://C3S.cc
+
+       M.eik Michalke :
+ Dr. Holger Schwetter : Geschäftsführende Direktoren
+                      :
+   Meinhard Starostik : Vorsitzender des Verwaltungsrates
+                      :
+              GnR 506 : Genossenschaftsregister AG Düsseldorf
+               USt-ID : DE294690528
+
 """
                  )
     else:
@@ -39,7 +60,30 @@ Thanks a lot for your contribution to the C3S!
 
 Best wishes,
 
-The C3S Team"""
+The C3S Team
+
+-- 
+      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
+      :::     support fair remuneration for artists    :::
+      :::          https://sustain.c3s.cc/?en          :::
+      ::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+                      :
+              C3S SCE : Cultural Commons Collecting Society
+                      : SCE mit beschränkter Haftung
+                      : Heyestraße 194 : 40625 Düsseldorf : Germany
+                      : https://C3S.cc
+
+       M.eik Michalke :
+ Dr. Holger Schwetter : executive directors
+                      :
+   Meinhard Starostik : chairperson of the board of directors
+                      :
+              GnR 506 : Genossenschaftsregister AG Düsseldorf
+               USt-ID : DE294690528
+
+
+"""
                  )
 
     return _body
@@ -68,6 +112,27 @@ Schön, dass Du ein Teil der C3S werden möchtest!
 Liebe Grüße,
 
 Das C3S-Team
+
+-- 
+      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
+      ::: dein beitrag zu fairer bezahlung für musiker :::
+      :::            https://sustain.c3s.cc            :::
+      ::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+                      :
+              C3S SCE : Cultural Commons Collecting Society
+                      : SCE mit beschränkter Haftung
+                      : Heyestraße 194 : 40625 Düsseldorf : Germany
+                      : https://C3S.cc
+
+       M.eik Michalke :
+ Dr. Holger Schwetter : Geschäftsführende Direktoren
+                      :
+   Meinhard Starostik : Vorsitzender des Verwaltungsrates
+                      :
+              GnR 506 : Genossenschaftsregister AG Düsseldorf
+               USt-ID : DE294690528
+
 """)
     else:
         _body = (u"""Dear new member,
@@ -86,5 +151,26 @@ Great that you want to become a part of the C3S!
 Best wishes,
 
 The C3S Team
+
+-- 
+      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
+      :::     support fair remuneration for artists    :::
+      :::          https://sustain.c3s.cc/?en          :::
+      ::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+                      :
+              C3S SCE : Cultural Commons Collecting Society
+                      : SCE mit beschränkter Haftung
+                      : Heyestraße 194 : 40625 Düsseldorf : Germany
+                      : https://C3S.cc
+
+       M.eik Michalke :
+ Dr. Holger Schwetter : executive directors
+                      :
+   Meinhard Starostik : chairperson of the board of directors
+                      :
+              GnR 506 : Genossenschaftsregister AG Düsseldorf
+               USt-ID : DE294690528
+
 """)
     return _body
