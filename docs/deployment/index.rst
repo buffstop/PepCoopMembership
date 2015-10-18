@@ -17,6 +17,7 @@ There are two more things needed:
 
 - Apache VirtualHost Configuration: as normal, but referencing a ..
 - WSGI Python File: helps apache to load the app WSGI-style, using the virtualenv.
+
 For the wsgi file, there is an example :download:`here <./yes.wsgi>`.
 
 We assume you know how to set up an Apache VirtualHost configuration file.
