@@ -49,11 +49,14 @@ $ virtualenv env
 
 $ env/bin/python setup.py develop
 
+Creating an initial database:
+
+$ env/bin/initialize_c3sMembership_db development.ini
+
 
 
 Run (in development mode)
 -------------------------
-
 
 $ env/bin/pserve development.ini --reload
 
