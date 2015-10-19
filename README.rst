@@ -1,5 +1,7 @@
 c3sMembership README
 ====================
+
+
 This webapp offers a form to to join *Cultural Commons Collecting Society (C3S)*
 as member. A GnuPG encrypted mail with the details submitted will be sent to C3S.
 
@@ -15,18 +17,36 @@ Help via screencast is available: http://translate.c3s.cc
 Also see ./tx/README.rst for more help on the translation machinery.
 
 
+
 fonts
 -----
 
+
 The .odt files for the membership application in pdftk require the font Signika which can be downloaded at: http://www.google.com/fonts/specimen/Signika
+
 
 
 setup
 -----
 
+
 see ci.sh (is partially out of date)
 
-install pdftk (sudo apt-get install pdftk)
+dependencies:
+
+- development:
+
+  $ sudo apt-get install python-pip python-dev python2.7-dev python-virtualenv libxml2-dev libxslt1-dev build-essential pdftk zlib1g-dev
+
+- LaTeX pdf compilation:
+
+  $ sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra pgf texlive-lang-german
+
+- documentation diagram generation:
+
+  $ sudo apt-get install graphviz
+
+setup:
 
 $ virtualenv env
 
@@ -37,22 +57,28 @@ $ cp deform/slider.pt env/lib/python2.7/site-packages/deform-2.0a2-py2.7.egg/def
 $ env/bin/python setup.py develop
 
 
+
 run (in development mode)
 -------------------------
+
 
 $ env/bin/pserve development.ini --reload
 
 The app will rebuild templates and reload code whenever there are changes by using --reload.
 
 
+
 run (in production mode, daemon mode)
 -------------------------------------
+
 
 $ pserve production.ini start
 
 
+
 Routes and Views for Users
 --------------------------
+
 
 The default route is *'/'* (named 'join'), presenting the join form.
 From there, users can follow links to other views with relatively static
@@ -82,8 +108,10 @@ Givern the code, email and password all match,
 a view */success_pdf* presents a link to download the form.
 
 
+
 Routes and Views for Accountants
 --------------------------------
+
 
 C3S staff may login to the app at */login* to see the membership applications made
 in views */dashboard*, and */detail/{memberid}* especially to get an overview

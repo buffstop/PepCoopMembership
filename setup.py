@@ -29,6 +29,7 @@ requires = [
     'unicodecsv',
     'waitress',
     'zope.sqlalchemy',
+    'sphinx', # for generating the documentation
 ]
 # for the translations machinery using transifex you also need to
 # "pip install transifex-client"
