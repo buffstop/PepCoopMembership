@@ -15,7 +15,7 @@ the form available in several languages.
 
 
 
-fonts
+Fonts
 -----
 
 
@@ -25,13 +25,25 @@ http://www.google.com/fonts/specimen/Signika
 
 
 
-setup
+Setup
 -----
 
 
-see ci.sh (is partially out of date)
+Install dependencies:
 
-install pdftk (sudo apt-get install pdftk)
+- Development:
+
+  $ sudo apt-get install python-pip python-dev python2.7-dev python-virtualenv libxml2-dev libxslt1-dev build-essential pdftk zlib1g-dev
+
+- LaTeX pdf compilation:
+
+  $ sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra pgf texlive-lang-german
+
+- Documentation diagram generation:
+
+  $ sudo apt-get install graphviz
+
+Setup:
 
 $ virtualenv env
 
@@ -39,7 +51,7 @@ $ env/bin/python setup.py develop
 
 
 
-run (in development mode)
+Run (in development mode)
 -------------------------
 
 
@@ -50,7 +62,7 @@ using --reload.
 
 
 
-run (in production mode, daemon mode)
+Run (in production mode, daemon mode)
 -------------------------------------
 
 
