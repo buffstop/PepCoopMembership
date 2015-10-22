@@ -20,7 +20,7 @@ Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
 Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt demnach
-50,- Euro für das ganze Jahr 2015.
+50 Euro für das ganze Jahr 2015.
 
 Dein Mitgliedsbeitrag {5} beträgt also {3} Euro.
 
@@ -84,7 +84,7 @@ financial basis for the continuation of our common project:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
-For 2015, the membership dues for active members will therefore be 50,-
+For 2015, the membership dues for active members will therefore be 50
 Euro. They will be less if you joined later than in the first quarter
 2015.
 
@@ -152,7 +152,7 @@ Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
 Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
-demnach 50,- Euro.
+demnach 50 Euro.
 
 Da Du investierendes Mitglied bist, bist Du vom Mitgliedsbeitrag
 befreit. Du würdest der C3S aber sehr helfen, wenn Du dennoch freiwillig
@@ -209,7 +209,7 @@ financial basis for the continuation of our common project:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
-For 2015, the membership dues for active members will therefore be 50,-
+For 2015, the membership dues for active members will therefore be 50
 Euro.
 
 Since you are an investing member, you are exempt from this payment.
@@ -269,7 +269,7 @@ Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
 Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
-demnach 50,- Euro.
+demnach 50 Euro.
 
 Da {1} investierendes Mitglied ist, seit Ihr vom
 Mitgliedsbeitrag befreit. Ihr würdet der C3S aber sehr helfen, wenn Ihr 
@@ -325,7 +325,7 @@ financial basis for the continuation of our common project:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
-For 2015, the membership dues for active members will therefore be 50,-
+For 2015, the membership dues for active members will therefore be 50
 Euro.
 
 Since {1} is an investing member, you are exempt from this
