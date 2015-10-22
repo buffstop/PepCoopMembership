@@ -1,5 +1,5 @@
-Next Release
-============
+1.11
+====
 
 - Introduce membership dues handling. Dues are calculated per quarter
   depending on the membership duration.
@@ -24,6 +24,10 @@ Next Release
   - How to deploy the application onto an Apache server is explained.
 
 - Invitation emails for the 2015 general assembly and barcamp.
+
+- Cleanup code.
+
+- Fixed minor bugs.
 
 
 
