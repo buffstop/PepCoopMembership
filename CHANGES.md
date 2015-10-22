@@ -1,3 +1,12 @@
+Next Rlease
+===========
+
+- Fix notation of euro values and currency symbols.
+
+- Remove unnecessary empty lines at beginning and end of email texts.
+
+
+
 1.11
 ====
 

@@ -62,8 +62,7 @@ Dein C3S Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-
-'''
+'''.strip()
 
 # english template for *normal* members; see placeholder list below!
 #
@@ -125,7 +124,7 @@ Your C3S team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-'''
+'''.strip()
 # format strings:
 # {0}: first name
 # {1}: last name
@@ -189,7 +188,7 @@ Dein C3S Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-'''
+'''.strip()
 
 
 # english template for *investing* members; see placeholder list below!
@@ -247,8 +246,7 @@ Your C3S team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-
-'''
+'''.strip()
 
 # german template for *investing* members which are legal entities;
 # see placeholder list below!
@@ -461,7 +459,7 @@ Dein C3S Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-'''
+'''.strip()
 
 
 # *english* email template for reduction of dues
@@ -521,7 +519,7 @@ Your C3S team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-'''
+'''.strip()
 
 
 # *german* email template for exemption of dues
