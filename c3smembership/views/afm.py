@@ -37,6 +37,7 @@ from pyramid.i18n import (
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_request
 from pyramid_mailer import get_mailer
+from pyramid_mailer.message import Message
 from pyramid.httpexceptions import HTTPFound
 from sqlalchemy.exc import (
     IntegrityError,
@@ -847,7 +848,35 @@ def show_success_pdf(request):
         if 'true' in request.registry.settings['testing.mail_to_console']:
             print(the_mail.body)
         else:
-            mailer.send(the_mail)
+            try:
+                mailer.send(the_mail)
+            except:
+                # if mailout fails for some reason (gnupg, whatever), we need
+                # 1) a mail to staff, so we take notice and fix it
+                # 2) a message to $user, so she does not worry
+                staff_mail = Message(
+                    subject=_("[yes][ALERT] check the logs!"),
+                    sender="noreply@c3s.cc",
+                    recipients=['yes@c3s.cc'],
+                    body="""
+problems! problems!
+
+this is {}
+
+a user could not download her pdf, because....
+maybe gnupg failed? something else?
+
+go fix it!
+                    """.format(request.registry.settings['c3smembership.url']))
+                mailer.send(staff_mail)
+
+                request.session.flash(
+                    u"Oops. we hit a bug. Staff will be "
+                    u"informed. We will come back to you "
+                    u"once we fixed it!",
+                    'message_to_user'  # msg queue f. user
+                )
+                return HTTPFound(request.route_url('error_page'))
 
         return generate_pdf(request.session['appstruct'])
     # 'else': send user to the form

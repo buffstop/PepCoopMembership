@@ -133,9 +133,27 @@ def main(global_config, **settings):
                      '/aml-{date}.pdf')
     config.add_route('membership_listing_aufstockers',
                      '/aml_aufstockers')
+    # membership dues
+    config.add_route('send_dues_invoice_email', '/dues_invoice/{member_id}')
+    config.add_route('send_dues_invoice_batch', '/dues_invoice_batch')
+    config.add_route('send_dues_receipt_mail',
+                     '/dues_receipt_mail/{member_id}')
+    # config.add_route('make_dues_invoice_pdf',  # retired! use route below!
+    #                 '/dues_invoice/{email}/{code}/invoice.pdf')
+    config.add_route('make_dues_invoice_no_pdf',
+                     '/dues_invoice_no/{email}/{code}/C3S-dues15-{i}.pdf')
+    config.add_route('dues15_reduction',
+                     '/dues15_reduction/{member_id}')
+    config.add_route('make_reversal_invoice_pdf',
+                     '/dues_reversal/{email}/{code}/C3S-dues15-{no}-S.pdf')
+    config.add_route('dues15_notice', '/dues15_notice/{member_id}')
+    config.add_route('dues15_listing', '/dues15_listing')
+
     # utilities & wizardry
     config.add_route('plz_dist', '/plz_dist')
     config.add_route('get_member', '/members/{memberid}')
+    config.add_route('error_page', '/error')  # generic error view
+    
     # shares
     config.add_route('shares_detail', '/shares_detail/{id}')
     config.add_route('shares_edit', '/shares_edit/{id}')

@@ -1,19 +1,24 @@
 # -*- coding: utf-8  -*-
 # import os
-import unittest
-import transaction
-# from pyramid.config import Configurator
-from pyramid import testing
 from datetime import date
+from decimal import Decimal as D
+from decimal import InvalidOperation
+from pyramid import testing
 from sqlalchemy import create_engine
-# from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError
+import transaction
+import unittest
+
 from c3smembership.models import (
-    DBSession,
     Base,
     C3sMember,
+    C3sStaff,
+    DBSession,
+    Dues15Invoice,
     Group,
-    C3sStaff
+    Shares,
 )
+
 DEBUG = False
 
 
@@ -170,6 +175,25 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance.firstname, u'SomeFirstnäme')
         self.assertEqual(instance_from_DB.email, u'some@shri.de')
 
+    def test_get_by_dues15_token(self):
+        instance = self._makeOne()
+        self.session.add(instance)
+        instance.dues15_token = u'THIS_ONE'
+        myMembershipSigneeClass = self._getTargetClass()
+        instance_from_DB = myMembershipSigneeClass.get_by_dues15_token(
+            u'THIS_ONE')
+        self.assertEqual(instance_from_DB.firstname, u'SomeFirstnäme')
+        self.assertEqual(instance_from_DB.email, u'some@shri.de')
+
+    def test_get_by_email(self):
+        instance = self._makeOne()
+        self.session.add(instance)
+        myMembershipSigneeClass = self._getTargetClass()
+        list_from_DB = myMembershipSigneeClass.get_by_email(
+            u'some@shri.de')
+        self.assertEqual(list_from_DB[0].firstname, u'SomeFirstnäme')
+        self.assertEqual(list_from_DB[0].email, u'some@shri.de')
+
     def test_get_by_id(self):
         instance = self._makeOne()
         self.session.add(instance)
@@ -204,6 +228,29 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance_from_DB.name_of_colsoc, u'GEMA')
         self.assertEqual(instance_from_DB.num_shares, u'23')
 
+    def test_get_all(self):
+        instance = self._makeOne()
+        instance2 = self._makeAnotherOne()
+        self.session.add(instance, instance2)
+        self.session.flush()
+        myMembershipSigneeClass = self._getTargetClass()
+        all = myMembershipSigneeClass.get_all()
+        self.assertEquals(len(all), 2)
+
+    def test_get_dues_invoicees(self):
+        instance = self._makeOne()
+        instance2 = self._makeAnotherOne()
+        self.session.add(instance, instance2)
+        self.session.flush()
+        myMembershipSigneeClass = self._getTargetClass()
+        invoicees = myMembershipSigneeClass.get_dues_invoicees(27)
+        self.assertEquals(len(invoicees), 0)
+        # change details so they be found
+        instance.membership_accepted = True
+        instance2.membership_accepted = True
+        invoicees = myMembershipSigneeClass.get_dues_invoicees(27)
+        self.assertEquals(len(invoicees), 1)
+        
     def test_delete_by_id(self):
         instance = self._makeOne()
         self.session.add(instance)
@@ -356,6 +403,11 @@ class GroupTests(unittest.TestCase):
         result = Group.get_staffers_group()
         self.assertEquals(result.__str__(), 'group:staff')
 
+    def test__str__(self):
+        g1 = Group.get_staffers_group()
+        res = g1.__str__()
+        self.assertEquals(res, 'group:staff')
+
 
 class C3sStaffTests(unittest.TestCase):
     """
@@ -440,3 +492,256 @@ class C3sStaffTests(unittest.TestCase):
         # print(C3sStaff.check_password(cashier1, 'cashierspassword'))
         C3sStaff.check_password(u'staffer2', u'staffer2spassword')
         # self.assert
+
+
+class SharesModelTests(unittest.TestCase):
+    """
+    test the shares model
+    """
+    def setUp(self):
+        self.config = testing.setUp()
+        self.config.include('pyramid_mailer.testing')
+        try:
+            DBSession.remove()
+        except:
+            pass
+        # engine = create_engine('sqlite:///test_model_staff.db')
+        engine = create_engine('sqlite://')
+        self.session = DBSession
+        self.session.configure(bind=engine)
+        Base.metadata.create_all(engine)
+
+        with transaction.manager:
+            shares1 = Shares(
+                number=10,
+                date_of_acquisition=date.today(),
+                reference_code=u'ABCDEFGH',
+                signature_received=True,
+                signature_received_date=date.today(),
+                payment_received=True,
+                payment_received_date=date.today()
+            )
+            DBSession.add(shares1)
+            DBSession.flush()
+
+    def tearDown(self):
+        self.session.close()
+        self.session.remove()
+        # os.remove('test_model_staff.db')
+
+    def test_get_all(self):
+        '''
+        test get_all
+        '''
+        res = Shares.get_all()
+        self.assertEqual(len(res), 1)
+
+    def test_get_number(self):
+        '''
+        test get_number
+        '''
+        res = Shares.get_number()
+        self.assertEqual(res, 1)
+
+    def test_get_max_id(self):
+        '''
+        test get_max_id
+        '''
+        res = Shares.get_max_id()
+        self.assertEqual(res, 1)
+
+    def test_get_by_id(self):
+        '''
+        test get_by_id
+        '''
+        res = Shares.get_by_id(1)
+        self.assertEqual(res.id, 1)
+
+    def test_get_total_shares(self):
+        '''
+        test get_total shares
+        '''
+        res = Shares.get_total_shares()
+        self.assertEqual(res, 10)
+
+    def test_delete_by_id(self):
+        '''test delete_by_id'''
+        self.assertEqual(len(Shares.get_all()), 1)
+        # returns 0 if no shares found to delete
+        res = Shares.delete_by_id(10)
+        self.assertEqual(res, 0)
+
+        # returns 1 if shares found and deleted
+        res = Shares.delete_by_id(1)
+        self.assertEqual(res, 1)
+        res2 = Shares.get_all()
+        self.assertEqual(len(res2), 0)
+
+
+class Dues15InvoiceModelTests(unittest.TestCase):
+    """
+    test the dues15 invoice model
+    """
+    def setUp(self):
+        self.config = testing.setUp()
+        self.config.include('pyramid_mailer.testing')
+        try:
+            DBSession.remove()
+        except:
+            pass
+        # engine = create_engine('sqlite:///test_model_staff.db')
+        engine = create_engine('sqlite://')
+        self.session = DBSession
+        self.session.configure(bind=engine)
+        Base.metadata.create_all(engine)
+
+        with transaction.manager:
+            dues1 = Dues15Invoice(
+                invoice_no=1,
+                invoice_no_string=u'C3S-dues15-0001',
+                invoice_date=date.today(),
+                invoice_amount=unicode(D('-37.50').to_eng_string()),
+                member_id=1,
+                membership_no=1,
+                email=u'uat.yes@c3s.cc',
+                token=u'ABCDEFGH',
+            )
+            DBSession.add(dues1)
+            DBSession.flush()
+
+    def tearDown(self):
+        self.session.close()
+        self.session.remove()
+        # os.remove('test_model_staff.db')
+
+    def test_get_all(self):
+        '''
+        test get_all
+        '''
+        res = Dues15Invoice.get_all()
+        self.assertEqual(len(res), 1)
+
+    def test_get_by_invoice_no(self):
+        '''
+        test get_by_invoice_no
+        '''
+        res = Dues15Invoice.get_by_invoice_no(1)
+        self.assertEqual(res.id, 1)
+
+    def test_get_by_membership_no(self):
+        '''
+        test get_by_invoice_no
+        '''
+        res = Dues15Invoice.get_by_membership_no(1)
+        self.assertEqual(res[0].id, 1)  # is a list
+
+    def test_get_max_invoice_no(self):
+        '''
+        test get_max_invoice_no
+        '''
+        res = Dues15Invoice.get_max_invoice_no()
+        self.assertEqual(res, 1)
+
+    def test_check_for_existing_dues15_token(self):
+        """
+        test check_for_existing_dues15_token
+        """
+        res = Dues15Invoice.check_for_existing_dues15_token(
+            u'ABCDEFGH')
+        self.assertEqual(res, True)
+        res2 = Dues15Invoice.check_for_existing_dues15_token(
+            u'ABCDEFGHIK0000000000')
+        self.assertEqual(res2, False)
+
+    def test_decimality(self):
+        """
+        test the features of the 'amounts', esp. the format and persistence
+        """
+
+        # try to make another invoice with the same number
+        def trigger_IntegrityError1():
+            dues2 = Dues15Invoice(
+                invoice_no=1,
+                invoice_no_string=u'C3S-dues15-0001',
+                invoice_date=date.today(),
+                invoice_amount=unicode(D('-37.50').to_eng_string()),
+                member_id=1,
+                membership_no=1,
+                email=u'uat.yes@c3s.cc',
+                token=u'ABCDEFGH',
+            )
+            DBSession.add(dues2)
+            DBSession.flush()
+
+        self.assertTrue(True)
+        self.assertRaises(IntegrityError, trigger_IntegrityError1)
+        self.session.rollback()
+
+        res = Dues15Invoice.get_all()
+        self.assertEqual(len(res), 1)
+
+        # try to make another invoice with the same string
+        def trigger_IntegrityError2():
+            dues2 = Dues15Invoice(
+                invoice_no=2,
+                invoice_no_string=u'C3S-dues15-0001',
+                invoice_date=date.today(),
+                invoice_amount=unicode(D('-37.50').to_eng_string()),
+                member_id=1,
+                membership_no=1,
+                email=u'uat.yes@c3s.cc',
+                token=u'ABCDEFGH',
+            )
+            DBSession.add(dues2)
+            DBSession.flush()
+
+        self.assertTrue(True)
+        self.assertRaises(IntegrityError, trigger_IntegrityError2)
+        self.session.rollback()
+
+        res = Dues15Invoice.get_all()
+        self.assertEqual(len(res), 1)
+
+        # try to make another invoice with a non-decimal amount
+        # InvalidOperation: Invalid literal for Decimal: '-37.50.20'
+        def trigger_InvalidOperation():
+            dues2 = Dues15Invoice(
+                invoice_no=2,
+                invoice_no_string=u'C3S-dues15-0002',
+                invoice_date=date.today(),
+                invoice_amount=unicode(D('-37.50.20').to_eng_string()),
+                member_id=1,
+                membership_no=1,
+                email=u'uat.yes@c3s.cc',
+                token=u'ABCDEFGH',
+            )
+            DBSession.add(dues2)
+            DBSession.flush()
+
+        self.assertTrue(True)
+        self.assertRaises(InvalidOperation, trigger_InvalidOperation)
+        # trigger_InvalidOperation()
+        self.session.rollback()
+
+        res = Dues15Invoice.get_all()
+        self.assertEqual(len(res), 1)
+
+        # now really store a new Dues15Invoice
+        dues3 = Dues15Invoice(
+            invoice_no=2,
+            invoice_no_string=u'C3S-dues15-0002',
+            invoice_date=date.today(),
+            # invoice_amount=unicode(D('-37.50').to_eng_string()),
+            invoice_amount=D('-37.50').to_eng_string(),
+            member_id=1,
+            membership_no=1,
+            email=u'uat.yes@c3s.cc',
+            token=u'ABCDEFGH',
+        )
+        DBSession.add(dues3)
+        DBSession.flush()
+
+        res = Dues15Invoice.get_all()
+        self.assertEqual(len(res), 2)
+        self.assertEqual(dues3.id, 2)
+        # print(type(dues3.invoice_amount))

@@ -54,6 +54,8 @@ def send_certificate_email(request):
     so the member can get her membership certificate.
     '''
     # print request.referrer  # note: will fail in tests
+    _special_condition = False  # for redirects to referrer
+
     mid = request.matchdict['id']
     _m = C3sMember.get_by_id(mid)
     if isinstance(_m, NoneType) or not _m.membership_accepted:
@@ -105,7 +107,7 @@ def send_certificate_email(request):
         if 'detail' in request.referrer:  # pragma: no cover
             _special_condition = True
     except:
-        _special_condition = False
+        pass
 
     if _special_condition:  # pragma: no cover
         return HTTPFound(
@@ -197,23 +199,32 @@ def gen_cert(request, _m):
     '''
     import os
     here = os.path.dirname(__file__)
-    # latex header and footer
-    latex_header_tex = os.path.abspath(
-        os.path.join(here, '../certificate/urkunde_header.tex'))
-    # print("latex header file: %s" % latex_header_tex)
-    latex_footer_tex = os.path.abspath(
-        os.path.join(here, '../certificate/urkunde_footer.tex'))
-    # print("latex footer file: %s" % latex_footer_tex)
+
     # print '#'*60
     # print _m.locale
     # print '#'*60
 
-    if _m.locale == 'de':
+    if 'de' in _m.locale:
         latex_background_image = os.path.abspath(
             os.path.join(here, '../certificate/Urkunde_Hintergrund_blank.pdf'))
+        # latex header and footer
+        latex_header_tex = os.path.abspath(
+            os.path.join(here, '../certificate/urkunde_header_de.tex'))
+        # print("latex header file: %s" % latex_header_tex)
+        latex_footer_tex = os.path.abspath(
+            os.path.join(here, '../certificate/urkunde_footer_de.tex'))
+        # print("latex footer file: %s" % latex_footer_tex)
     else:
         latex_background_image = os.path.abspath(
-            os.path.join(here, '../certificate/Urkunde_Hintergrund_EN.pdf'))
+            os.path.join(here, '../certificate/Urkunde_Hintergrund_blank.pdf'))
+        # latex header and footer
+        latex_header_tex = os.path.abspath(
+            os.path.join(here, '../certificate/urkunde_header_en.tex'))
+        # print("latex header file: %s" % latex_header_tex)
+        latex_footer_tex = os.path.abspath(
+            os.path.join(here, '../certificate/urkunde_footer_en.tex'))
+        # print("latex footer file: %s" % latex_footer_tex)
+
     sign_meik = os.path.abspath(
         os.path.join(here, '../certificate/sign_meik.png'))
     sign_holger = os.path.abspath(

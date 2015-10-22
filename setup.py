@@ -23,12 +23,13 @@ requires = [
     'pyramid_mailer',
     'pyramid_tm',
     'python-gnupg',
-    'repoze.sendmail==4.1',
+    'repoze.sendmail>=4.1',
     'SQLAlchemy',
     'transaction',
     'unicodecsv',
     'waitress',
     'zope.sqlalchemy',
+    'sphinx', # for generating the documentation
 ]
 # for the translations machinery using transifex you also need to
 # "pip install transifex-client"
@@ -46,7 +47,7 @@ if sys.version_info[:3] < (2, 5, 0):
     requires.append('pysqlite')
 
 setup(name='c3smembership',
-      version='1.10.2',
+      version='1.11',
       description='Membership Form for C3S (form, PDF, email)',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

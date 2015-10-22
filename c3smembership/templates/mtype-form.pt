@@ -66,7 +66,7 @@ $(document).ready(function(){
 
     <h2 i18n:translate="join-form-headline-fine-print" class="deform">The Fine Print</h2>
     <p i18n:translate="" class="infoIndent">
-      <a href="https://www.c3s.cc/en-manifesto/" target="_blank"
+      <a href="https://www.c3s.cc/ueber-c3s/manifesto/" target="_blank"
 	 i18n:name="join-form-manifesto-title"
 	 i18n:translate="join-form-manifesto-title">The Cultural Commons Manifesto</a>
     </p>
@@ -89,7 +89,7 @@ $(document).ready(function(){
     <p i18n:translate="join-form-disclaimer-paragraph">
       We will store and use the information you provide for administrative purposes
       and in order to protect your rights as an artist.
-      Responsible authority: C3S SCE mbH, Heyestraße 194, 40625 Düsseldorf.
+      Responsible authority: C3S SCE, Heyestraße 194, 40625 Düsseldorf.
     </p>
     <!-- p i18n:translate="" class="infoIndent" -->
       <!-- a href="/faq" target="_blank"

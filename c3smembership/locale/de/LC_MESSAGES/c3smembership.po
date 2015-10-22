@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2014-06-26 22:01+0200\n"
-"PO-Revision-Date: 2014-06-26 22:06+0100\n"
+"PO-Revision-Date: 2015-09-10 12:58+0100\n"
 "Last-Translator: Christoph Scheid <christoph.scheid@c3s.cc>\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -727,8 +727,9 @@ msgstr "Lade dein PDF..."
 #: c3smembership/templates/verify_password.pt:48
 msgid "load-pdf-download-instructions"
 msgstr ""
-"Um den Beitritt als Mitglied zu vollziehen, musst Du das Formular ausdrucken "
-"und unterzeichnen. Bitte aufmerksam durchlesen."
+"Manche Brower (bzw. Browser plugins) zeigen das Formular evtl. nicht bzw. "
+"nicht richtig an.  In diesem Falle versuche es mit Rechtsklick auf den oben "
+"stehenden Link, wähle \"Speichern unter\" und wähle den Speicherort."
 
 #. Default: To make your membership valid, please print the PDF, sign it and
 #. send

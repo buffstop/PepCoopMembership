@@ -1,3 +1,36 @@
+1.11
+====
+
+- Introduce membership dues handling. Dues are calculated per quarter
+  depending on the membership duration.
+
+  - Invoices are generated and sent to the member. They can be canceled.
+
+  - Membership dues can be reduced which leads to a canceling of the previous
+    invoice and generation of a new one.
+
+  - The payment can be entered with amount and date.
+
+- Extend documentation.
+
+  - An overview of the application is given.
+
+  - The source code documentation auto-generated.
+
+  - How to run the test.
+
+  - Setup for development is descibed.
+
+  - How to deploy the application onto an Apache server is explained.
+
+- Invitation emails for the 2015 general assembly and barcamp.
+
+- Cleanup code.
+
+- Fixed minor bugs.
+
+
+
 1.10.2
 ======
 

@@ -51,12 +51,12 @@ def new_member(request):
         """
         firstname = colander.SchemaNode(
             colander.String(),
-            title=u'Vorname (b. Körpersch.: Firma)',
+            title=u'Vorname (b. Körpersch.: Ansprechpartner)',
             oid="firstname",
         )
         lastname = colander.SchemaNode(
             colander.String(),
-            title=u'Nachnahme (b. Körpersch.: c/o Person)',
+            title=u'Nachname (b. Körpersch.: Name der Körperschaft)',
             oid="lastname",
         )
         email = colander.SchemaNode(
@@ -103,7 +103,7 @@ def new_member(request):
             title='Geburtsdatum',
             # widget=deform.widget.DatePartsWidget(
             #    inline=True),
-            default=date(2013, 1, 1),
+            default=date(1970, 1, 1),
             validator=Range(
                 min=date(1913, 1, 1),
                 max=date(2000, 1, 1),
