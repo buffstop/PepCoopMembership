@@ -636,7 +636,9 @@ def make_invoice_pdf_pdflatex(_member, _inv=None):
     tex_cmd += '\\input{%s}' % tpl_tex
     tex_cmd = u'"'+tex_cmd+'"'
 
-    # print(u"the tex_cmd: {}".format(tex_cmd))
+    # make latex show ß correctly in pdf:
+    tex_cmd = tex_cmd.replace(u'ß', u'\ss{}')
+    #print(u"the tex_cmd: {}".format(tex_cmd))
 
     # generate pdf
     # _command = 'pdflatex -jobname {} -output-directory {} '.format(

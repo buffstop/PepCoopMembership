@@ -20,7 +20,7 @@ Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
 Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt demnach
-50,- Euro für das ganze Jahr 2015.
+50 Euro für das ganze Jahr 2015.
 
 Dein Mitgliedsbeitrag {5} beträgt also {3} Euro.
 
@@ -62,8 +62,7 @@ Dein C3S Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-
-'''
+'''.strip()
 
 # english template for *normal* members; see placeholder list below!
 #
@@ -84,9 +83,9 @@ financial basis for the continuation of our common project:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
-For 2015, the membership dues for active members will therefore be 50,-
-Euro. They will be less if you joined later than in the first quarter
-2015.
+For 2015, the annual membership dues for active members will therefore
+be 50 Euro. They will be less if you joined later than in the first
+quarter 2015 (12,50 Euro per quarter of active membership).
 
 Please transfer {3} Euro to the following account of the C3S SCE:
 
@@ -125,7 +124,7 @@ Your C3S team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-'''
+'''.strip()
 # format strings:
 # {0}: first name
 # {1}: last name
@@ -152,7 +151,7 @@ Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
 Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
-demnach 50,- Euro.
+demnach 50 Euro.
 
 Da Du investierendes Mitglied bist, bist Du vom Mitgliedsbeitrag
 befreit. Du würdest der C3S aber sehr helfen, wenn Du dennoch freiwillig
@@ -189,7 +188,7 @@ Dein C3S Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-'''
+'''.strip()
 
 
 # english template for *investing* members; see placeholder list below!
@@ -209,7 +208,7 @@ financial basis for the continuation of our common project:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
-For 2015, the membership dues for active members will therefore be 50,-
+For 2015, the membership dues for active members will therefore be 50
 Euro.
 
 Since you are an investing member, you are exempt from this payment.
@@ -247,8 +246,7 @@ Your C3S team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-
-'''
+'''.strip()
 
 # german template for *investing* members which are legal entities;
 # see placeholder list below!
@@ -269,7 +267,7 @@ Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
 Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
-demnach 50,- Euro.
+demnach 50 Euro.
 
 Da {1} investierendes Mitglied ist, seit Ihr vom
 Mitgliedsbeitrag befreit. Ihr würdet der C3S aber sehr helfen, wenn Ihr 
@@ -325,7 +323,7 @@ financial basis for the continuation of our common project:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
-For 2015, the membership dues for active members will therefore be 50,-
+For 2015, the membership dues for active members will therefore be 50
 Euro.
 
 Since {1} is an investing member, you are exempt from this
@@ -461,7 +459,7 @@ Dein C3S Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-'''
+'''.strip()
 
 
 # *english* email template for reduction of dues
@@ -521,7 +519,7 @@ Your C3S team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-'''
+'''.strip()
 
 
 # *german* email template for exemption of dues
