@@ -83,9 +83,9 @@ financial basis for the continuation of our common project:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
 
-For 2015, the membership dues for active members will therefore be 50
-Euro. They will be less if you joined later than in the first quarter
-2015.
+For 2015, the annual membership dues for active members will therefore 
+be 50 Euro. They will be less if you joined later than in the first 
+quarter 2015 (12,50 Euro per quarter of active membership).
 
 Please transfer {3} Euro to the following account of the C3S SCE:
 
