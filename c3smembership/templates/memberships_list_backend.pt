@@ -110,13 +110,16 @@
                 <a href="${request.route_url('membership_listing_backend', number=current, orderby='id', order='desc')}" title="sort by id: descending" class="glyphicon glyphicon-chevron-down"></a>
             </th>
             <th>
+                dues<br />
+                invoice
+            </th>
+            <th>
                 certificate
             </th>
             <th>
                 mtype<br />
                 status
             </th>
-            <!-- <th>code</th> -->
             <th>
                 firstname <br />
                 <a href="${request.route_url('membership_listing_backend', number=current, orderby='firstname', order='asc')}" title="sort by firstname: ascending" class="glyphicon glyphicon-chevron-up"></a>
@@ -145,6 +148,16 @@
                         dup:${member.is_duplicate_of}
                     </a>
                 </div>
+            </td>
+            <td>
+                <a tal:condition="member.dues15_invoice is False"
+                    href="${request.route_url('send_dues_invoice_email', member_id=member.id)}"
+                    title="dues invoice not sent yet. Click to send!"
+                    class="btn btn-danger"></a>
+                <a tal:condition="member.dues15_invoice is True"
+                    href="${request.route_url('send_dues_invoice_email', member_id=member.id)}"
+                    title="gesendet ${member.dues15_invoice_date.strftime('am %d.%m.%Y um %H:%M')}"
+                    class="btn btn-success"></a>
             </td>
             <td>
                 <a tal:condition="not member.certificate_email"
@@ -183,7 +196,9 @@
             <!-- <td><a href="/detail/${member.id}">${member.email_confirm_code}</a></td> -->
             <td>${member.firstname}</td>
             <td>${member.lastname}</td>
-            <td><a href="mailto:${member.email}" title="${member.email}">mailto</a></td>
+            <td>
+                <a href="mailto:${member.email}" title="${member.email}">mailto</a>
+            </td>
             <td>
                 <div>
                     <a tal:condition="not member.email_is_confirmed and (isinstance(member.email_confirm_token, type(None)))"

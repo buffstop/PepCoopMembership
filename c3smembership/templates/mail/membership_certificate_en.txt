@@ -1,6 +1,5 @@
 Hello {name},
 
-
 we are happy to deliver your personal membership certificate!
 
  {url}
@@ -19,19 +18,25 @@ higher than the first mandatory share. That is, if you hold 10 shares,
 you should find the note in your certificate that 9 additional shares
 were aquired.
 
-
 Best wishes
 Your C3S team
 
 -- 
-Cultural Commons Collecting Society SCE mit beschränkter Haftung (C3S SCE)
-Heyestraße 194
-40625 Düsseldorf
-Germany
+      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
+      :::     support fair remuneration for artists    :::
+      :::          https://sustain.c3s.cc/?en          :::
+      ::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-https://www.c3s.cc
+                      :
+              C3S SCE : Cultural Commons Collecting Society
+                      : SCE mit beschränkter Haftung
+                      : Heyestraße 194 : 40625 Düsseldorf : Germany
+                      : https://C3S.cc
 
-Executive Directors: m.eik michalke & Wolfgang Senges
-Chairman of the Board of Directors: Meinhard Starostik
-Registered AG Düsseldorf, GnR 506
-Statutes: https://archive.c3s.cc/legal/C3S_en_v1.0.pdf
+       M.eik Michalke :
+ Dr. Holger Schwetter : executive directors
+                      :
+   Meinhard Starostik : chairperson of the board of directors
+                      :
+              GnR 506 : Genossenschaftsregister AG Düsseldorf
+               USt-ID : DE294690528

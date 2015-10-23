@@ -6,7 +6,7 @@ import transaction
 from datetime import datetime, date
 
 from sqlalchemy import engine_from_config
-from sqlalchemy.exc import IntegrityError
+# from sqlalchemy.exc import IntegrityError
 from pyramid.paster import (
     get_appsettings,
     setup_logging,
@@ -85,7 +85,7 @@ def main(argv=sys.argv):
         try:
             DBSession.add(accountants_group)
             DBSession.flush()
-            #print("adding group staff")
+            # print("adding group staff")
         except:
             print("could not add group staff.")
             # pass
@@ -99,7 +99,7 @@ def main(argv=sys.argv):
         staffer1.groups = [accountants_group]
         try:
             DBSession.add(staffer1)
-            #print("adding staff rut")
+            # print("adding staff rut")
             DBSession.flush()
         except:
             print("it borked! (rut)")
@@ -114,7 +114,7 @@ def main(argv=sys.argv):
         staffer2.groups = [accountants_group]
         try:
             DBSession.add(staffer2)
-            #print("adding staff reel")
+            # print("adding staff reel")
             DBSession.flush()
         except:
             print("it borked! (reel)")
@@ -124,7 +124,7 @@ def main(argv=sys.argv):
         member1 = C3sMember(
             firstname=u"Firstnäme",  # includes umlaut
             lastname=u"Lastname",
-            email=u"foo@shri.de",
+            email=u"uat.yes@c3s.cc",
             password=u"berries",
             address1=u"address one",
             address2=u"address two",
@@ -132,7 +132,7 @@ def main(argv=sys.argv):
             city=u"Footown Mäh",
             country=u"Foocountry",
             locale=u"en",
-            date_of_birth=date.today(),
+            date_of_birth=date(1971, 02, 03),
             email_is_confirmed=False,
             email_confirm_code=u"ABCDEFGHIJ",
             num_shares=u'10',
@@ -143,52 +143,183 @@ def main(argv=sys.argv):
         )
         try:
             DBSession.add(member1)
-            #print("adding Firstnäme")
+            # print("adding Firstnäme")
         except:
             pass
-    # even more members
-    import random
-    import string
-    print("about to add %s members..." % how_many)
 
     with transaction.manager:
-        for i in range(how_many):  # create 50 members with semi-random dates
-            #print i
-            member = C3sMember(
-                firstname=u"Firstnäme%s" % i,  # includes umlaut
-                lastname=u"Lastname",
-                email=u"foo@shri.de",
-                password=u"berries",
-                address1=u"address one",
-                address2=u"address two",
-                postcode=u"12345 foo",
-                city=u"Footown Mäh",
-                country=u"Foocountry",
-                locale=u"de",
-                date_of_birth=date.today(),
-                email_is_confirmed=False,
-                email_confirm_code=u''.join(
-                    random.choice(
-                        string.ascii_uppercase + string.digits
-                    ) for x in range(8)),
-                num_shares=random.randint(1, 60),
-                date_of_submission=datetime.now(),
-                membership_type=random.choice((u'normal', u'investing')),
-                member_of_colsoc=random.choice((True, False)),
-                name_of_colsoc=u"GEMA",
-            )
-            try:
-                DBSession.add(member)
-            except IntegrityError:
-                print("exception!!!!!!!!!!!!!!!!!!!!1")
-                #DBSession.remove(member)
+        normal_de = C3sMember(  # german normal
+            firstname=u'Ada Traumhaft',
+            lastname=u'Musiziert',
+            email=u'uat.yes@c3s.cc',
+            address1=u"Musikergasse 34",
+            address2=u"Hinterhaus",
+            postcode=u"12345",
+            city=u"Foostadt Ada",
+            country=u"Germany",
+            locale=u"de",
+            date_of_birth=date(1971, 3, 4),
+            email_is_confirmed=False,
+            email_confirm_code=u'NORMAL_DE1',
+            password=u'adasrandompassword',
+            date_of_submission=date.today(),
+            membership_type=u'normal',
+            member_of_colsoc=True,
+            name_of_colsoc=u"GEMA",
+            num_shares=u'23',
+        )
+        normal_en = C3sMember(  # english normal
+            firstname=u'James',
+            lastname=u'Musician',
+            email=u'uat.yes@c3s.cc',
+            address1=u"james addr 1",
+            address2=u"james appartment 2",
+            postcode=u"12345",
+            city=u"Jamestown",
+            country=u"Jamescountry",
+            locale=u"en",
+            date_of_birth=date(1972, 4, 5),
+            email_is_confirmed=False,
+            email_confirm_code=u'NORMAL_DE',
+            password=u'jamesrandompassword',
+            date_of_submission=date.today(),
+            membership_type=u'normal',
+            member_of_colsoc=True,
+            name_of_colsoc=u"",
+            num_shares=u'2',
+        )
+        investing_de = C3sMember(  # german investing
+            firstname=u'Herman',
+            lastname=u'Investor',
+            email=u'uat.yes@c3s.cc',
+            address1=u"c/o Mutti",
+            address2=u"addr two4",
+            postcode=u"12344",
+            city=u"Footown M44",
+            country=u"Austria",
+            locale=u"de",
+            date_of_birth=date(1974, 9, 8),
+            email_is_confirmed=False,
+            email_confirm_code=u'INVESTING_DE',
+            password=u'arandompasswor4',
+            date_of_submission=date.today(),
+            membership_type=u'investing',
+            member_of_colsoc=False,
+            name_of_colsoc=u"",
+            num_shares=u'6',
+        )
+        investing_en = C3sMember(  # english investing
+            firstname=u'Britany',
+            lastname=u'Investing',
+            email=u'uat.yes@c3s.cc',
+            address1=u"aone5",
+            address2=u"atwo5",
+            postcode=u"12355",
+            city=u"London",
+            country=u"United Kingdom",
+            locale=u"en",
+            date_of_birth=date(1978, 4, 1),
+            email_is_confirmed=False,
+            email_confirm_code=u'INVESTING_EN',
+            password=u'arandompasswor5',
+            date_of_submission=date.today(),
+            membership_type=u'investing',
+            member_of_colsoc=True,
+            name_of_colsoc=u"",
+            num_shares=u'60',
+        )
+        legal_entity_de = C3sMember(  # german investing legal entity
+            firstname=u'Günther Vorstand',
+            lastname=u'Deutscher Musikverlag',
+            email=u'uat.yes@c3s.cc',
+            address1=u"Ährenweg 1",
+            address2=u"",
+            postcode=u"98765",
+            city=u"Teststadt",
+            country=u"Germany",
+            locale=u"de",
+            date_of_birth=date(1987, 3, 6),
+            email_is_confirmed=False,
+            email_confirm_code=u'VERLAG_DE',
+            password=u'arandompasswor6',
+            date_of_submission=date.today(),
+            membership_type=u'investing',
+            member_of_colsoc=False,
+            name_of_colsoc=u"",
+            num_shares=u'60',
+        )
+        legal_entity_en = C3sMember(  # english investing legal entity
+            firstname=u'John BigBoss',
+            lastname=u'Some Company',
+            email=u'uat.yes@c3s.cc',
+            address1=u"foo boulevard",
+            address2=u"123-345",
+            postcode=u"98765",
+            city=u"London",
+            country=u"United Kingdom",
+            locale=u"en",
+            date_of_birth=date(1982, 4, 2),
+            email_is_confirmed=False,
+            email_confirm_code=u'COMPANY_EN',
+            password=u'arandompasswor6',
+            date_of_submission=date.today(),
+            membership_type=u'investing',
+            member_of_colsoc=False,
+            name_of_colsoc=u"",
+            num_shares=u'60',
+        )
+        DBSession.add(normal_de)
+        DBSession.add(normal_en)
+        DBSession.add(investing_de)
+        DBSession.add(investing_en)
+        legal_entity_de.is_legalentity = True
+        DBSession.add(legal_entity_de)
+        legal_entity_en.is_legalentity = True
+        DBSession.add(legal_entity_en)
+
+
+        # even more members
+        # import random
+        # import string
+
+        # print("about to add %s members..." % how_many)
+        # for i in range(how_many):  # create 50 members with semi-random dates
+        #     # print i
+        #     member = C3sMember(
+        #         firstname=u"Firstnäme%s" % i,  # includes umlaut
+        #         lastname=u"Lastname",
+        #         email=u"foo_n" + str(i) + u"@shri.de",
+        #         password=u"berries",
+        #         address1=u"address one",
+        #         address2=u"address two",
+        #         postcode=u"12345 foo",
+        #         city=u"Footown Mäh",
+        #         country=u"Foocountry",
+        #         locale=u"de",
+        #         date_of_birth=date.today(),
+        #         email_is_confirmed=False,
+        #         email_confirm_code=str(i) + u''.join(
+        #             random.choice(
+        #                 string.ascii_uppercase + string.digits
+        #             ) for x in range(8)),
+        #         num_shares=random.randint(1, 60),
+        #         date_of_submission=datetime.now(),
+        #         membership_type=random.choice((u'normal', u'investing')),
+        #         member_of_colsoc=random.choice((True, False)),
+        #         name_of_colsoc=u"GEMA",
+        #     )
+        #     try:
+        #         DBSession.add(member)
+        #     except IntegrityError:
+        #         print("exception!!!!!!!!!!!!!!!!!!!!1")
+        #         # DBSession.remove(member)
 
 
 def init():
-    #config_uri = 'development.ini'
-    #setup_logging(config_uri)
-    #settings = get_appsettings(config_uri)
-    #engine = engine_from_config('sqlite://')
+    # config_uri = 'development.ini'
+    # setup_logging(config_uri)
+    # settings = get_appsettings(config_uri)
+    # engine = engine_from_config('sqlite://')
     engine = engine_from_config({'sqlalchemy.url': 'sqlite://'})
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
@@ -242,7 +373,8 @@ def init():
 
     #     if (C3sMember.get_by_code(member1.email_confirm_code) is None):
     #         # there is no member in the DB with that same email_confirm_code
-    #         print("C3sMember.get_by_code(member1.email_confirm_code) is None")
+    #         print(
+    #             "C3sMember.get_by_code(member1.email_confirm_code) is None")
     #         try:
     #             DBSession.add(member1)
     #         except IntegrityError:

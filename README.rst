@@ -2,8 +2,8 @@ c3sMembership README
 ====================
 
 
-This webapp offers a form to to join *Cultural Commons Collecting Society
-(C3S)* as member. A GnuPG encrypted mail with the details submitted will be
+This webapp offers a form to to join the *Cultural Commons Collecting Society
+(C3S)* as a member. A GnuPG encrypted mail with the details submitted will be
 sent to C3S.
 
 When the form is submitted and the email verified,
@@ -57,6 +57,7 @@ $ env/bin/initialize_c3sMembership_db development.ini
 
 Run (in development mode)
 -------------------------
+
 
 $ env/bin/pserve development.ini --reload
 

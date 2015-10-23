@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
-"""Provides views for login, dashboard and payment and user management."""
+"""
+This module holds views for accountants to do accounting stuff.
+
+- Log In or Log Out
+- Administer Applications for Membership on the Dashboard
+- Check reception of signature, send reception confirmation or reminder mails
+- Check reception of payment, send reception confirmation or reminder mails
+- Check application details
+- Deletion of applications
+- ReGenerate a PDF for an application
+"""
+# import tempfile
+# import unicodecsv
 
 from c3smembership.models import (
     C3sMember,
     C3sStaff,
+    Dues15Invoice,
 )
 from c3smembership.utils import generate_pdf
 from c3smembership.mail_utils import (
@@ -37,7 +50,10 @@ from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.url import route_url
 from translationstring import TranslationStringFactory
-from datetime import datetime
+from datetime import (
+    datetime,
+    date,
+)
 import math
 
 DEFORM_TEMPLATES = resource_filename('deform', 'templates')
@@ -75,8 +91,9 @@ if LOGGING:  # pragma: no cover
              route_name='login')
 def accountants_login(request):
     """
-    This view lets accountants log in.
-    if a person is already logged in, she is forwarded to the dashboard
+    This view lets accountants log in (using a login form).
+
+    If a person is already logged in, she is forwarded to the dashboard.
     """
     logged_in = authenticated_userid(request)
 
@@ -156,8 +173,23 @@ def accountants_login(request):
              route_name='dashboard')
 def accountants_desk(request):
     """
-    This view lets accountants view applications and set their status:
-    has their signature arrived? how about the payment?
+    The Dashboard.
+
+    This view lets accountants view
+    the **list of applications for membership**.
+
+    Some details can be seen (name, email, link to more details)
+    as well as their membership application *progress*:
+
+    - has their signature arrived?
+    - how about the payment?
+    - have reminders been sent? receptions confirmed?
+
+    There are also links to *edit* or *delete* one of the datasets.
+
+    Once all requirements are fulfilled,
+    an application can be turned into a membership from here:
+    a button shows up.
     """
     _number_of_datasets = C3sMember.nonmember_listing_count()
     try:
@@ -251,8 +283,8 @@ def accountants_desk(request):
              route_name='switch_sig')
 def switch_sig(request):
     """
-    This view lets accountants switch member signature info
-    has their signature arrived?
+    This view lets accountants switch an applications signature status
+    once their signature has arrived.
     """
     memberid = request.matchdict['memberid']
 
@@ -276,19 +308,27 @@ def switch_sig(request):
         _member.signature_received
     )
 
-    return HTTPFound(
-        request.route_url(
-            'dashboard',
-            number=dashboard_page, order=order, orderby=order_by)
-        + '#member_' + str(_member.id)
-    )
+    if 'dashboard' in request.referrer:
+        return HTTPFound(
+            request.route_url(
+                'dashboard',
+                number=dashboard_page, order=order, orderby=order_by)
+            + '#member_' + str(_member.id)
+        )
+    else:
+        return HTTPFound(
+            request.route_url(
+                'detail',
+                memberid=_member.id)
+            + '#membership_info'
+        )
 
 
 @view_config(permission='manage',
              route_name='delete_entry')
 def delete_entry(request):
     """
-    This view lets accountants delete entries (doublettes)
+    This view lets accountants delete datasets (e.g. doublettes).
     """
 
     deletion_confirmed = (request.params.get('deletion_confirmed', '0') == '1')
@@ -309,12 +349,13 @@ def delete_entry(request):
             )
         )
         _message = "member.id %s was deleted" % _member.id
-
         request.session.flash(_message, 'messages')
+
+        _msgstr = u'Member with id {0} \"{1}, {2}\" was deleted.'
         return HTTPFound(
             request.route_url(
                 redirection_view,
-                _query={'message': u'Member with id {0} \"{1}, {2}\" was deleted.'.format(
+                _query={'message': _msgstr.format(
                         memberid,
                         member_lastname,
                         member_firstname)}
@@ -324,19 +365,19 @@ def delete_entry(request):
         return HTTPFound(
             request.route_url(
                 redirection_view,
-                _query={'message': 'Deleting the member was not confirmed' + \
-                    ' and therefore nothing has been deleted.'}
+                _query={'message': (
+                    'Deleting the member was not confirmed'
+                    ' and therefore nothing has been deleted.')}
             )
         )
-
 
 
 @view_config(permission='manage',
              route_name='switch_pay')
 def switch_pay(request):
     """
-    This view lets accountants switch member signature info
-    has their signature arrived?
+    This view lets accountants switch a member applications payment status
+    once their payment has arrived.
     """
     memberid = request.matchdict['memberid']
     dashboard_page = request.cookies['on_page']
@@ -357,18 +398,31 @@ def switch_pay(request):
         request.user.login,
         _member.payment_received
     )
-    return HTTPFound(
-        request.route_url(
-            'dashboard',
-            number=dashboard_page, order=order, orderby=order_by
-        ) + '#member_' + str(_member.id)
-    )
+    if 'dashboard' in request.referrer:
+        return HTTPFound(
+            request.route_url(
+                'dashboard',
+                number=dashboard_page, order=order, orderby=order_by)
+            + '#member_' + str(_member.id)
+        )
+    else:
+        return HTTPFound(
+            request.route_url(
+                'detail',
+                memberid=_member.id)
+            + '#membership_info'
+        )
 
 
 @view_config(renderer='json',
              permission='manage',
              route_name='get_member')
 def get_member(request):
+    """
+    This function serves an AJAX-call from the dashboard.
+
+    There will be one call per application for membership listed!
+    """
     memberid = request.matchdict['memberid']
     member = C3sMember.get_by_id(memberid)
     if member is None:
@@ -387,100 +441,138 @@ def get_member(request):
              route_name='detail')
 def member_detail(request):
     """
-    This view lets accountants view member details
-    has their signature arrived? how about the payment?
+    This view lets accountants view member details:
+
+    - has their signature arrived?
+    - how about the payment?
+
+    Mostly all the info about an application or membership
+    in the database can be seen here.
     """
+    from decimal import Decimal as D
+    # import decimal
     logged_in = authenticated_userid(request)
     memberid = request.matchdict['memberid']
     LOG.info("member details of id %s checked by %s", memberid, logged_in)
 
     _member = C3sMember.get_by_id(memberid)
 
-    if _member is None:
-        return HTTPFound(
-            request.route_url('dashboard_only'))
-
-    class ChangeDetails(colander.MappingSchema):
-        """
-        colander schema (form) to change details of member
-        """
-        signature_received = colander.SchemaNode(
-            colander.Bool(),
-            title=_(u"Have we received a good signature?")
+    if _member is None:  # that memberid did not produce good results
+        request.session.flash(
+            "A Member with id "
+            "{} could not be found in the DB. run for the backups!".format(
+                memberid),
+            'message_to_staff'
         )
-        payment_received = colander.SchemaNode(
-            colander.Bool(),
-            title=_(u"Have we received payment for the shares?")
-        )
+        return HTTPFound(  # back to base
+            request.route_url('toolbox'))
 
-    schema = ChangeDetails()
-    form = deform.Form(
-        schema,
-        buttons=[
-            deform.Button('submit', _(u'Submit')),
-            deform.Button('reset', _(u'Reset'))
-        ],
-        use_ajax=True,
-        renderer=ZPT_RENDERER
-    )
+    # class ChangeDetails(colander.MappingSchema):
+    #     """
+    #     colander schema (form) to change details of member
+    #     """
+    #     signature_received = colander.SchemaNode(
+    #         colander.Bool(),
+    #         title=_(u"Have we received a good signature?")
+    #     )
+    #     payment_received = colander.SchemaNode(
+    #         colander.Bool(),
+    #         title=_(u"Have we received payment for the shares?")
+    #     )
 
-    # if the form has been used and SUBMITTED, check contents
-    if 'submit' in request.POST:
-        controls = request.POST.items()
-        try:
-            appstruct = form.validate(controls)
-        except ValidationFailure, e_validation_failure:  # pragma: no cover
-            LOG.info(e_validation_failure)
-            print(e_validation_failure)
-            request.session.flash(
-                _(u"Please note: There were errors, "
-                  "please check the form below."),
-                'message_above_form',
-                allow_duplicate=False)
-            return{'form': e_validation_failure.render()}
+    # schema = ChangeDetails()
+    # form = deform.Form(
+    #     schema,
+    #     buttons=[
+    #         deform.Button('submit', _(u'Submit')),
+    #         deform.Button('reset', _(u'Reset'))
+    #     ],
+    #     use_ajax=True,
+    #     renderer=zpt_renderer
+    # )
 
-        # change info about member in database
-        test1 = (  # changed value through form (different from db)?
-            appstruct['signature_received'] == _member.signature_received)
-        if not test1:
-            LOG.info(
-                "info about signature of %s changed by %s to %s",
-                _member.id,
-                request.user.login,
-                appstruct['signature_received'])
-            _member.signature_received = appstruct['signature_received']
-        test2 = (  # changed value through form (different from db)?
-            appstruct['payment_received'] == _member.payment_received)
-        if not test2:
-            LOG.info(
-                "info about payment of %s changed by %s to %s",
-                _member.id,
-                request.user.login,
-                appstruct['payment_received'])
-            _member.payment_received = appstruct['payment_received']
-        # store appstruct in session
-        request.session['appstruct'] = appstruct
+    # # if the form has been used and SUBMITTED, check contents
+    # if 'submit' in request.POST:
+    #     controls = request.POST.items()
+    #     try:
+    #         appstruct = form.validate(controls)
+    #     except ValidationFailure, e:  # pragma: no cover
+    #         log.info(e)
+    #         print(e)
+    #         request.session.flash(
+    #             _(u"Please note: There were errors, "
+    #               "please check the form below."),
+    #             'message_above_form',
+    #             allow_duplicate=False)
+    #         return{'form': e.render()}
 
-        # show the updated details
-        HTTPFound(route_url('detail', request, memberid=memberid))
+    #     # change info about member in database
+    #     test1 = (  # changed value through form (different from db)?
+    #         appstruct['signature_received'] == _member.signature_received)
+    #     if not test1:
+    #         log.info(
+    #             "info about signature of %s changed by %s to %s" % (
+    #                 _member.id,
+    #                 request.user.login,
+    #                 appstruct['signature_received']))
+    #         _member.signature_received = appstruct['signature_received']
+    #     test2 = (  # changed value through form (different from db)?
+    #         appstruct['payment_received'] == _member.payment_received)
+    #     if not test2:
+    #         log.info(
+    #             "info about payment of %s changed by %s to %s" % (
+    #                 _member.id,
+    #                 request.user.login,
+    #                 appstruct['payment_received']))
+    #         _member.payment_received = appstruct['payment_received']
+    #     # store appstruct in session
+    #     request.session['appstruct'] = appstruct
 
-    # else: form was not submitted: just show member info and form
+    #     # show the updated details
+    #     HTTPFound(route_url('detail', request, memberid=memberid))
+
+    # # else: form was not submitted: just show member info and form
+    # else:
+    #     appstruct = {  # populate form with values from DB
+    #         'signature_received': _member.signature_received,
+    #         'payment_received': _member.payment_received}
+    #     form.set_appstruct(appstruct)
+    #     # print("the appstruct: %s") % appstruct
+    # html = form.render()
+
+    # make pretty link for certificate download
+    if _member.is_legalentity:
+        _cert_link = _member.lastname
     else:
-        appstruct = {  # populate form with values from DB
-            'signature_received': _member.signature_received,
-            'payment_received': _member.payment_received}
-        form.set_appstruct(appstruct)
-    html = form.render()
+        _cert_link = _member.firstname + _member.lastname
 
-    return {'member': _member,
-            'form': html}
+    _cert_link = _cert_link.replace(
+        u'&', u'+').replace(
+        u' ', u'_').replace(
+        u'.', u'').replace(
+        u'ä', u'ae').replace(
+        u'ö', u'oe').replace(
+        u'ü', u'ue').replace(
+        u'.', u'')
+
+    # get the members invoices from the DB
+    _invoices = Dues15Invoice.get_by_membership_no(_member.membership_number)
+
+    return {
+        'today': date.today().strftime('%Y-%m-%d'),
+        'D': D,
+        'member': _member,
+        'cert_link': _cert_link,
+        'invoices': _invoices,
+        # 'form': html
+    }
 
 
 @view_config(permission='view',
              route_name='logout')
 def logout_view(request):
     """
-    can be used to log a user/staffer off. "forget"
+    Is used to log a user/staffer off. "forget"
     """
     request.session.invalidate()
     request.session.flash(u'Logged out successfully.')
@@ -495,7 +587,7 @@ def logout_view(request):
              route_name='regenerate_pdf')
 def regenerate_pdf(request):
     """
-    staffers can regenerate a users pdf
+    Staffers can regenerate an appkicants PDF and send it to her.
     """
     _code = request.matchdict['code']
     _member = C3sMember.get_by_code(_code)
@@ -529,8 +621,8 @@ def regenerate_pdf(request):
              route_name='mail_sig_confirmation')
 def mail_signature_confirmation(request):
     """
-    send a mail to membership applicant
-    informing her about reception of signature
+    Send a mail to a membership applicant
+    informing her about reception of signature.
     """
     _id = request.matchdict['memberid']
     _member = C3sMember.get_by_id(_id)
@@ -561,8 +653,8 @@ def mail_signature_confirmation(request):
              route_name='mail_pay_confirmation')
 def mail_payment_confirmation(request):
     """
-    send a mail to membership applicant
-    informing her about reception of payment
+    Send a mail to a membership applicant
+    informing her about reception of payment.
     """
     _id = request.matchdict['memberid']
     _member = C3sMember.get_by_id(_id)
@@ -593,8 +685,8 @@ def mail_payment_confirmation(request):
              route_name='mail_sig_reminder')
 def mail_signature_reminder(request):
     """
-    send a mail to membership applicant
-    reminding her about lack of signature
+    Send a mail to a membership applicant
+    reminding her about lack of signature.
     """
     _id = request.matchdict['memberid']
     _member = C3sMember.get_by_id(_id)
@@ -636,8 +728,8 @@ def mail_signature_reminder(request):
              route_name='mail_pay_reminder')
 def mail_payment_reminder(request):
     """
-    send a mail to membership applicant
-    reminding her about lack of signature
+    Send a mail to a membership applicant
+    reminding her about lack of signature.
     """
     _id = request.matchdict['memberid']
     _member = C3sMember.get_by_id(_id)
@@ -664,9 +756,14 @@ def mail_payment_reminder(request):
         orderby=request.cookies['orderby']) + '#member_' + str(_member.id))
 
 
-
 @view_config(permission='manage', route_name='dashboard_only')
 def dashboard_only(request):
+    """
+    This is a mere redirect, so the url with /dashboard works w/o long tail.
+
+    Convenience. Can also be used in code or templates:
+    request.route_url('dashboard_only')
+    """
     if 'on_page' in request.cookies:
         try:
             _number = int(request.cookies['on_page'])

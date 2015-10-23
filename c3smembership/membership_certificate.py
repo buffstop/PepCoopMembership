@@ -1,4 +1,18 @@
 # -*- coding: utf-8 -*-
+"""
+This module holds functionality to handle Membership Certificates.
+
+- Send out email with individual links.
+- Generate certificate PDFs for users.
+- Generate certificate PDFs for staff.
+
+The actual PDFs are generated using *pdflatex*.
+
+The LaTeX templates for this have been factured out into a private repository,
+because we do not want others to be able to re-create our membership
+certificates and also because there are files contained
+that we do not want to be public, e.g. signatures.
+"""
 from datetime import (
     date,
     datetime
@@ -17,10 +31,12 @@ from types import NoneType
 
 from c3smembership.models import C3sMember
 
+DEBUG = False
+
 
 def make_random_token():
     """
-    used as token to allow access to certificate
+    Generate a random token used to allow access to certificate.
     """
     import random
     import string
@@ -34,9 +50,12 @@ def make_random_token():
              route_name='certificate_mail')
 def send_certificate_email(request):
     '''
-    send a mail to a member with a link
-    so the mamber can get her membership certificate
+    Send email to a member with a link
+    so the member can get her membership certificate.
     '''
+    # print request.referrer  # note: will fail in tests
+    _special_condition = False  # for redirects to referrer
+
     mid = request.matchdict['id']
     _m = C3sMember.get_by_id(mid)
     if isinstance(_m, NoneType) or not _m.membership_accepted:
@@ -47,16 +66,17 @@ def send_certificate_email(request):
     _m.certificate_token = make_random_token()
     # construct mail
     _name = re.sub(  # # replace characters
-        '[^a-zA-Z]',  # other than these
+        '[^0-9a-zA-Z]',  # other than these
         '-',  # with a -
-        _m.lastname + _m.firstname)
+        _m.lastname if _m.is_legalentity else (_m.lastname + _m.firstname))
 
     _url = request.route_url('certificate_pdf',
                              id=_m.id, name=_name, token=_m.certificate_token)
-    #print '#'*60
-    #print _m.certificate_token
-    #print _url
-    #print '#'*60
+    if DEBUG:  # pragma: no cover
+        print '#'*60
+        print _m.certificate_token
+        print _url
+        print '#'*60
 
     message_body_file_name = \
         'c3smembership/templates/mail/membership_certificate_' + \
@@ -76,34 +96,64 @@ def send_certificate_email(request):
         recipients=[_m.email, ],
         body = message_body
     )
-    mailer.send(the_message)
+    if 'true' in request.registry.settings[
+            'testing.mail_to_console']:  # pragma: no cover
+        print('== 8< ======================================================')
+        print(the_message.body)
+        print('====================================================== >8 ==')
+    else:
+        mailer.send(the_message)
     _m.certificate_email = True
     _m.certificate_email_date = datetime.now()
-    return HTTPFound(
-        location=request.route_url(
-            'membership_listing_backend',
-            number=request.cookies['m_on_page'],
-            order=request.cookies['m_order'],
-            orderby=request.cookies['m_orderby']) +
-        '#member_' + str(_m.id))
+
+    try:
+        if 'detail' in request.referrer:  # pragma: no cover
+            _special_condition = True
+    except:
+        pass
+
+    if _special_condition:  # pragma: no cover
+        return HTTPFound(
+            location=request.referrer +
+            '#certificate'
+        )
+    else:
+        try:  # iff usefull cookie exists
+            return HTTPFound(
+                location=request.route_url(
+                    'membership_listing_backend',
+                    number=request.cookies['m_on_page'],
+                    order=request.cookies['m_order'],
+                    orderby=request.cookies['m_orderby']) +
+                '#member_' + str(_m.id))
+        except:  # pragma: no cover  # iff no good cookie found
+            return HTTPFound(
+                location=request.route_url(
+                    'membership_listing_backend',
+                    number=0,
+                    order='asc',
+                    orderby='id') +
+                '#member_' + str(_m.id))
 
 
 @view_config(permission='view',
              route_name='certificate_pdf')
 def generate_certificate(request):
     '''
-    generate a membership_certificate for a member
+    Generate a membership_certificate for a member.
     '''
     mid = request.matchdict['id']
     token = request.matchdict['token']
 
     try:
         _m = C3sMember.get_by_id(mid)
-        #print _m.firstname
-        #print _m.certificate_token
-        #print type(_m.certificate_token)  # NoneType
-        #print token
-        #print type(token)  # unicode
+
+        if DEBUG:  # pragma: no cover
+            print _m.firstname
+            print _m.certificate_token
+            print type(_m.certificate_token)  # NoneType
+            print token
+            print type(token)  # unicode
         assert(_m.certificate_token is not None)
         assert(str(_m.certificate_token) in str(token))
         assert(str(token) in str(_m.certificate_token))
@@ -111,12 +161,12 @@ def generate_certificate(request):
         from datetime import timedelta
         _2weeks = timedelta(weeks=2)
         token_date = _m.certificate_email_date
-        #print "token_date: {}".format(token_date)
+        # print "token_date: {}".format(token_date)
         present = datetime.now()
         _delta = present - token_date
-        #if (_delta > _2weeks):
+        # if (_delta > _2weeks):
         #    print "more than two weeks!"
-        #else:
+        # else:
         #    print "less than two weeks!"
         assert(_delta < _2weeks)
     except:
@@ -132,7 +182,7 @@ def generate_certificate(request):
              route_name='certificate_pdf_staff')
 def generate_certificate_staff(request):
     '''
-    generate a membership_certificate for staffers
+    Generate a membership_certificate for staffers.
     '''
     mid = request.matchdict['id']
 
@@ -148,42 +198,51 @@ def generate_certificate_staff(request):
 
 def gen_cert(request, _m):
     '''
-    create a membership certificate PDF file using pdflatex
+    Utility function: create a membership certificate PDF file using pdflatex
     '''
     import os
     here = os.path.dirname(__file__)
-    # latex header and footer
-    latex_header_tex = os.path.abspath(
-        os.path.join(here, '../certificate/urkunde_header.tex'))
-    #print("latex header file: %s" % latex_header_tex)
-    latex_footer_tex = os.path.abspath(
-        os.path.join(here, '../certificate/urkunde_footer.tex'))
-    #print("latex footer file: %s" % latex_footer_tex)
-    #print '#'*60
-    #print _m.locale
-    #print '#'*60
 
-    if _m.locale == 'de':
+    # print '#'*60
+    # print _m.locale
+    # print '#'*60
+
+    if 'de' in _m.locale:
         latex_background_image = os.path.abspath(
-            os.path.join(here, '../certificate/Urkunde_Hintergrund.pdf'))
+            os.path.join(here, '../certificate/Urkunde_Hintergrund_blank.pdf'))
+        # latex header and footer
+        latex_header_tex = os.path.abspath(
+            os.path.join(here, '../certificate/urkunde_header_de.tex'))
+        # print("latex header file: %s" % latex_header_tex)
+        latex_footer_tex = os.path.abspath(
+            os.path.join(here, '../certificate/urkunde_footer_de.tex'))
+        # print("latex footer file: %s" % latex_footer_tex)
     else:
         latex_background_image = os.path.abspath(
-            os.path.join(here, '../certificate/Urkunde_Hintergrund_EN.pdf'))
+            os.path.join(here, '../certificate/Urkunde_Hintergrund_blank.pdf'))
+        # latex header and footer
+        latex_header_tex = os.path.abspath(
+            os.path.join(here, '../certificate/urkunde_header_en.tex'))
+        # print("latex header file: %s" % latex_header_tex)
+        latex_footer_tex = os.path.abspath(
+            os.path.join(here, '../certificate/urkunde_footer_en.tex'))
+        # print("latex footer file: %s" % latex_footer_tex)
+
     sign_meik = os.path.abspath(
         os.path.join(here, '../certificate/sign_meik.png'))
-    sign_wolfgang = os.path.abspath(
-        os.path.join(here, '../certificate/sign_wolfgang.png'))
+    sign_holger = os.path.abspath(
+        os.path.join(here, '../certificate/sign_holger_la_600.png'))
 
     # a temporary directory for the latex run
     _tempdir = tempfile.mkdtemp()
-    #print("new temporary directory: %s" % _tempdir)
+    # print("new temporary directory: %s" % _tempdir)
 
     latex_file = tempfile.NamedTemporaryFile(
         suffix='.tex',
         dir=_tempdir,
         delete=False,  # directory will be deleted anyways
     )
-    #print "the latex file: {}".format(latex_file.name)
+    # print "the latex file: {}".format(latex_file.name)
 
     # using tempfile
     pdf_file = tempfile.NamedTemporaryFile(
@@ -194,8 +253,8 @@ def gen_cert(request, _m):
     pdf_file.name += '.pdf'
 
     is_founder = True if 'dungHH_' in _m.email_confirm_code else False
-    #print u"email confirm code: {}".format(_m.email_confirm_code)
-    #print u"is a founding member? {}".format(
+    # print u"email confirm code: {}".format(_m.email_confirm_code)
+    # print u"is a founding member? {}".format(
     #    True if 'dungHH_' in _m.email_confirm_code else False)
     # prepare the certificate text
     if _m.locale == 'de':  # german
@@ -258,7 +317,7 @@ def gen_cert(request, _m):
 \def\\txtBlkConfirmDate{%s}
 \def\\signDate{%s}
 \def\signMeik{%s}
-\def\signWolfgang{%s}
+\def\signHolger{%s}
 \def\\txtBlkCEO{%s}
 \def\\txtBlkMembershipNum{%s}
     ''' % (
@@ -278,13 +337,18 @@ def gen_cert(request, _m):
         datetime.strftime(
             date.today(), "%d.%m.%Y") if _m.locale == 'de' else date.today(),
         sign_meik,
-        sign_wolfgang,
+        sign_holger,
         exec_dir,
-        mship_num_text,
+        mship_num_text
     )
+    if DEBUG:  # pragma: no cover
+        print('#'*60)
+        print(_m.is_legalentity)
+        print(_m.lastname)
+        print('#'*60)
     if _m.is_legalentity:  # XXX TODO: field of company name
         latex_data += '''
-\def\\company{%s}''' % _m.firstname
+\def\\company{%s}''' % _m.lastname
     if _m.address2 is not u'':  # add address part 2 iff exists
         latex_data += '''
 \def\\addressTwo{%s}''' % _m.address2
@@ -310,15 +374,20 @@ def gen_cert(request, _m):
     # finish the latex document
     latex_data += '''
 \input{%s}''' % latex_footer_tex
-    #print '*' * 70
-    #print latex_data
-    #print '*' * 70
+
+    # DEBUG = True
+    if DEBUG:  # pragma: no cover
+        print '*' * 70
+        print('*' * 30, 'latex data: ', '*' * 30)
+        print '*' * 70
+        print latex_data
+        print '*' * 70
     latex_file.write(latex_data.encode('utf-8'))
     latex_file.seek(0)  # rewind
 
     # pdflatex latex_file to pdf_file
     FNULL = open(os.devnull, 'w')  # hide output here ;-)
-    #pdflatex_output =
+    # pdflatex_output =
     subprocess.call(
         [
             'pdflatex',
@@ -327,16 +396,16 @@ def gen_cert(request, _m):
         ],
         stdout=FNULL, stderr=subprocess.STDOUT  # hide output
     )
-    #print("the output of pdflatex run: %s" % pdflatex_output)
+    # print("the output of pdflatex run: %s" % pdflatex_output)
 
     # debug: open the PDF in a viewer
-    #subprocess.call(
+    # subprocess.call(
     #    [
     #        'evince',
     #        pdf_file.name
     #    ],
     #    stdout=FNULL, stderr=subprocess.STDOUT  # hide output
-    #)
+    # )
 
     # return a pdf file
     response = Response(content_type='application/pdf')

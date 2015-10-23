@@ -15,14 +15,15 @@ from c3smembership.models import (
     DBSession,
     Base,
 )
-#Base = declarative_base()
+
+# DEBUG = True
+DEBUG = False
+
+_min_PDF_size = 60000
+_max_PDF_size = 100000
 
 
 def _initTestingDB():
-    #from sqlalchemy import create_engine
-    #from c3smembership.models import initialize_sql
-    #session = initialize_sql(create_engine('sqlite:///memory'))
-    #session = DBSession
     my_settings = {'sqlalchemy.url': 'sqlite:///:memory:', }
     engine = engine_from_config(my_settings)
     DBSession.configure(bind=engine)
@@ -68,8 +69,29 @@ def _initTestingDB():
             name_of_colsoc=u"GEMA",
             num_shares=u'2',
         )
+        founding_member3 = C3sMember(  # english
+            firstname=u'BBBSomeFirstnäme',
+            lastname=u'YYYSomeLastnäme',
+            email=u'some3@shri.de',
+            address1=u"addr one",
+            address2=u"addr two",
+            postcode=u"12345",
+            city=u"Footown Mäh",
+            country=u"Foocountry",
+            locale=u"en",
+            date_of_birth=date.today(),
+            email_is_confirmed=False,
+            email_confirm_code=u'ABCBARdungHH_',
+            password=u'anotherrandompassword',
+            date_of_submission=date.today(),
+            membership_type=u'normal',
+            member_of_colsoc=True,
+            name_of_colsoc=u"GEMA",
+            num_shares=u'2',
+        )
         DBSession.add(member1)
         DBSession.add(member2)
+        DBSession.add(founding_member3)
 
     return DBSession
 
@@ -84,6 +106,9 @@ class TestMembershipCertificateViews(unittest.TestCase):
         self.config.include('pyramid_chameleon')
         DBSession.remove()
         self.session = _initTestingDB()
+        self.config.registry.settings['testing.mail_to_console'] = 'no'
+        # set this to true to see mail bodies, but:
+        # tests will fail: no mail in outbox
 
     def tearDown(self):
         DBSession.remove()
@@ -93,6 +118,8 @@ class TestMembershipCertificateViews(unittest.TestCase):
         """
         test the send_certificate_email view (german)
         """
+        if DEBUG:
+            print('test_send_certificate_email_german')
         from c3smembership.membership_certificate import send_certificate_email
         self.config.add_route('join', '/')
         self.config.add_route('dashboard', '/')
@@ -111,8 +138,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
 
         mailer = get_mailer(request)
         result = send_certificate_email(request)
-
-        #print result
+        # print result
         self.assertTrue(result.status_code == 404)  # not found
         self.assertEqual(len(mailer.outbox), 0)
 
@@ -122,7 +148,6 @@ class TestMembershipCertificateViews(unittest.TestCase):
             'token': 'hotzenplotz123'
         }
         member1 = C3sMember.get_by_id(1)
-        #member1.certificate_token = u'hotzenplotz123'
         member1.membership_accepted = True
 
         # the request needs stuff to be in the cookie (for redirects)
@@ -131,7 +156,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
         request.cookies['m_orderby'] = 'id'
 
         result = send_certificate_email(request)
-        #print result
+        # print result
         self.assertTrue(result.status_code == 302)  # redirect
 
         self.assertEqual(len(mailer.outbox), 1)
@@ -139,7 +164,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
             mailer.outbox[0].subject,
             u"C3S-Mitgliedsbescheinigung"
         )
-        #print mailer.outbox[0].body
+        # print mailer.outbox[0].body
         self.assertTrue(
             u"Hallo SomeFirstnäme," in mailer.outbox[0].body)
         self.assertTrue(
@@ -149,6 +174,8 @@ class TestMembershipCertificateViews(unittest.TestCase):
         """
         test the send_certificate_email view (english)
         """
+        if DEBUG:
+            print('test_send_certificate_email_english')
         from c3smembership.membership_certificate import send_certificate_email
         self.config.add_route('join', '/')
         self.config.add_route('dashboard', '/')
@@ -167,8 +194,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
 
         mailer = get_mailer(request)
         result = send_certificate_email(request)
-
-        #print result
+        # print result
         self.assertTrue(result.status_code == 404)  # not found
         self.assertEqual(len(mailer.outbox), 0)
 
@@ -178,7 +204,6 @@ class TestMembershipCertificateViews(unittest.TestCase):
             'token': 'hotzenplotz123'
         }
         member2 = C3sMember.get_by_id(2)
-        #member1.certificate_token = u'hotzenplotz123'
         member2.membership_accepted = True
 
         # the request needs stuff to be in the cookie (for redirects)
@@ -187,7 +212,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
         request.cookies['m_orderby'] = 'id'
 
         result = send_certificate_email(request)
-        #print result
+        # print result
         self.assertTrue(result.status_code == 302)  # redirect
 
         self.assertEqual(len(mailer.outbox), 1)
@@ -195,7 +220,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
             mailer.outbox[0].subject,
             u"C3S membership certificate"
         )
-        #print mailer.outbox[0].body
+        # print mailer.outbox[0].body
         self.assertTrue(
             u"Hello AAASomeFirstnäme," in mailer.outbox[0].body)
         self.assertTrue(
@@ -214,6 +239,8 @@ class TestMembershipCertificateViews(unittest.TestCase):
         }
 
         result = generate_certificate(request)
+        if DEBUG:
+            print(result)
 
         # check: this is *not* found because the token is *invalid*
         self.assertTrue(result.status_code == 404)  # not found
@@ -230,9 +257,15 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member2.certificate_email_date = datetime.now(
         ) - timedelta(weeks=1)
         member2.membership_accepted = True
-
         result = generate_certificate(request)
-        self.assertTrue(100000 < len(result.body) < 110000)
+
+        if DEBUG:  # pragma: no cover
+            print("size of resulting certificate PDF here: {}".format(
+                len(result.body)))
+            print("min and max: {} {}".format(
+                _min_PDF_size, _max_PDF_size))
+
+        self.assertTrue(_min_PDF_size < len(result.body) < _max_PDF_size)
         self.assertTrue(result.content_type == 'application/pdf')
 
     def test_generate_certificate_german(self):
@@ -261,7 +294,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member.membership_accepted = True
 
         result = generate_certificate(request)
-        #print result.body
+        # print result.body
         self.assertTrue(result.status_code == 404)  # not found
 
         # test: email/token is too old
@@ -275,7 +308,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
         result = generate_certificate(request)
 
         # print result.body
-        self.assertTrue(100000 < len(result.body) < 120000)
+        self.assertTrue(_min_PDF_size < len(result.body) < _max_PDF_size)
         self.assertTrue(result.content_type == 'application/pdf')
 
         # edge case: member has one share
@@ -283,8 +316,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member.num_shares = 1
 
         result = generate_certificate(request)
-        self.assertTrue(100000 < len(result.body) < 120000)
-
+        self.assertTrue(_min_PDF_size < len(result.body) < _max_PDF_size)
         self.assertTrue(result.content_type == 'application/pdf')
 
         # edge case: member has one share
@@ -292,7 +324,58 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member.is_legalentity = True
 
         result = generate_certificate(request)
-        self.assertTrue(100000 < len(result.body) < 120000)
+        if DEBUG:  # pragma: no cover
+            print("size of resulting certificate PDF: {}".format(
+                len(result.body)))
+
+        self.assertTrue(_min_PDF_size < len(result.body) < _max_PDF_size)
+        self.assertTrue(result.content_type == 'application/pdf')
+
+    def test_generate_certificate_founder(self):
+        """
+        test the certificate download view (german)
+        """
+        from c3smembership.membership_certificate import generate_certificate
+        request = testing.DummyRequest()
+        request.matchdict = {
+            'id': '3',
+            'name': 'foobar',
+            'token': 'hotzenplotz123'
+        }
+        member = C3sMember.get_by_id(3)
+        member.certificate_token = u'hotzenplotz123'
+        member.membership_accepted = True
+
+        # need to get the date right!
+        member.certificate_email_date = datetime.now(
+        ) - timedelta(weeks=1)
+        result = generate_certificate(request)
+
+        # print result.body
+        self.assertTrue(_min_PDF_size < len(result.body) < _max_PDF_size)
+        self.assertTrue(result.content_type == 'application/pdf')
+
+        # edge case: member has one share
+        member.certificate_token = u'hotzenplotz123'
+        member.num_shares = 1
+
+        result = generate_certificate(request)
+        self.assertTrue(_min_PDF_size < len(result.body) < _max_PDF_size)
+        self.assertTrue(result.content_type == 'application/pdf')
+
+        # edge case: member has one share
+        member.certificate_token = u'hotzenplotz123'
+        member.is_legalentity = True
+
+        result = generate_certificate(request)
+        member.locale = u'de'
+        result = generate_certificate(request)
+
+        if DEBUG:  # pragma: no cover
+            print("size of resulting certificate PDF: {}".format(
+                len(result.body)))
+
+        self.assertTrue(_min_PDF_size < len(result.body) < _max_PDF_size)
         self.assertTrue(result.content_type == 'application/pdf')
 
     def test_generate_certificate_awkward_characters(self):
@@ -328,7 +411,11 @@ class TestMembershipCertificateViews(unittest.TestCase):
         ) - timedelta(weeks=1)
 
         result = generate_certificate(request)
-        self.assertTrue(100000 < len(result.body) < 120000)
+        if DEBUG:  # pragma: no cover
+            print("size of resulting certificate PDF: {}".format(
+                len(result.body)))
+
+        self.assertTrue(_min_PDF_size < len(result.body) < _max_PDF_size)
         self.assertTrue(result.content_type == 'application/pdf')
 
     def test_generate_certificate_staff(self):
@@ -349,5 +436,9 @@ class TestMembershipCertificateViews(unittest.TestCase):
         }
         result = generate_certificate_staff(request)
 
-        self.assertTrue(100000 < len(result.body) < 120000)
+        if DEBUG:  # pragma: no cover
+            print("size of resulting certificate PDF: {}".format(
+                len(result.body)))
+
+        self.assertTrue(_min_PDF_size < len(result.body) < _max_PDF_size)
         self.assertTrue(result.content_type == 'application/pdf')
