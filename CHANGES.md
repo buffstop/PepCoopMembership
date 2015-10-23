@@ -1,9 +1,13 @@
-Next Rlease
-===========
+Next Release
+============
 
 - Fix notation of euro values and currency symbols.
 
 - Remove unnecessary empty lines at beginning and end of email texts.
+
+- Workaround for German character "ß" (sharp s) in LaTeX documents.
+
+- Clarify phrasing in English membership dues emails.
 
 
 
