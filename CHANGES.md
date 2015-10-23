@@ -1,5 +1,5 @@
-Next Release
-============
+1.11.1
+======
 
 - Fix notation of euro values and currency symbols.
 
