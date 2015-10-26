@@ -1,6 +1,8 @@
+"""
+This module holds the main method: config and route declarations
+"""
 
-__version__ = '1.10.2'
-
+__version__ = '1.11.1'
 
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
@@ -27,7 +29,6 @@ def main(global_config, **settings):
         callback=groupfinder,)
     authz_policy = ACLAuthorizationPolicy()
 
-    #DBSession.configure(bind=engine)
     Base.metadata.bind = engine
 
     config = Configurator(settings=settings,
@@ -48,6 +49,9 @@ def main(global_config, **settings):
     config.add_static_view('static_deform', 'deform:static')
     config.add_static_view('static',
                            'c3smembership:static', cache_max_age=3600)
+    config.add_static_view(
+        'docs',
+        'static_docs', cache_max_age=3600)
 
     config.add_subscriber('c3smembership.subscribers.add_base_template',
                           'pyramid.events.BeforeRender')
@@ -62,11 +66,7 @@ def main(global_config, **settings):
                         factory='c3smembership.renderers.CSVRenderer')
     # home is /, the membership application form
     config.add_route('join', '/')
-    # info pages
-    #config.add_route('disclaimer', '/disclaimer')
-    #config.add_route('faq', '/faq')
-    #config.add_route('statute', '/statute')
-    #config.add_route('manifesto', '/manifesto')
+
     # success and further steps
     config.add_route('success', '/success')
     config.add_route('success_check_email', '/check_email')
@@ -76,7 +76,7 @@ def main(global_config, **settings):
     config.add_route(
         'verify_afm_email',
         '/vae/{refcode}/{token}/{email}')  # verify afm email
-    #config.add_route(
+    # config.add_route(
     #    'verify_member_email',
     #    '/vfe/{refcode}/{token}/{email}')  # verify founders mail?
     # routes & views for staff
@@ -114,6 +114,8 @@ def main(global_config, **settings):
     config.add_route('mail_mtype_form', '/mtype/{afmid}')  # mail link to form
     config.add_route('mtype_form', '/mtype/{refcode}/{token}/{email}')  # form
     config.add_route('mtype_thanks', '/mtype_thanks')  # thanks
+    # applications for membership
+    config.add_route('afms_awaiting_approval', '/afms_awaiting_approval')
     # memberships
     config.add_route('flag_duplicates', '/flag_dup')
     config.add_route('merge_duplicates', '/merge_dup')
@@ -130,16 +132,44 @@ def main(global_config, **settings):
                      '/memberships/{number}/{orderby}/{order}')
     config.add_route('membership_listing_alphabetical',
                      '/aml')
-    config.add_route('get_member', '/members/{memberid}')
+    config.add_route('membership_listing_date_pdf',
+                     '/aml-{date}.pdf')
+    config.add_route('membership_listing_aufstockers',
+                     '/aml_aufstockers')
+    # membership dues
+    config.add_route('send_dues_invoice_email', '/dues_invoice/{member_id}')
+    config.add_route('send_dues_invoice_batch', '/dues_invoice_batch')
+    config.add_route('send_dues_receipt_mail',
+                     '/dues_receipt_mail/{member_id}')
+    # config.add_route('make_dues_invoice_pdf',  # retired! use route below!
+    #                 '/dues_invoice/{email}/{code}/invoice.pdf')
+    config.add_route('make_dues_invoice_no_pdf',
+                     '/dues_invoice_no/{email}/{code}/C3S-dues15-{i}.pdf')
+    config.add_route('dues15_reduction',
+                     '/dues15_reduction/{member_id}')
+    config.add_route('make_reversal_invoice_pdf',
+                     '/dues_reversal/{email}/{code}/C3S-dues15-{no}-S.pdf')
+    config.add_route('dues15_notice', '/dues15_notice/{member_id}')
+    config.add_route('dues15_listing', '/dues15_listing')
 
+    # utilities & wizardry
+    config.add_route('plz_dist', '/plz_dist')
+    config.add_route('get_member', '/members/{memberid}')
+    config.add_route('error_page', '/error')  # generic error view
+    
     # shares
-    config.add_route('detail_shares', '/detail_shares/{id}')
+    config.add_route('shares_detail', '/shares_detail/{id}')
+    config.add_route('shares_edit', '/shares_edit/{id}')
+    config.add_route('shares_delete', '/shares_delete/{id}')
     # membership_certificate
     config.add_route('certificate_mail', '/cert_mail/{id}')
     config.add_route('certificate_pdf', '/cert/{id}/C3S_{name}_{token}.pdf')
     config.add_route('certificate_pdf_staff', '/cert/{id}/C3S_{name}.pdf')
+    # annual reports
+    config.add_route('annual_reporting', '/annual_reporting')
     # invite people
     config.add_route('invite_member', '/invite_member/{m_id}')
+    config.add_route('invite_batch', '/invite_batch/{number}')
     # search for people
     config.add_route('search_people', '/search_people')
     config.add_route('autocomplete_people_search', '/aps/')
@@ -148,5 +178,6 @@ def main(global_config, **settings):
     config.add_route('autocomplete_input_values', '/aiv/')
     # fix the database
     config.add_route('fix_database', '/fix_database')
+    config.add_route('fix_dob', '/fix_dob')
     config.scan()
     return config.make_wsgi_app()

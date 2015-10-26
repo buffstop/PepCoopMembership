@@ -1,23 +1,32 @@
 # -*- coding: utf-8 -*-
+"""
+This module holds import functions for datasets.
+
+NOTE: This code is historic. It was used once to import datasets
+(the founders, the crowdfunders) but will rarely be used in the future.
+However, it might be useful to see what happened (reconstruction)
+or for similar future needs.
+"""
+
 from c3smembership.models import (
     C3sMember,
     DBSession,
-    Shares,
-#    Membership,
+    # Shares,
+    # Membership,
 )
 import datetime
 
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
-from pyramid.security import (
-    authenticated_userid,
-)
+# from pyramid.security import (
+#     authenticated_userid,
+# )
 from sqlalchemy.exc import (
     IntegrityError,
     ResourceClosedError,
 )
 import tempfile
-from types import NoneType
+# from types import NoneType
 import unicodecsv
 
 
@@ -25,7 +34,7 @@ import unicodecsv
              route_name='import_founders')
 def import_founders(request):
     '''
-    import the list of founders
+    Import the list of founders (CSV).
     '''
     try:  # check if the file exists
         with open(request.registry.settings['founders_importfile'], 'r') as f:
@@ -42,7 +51,7 @@ def import_founders(request):
     # reader for CSV files
     r = unicodecsv.reader(content.file, delimiter=',',
                           encoding='utf-8',
-                          #encoding='iso-8859-2',
+                          # encoding='iso-8859-2',
                           quoting=unicodecsv.QUOTE_ALL
                           )
     header = r.next()  # first line is the header.
@@ -137,11 +146,12 @@ def import_founders(request):
              route_name='import_crowdfunders')
 def import_crowdfunders(request):
     '''
-    import the list of crowdfunders to the membership database
+    Import the list of crowdfunders (CSV) to the membership database.
     '''
     try:  # check if the file exists
-        #with open('import/startnext_success.utf8.csv', 'r') as f:
-        startnext_importfile = request.registry.settings['startnext_importfile']
+        # with open('import/startnext_success.utf8.csv', 'r') as f:
+        startnext_importfile = request.registry.settings[
+            'startnext_importfile']
         with open(startnext_importfile, 'r') as f:
             print("the csv file was found.")
             # store contents in tempfile
@@ -156,7 +166,7 @@ def import_crowdfunders(request):
         return HTTPFound(request.route_url('dashboard_only'))
 
     # reader for CSV files
-    #rdr = unicodecsv.reader(content.file, delimiter='\t',
+    # rdr = unicodecsv.reader(content.file, delimiter='\t',
     rdr = unicodecsv.reader(content.file, delimiter=';',
                             encoding='utf-8',
                             quoting=unicodecsv.QUOTE_ALL
@@ -230,10 +240,10 @@ def import_crowdfunders(request):
     except AssertionError, ae:
         print ae
         print "the header of the crowdfunder CSV does not match what we expect"
-        #print "==== got:"
-        #print header
-        #print "==== expected:"
-        #print expected_header
+        # print "==== got:"
+        # print header
+        # print "==== expected:"
+        # print expected_header
         request.session.flash(
             "Importing Crowdfunders: header fields mismatch. NOT importing",
             'message_to_staff')
@@ -249,7 +259,7 @@ def import_crowdfunders(request):
         try:
             row = rdr.next()
             # DEBUG: just take 10 for testing
-            #if counter == 11:
+            # if counter == 11:
             #    break
         except:
             break  # stop import if there is no next line
@@ -262,7 +272,7 @@ def import_crowdfunders(request):
             the number of shares can be extracted from row 1
             '''
             _num_shares = row[1].split('x')[0]
-            #print("the number of shares: %s" % _num_shares)
+            # print("the number of shares: %s" % _num_shares)
         except:
             print(
                 "failed to extract data: row %s, TR-ID %s. %s" % (
@@ -294,28 +304,29 @@ def import_crowdfunders(request):
         import_startnexter.signature_confirmed = True
         import_startnexter.payment_received = True
         import_startnexter.payment_confirmed = True
-        #print('importing %s now...' % counter)
+        # print('importing %s now...' % counter)
         try:
             dbsession = DBSession
             dbsession.add(import_startnexter)
-            #dbsession.flush()
+            # dbsession.flush()
             request.session.flash(
                 "imported dataset {}".format(
                     import_startnexter.email_confirm_code),
                 'messages'
             )
-            #log.info(
+            # log.info(
             #    "%s imported dataset %s" % (
             #        authenticated_userid(request),
             #        import_startnexter.email_confirm_code))
-            #print('done with %s!' % counter)
+            # print('done with %s!' % counter)
         except ResourceClosedError, rce:
             # XXX can't catch this exception,
             # because it happens somwhere else, later, deeper !?!
             print "transaction was aborted/resource closed"
             print rce
             return {
-                'message': "tried import of dataset but resource is closed. ABORTED!"}
+                'message': ("tried import of dataset "
+                            "but resource is closed. ABORTED!")}
         except IntegrityError, ie:
             print "integrity error"
             dbsession.rollback()
@@ -324,13 +335,14 @@ def import_crowdfunders(request):
                 print("import of dataset %s failed, because the confirmation"
                       "code already existed" % counter)
                 return {
-                    'message': "tried import of dataset(s) with existing confirm code. ABORTED!"}
+                    'message': ("tried import of dataset(s) "
+                                "with existing confirm code. ABORTED!")}
         except StopIteration, si:
             print "stop iteration reached"
             print si
             return {'message': "file found, StopIteration reached."}
 
-    #print("done with all import steps, successful or not!")
+    # print("done with all import steps, successful or not!")
     return HTTPFound(
         request.route_url('dashboard_only'))
 
@@ -339,11 +351,13 @@ def import_crowdfunders(request):
              route_name='fix_import_crowdfunders')
 def fix_import_crowdfunders(request):
     '''
-    fix the import of
-    the list of crowdfunders to the membership database
+    Fix the import of
+    the list of crowdfunders to the membership database.
+
+    (when done in a hurry, things go wrong and need fixing.)
     '''
     try:  # check if the file exists
-        #with open('import/startnext_success.utf8.csv', 'r') as f:
+        # with open('import/startnext_success.utf8.csv', 'r') as f:
         startnext_importfile = request.registry.settings[
             'startnext_importfile']
         with open(startnext_importfile, 'r') as f:
@@ -360,7 +374,7 @@ def fix_import_crowdfunders(request):
         return HTTPFound(request.route_url('dashboard_only'))
 
     # reader for CSV files
-    #rdr = unicodecsv.reader(content.file, delimiter='\t',
+    # rdr = unicodecsv.reader(content.file, delimiter='\t',
     rdr = unicodecsv.reader(content.file, delimiter=';',
                             encoding='utf-8',
                             quoting=unicodecsv.QUOTE_ALL
@@ -415,24 +429,24 @@ def fix_import_crowdfunders(request):
         try:
             row = rdr.next()
             # DEBUG: just take a few for testing
-            #if counter == 2:
+            # if counter == 2:
             #    break
         except:
             break  # stop import if there is no next line
         counter += 1
-        #highest_mem_num += 1  # later...
+        # highest_mem_num += 1  # later...
 
         print(u"=== row %s: %s" % (counter, row))
 
         _startnexter = C3sMember.get_by_code(row[9])
         print u"found {}: has {}, should be {}".format(
             _startnexter.id,
-            #_startnexter.firstname,
+            # _startnexter.firstname,
             _startnexter.date_of_submission,
             row[11],
         )
         if row[11] is not '':
-            #print "----PING! {}".format(_startnexter.id)
+            # print "----PING! {}".format(_startnexter.id)
             _startnexter.date_of_submission = datetime.datetime.strptime(
                 row[11], '%Y-%m-%d')  # lost in a rush... fixing it now
         DBSession.flush()

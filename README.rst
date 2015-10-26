@@ -1,90 +1,125 @@
 c3sMembership README
 ====================
-This webapp offers a form to to join *Cultural Commons Collecting Society (C3S)*
-as member. A GnuPG encrypted mail with the details submitted will be sent to C3S.
+
+
+This webapp offers a form to to join the *Cultural Commons Collecting Society
+(C3S)* as a member. A GnuPG encrypted mail with the details submitted will be
+sent to C3S.
 
 When the form is submitted and the email verified,
 form submission data is used to populate a pdf with form fields (using fdf
 and pdftk) and the resulting PDF is ready for download.
 
 Another special feature of this app is internationalisation (i18n), making
-the form available in several languages. You can help translate this app on
-transifex: https://www.transifex.com/projects/p/... tba .../
-
-Help via screencast is available: http://translate.c3s.cc
-Also see ./tx/README.rst for more help on the translation machinery.
+the form available in several languages.
 
 
-fonts
+
+Fonts
 -----
 
-The .odt files for the membership application in pdftk require the font Signika which can be downloaded at: http://www.google.com/fonts/specimen/Signika
+
+The .odt files for the membership application in pdftk require the font
+Signika which can be downloaded at:
+http://www.google.com/fonts/specimen/Signika
 
 
-setup
+
+Setup
 -----
 
-see ci.sh (is partially out of date)
 
-install pdftk (sudo apt-get install pdftk)
+Install dependencies:
+
+- Development:
+
+  $ sudo apt-get install python-pip python-dev python2.7-dev python-virtualenv libxml2-dev libxslt1-dev build-essential pdftk zlib1g-dev
+
+- LaTeX pdf compilation:
+
+  $ sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra pgf texlive-lang-german
+
+- Documentation diagram generation:
+
+  $ sudo apt-get install graphviz
+
+Setup:
 
 $ virtualenv env
 
 $ env/bin/python setup.py develop
 
+Creating an initial database:
 
-run (in development mode)
+$ env/bin/initialize_c3sMembership_db development.ini
+
+
+
+Run (in development mode)
 -------------------------
+
 
 $ env/bin/pserve development.ini --reload
 
-The app will rebuild templates and reload code whenever there are changes by using --reload.
+The app will rebuild templates and reload code whenever there are changes by
+using --reload.
 
 
-run (in production mode, daemon mode)
+
+Run (in production mode, daemon mode)
 -------------------------------------
 
+
 $ pserve production.ini start
+
 
 
 Routes and Views for Users
 --------------------------
 
+
 The default route is *'/'* (named 'join'), presenting the join form.
 From there, users can follow links to other views with relatively static
 information:
 
-* */disclaimer*
-* */faq*
-* */statute*
-* */manifesto*
+- /disclaimer
 
-If the form is used and submitted, after successful validation the
-information entered is presented in a view under */success*, where the
-user can choose to re-edit (back to the join form) or confirm the data given
-and request a validation email by clicking a button. 
+- /faq
+
+- /statute
+
+- /manifesto
+
+If the form is used and submitted, after successful validation the information
+entered is presented in a view under */success*, where the user can choose to
+re-edit (back to the join form) or confirm the data given and request a
+validation email by clicking a button. 
 
 At this point (in view */success_check_email*, the data is persisted in a DB
-and the session is invalidated, i.e. the app forgets about the users connection.
+and the session is invalidated, i.e. the app forgets about the users
+connection.
 
-The user then needs to check her email and come back using the validation link.
-The validation link contains the email and a code to identify the user
-in view */verify_password*,
-where the user additionally has to enter her password.
-(Without this password check,
-anybody holding the verification link would be able to obtain the users data.)
+The user then needs to check her email and come back using the validation
+link. The validation link contains the email and a code to identify the user
+in view */verify_password*, where the user additionally has to enter her
+password. (Without this password check, anybody holding the verification link
+would be able to obtain the users data.)
 
 Givern the code, email and password all match,
 a view */success_pdf* presents a link to download the form.
 
 
+
 Routes and Views for Accountants
 --------------------------------
 
-C3S staff may login to the app at */login* to see the membership applications made
-in views */dashboard*, and */detail/{memberid}* especially to get an overview
-of and change the relevant status of
+
+C3S staff may login to the app at */login* to see the membership applications
+made in views */dashboard*, and */detail/{memberid}* especially to get an
+overview of and change the relevant status of
+
 - signatures (have we received a valid signature/printed PDF) and
-- payment for shares (have we received modey?).
+
+- payment for shares (have we received money?).
 
 Eventually, there is a */logout* view to log out of that interface.

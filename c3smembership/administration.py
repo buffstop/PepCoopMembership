@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+This module has functionality to let staff do administrative tasks.
+"""
+
 from c3smembership.models import (
     C3sMember,
     C3sStaff,
@@ -7,7 +11,10 @@ from c3smembership.models import (
 )
 from c3smembership.gnupg_encrypt import encrypt_with_gnupg
 import colander
-from datetime import datetime
+from datetime import (
+    datetime,
+    date
+)
 import deform
 from deform import ValidationFailure
 from pkg_resources import resource_filename
@@ -62,9 +69,32 @@ if LOGGING:  # pragma: no cover
              route_name='toolbox')
 def toolbox(request):
     """
-    This view shows some options
+    Toolbox: This view shows many options.
+
+    The view is rather minimal, but the template has all the links:
+
+    - Statistics and Reporting
+       - Statistics
+       - Annual Reporting
+       - Postal Codes (TODO)
+    - Search
+       - Search for Codes
+       - Search for People
+    - Applications for Membership
+       - AfM dashboard
+       - AfMs ready for approval by the board
+    - Members List (HTML)
+       - with links -- useful for interaction (like the dashboard)
+       - without links -- useful for printout
+       - Alphabetical Aufstockers List
+    - Members List (PDF)
+    - Import & Export
+    - ...
     """
-    return {'foo': 'bar'}
+
+    return {
+        'date': date.today().strftime('%Y-%m-%d')
+    }
 
 
 @view_config(renderer='templates/staff.pt',
@@ -72,8 +102,10 @@ def toolbox(request):
              route_name='staff')
 def staff_view(request):
     """
-    This view lets admins edit staff/cashier personnel:
-    who may act as cashier etc.?
+    This view lets admins edit staff personnel.
+
+    - edit/change password
+    - delete
     """
     _staffers = C3sStaff.get_all()
 
@@ -97,7 +129,7 @@ def staff_view(request):
     )
 
     if 'action' in request.POST:
-        #print(request.POST['id'])
+        # print(request.POST['id'])
         try:
             _staffer = C3sStaff.get_by_id(int(request.POST['id']))
         except:
@@ -198,7 +230,9 @@ your membership tool''' % (staffer.login,
              route_name='delete_afms')
 def delete_afms(request):
     '''
-    delete a bunch of AfMs in one go
+    Delete a bunch of AfMs in one go.
+
+    I wrote this while implementing mass import to ease development 8-)
     '''
     class DeleteAfMRange(colander.MappingSchema):
         first = colander.SchemaNode(
@@ -215,14 +249,14 @@ def delete_afms(request):
         buttons=[deform.Button('delete_them', 'DELETE')]
     )
     if 'first' in request.POST:
-        print "form was submitted!"
-        print "first ID to delete: %s" % request.POST['first']
+        # print "form was submitted!"
+        # print "first ID to delete: %s" % request.POST['first']
         controls = request.POST.items()
         try:
             appstruct = delete_range_form.validate(controls)
             _first = appstruct['first']
             _last = appstruct['last']
-            assert(_first < _last)
+            assert(_first < _last)  # XXX TODO: how about just one id? test!
         except ValidationFailure, e:
             return {
                 'resetform': e.render()
@@ -242,7 +276,10 @@ def delete_afms(request):
              route_name='mail_mail_confirmation')
 def mail_mail_conf(request):
     '''
-    send email to member to confirm her email address by clicking a link
+    Send email to member to confirm her email address by clicking a link.
+
+    Needed for applications that came in solely on paper
+    and were digitalized/entered into DB by staff.
     '''
     afmid = request.matchdict['memberid']
     afm = C3sMember.get_by_id(afmid)
@@ -310,11 +347,11 @@ from our database.
 Should you want to change your email address please reply to this mail, too.
 
 Best wishes :: The C3S Team
-'''.format(
-    _url,
-    afm.firstname,
-    afm.lastname,
-)
+    '''.format(
+        _url, # {0}
+        afm.firstname, # {1}
+        afm.lastname, # {2}
+    )
 
     log.info("mailing mail confirmation to AFM # {0}".format(afm.id))
 
@@ -340,7 +377,10 @@ Best wishes :: The C3S Team
              route_name='verify_afm_email')
 def verify_mailaddress_conf(request):
     '''
-    let member confirm her email address by clicking a link
+    Let a prospective member confirm her email address by clicking a link.
+
+    Needed for applications that came in solely on paper
+    and were digitalized/entered into DB by staff.
     '''
     user_email = request.matchdict['email']
     refcode = request.matchdict['refcode']
@@ -403,7 +443,10 @@ def verify_mailaddress_conf(request):
              route_name='mail_mtype_form')
 def mail_mtype_fixer_link(request):
     '''
-    send email to member to set her membership type details by visiting a form
+    Send email to prospective member
+    to let her set her membership type details by visiting a form.
+
+    Was needed for crowdfunders from startnext: data was missing.
     '''
     afmid = request.matchdict['afmid']
     afm = C3sMember.get_by_id(afmid)
@@ -461,7 +504,9 @@ def mail_mtype_fixer_link(request):
              route_name='mtype_form')
 def membership_status_fixer(request):
     '''
-    let member confirm her email membership details by filling a form
+    Let a prospective member confirm her email address by filling a form.
+
+    Was needed for crowdfunders from startnext: data was missing.
     '''
     user_email = request.matchdict['email']
     refcode = request.matchdict['refcode']
@@ -574,7 +619,7 @@ def membership_status_fixer(request):
         renderer=zpt_renderer
     )
     # if the form has NOT been used and submitted, remove error messages if any
-    if not 'submit' in request.POST:
+    if 'submit' not in request.POST:
         request.session.pop_flash()
 
     # if the form has been used and SUBMITTED, check contents
@@ -588,7 +633,7 @@ def membership_status_fixer(request):
             if 'no' in appstruct['membership_info']['member_of_colsoc']:
                 appstruct['membership_info']['name_of_colsoc'] = ''
                 print appstruct['membership_info']['name_of_colsoc']
-                #print '-'*80
+                # print '-'*80
 
         except ValidationFailure, e:
             request.session.flash(
@@ -639,6 +684,6 @@ def membership_status_fixer(request):
              route_name='mtype_thanks')
 def membership_status_thanks(request):
     '''
-    say thanks
+    say thanks afterwards.
     '''
     return {'foo': 'bar'}

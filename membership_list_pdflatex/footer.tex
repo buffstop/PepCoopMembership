@@ -1,0 +1,45 @@
+%\begin{textblock}{20}(2,1.5)
+  \Large
+    \textbf{C3S SCE mbh -- Alphabetische Mitgliederliste}
+    \normalsize \hfill \mbox{Stand \today}
+
+    \mbox{\numMembers{} Mitglieder, \numShares{} Anteile im Wert von \EUR{\sumShares}}
+%\end{textblock}
+
+\fancyhead{}
+\fancyfoot{}
+%\headrulewidth 3 pt
+%\footrulewidth 0 pt
+\lhead{\footnotesize C3S SCE -- Alphabetische Mitgliederliste}
+\chead{\footnotesize Stand: \today}
+\rhead{\footnotesize Seite \thepage{} von \pageref{LastPage}}
+
+\thispagestyle{plain}
+\begin{textblock}{5}(17.8,0.7)
+  \footnotesize Seite \thepage{} von \pageref{LastPage}
+\end{textblock}
+
+%\vspace*{1cm}
+
+\small 
+%\begin{tabular}{lllllll}
+%\begin{longtable}{ll>{\arraybackslash}p{6.0cm}>{\raggedright \arraybackslash}p{5.0cm}}
+%\begin{longtable}{lll>{\raggedright \arraybackslash}p{5.0cm}lll}
+\begin{longtable}{
+    >{\raggedright \arraybackslash}p{2.9cm}
+    >{\raggedright \arraybackslash}p{3cm}
+    >{\raggedleft  \arraybackslash}p{1cm}
+    >{\raggedright \arraybackslash}p{4.3cm}
+    >{\raggedleft  \arraybackslash}p{1.4cm}
+    >{\raggedleft  \arraybackslash}p{1.4cm}
+    >{\raggedleft  \arraybackslash}p{0.7cm}}
+
+  \textbf{Nachname} &
+  \footnotesize \textbf{Vorname} &
+  \footnotesize \textbf{nr.} &
+  \textbf{Anschrift} &
+  \footnotesize \textbf{Geburtsd.} &
+  \footnotesize \textbf{Aufnahmed.} &
+  \footnotesize \textbf{Ant.}\\ \hline
+    \endhead
+%% hier sollten die mitgliederdaten im tabellenformat hineingeneriert werden.

@@ -15,6 +15,8 @@ from sqlalchemy import engine_from_config
 import transaction
 from datetime import date
 
+DEBUG = False
+
 
 class EditMemberTests(unittest.TestCase):
     """
@@ -155,20 +157,22 @@ class EditMemberTests(unittest.TestCase):
         res3 = res2.follow()
         self.failUnless('Dashboard' in res4.body)
 
-        #print '+' * 20
-        #print res2.body
-        #print '+' * 20
+        if DEBUG:
+            print '+' * 20
+            print res2.body
+            print '+' * 20
         # now try valid id
         res = self.testapp.get('/edit/1', status=200)
-        #print(res.body)
+        if DEBUG:
+            print(res.body)
         self.failUnless('Mitglied bearbeiten' in res.body)
 
         # now we change details, really editing that member
         form = res.form
-        #print "dir(form): {}".format(dir(form))
-        print "form.fields: {}".format(form.fields)
-        #import pdb
-        #pdb.set_trace()
+
+        if DEBUG:
+            print "form.fields: {}".format(form.fields)
+
         self.assertTrue(u'SomeFirstn\xe4me' in form['firstname'].value)
 
         form['firstname'] = 'EinVorname'
@@ -228,14 +232,14 @@ class EditMemberTests(unittest.TestCase):
 
         # now we change details, really editing that member
         form = res.form
-        #print "dir(form): {}".format(dir(form))
-        print "form.fields: {}".format(form.fields)
-        #import pdb
-        #pdb.set_trace()
+        if DEBUG:
+            print "form.fields: {}".format(form.fields)
+
         #self.assertTrue(u'SomeFirstn\xe4me' in form['firstname'].value)
         form2['membership_accepted'] = True
         res2 = form2.submit('submit', status=302)
         res3 = res2.follow()
 
         m1 = C3sMember.get_by_id(1)
-        print m1.shares
+        if DEBUG:
+            print m1.shares  # yields []

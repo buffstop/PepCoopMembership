@@ -8,10 +8,10 @@ from pyramid_mailer.message import (
     Message,
     Attachment,
 )
-DEBUG = False
-#DEBUG = True
-
 from translationstring import TranslationStringFactory
+
+DEBUG = False
+# DEBUG = True
 
 _ = TranslationStringFactory('c3smembership')
 
@@ -49,8 +49,8 @@ country_codes = [
     ('XX', _(u'other'))
 ]
 
-    #locale_codes = request.registry.settings[
-    #    'available_languages'].split()
+# locale_codes = request.registry.settings[
+#    'available_languages'].split()
 locale_codes = [
     (u'de', _(u'Deutsch')),
     (u'en', _(u'Englisch')),

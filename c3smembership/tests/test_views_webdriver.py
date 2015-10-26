@@ -2,9 +2,9 @@
 import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support.ui import WebDriverWait
 # available since 2.4.0
-from selenium.webdriver.support import expected_conditions as EC
+# from selenium.webdriver.support import expected_conditions as EC
 # available since 2.26.0
 import time
 from subprocess import call
@@ -39,9 +39,10 @@ class JoinFormTests(SeleniumTestBase):
         call(['env/bin/pserve', 'development.ini', 'stop'])
 
     def test_form_submission_de(self):
-        from c3smembership.views import join_c3s  # trigger coverage
+        from c3smembership.views.afm import join_c3s  # trigger coverage
+        join_c3s
         self.driver.get("http://0.0.0.0:6543/?de")
-        #self.driver.maximize_window()
+        # self.driver.maximize_window()
         inputElement = self.driver.find_element_by_name("firstname")
         inputElement.send_keys("Christoph")
         self.driver.find_element_by_name('lastname').send_keys('Scheid')
@@ -72,7 +73,7 @@ class JoinFormTests(SeleniumTestBase):
         self.driver.find_element_by_name('deformField14').click()
         time.sleep(0.1)
         self.driver.find_element_by_name('other_colsoc').click()  # Yes
-        #self.driver.find_element_by_id('other_colsoc-1').click()  # No
+        # self.driver.find_element_by_id('other_colsoc-1').click()  # No
         time.sleep(0.1)
         self.driver.find_element_by_id(
             'colsoc_name').send_keys('GEMA')
@@ -96,7 +97,7 @@ class JoinFormTests(SeleniumTestBase):
         # TODO: check save to DB/randomstring: views.py 784-865
 
         # TODO: check re-edit of form: views.py 877-880 XXX
-        #self.failUnless('Angaben ändern' in self.driver.page_source)
+        # self.failUnless('Angaben ändern' in self.driver.page_source)
         self.driver.find_element_by_name('edit').click()
         # back to the form
         time.sleep(0.1)  # wait a little
@@ -106,9 +107,9 @@ class JoinFormTests(SeleniumTestBase):
             'firstname').get_attribute('value'), 'Christoph')
         self.assertEqual(self.driver.find_element_by_name(
             'email').get_attribute('value'), 'c@c3s.cc')
-        #self.assertEqual(self.driver.find_element_by_name(
+        # self.assertEqual(self.driver.find_element_by_name(
         #    'password').get_attribute('value'), 'foobar')
-        #print("the password: %s" % self.driver.find_element_by_name(
+        # print("the password: %s" % self.driver.find_element_by_name(
         #        'password').get_attribute('value'))
         self.assertEqual(self.driver.find_element_by_name(
             'address1').get_attribute('value'), 'addr one')
@@ -154,15 +155,14 @@ class JoinFormTests(SeleniumTestBase):
         self.assertTrue(
             'Bitte beachten: Es gab fehler' not in self.driver.page_source)
         self.assertTrue('addr two plus' in self.driver.page_source)
-        #print self.driver.page_source
-        #time.sleep(10)
+        # print self.driver.page_source
+        # time.sleep(10)
 
         self.driver.find_element_by_name('send_email').click()
         time.sleep(0.1)
-        #import pdb
-        #pdb.set_trace()
 
         page = self.driver.page_source
+
         self.assertTrue('C3S Mitgliedsantrag: Bitte Emails abrufen.' in page)
         self.assertTrue('Eine Email wurde verschickt,' in page)
         self.assertTrue('Christoph Scheid!' in page)
@@ -174,7 +174,7 @@ class JoinFormTests(SeleniumTestBase):
 
         self.assertTrue(u'Der Betreff der Email lautet:' in page)
         self.assertTrue(u'C3S: Email-Adresse' in page)
-        #self.assertTrue(u'tigen und Formular abrufen.' in page)
+        # self.assertTrue(u'tigen und Formular abrufen.' in page)
 
 
 class EmailVerificationTests(SeleniumTestBase):
@@ -225,19 +225,19 @@ class EmailVerificationTests(SeleniumTestBase):
 #    def test_foo(self):
 #        pass
 
-class DashboardPageObject(object):
-    def __init__(self):
-        pass
-        #ToDo: write page object
+# class DashboardPageObject(object):
+#     def __init__(self):
+#         pass
+#         # ToDo: write page object
 
 
-class OrderByTests(SeleniumTestBase):
-    def setUp(self):
-        super(OrderByTests, self).setUp()
-        self.driver.get('')
+# class OrderByTests(SeleniumTestBase):
+#     def setUp(self):
+#         super(OrderByTests, self).setUp()
+#         self.driver.get('')
 
-    def tearDown(self):
-        self.driver.quit()
+#     def tearDown(self):
+#         self.driver.quit()
 
-    def test(self):
-        url = "http://0.0.0.0:6543/dashboard/0/id/asc"
+#     def test(self):
+#         url = "http://0.0.0.0:6543/dashboard/0/id/asc"

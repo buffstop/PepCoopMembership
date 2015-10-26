@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from types import NoneType
@@ -6,7 +7,49 @@ from types import NoneType
 from c3smembership.models import (
     C3sMember,
     DBSession,
+    Shares,
 )
+
+
+@view_config(
+    route_name='fix_dob',
+    permission='manage')
+def fix_date_of_acquisition(request):
+    '''
+    fix the database: date of acquisition for shares must be corrected
+
+    the old way (old code) was the wrong way:
+    we used to choose the date we received the signature or payment
+    -- the later one -- to mark the date of acquisition,
+    when a new package of shares was attributed to a user.
+    but we need the date the board (VR) decided upon the approval.
+    '''
+    _num_total = Shares.get_number()
+    # print("the number of entries: {}".format(_num_total))
+    # print("the range: {}".format(range(_num_total)))
+    items_to_fix = []
+    for i in range(_num_total+1):
+        # print(i)
+        s = Shares.get_by_id(i)
+        if not isinstance(s, NoneType):
+            if (
+                    (s.date_of_acquisition > datetime(2013, 9, 25))
+                    and (s.date_of_acquisition < datetime(2014, 3, 29))
+            ):
+                # print("fixed: {}: {}".format(
+                #    s.id,
+                #    s.date_of_acquisition,
+                # ))
+                s.date_of_acquisition = datetime(2014, 3, 29)
+                items_to_fix.append(s.id)
+    # print("Done. {} shares packages needed fixing.".format(
+    #     len(items_to_fix)))
+
+    request.session.flash(
+        "Done. {} shares packages needed fixing.".format(len(items_to_fix)),
+        'message_to_staff'
+    )
+    return HTTPFound('toolbox')
 
 
 @view_config(route_name='fix_database',
@@ -16,12 +59,12 @@ def fix_database(request):
     fix the database: correct values/codes for countries
     '''
     _num_total = C3sMember.get_number()+1
-    #print "the number of entries: {}".format(_num_total)
-    #print "the range: {}".format(range(_num_total))
+    # print "the number of entries: {}".format(_num_total)
+    # print "the range: {}".format(range(_num_total))
     for i in range(_num_total):
         m = C3sMember.get_by_id(i)
         if not isinstance(m, NoneType):
-            #print u"country of id {}: {}".format(i, m.country)
+            # print u"country of id {}: {}".format(i, m.country)
             # deutschland
             if ((u'Deutschland' in m.country) or
                     (u'Germany' in m.country) or

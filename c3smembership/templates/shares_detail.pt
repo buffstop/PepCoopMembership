@@ -10,12 +10,10 @@
       Or go <a href="${request.route_url('dashboard_only')}">back to dashboard</a>.
     </p>
     <h1>Details for Shares #${s.id}</h1>
-    <a href="$ off {request.route_url('edit_shares', _id=member.id)}"
+    <a href="${request.route_url('shares_edit', id=s.id)}"
        class="btn btn-warning">
       bearbeiten</a>
-    <a href="/edit/$ off {member.id}"
-       class="btn btn-warning">edit</a>
-    <a href="$ off {request.route_url('delete_entry', memberid=member.id)}"
+    <a href="${request.route_url('shares_delete', id=s.id)}"
        class="btn btn-danger">delete</a>
     <table class="table table-striped">
       <tr>
@@ -29,8 +27,8 @@
       <tr>
         <td>whose shares?</td>
 	<td>
-          <a href="${request.route_url('detail', memberid=s.members[0].id)}">
-            ${s.members[0].id}: ${s.members[0].firstname} ${s.members[0].lastname}</a>
+          <a href="${request.route_url('detail', memberid=m_id)}">
+            ${m_id}: ${m_first} ${m_last}</a>
         </td>
       </tr>
       <tr>
