@@ -8,6 +8,211 @@ developing the c3sMembership application.
 
 
 
+.. _tracking_changes:
+
+----------------
+Tracking Changes
+----------------
+
+
+The application contains a `MarkDown <http://daringfireball.net/projects/
+markdown/>`_ formated file named ``CHANGES.md`` describing all the changes
+made for a specific release.
+
+New development which has not been released yet is documented on the top
+of the document below the section "Next Release".
+
+At the time of the release, this headline has to be changed to the
+corresponding release number.
+
+Changes should be documented with each single commit. They can be rewritten,
+combined and sumarized later on if it seems appropiate.
+
+
+
+---------------
+Branching Model
+---------------
+
+
+The development uses a branching model which is similar to `GitFlow
+<https://de.atlassian.com/git/tutorials/comparing-workflows/gitflow-
+workflow>`_ as `proposed by Vincent Driessen <http://nvie.com/posts/a-
+successful-git-branching-model/>`_ with some minor modifications.
+
+
+
+The Master Branch
+=================
+
+
+The basic idea is that the master branch is always in a stable state (opposed
+to Vincent Driessen's GitFlow where it only contains final releases).
+Currently it is our opinion that it is easier to keep the master branch as the
+main branch for development as developers who are not familiar with GitFlow
+will use it for this purpose anyway.
+
+
+
+Feature Branches
+================
+
+
+For the development of new features, a new feature branch is created from
+master. They follow the naming convention ``feature/1234`` with 1234 being
+the issues id in the `C3S issue tracker <https://chili.c3s.cc>`_.
+
+.. code-block:: console
+
+   $ git checkout master
+   $ git branch feature/1234
+   $ git checkout feature/1234
+
+After the development is finished and the code tested, the feature
+branch is merged into the master branch.
+
+.. code-block:: console
+
+   $ git checkout master
+   $ git merge feature/1234
+   $ git push origin master
+
+After being merged into the master branch, feature branches are removed
+from the repository, locally as well as on the remote.
+
+.. code-block:: console
+
+   $ # Delete the feature branch locally.
+   $ git branch -d feature/1234
+   $ # Delete the feature branch on the origin remote.
+   $ git push origin :feature/1234
+
+
+
+Release Branches
+================
+
+At some point the development aims for a release. At this point a release
+branch is created from the master branch. The naming convention for release
+branches is ``release/1.2.3`` with 1.2.3 being the version number of the
+coming release according to `Semantic Versioning Specification
+<http://semver.org/>`_.
+
+.. code-block:: console
+
+   $ git checkout master
+   $ git branch release/1.2.3
+   $ git checkout release/1.2.3
+
+This release branch separates the release development
+from the parallel development of new features. From this point on release
+fixes are only performed on the release branch.
+
+Release branches are removed from the local and remote repository after the
+release was made final (see :ref:`the_release`).
+
+.. code-block:: console
+
+   $ # Delete the release branch locally.
+   $ git branch -d release/1.2.3
+   $ # Delete the release branch on the origin remote
+   $ git push origin :release/1.2.3
+
+
+
+The UAT Branch
+==============
+
+
+A release at C3S goes through user acceptance tests (UAT) in which the users
+check the application for issues. It seems convenient to have a corresponding
+branch named "uat" which the states of the UAT system. Therefore, when UAT
+starts, the release branch is merged into the uat branch.
+
+.. code-block:: console
+
+   $ git checkout uat
+   $ git merge release/1.2.3
+   $ git push origin uat
+
+On the UAT system only needs to pull to get the designated code version.
+
+.. code-block:: console
+
+   user@uat:~/c3sMembership$ git pull
+
+Fixes during UAT are performed on the release branch and merged into the uat
+branch when the next version is ready for testing.
+
+
+
+.. _the_release:
+
+The Release
+===========
+
+
+Once the release passes UAT, it is made final. At this point the version
+number in CHANGE.md (see :ref:`tracking_changes`) as well as the file 
+`__init__.py <https://github.com/C3S/c3sMembership/blob/master/
+c3smembership/__init__.py>`_ which defines the python package version at its
+top.
+
+The repository then gets assigned the final version number as a git tag and
+is listed as a release in the `c3sMembership Github repository <https://
+github.com/C3S/c3sMembership/releases>`_. The commit creating the tag should
+contain all changes of the release from ``CHANGES.MD`` as its commit message.
+
+.. code-block:: console
+
+   $ git checkout release/1.2.3
+   $ # Change "Next Release" in CHANGES.md to 1.2.3:
+   $ nano CHANGES.md
+   $ # Set the version number in __init__.py to 1.2.3:
+   $ nano __init__.py
+   $ git commit -m "Set version number to 1.2.3."
+   $ git push release/1.2.3
+   $ # Copy change notes from CHANGES.md to the commit message of the tag:
+   $ git tag -a 1.2.3
+   $ git push origin 1.2.3
+
+Once the release is final, the code gets merged back into master and the
+release branch gets removed:
+
+.. code-block:: console
+
+   $ git checkout master
+   $ git merge release/1.2.3
+   $ git push origin master
+   $ # Delete the release branch locally.
+   $ git branch -d release/1.2.3
+   $ # Delete the release branch on the origin remote.
+   $ git push origin :release/1.2.3
+
+
+
+The Production Branch
+=====================
+
+
+Similar to the uat branch a branch named "production" is maintained
+representing the state of the production server running the application.
+Therefore, the final release gets merged into the production branch.
+
+.. code-block:: console
+
+   $ git checkout production
+   $ git merge 1.2.3
+   $ git push origin production
+
+A pull command gets the production server the code it needs:
+
+.. code-block:: console
+
+   user@prod:~/c3sMembership$ git pull
+
+
+
 ------------------
 Database Migration
 ------------------
