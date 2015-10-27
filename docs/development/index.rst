@@ -144,6 +144,8 @@ On the UAT system only needs to pull to get the designated code version.
 Fixes during UAT are performed on the release branch and merged into the uat
 branch when the next version is ready for testing.
 
+No commits are made to the uat branch except for merges with release branches.
+
 
 
 .. _the_release:
@@ -210,6 +212,9 @@ A pull command gets the production server the code it needs:
 .. code-block:: console
 
    user@prod:~/c3sMembership$ git pull
+
+No commits are made to the production branch except for merges with final
+releases.
 
 
 
