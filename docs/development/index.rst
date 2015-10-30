@@ -88,6 +88,7 @@ from the repository, locally as well as on the remote.
    $ git push origin :feature/1234
 
 
+.. _release_branches:
 
 Release Branches
 ================
@@ -119,6 +120,8 @@ release was made final (see :ref:`the_release`).
    $ git push origin :release/1.2.3
 
 
+
+.. _the_uat_branch:
 
 The UAT Branch
 ==============
@@ -215,6 +218,48 @@ A pull command gets the production server the code it needs:
 
 No commits are made to the production branch except for merges with final
 releases.
+
+
+
+Hotfix Branches
+===============
+
+
+Hotfix branches are somewhat similar to :ref:`release_branches`. They are
+created in case a fix needs to be performed on the production state
+without wanting to integrate the fix into the normal feature release process.
+
+The reason for not going through the normal feature release process might be
+that it would take too much time. When fixing an issues via a feature
+branch and merging it into the master branch afterwards, not only the fix
+goes through the normal release process but all new features which have been
+developed since the last release and which already reside on the master
+branch.
+
+Instead, a hotfix branch can be created from the production branch.
+
+.. code-block:: console
+
+   $ git checkout production
+   $ git branch hotfix/1.2.3
+   $ git checkout hotfix/1.2.3
+
+Hotfixes should also go through the UAT phase in case they require user
+testing and approval.
+
+The release process of hotfixes does not differ from the one which applies to
+:ref:`release_branches`. Hotfixes can be seen as special release branches
+which just branch from production instead of master.
+
+Hotfix branches are removed from the local and remote repository after
+:ref:`the_release` was made final.
+
+.. code-block:: console
+
+   $ # Delete the release branch locally.
+   $ git branch -d hotfix/1.2.3
+   $ # Delete the release branch on the origin remote
+   $ git push origin :hotfix/1.2.3
 
 
 

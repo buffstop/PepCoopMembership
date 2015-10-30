@@ -32,10 +32,16 @@ Next Release
 - Make the link to the Cultural Commons Manifesto language specific in order
   to show the C3S website in the corresponding language.
 
-- Add documentation about internationalization of template and python files.
-
 - Fix several internationalization issues with the membership application
   formular.
+
+- Documentation:
+
+  - Use version number from python package.
+
+  - Document development branching model.
+
+  - Document internationalization of template and python files.
 
 
 
