@@ -1,3 +1,11 @@
+Next Release
+============
+
+
+- Fix permissions for reversal invoice generation as users cannot access it.
+
+
+
 1.11.1
 ======
 
