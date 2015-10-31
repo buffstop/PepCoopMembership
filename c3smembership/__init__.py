@@ -2,7 +2,7 @@
 This module holds the main method: config and route declarations
 """
 
-__version__ = '1.11.1'
+__version__ = '1.11.2'
 
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
