@@ -174,7 +174,7 @@ contain all changes of the release from ``CHANGES.MD`` as its commit message.
    $ # Change "Next Release" in CHANGES.md to 1.2.3:
    $ nano CHANGES.md
    $ # Set the version number in __init__.py to 1.2.3:
-   $ nano __init__.py
+   $ nano c3smembership/__init__.py
    $ git commit -m "Set version number to 1.2.3."
    $ git push release/1.2.3
    $ # Copy change notes from CHANGES.md to the commit message of the tag:
