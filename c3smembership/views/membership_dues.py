@@ -975,9 +975,7 @@ def dues15_reduction(request):
         '#dues15')
 
 
-@view_config(
-    route_name='make_reversal_invoice_pdf',
-    permission='manage')
+@view_config(route_name='make_reversal_invoice_pdf')
 def make_reversal_invoice_pdf(request):
     """
     This view checks supplied information (in URL) against info in database
