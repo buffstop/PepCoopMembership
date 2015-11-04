@@ -15,8 +15,8 @@ Tracking Changes
 ----------------
 
 
-The application contains a `MarkDown <http://daringfireball.net/projects/
-markdown/>`_ formated file named ``CHANGES.md`` describing all the changes
+The application contains a `reStructuredText <http://docutils.sourceforge.net/
+rst.html>`_ formatted file named ``CHANGES.rst`` describing all the changes
 made for a specific release.
 
 New development which has not been released yet is documented on the top
@@ -165,21 +165,21 @@ c3smembership/version.py>`_ which defines the python package version.
 The repository then gets assigned the final version number as a git tag and
 is listed as a release in the `c3sMembership Github repository <https://
 github.com/C3S/c3sMembership/releases>`_. The commit creating the tag should
-contain all changes of the release from ``CHANGES.MD`` as its commit message.
+contain all changes of the release from ``CHANGES.rst`` as its commit message.
 
 .. code-block:: console
 
    $ git checkout release/1.2.3
-   $ # Change "Next Release" in CHANGES.md to 1.2.3:
-   $ nano CHANGES.md
-   $ git add CHANGES.md
+   $ # Change "Next Release" in CHANGES.rst to 1.2.3:
+   $ nano CHANGES.rst
+   $ git add CHANGES.rst
    $ # Set the version number in __init__.py to 1.2.3:
    $ nano c3smembership/version.py
    $ git add c3smembership/version.py
    $ # Commit and push to remote:
    $ git commit -m "Set version number to 1.2.3."
    $ git push release/1.2.3
-   $ # Copy change notes from CHANGES.md to the commit message of the tag:
+   $ # Copy change notes from CHANGES.rst to the commit message of the tag:
    $ git tag -a 1.2.3
    $ git push origin 1.2.3
 

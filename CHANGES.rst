@@ -1,6 +1,7 @@
 Next Release
 ============
 
+
 - Include version information into dashboard view and template. Create
   helper class GitTools to provide git information about tags, branches and
   commits.
@@ -69,6 +70,7 @@ Next Release
 1.11
 ====
 
+
 - Introduce membership dues handling. Dues are calculated per quarter
   depending on the membership duration.
 
@@ -102,6 +104,7 @@ Next Release
 1.10.2
 ======
 
+
 - Fix jQuery path in dashboard template which was preventing the
   confirmation dialog for deleting a member to be shown. Made sure that
   a wrong jQuery path would not allow deletions without confirmation dialog
@@ -129,6 +132,7 @@ Next Release
 
 1.10.1
 ======
+
 
 - Remove column "BC/GV" from Application for Membership dashboard. Emails
   were sent without confirmation when clicking the button.
