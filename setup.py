@@ -23,13 +23,14 @@ requires = [
     'pyramid_mailer',
     'pyramid_tm',
     'python-gnupg',
-    'repoze.sendmail>=4.1',
+    'repoze.sendmail==4.1',  # pin to 4.1 because of repoze/repoze.sendmail#31
+    # see https://github.com/repoze/repoze.sendmail/issues/31
     'SQLAlchemy',
     'transaction',
     'unicodecsv',
     'waitress',
     'zope.sqlalchemy',
-    'sphinx', # for generating the documentation
+    'sphinx',  # for generating the documentation
 ]
 # for the translations machinery using transifex you also need to
 # "pip install transifex-client"
@@ -37,7 +38,7 @@ test_requirements = [
     'coverage',
     'nose',
     'pdfminer',  # and its dependency
-    'mock', # for creating mock objects
+    'mock',  # for creating mock objects
     'pyquery',
     'selenium',
     'slate',  # pdf to text helper
