@@ -2,15 +2,19 @@
 Requirements Specification
 ##########################
 
-The requirements specification is used to track the requirements of the existing c3sMembership application as well as new requirements for future development.
+The requirements specification is used to track the requirements of the existing
+c3sMembership application as well as new requirements for future development.
 
-The approach and document structure are inspired by the book "Requirements Engineering Fundamentals" by Chris Rupp and Klaus Pohl (English ISBN 978-1-93753-877-4, German ISBN 978-3-86490-283-3).
+The approach and document structure are inspired by the book "Requirements
+Engineering Fundamentals" by Chris Rupp and Klaus Pohl
+(English ISBN 978-1-93753-877-4, German ISBN 978-3-86490-283-3).
 
 Authors:
 
 - Sarah Stoffels
 - Markus Lorenz, mrks@lrnz.name
 - Eva Bolten
+- Christoph Scheid
 
 
 
@@ -19,12 +23,17 @@ Introduction
 ============
 
 
-The application C3S Membership Administration (c3sMembership) is used to manage members of the C3S SCE. It focuses on the automation and support of business processes for membership application, accounting and others.
+The application C3S Membership Administration (c3sMembership) is used to manage
+members of the C3S SCE.
+It focuses on the automation and support of business processes
+for membership application, accounting and others.
 
 This documents covers the following perspectives:
 
-- Business perspective: it describes the business processes in whose context the application is used
-- Structural perspective: specification of data structures which the application deals with
+- Business perspective: it describes the business processes
+  in whose context the application is used
+- Structural perspective: specification of data structures
+  which the application deals with
 - Functional perspective: the workflows which the application covers
 - Behavioural perspective: the use cases
 
@@ -47,7 +56,10 @@ The requirements are gathered from stakeholders and existing documentation.
 
 Stakeholders are the uses of the application:
 
-- Financial accounting: for working with membership applications, invoices, payments, analyses, working with certain membership data (e.g. adresses, date of entry, date of cancellation), generating of legally required membership list [GenG_Mitgliederliste]_
+- Financial accounting: for working with membership applications, invoices,
+  payments, analyses, working with certain membership data
+  (e.g. adresses, date of entry, date of cancellation),
+  generating of legally required membership list [GenG_Mitgliederliste]_
 - Cooperative members: for registering, receiving information and invoices
 
 **TODO:** *Investigate existing documentation.*
@@ -59,7 +71,10 @@ Risks
 =====
 
 
-The C3S Membership Administration application is already in production and being used. The introduction of changes therefore requires extensive testing to provide a high reliability. The potential damages through a loss of data could be disastrous.
+The C3S Membership Administration application is already in production and
+being used. The introduction of changes therefore requires extensive testing
+to provide a high reliability.
+The potential damages through a loss of data could be disastrous.
 
 
 
@@ -68,7 +83,8 @@ System Context
 ==============
 
 
-The system consists of a publicly accessible part for membership application and a restricted area for administration.
+The system consists of a publicly accessible part for membership application
+and a restricted area for administration.
 
 Interfaces exist for importing and exporting data.
 
@@ -81,7 +97,14 @@ Business Processes
 ==================
 
 
-Business processes are the basis of the application. They would even function with pen and paper but shall be technically supported and by the application. Therefore, this chapter describes and explains the business processes from which use cases and the majority of business and technical requirements can be derived. The business processes themselves are independent from the technology which helps living them.
+Business processes are the basis of the application.
+They would even function with pen and paper but shall be technically supported
+and by the application.
+Therefore, this chapter describes and explains the business processes
+from which use cases and the majority of business and technical requirements
+can be derived.
+The business processes themselves are independent from the technology which
+helps living them.
 
 
 
@@ -90,7 +113,14 @@ Membership Application
 ----------------------
 
 
-A signed and fully filled membership application is required. Furthermore, the payment for the shares which shall be acquired must have arrived. Then the membership can be approved or declined by the governing board. The decision of the governing board must be recorded on the member's record in the membership list.
+A signed and fully filled membership application is required.
+Furthermore, the payment for the shares which shall be acquired must have
+arrived.
+One share is required for membership.
+Then the membership can be approved or declined by the governing board.
+The decision of the governing board must be recorded on the member's record
+in the membership list.
+
 
 **TODO:** *Clarification of legal rules and regulations including the C3S statue which motivate the process.*
 
@@ -101,11 +131,16 @@ Membership Resignation
 ----------------------
 
 
-A member can resign from C3S by application. Therefore, a signed application of resignation needs to be provided by the member. The membership is then terminated by the end of the following year.
+A member can resign from C3S by application.
+Therefore, a signed application of resignation needs to be provided
+by the member.
+The membership is then terminated by the end of the following year.
 
 **TODO:**
 
 - *Check and reference statute*
+  * http://archive.c3s.cc/legal/C3S_en_v1.0.pdf
+  * http://archive.c3s.cc/legal/C3S_de_v1.0.pdf
 - *Does the payback of the shares' value only depend on the financial situation?*
 - *Clarification of legal rules and regulations including the C3S statue which motivate the process.*
 
@@ -115,8 +150,13 @@ A member can resign from C3S by application. Therefore, a signed application of 
 Additional Acquisition of Shares
 --------------------------------
 
+Membership 
+A member can acquire additional shares by application.
+The number of shares must be at most 60.
+As one share costs 50 Euros, this amounts to a maximum of 3000 Euros
+any member can deposit.
 
-A member can acquire additional shares by application. The number of shares must be at most 30. The payment for the additional shares needs to be received and the board of directory needs to approve.
+The payment for the additional shares needs to be received and the board of directory needs to approve.
 
 **TODO:** *Clarification of legal rules and regulations including the C3S statue which motivate the process.*
 
@@ -527,14 +567,11 @@ Quality Requiremements
 
 
 
-..
+===========
+Open Topics
+===========
 
-   The section "Open Topics" is hidden because it's currently not used. Remove ".." and indentation to use it.
-
-   ===========
-   Open Topics
-   ===========
-
+TODO...
 
 
 ========
