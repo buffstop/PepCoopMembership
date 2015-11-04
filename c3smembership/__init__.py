@@ -2,8 +2,6 @@
 This module holds the main method: config and route declarations
 """
 
-__version__ = '1.11.2'
-
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
@@ -16,6 +14,9 @@ from c3smembership.security import (
 from pyramid_beaker import session_factory_from_settings
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
+
+from pkg_resources import get_distribution
+__version__ = get_distribution('c3sMembership').version
 
 
 def main(global_config, **settings):
