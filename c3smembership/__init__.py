@@ -52,7 +52,7 @@ def main(global_config, **settings):
                            'c3smembership:static', cache_max_age=3600)
     config.add_static_view(
         'docs',
-        'static_docs', cache_max_age=3600)
+        '../docs/_build/html/', cache_max_age=3600)
 
     config.add_subscriber('c3smembership.subscribers.add_base_template',
                           'pyramid.events.BeforeRender')
