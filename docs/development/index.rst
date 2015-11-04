@@ -159,9 +159,8 @@ The Release
 
 Once the release passes UAT, it is made final. At this point the version
 number in CHANGE.md (see :ref:`tracking_changes`) as well as the file 
-`__init__.py <https://github.com/C3S/c3sMembership/blob/master/
-c3smembership/__init__.py>`_ which defines the python package version at its
-top.
+`version.py <https://github.com/C3S/c3sMembership/blob/master/
+c3smembership/version.py>`_ which defines the python package version.
 
 The repository then gets assigned the final version number as a git tag and
 is listed as a release in the `c3sMembership Github repository <https://
@@ -175,8 +174,8 @@ contain all changes of the release from ``CHANGES.MD`` as its commit message.
    $ nano CHANGES.md
    $ git add CHANGES.md
    $ # Set the version number in __init__.py to 1.2.3:
-   $ nano c3smembership/__init__.py
-   $ git add c3smembership/__init__.py
+   $ nano c3smembership/version.py
+   $ git add c3smembership/version.py
    $ # Commit and push to remote:
    $ git commit -m "Set version number to 1.2.3."
    $ git push release/1.2.3
