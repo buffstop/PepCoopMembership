@@ -1,6 +1,7 @@
 Next Release
 ============
 
+
 - Include version information into dashboard view and template. Create
   helper class GitTools to provide git information about tags, branches and
   commits.
@@ -27,7 +28,8 @@ Next Release
 
 - Fix several template HTML syntax errors.
 
-- Fix setup.py which was referencing CHANGES.txt instead of CHANGES.md.
+- Fix setup.py which was referencing CHANGES.txt instead of CHANGES.md which
+  is now CHANGES.rst.
 
 - Make the link to the Cultural Commons Manifesto language specific in order
   to show the C3S website in the corresponding language.

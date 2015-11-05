@@ -248,7 +248,8 @@ def accountants_desk(request):
     version_number = c3smembership.__version__
     version_location_url = None
     version_location_name = None
-    if request.registry.settings['c3smembership.runmode'] == 'dev':
+    if 'c3smembership.runmode' in request.registry.settings and \
+            request.registry.settings['c3smembership.runmode'] == 'dev':
         # retrieving git information is expensive and therefore only
         # displayed in development mode
         git_tag = GitTools.get_tag()
