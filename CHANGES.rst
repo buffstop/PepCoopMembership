@@ -1,7 +1,6 @@
 Next Release
 ============
 
-
 - Include version information into dashboard view and template. Create
   helper class GitTools to provide git information about tags, branches and
   commits.
@@ -43,6 +42,8 @@ Next Release
   - Document development branching model.
 
   - Document internationalization of template and python files.
+
+- Extended statistics for a monthly summary of membership invoices.
 
 
 

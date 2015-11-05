@@ -76,6 +76,47 @@
     </table>
     <h5>XXX TODO Auflistung nach PLZ... grafische übersicht</h5> 
 
+    <h3 i18n:translate="stats-dues">Dues 2015</h3>
+    <table class="table table-striped">
+      <thead>
+          <tr>
+              <th i18n:translate="stats-dues-month">Month</th>
+              <th i18n:translate="stats-dues-sum-normal">Normal invoices sum</th>
+              <th i18n:translate="stats-dues-sum-reversal">Reversal invoices sum</th>
+              <th i18n:translate="stats-dues-sum-total">Invoices sum total</th>
+          </tr>
+      </thead>
+      <tbody>
+          <?python
+              from babel.core import Locale
+              user_locale = Locale(request.locale_name)
+              from babel import numbers
+
+              normal_invoices_sum_total = 0
+              reversal_invoices_sum_total = 0
+              invoices_sum_total = 0
+          ?>
+          <tr tal:repeat="dues_stat dues_stats">
+              <?python
+                  normal_invoices_sum_total = normal_invoices_sum_total + dues_stat['normal_invoices_sum']
+                  reversal_invoices_sum_total = reversal_invoices_sum_total + dues_stat['reversal_invoices_sum']
+              ?>
+              <td>${dues_stat.month.strftime('%Y-%m')}</td>
+              <td>${numbers.format_decimal(dues_stat.normal_invoices_sum, locale=user_locale)}&nbsp;&euro;</td>
+              <td>${numbers.format_decimal(dues_stat.reversal_invoices_sum, locale=user_locale)}&nbsp;&euro;</td>
+              <td>${numbers.format_decimal(dues_stat.normal_invoices_sum + dues_stat.reversal_invoices_sum, locale=user_locale)}&nbsp;&euro;</td>
+          </tr>
+      </tbody>
+      <tfoot>
+          <tr>
+              <th i18n:translate="stats-dues-total">Total</th>
+              <th>${numbers.format_decimal(normal_invoices_sum_total)}&nbsp;&euro;</th>
+              <th>${numbers.format_decimal(reversal_invoices_sum_total)}&nbsp;&euro;</th>
+              <th>${numbers.format_decimal(normal_invoices_sum_total + reversal_invoices_sum_total)}&nbsp;&euro;</th>
+          </tr>
+      </tfoot>
+    </table>
+
     <h3>Staff</h3>
     <p>
       Wie viele Accounts gibt es? ${num_staff}<br />

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-10-23 13:53+0200\n"
+"POT-Creation-Date: 2015-11-03 23:26+0100\n"
 "PO-Revision-Date: 2015-09-10 12:58+0100\n"
 "Last-Translator: Christoph Scheid <christoph.scheid@c3s.cc>\n"
 "Language-Team: de <LL@li.org>\n"
@@ -27,55 +27,44 @@ msgstr "Login"
 msgid "password"
 msgstr "Passwort"
 
-#: c3smembership/accountants_views.py:125
-#: c3smembership/accountants_views.py:482 c3smembership/administration.py:616
+#: c3smembership/accountants_views.py:125 c3smembership/administration.py:616
 #: c3smembership/annual_accounting.py:66 c3smembership/edit_member.py:346
 #: c3smembership/new_member.py:224 c3smembership/shares_views.py:94
-#: c3smembership/views/afm.py:388
+#: c3smembership/views/afm.py:390
 msgid "Submit"
 msgstr "Absenden"
 
-#: c3smembership/accountants_views.py:126
-#: c3smembership/accountants_views.py:483 c3smembership/administration.py:617
+#: c3smembership/accountants_views.py:126 c3smembership/administration.py:617
 #: c3smembership/edit_member.py:347 c3smembership/new_member.py:225
-#: c3smembership/views/afm.py:389
+#: c3smembership/views/afm.py:391
 msgid "Reset"
 msgstr "Löschen"
 
-#: c3smembership/accountants_views.py:139
-#: c3smembership/accountants_views.py:498 c3smembership/administration.py:640
+#: c3smembership/accountants_views.py:139 c3smembership/administration.py:640
 #: c3smembership/annual_accounting.py:91 c3smembership/edit_member.py:363
 #: c3smembership/new_member.py:263 c3smembership/shares_views.py:111
-#: c3smembership/views/afm.py:413
+#: c3smembership/views/afm.py:415
 msgid "Please note: There were errors, please check the form below."
 msgstr "Bitte beachten: Es gab Fehler. Bitte Eingaben unten korrigieren."
 
-#: c3smembership/accountants_views.py:471
-msgid "Have we received a good signature?"
-msgstr "Ist ein unterschriebenes Formular eingegangen?"
-
-#: c3smembership/accountants_views.py:475
-msgid "Have we received payment for the shares?"
-msgstr "Gab es einen Geldeingang in Höhe der Anteile?"
-
 #: c3smembership/administration.py:559 c3smembership/edit_member.py:248
-#: c3smembership/new_member.py:124 c3smembership/views/afm.py:232
-#: c3smembership/views/afm.py:338
+#: c3smembership/new_member.py:124 c3smembership/views/afm.py:234
+#: c3smembership/views/afm.py:340
 msgid "Yes"
 msgstr "Ja"
 
 #: c3smembership/administration.py:560 c3smembership/edit_member.py:249
-#: c3smembership/new_member.py:125 c3smembership/views/afm.py:233
+#: c3smembership/new_member.py:125 c3smembership/views/afm.py:235
 msgid "No"
 msgstr "Nein"
 
-#: c3smembership/administration.py:563 c3smembership/views/afm.py:263
+#: c3smembership/administration.py:563 c3smembership/views/afm.py:265
 msgid ""
 "I want to become a ... (choose membership type, see C3S SCE statute sec. "
 "4)"
 msgstr "Ich möchte ... (Art der Mitgliedschaft auswählen, siehe Satzung § 4)"
 
-#: c3smembership/administration.py:565 c3smembership/views/afm.py:265
+#: c3smembership/administration.py:565 c3smembership/views/afm.py:267
 msgid "choose the type of membership."
 msgstr "Wähle die Art der Mitgliedschaft."
 
@@ -92,7 +81,7 @@ msgstr ""
 "Remixer_innen und ausübende Musiker_innen zu. Sie erhalten volles "
 "Stimmrecht."
 
-#: c3smembership/administration.py:574 c3smembership/views/afm.py:275
+#: c3smembership/administration.py:574 c3smembership/views/afm.py:277
 msgid ""
 "INVESTING member. Investing members can be natural or legal entities or "
 "private companies that do not register works with C3S. They do not get a "
@@ -104,7 +93,7 @@ msgstr ""
 "Verlage oder Rechtsnachfolger von  Urheber_innen zu. Sie erhalten kein "
 "Stimmrecht, können aber beraten."
 
-#: c3smembership/administration.py:584 c3smembership/views/afm.py:299
+#: c3smembership/administration.py:584 c3smembership/views/afm.py:301
 msgid "Currently, I am a member of (at least) one other collecting society."
 msgstr ""
 "Ich bin derzeit Mitglied (mindestens) einer anderen "
@@ -124,7 +113,7 @@ msgstr ""
 
 #: c3smembership/administration.py:608 c3smembership/edit_member.py:335
 #: c3smembership/new_member.py:213 c3smembership/templates/success.pt:36
-#: c3smembership/views/afm.py:377
+#: c3smembership/views/afm.py:379
 msgid "Membership Requirements"
 msgstr "Voraussetzungen der Mitgliedschaft"
 
@@ -134,13 +123,13 @@ msgstr "E-Mail-Adresse"
 
 #: c3smembership/edit_member.py:164 c3smembership/edit_member.py:188
 #: c3smembership/edit_member.py:217 c3smembership/edit_member.py:232
-#: c3smembership/new_member.py:110 c3smembership/views/afm.py:203
+#: c3smembership/new_member.py:110 c3smembership/views/afm.py:205
 msgid "${val} is earlier than earliest date ${min}"
 msgstr "${val} liegt vor dem frühesten Datum ${min}"
 
 #: c3smembership/edit_member.py:165 c3smembership/edit_member.py:189
 #: c3smembership/edit_member.py:218 c3smembership/edit_member.py:233
-#: c3smembership/new_member.py:111 c3smembership/views/afm.py:204
+#: c3smembership/new_member.py:111 c3smembership/views/afm.py:206
 msgid "${val} is later than latest date ${max}"
 msgstr "${val} liegt nach dem spätesten Datum ${max}"
 
@@ -165,7 +154,7 @@ msgid "Zahlung eingegangen"
 msgstr "Zahlung eingegangen"
 
 #: c3smembership/edit_member.py:329 c3smembership/new_member.py:208
-#: c3smembership/templates/success.pt:24 c3smembership/views/afm.py:374
+#: c3smembership/templates/success.pt:24 c3smembership/views/afm.py:376
 msgid "Personal Data"
 msgstr "Persönliche Angaben"
 
@@ -174,7 +163,7 @@ msgid "Membership Bureaucracy"
 msgstr "Mitgliedschaftsbürokratie"
 
 #: c3smembership/edit_member.py:338 c3smembership/new_member.py:216
-#: c3smembership/templates/success.pt:44 c3smembership/views/afm.py:380
+#: c3smembership/templates/success.pt:44 c3smembership/views/afm.py:382
 msgid "Shares"
 msgstr "Genossenschaftsanteile"
 
@@ -518,6 +507,36 @@ msgstr "Dein C3S Team"
 msgid "Support fair remuneration for artists"
 msgstr "Dein Beitrag zu fairer Bezahlung für Musiker"
 
+#. Default: Dues 2015
+#: c3smembership/templates/stats.pt:79
+msgid "stats-dues"
+msgstr "Mitgliedsbeiträge 2015"
+
+#. Default: Month
+#: c3smembership/templates/stats.pt:83
+msgid "stats-dues-month"
+msgstr "Monat"
+
+#. Default: Normal invoices sum
+#: c3smembership/templates/stats.pt:84
+msgid "stats-dues-sum-normal"
+msgstr "Rechnungssumme Normal"
+
+#. Default: Reversal invoices sum
+#: c3smembership/templates/stats.pt:85
+msgid "stats-dues-sum-reversal"
+msgstr "Rechnungssumme Reversal"
+
+#. Default: Invoices sum total
+#: c3smembership/templates/stats.pt:86
+msgid "stats-dues-sum-total"
+msgstr "Rechnungssumme Gesamt"
+
+#. Default: Total
+#: c3smembership/templates/stats.pt:112
+msgid "stats-dues-total"
+msgstr "Gesamt"
+
 #. Default: C3S SCE Statute
 #: c3smembership/templates/statute.pt:9
 msgid "statute-title"
@@ -559,11 +578,11 @@ msgstr ""
 msgid "success-headline-data-received"
 msgstr "Wir haben folgende Daten erhalten"
 
-#: c3smembership/templates/success.pt:26 c3smembership/views/afm.py:135
+#: c3smembership/templates/success.pt:26 c3smembership/views/afm.py:137
 msgid "(Real) First Name"
 msgstr "Vorname"
 
-#: c3smembership/templates/success.pt:27 c3smembership/views/afm.py:140
+#: c3smembership/templates/success.pt:27 c3smembership/views/afm.py:142
 msgid "(Real) Last Name"
 msgstr "Nachname"
 
@@ -571,11 +590,11 @@ msgstr "Nachname"
 msgid "Email"
 msgstr "E-Mail"
 
-#: c3smembership/templates/success.pt:29 c3smembership/views/afm.py:161
+#: c3smembership/templates/success.pt:29 c3smembership/views/afm.py:163
 msgid "Address Line 1"
 msgstr "Straße und Hausnummer"
 
-#: c3smembership/templates/success.pt:30 c3smembership/views/afm.py:166
+#: c3smembership/templates/success.pt:30 c3smembership/views/afm.py:168
 msgid "Address Line 2"
 msgstr "Adresszusatz"
 
@@ -583,15 +602,15 @@ msgstr "Adresszusatz"
 msgid "Post Code"
 msgstr "Postleitzahl"
 
-#: c3smembership/templates/success.pt:32 c3smembership/views/afm.py:175
+#: c3smembership/templates/success.pt:32 c3smembership/views/afm.py:177
 msgid "City"
 msgstr "Ort"
 
-#: c3smembership/templates/success.pt:33 c3smembership/views/afm.py:184
+#: c3smembership/templates/success.pt:33 c3smembership/views/afm.py:186
 msgid "Country"
 msgstr "Land"
 
-#: c3smembership/templates/success.pt:34 c3smembership/views/afm.py:196
+#: c3smembership/templates/success.pt:34 c3smembership/views/afm.py:198
 msgid "Date of Birth"
 msgstr "Geburtsdatum"
 
@@ -703,15 +722,15 @@ msgstr ""
 msgid "load-pdf-further-instructions-on-page-2"
 msgstr "Diese und weitere Informationen findest Du auf Seite 2 des PDF."
 
-#: c3smembership/views/afm.py:145
+#: c3smembership/views/afm.py:147
 msgid "Email Address"
 msgstr "E-Mail-Adresse"
 
-#: c3smembership/views/afm.py:153
+#: c3smembership/views/afm.py:155
 msgid "Password (to protect access to your data)"
 msgstr "Passwort (schützt Deine Daten)"
 
-#: c3smembership/views/afm.py:154
+#: c3smembership/views/afm.py:156
 msgid ""
 "We need a password to protect your data. After verifying your email you "
 "will have to enter it."
@@ -719,15 +738,12 @@ msgstr ""
 "Wir brauchen ein Passwort, um deine Daten zu schützen. Nach der "
 "Bestätigung der E-Mail-Adresse wird es abgefragt."
 
-#: c3smembership/views/afm.py:170
+#: c3smembership/views/afm.py:172
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#: c3smembership/views/afm.py:269
+#: c3smembership/views/afm.py:271
 #, fuzzy
-#| msgid "" "FULL member. Full members have to be natural persons who register
-#| at " "least three works with C3S they created themselves. This applies to "
-#| "composers, lyricists and remixers. They get a vote."
 msgid ""
 "FULL member. Full members have to be natural persons who register at "
 "least three works they created themselves with C3S. This applies to "
@@ -740,13 +756,13 @@ msgstr ""
 "Remixer_innen und ausübende Musiker_innen zu. Sie erhalten volles "
 "Stimmrecht."
 
-#: c3smembership/views/afm.py:309
+#: c3smembership/views/afm.py:311
 msgid ""
 "If so, which one(s)? Please separate multiple collecting societies by "
 "comma."
 msgstr "Falls ja, welche? Mehrere Nennungen bitte durch Komma getrennt."
 
-#: c3smembership/views/afm.py:311
+#: c3smembership/views/afm.py:313
 msgid ""
 "Please tell us which collecting societies you are a member of. If more "
 "than one, please separate them by comma."
@@ -754,16 +770,14 @@ msgstr ""
 "Bitte nenne uns die Verwertungsgesellschaft(en), in denen Du Mitglied "
 "bist. Mehrere Nennungen bitte durch Komma getrennt"
 
-#: c3smembership/views/afm.py:325
+#: c3smembership/views/afm.py:327
 msgid "You must confirm to have access to the C3S SCE statute"
 msgstr ""
 "Du musst bestätigen, die Satzung der C3S SCE in elektronischer Form zur "
 "Verfügung gestellt bekommen zu haben. (Link zun Download siehe unten)"
 
-#: c3smembership/views/afm.py:330
+#: c3smembership/views/afm.py:332
 #, fuzzy
-#| msgid "" "An electronic copy of the statute of the C3S SCE has been made
-#| available " "to me (see link below)."
 msgid ""
 "An electronic copy of the statute of the C3S SCE has been made available "
 "to me. (see link below)"
@@ -771,14 +785,12 @@ msgstr ""
 "Die Satzung ist mir in elektronischer Form zur Verfügung gestellt worden "
 "(siehe Link unten)."
 
-#: c3smembership/views/afm.py:333
+#: c3smembership/views/afm.py:335
 msgid "You must confirm to have access to the statute."
 msgstr "Du musst bestätigen, Zugriff auf die Satzung gehabt zu haben."
 
-#: c3smembership/views/afm.py:350
+#: c3smembership/views/afm.py:352
 #, fuzzy
-#| msgid "" "I want to buy the following number of Shares (50 € each, up to
-#| 3000 €, " "C3S statute sec. 5):"
 msgid ""
 "I want to buy the following number of Shares (50€ each, up to 3000€, see "
 "C3S statute sec. 5)"
@@ -786,23 +798,23 @@ msgstr ""
 "Ich erwerbe die folgende Anzahl Anteile (50 € pro Anteil, höchstens 3000 "
 "€, Satzung § 5):"
 
-#: c3smembership/views/afm.py:353
+#: c3smembership/views/afm.py:355
 msgid "You can choose any amount of shares between 1 and 60."
 msgstr "Du kannst eine Anzahl von Anteilen zwischen 1 und 60 auswählen."
 
-#: c3smembership/views/afm.py:361
+#: c3smembership/views/afm.py:363
 msgid "You need at least one share of 50 €."
 msgstr "Du brauchst mindestens einen Anteil zu 50 €."
 
-#: c3smembership/views/afm.py:362
+#: c3smembership/views/afm.py:364
 msgid "You may choose 60 shares at most (3000 €)."
 msgstr "Du darfst höchstens 60 Anteile auswählen (3000€)."
 
-#: c3smembership/views/afm.py:582
+#: c3smembership/views/afm.py:584
 msgid "C3S: confirm your email address and load your PDF"
 msgstr "C3S: Bestätige deine E-Mail-Adresse und lade Dein PDF"
 
-#: c3smembership/views/afm.py:668
+#: c3smembership/views/afm.py:670
 msgid ""
 "Not found. Check verification URL. If all seems right, please use the "
 "form again."
@@ -810,18 +822,25 @@ msgstr ""
 "Nicht gefunden. Bitte Bestätigungs-URL überprüfen. Wenn alles richtig "
 "sein müsste, bitte das Formular nochmals benutzen."
 
-#: c3smembership/views/afm.py:683
+#: c3smembership/views/afm.py:685
 msgid "Wrong Password!"
 msgstr "Falsches Passwort"
 
-#: c3smembership/views/afm.py:734
+#: c3smembership/views/afm.py:736
 msgid "Success. Load your PDF!"
 msgstr "Erfolg. Lade Dein PDF!"
 
-#: c3smembership/views/afm.py:739
+#: c3smembership/views/afm.py:741
 msgid "Please enter your password."
 msgstr "Bitte das Passwort eingeben."
 
-#: c3smembership/views/afm.py:784
+#: c3smembership/views/afm.py:786
 msgid "[yes][ALERT] check the logs!"
 msgstr "[yes][ALERT] Prüfe die Log-Dateien."
+
+#~ msgid "Have we received a good signature?"
+#~ msgstr "Ist ein unterschriebenes Formular eingegangen?"
+
+#~ msgid "Have we received payment for the shares?"
+#~ msgstr "Gab es einen Geldeingang in Höhe der Anteile?"
+

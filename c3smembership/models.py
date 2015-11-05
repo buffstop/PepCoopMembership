@@ -28,6 +28,7 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.sql import func
+from sqlalchemy.sql import expression
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
@@ -1002,3 +1003,47 @@ class Dues15Invoice(Base):
             return True
         else:
             return False
+
+
+    @classmethod
+    def get_monthly_stats(cls):
+        """
+        Gets the monthly statistics.
+
+        Provides sums of the normale as well as reversal invoices per
+        calendar month based on the invoice date.
+        """
+        result = []
+        # SQLite specific: substring for SQLite as it does not support
+        # date_trunc.
+        # invoice_date_month = func.date_trunc(
+        #     'month',
+        #     Dues15Invoice.invoice_date)
+        invoice_date_month = func.substr(Dues15Invoice.invoice_date, 1, 7)
+
+        month_stats_query = DBSession.query(
+                invoice_date_month,
+                func.sum(expression.case(
+                    [(
+                        expression.not_(Dues15Invoice.is_reversal),
+                        Dues15Invoice.invoice_amount)],
+                    else_=Decimal('0.0'))),
+                func.sum(expression.case(
+                    [(
+                        Dues15Invoice.is_reversal,
+                        Dues15Invoice.invoice_amount)],
+                    else_=Decimal('0.0')))
+            ) \
+            .group_by(invoice_date_month) \
+            .order_by(invoice_date_month)
+        for month_stat in month_stats_query.all():
+            result.append(
+                {
+                    'month': datetime(
+                        int(month_stat[0][0:4]),
+                        int(month_stat[0][5:7]),
+                        1),
+                    'normal_invoices_sum': month_stat[1],
+                    'reversal_invoices_sum': month_stat[2],
+                })
+        return result

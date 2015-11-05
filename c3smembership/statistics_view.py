@@ -3,8 +3,8 @@ from c3smembership.models import (
     C3sMember,
     C3sStaff,
     Shares,
+    Dues15Invoice,
 )
-
 
 @view_config(renderer='templates/stats.pt',
              permission='manage',
@@ -56,6 +56,9 @@ def stats_view(request):
         'countries_list': _cl_sorted,
         #    key=lambda x: x[1]
         #),  # XXX TODO: sorte
+
+        # dues stats
+        'dues_stats': Dues15Invoice.get_monthly_stats(),
 
         # staff figures
         'num_staff': len(C3sStaff.get_all())
