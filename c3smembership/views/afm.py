@@ -325,17 +325,39 @@ def join_c3s(request):
                 raise Invalid(
                     node,
                     _(u'You must confirm to have access '
-                      u'to the C3S SCE statute'))
+                      u'to the statute.'))
 
         got_statute = colander.SchemaNode(
             colander.Bool(true_val=u'yes'),
             title=_(
                 u'An electronic copy of the statute of the '
-                u'C3S SCE has been made available to me. (see link below)'),
+                u'C3S SCE has been made available to me (see link below).'),
             description=_(
                 u'You must confirm to have access to the statute.'),
             widget=deform.widget.CheckboxWidget(),
             validator=statute_validator,
+            required=True,
+            label=_('Yes'),
+        )
+
+        def dues_regulations_validator(node, value):
+            if not value:
+                raise Invalid(
+                    node,
+                    _(u'You must confirm to have access '
+                      u'to the temporary membership dues regulations.'))
+
+        got_dues_regulations = colander.SchemaNode(
+            colander.Bool(true_val=u'yes'),
+            title=_(
+                u'An electronic copy of the temporary membership dues '
+                u'of the C3S SCE has been made available to me (see link '
+                u'below).'),
+            description=_(
+                u'You must confirm to have access to the temporary '
+                u'membership dues regulations.'),
+            widget=deform.widget.CheckboxWidget(),
+            validator=dues_regulations_validator,
             required=True,
             label=_('Yes'),
         )

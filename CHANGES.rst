@@ -43,7 +43,10 @@ Next Release
 
   - Document internationalization of template and python files.
 
-- Extended statistics for a monthly summary of membership invoices.
+- Extend statistics for a monthly summary of membership invoices.
+
+- Add acknowledgement checkbox and links for membership dues regulations to
+  registration form.
 
 
 

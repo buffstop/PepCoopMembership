@@ -402,6 +402,9 @@ update the translation files. This again consists of three steps:
 
       $ python setup.py compile_catalog
 
+The application needs to be restarted in order for the catalog changes to take
+effect.
+
 
 References:
 
