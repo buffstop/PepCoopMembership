@@ -51,6 +51,8 @@ class JoinFormTests(SeleniumTestBase):
         time.sleep(0.1)
         self.driver.find_element_by_name('password').send_keys('foobar')
         time.sleep(0.1)
+        self.driver.find_element_by_name('password-confirm').send_keys('foobar')
+        time.sleep(0.1)
         self.driver.find_element_by_name('address1').send_keys('addr one')
         time.sleep(0.11)
         self.driver.find_element_by_name('address2').send_keys('addr two')
@@ -151,6 +153,7 @@ class JoinFormTests(SeleniumTestBase):
         self.driver.find_element_by_id('other_colsoc-1').click()  # No colsoc
         # enter password
         self.driver.find_element_by_name('password').send_keys('foobar')
+        self.driver.find_element_by_name('password-confirm').send_keys('foobar')
         time.sleep(0.1)
 
         self.driver.find_element_by_name('submit').click()

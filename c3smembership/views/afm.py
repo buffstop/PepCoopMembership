@@ -28,6 +28,7 @@ from datetime import (
 )
 import deform
 from deform import ValidationFailure
+import peppercorn
 from colander import (
     Invalid,
     Range,
@@ -151,7 +152,7 @@ def join_c3s(request):
         password = colander.SchemaNode(
             colander.String(),
             validator=colander.Length(min=5, max=100),
-            widget=deform.widget.PasswordWidget(size=20),
+            widget=deform.widget.CheckedPasswordWidget(size=20),
             title=_(u'Password (to protect access to your data)'),
             description=_(u'We need a password to protect your data. After '
                           u'verifying your email you will have to enter it.'),
@@ -322,10 +323,9 @@ def join_c3s(request):
 
         def statute_validator(node, value):
             if not value:
-                raise Invalid(
-                    node,
-                    _(u'You must confirm to have access '
-                      u'to the statute.'))
+                # raise without additional error message as the description
+                # already explains the necessity of the checkbox
+                raise Invalid(node, u'')
 
         got_statute = colander.SchemaNode(
             colander.Bool(true_val=u'yes'),
@@ -342,10 +342,9 @@ def join_c3s(request):
 
         def dues_regulations_validator(node, value):
             if not value:
-                raise Invalid(
-                    node,
-                    _(u'You must confirm to have access '
-                      u'to the temporary membership dues regulations.'))
+                # raise without additional error message as the description
+                # already explains the necessity of the checkbox
+                raise Invalid(node, u'')
 
         got_dues_regulations = colander.SchemaNode(
             colander.Bool(true_val=u'yes'),
@@ -430,15 +429,25 @@ def join_c3s(request):
             #  collsoc name even if it was supplied through form
             if 'no' in appstruct['membership_info']['member_of_colsoc']:
                 appstruct['membership_info']['name_of_colsoc'] = ''
-                print appstruct['membership_info']['name_of_colsoc']
+
         except ValidationFailure as validation_failure:
-            print(validation_failure)
             request.session.flash(
                 _(u'Please note: There were errors, '
                   u'please check the form below.'),
                 'message_above_form',
                 allow_duplicate=False)
-            return{'form': validation_failure.render()}
+
+            # If the validation error was not caused by the password field,
+            # manually set an error to the password field because the user
+            # needs to re-enter it after a validation error.
+            form = validation_failure.field
+            if form['person']['password'].error is None:
+                form['person']['password'].error = Invalid(
+                    None,
+                    _(u'Please re-enter your password.'))
+                validation_failure = ValidationFailure(form, None, form.error)
+
+            return {'form': validation_failure.render()}
 
         def make_random_string():
             """

@@ -8,7 +8,6 @@ html, body, #top, #container {
     font-weight: bold;
 }
 #container {
-    /*min-height: 80%;*/
     margin-top: 20px;
     margin-left: 20px;
     margin-right: 10px;
@@ -16,7 +15,6 @@ html, body, #top, #container {
 #middle {
     border-top: 0;
     border-bottom: 0;
-    /*margin-left:20px;*/
 }
 .footer{
     margin-left: 20px;
@@ -62,16 +60,15 @@ html, body, #top, #container {
 input[type=text], select {
     font-size:120%;
     border-color:#4dbd38;
-    /* padding: 10px; */
-    /* width:50%; */
 }
-/* 320px!imp */
 #password {
-    font-size:120%;
-    border-color:#4dbd38;
-    /* padding: 10px; */
-    /* width:50%; */
-} /* 320px!imp */
+    font-size: 120%;
+    border-color: #4dbd38;
+}
+#password-confirm {
+    font-size: 120%;
+    border-color: #4dbd38;
+}
 /* error messages: enlarge font a bit */
 .error {
     font-size:120%;}
@@ -80,13 +77,11 @@ input[type=text], select {
     border: 0; color: #4dbd38; font-weight: bold;
     font-size:120%;
     width: 50px!important;
-    /*background-color:#d9f0c8;*/
 }
 .num_shares_input#num_shares-calculated {
     border: 0; color: #4dbd38; font-weight: bold;
     font-size:120%;text-align:right;
     width:60px!important;
-    /*background-color:#d9f0c8;*/
 }
 #slider-div-num_shares {width:60%;} /* 430px */
 .ui-slider-handle {
@@ -105,13 +100,7 @@ a {text-decoration: underline;}
 }
 .footer {
     height:auto;
-    /* margin:40px 40px 20px 250px; */
     width:auto;
-    /* border:1px solid red; */
-    /* background-color:#ff00ff; */
-    /* background-image:url(/static/g8532.png); background-repeat:no-repeat; */
-    /* background-position:center center; */
-    /* background-attachment:scroll; */
     vertical-align: bottom!important;
 }
 

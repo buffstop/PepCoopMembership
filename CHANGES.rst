@@ -45,10 +45,18 @@ Next Release
 
   - Document internationalization of template and python files.
 
+  - Provide documentation with the running app at /docs
+
 - Extend statistics for a monthly summary of membership invoices.
 
-- Add acknowledgement checkbox and links for membership dues regulations to
-  registration form.
+- Registration form:
+
+  - Add acknowledgement checkbox and links for membership dues regulations.
+
+  - Add password confirmation field.
+
+  - Mark password field on validation error and remind the user to re-enter
+    it.
 
 
 
