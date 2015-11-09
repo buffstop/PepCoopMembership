@@ -587,7 +587,7 @@ def success_check_email(request):
         # build the emails body
         if 'de' in appstruct['person']['_LOCALE_']:
             the_mail_body = u'''
-hallo {} {}!
+Hallo {} {}!
 
 bitte benutze diesen Link um deine E-Mail-Adresse zu bestätigen
 und dein PDF herunterzuladen:
@@ -600,7 +600,7 @@ Dein C3S Team
             '''
         else:
             the_mail_body = u'''
-hello {} {}!
+Hello {} {}!
 
 please use this link to verify your email address
 and download your personalised PDF:
