@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
+VERSION = open(os.path.join(here, 'VERSION')).read()
 
 requires = [
     'alembic',  # migrate the database when introducing new fields
@@ -49,7 +50,7 @@ if sys.version_info[:3] < (2, 5, 0):
     requires.append('pysqlite')
 
 setup(name='c3smembership',
-      version=__import__('c3smembership').__version__,
+      version=VERSION,
       description='Membership Form for C3S (form, PDF, email)',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

@@ -173,9 +173,9 @@ contain all changes of the release from ``CHANGES.rst`` as its commit message.
    $ # Change "Next Release" in CHANGES.rst to 1.2.3:
    $ nano CHANGES.rst
    $ git add CHANGES.rst
-   $ # Set the version number in __init__.py to 1.2.3:
-   $ nano c3smembership/version.py
-   $ git add c3smembership/version.py
+   $ # Set the version number in VERSION to 1.2.3:
+   $ nano VERSION
+   $ git add VERSION
    $ # Commit and push to remote:
    $ git commit -m "Set version number to 1.2.3."
    $ git push release/1.2.3

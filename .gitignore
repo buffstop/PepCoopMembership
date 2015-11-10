@@ -8,7 +8,9 @@
 *.wsgi
 *~
 .coverage
+build/
 cover/
+dist/
 docs/_build/
 env/
 off/

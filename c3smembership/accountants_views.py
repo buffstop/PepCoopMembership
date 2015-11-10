@@ -33,7 +33,7 @@ import colander
 import deform
 from deform import ValidationFailure
 
-from git_tools import GitTools
+from c3smembership.git_tools import GitTools
 
 from pyramid.i18n import (
     get_localizer,
@@ -55,6 +55,8 @@ from datetime import (
     date,
 )
 import math
+from pkg_resources import get_distribution
+
 
 DEFORM_TEMPLATES = resource_filename('deform', 'templates')
 C3SMEMBERSHIP_TEMPLATES = resource_filename('c3smembership', 'templates')
@@ -133,8 +135,6 @@ def accountants_login(request):
         try:
             appstruct = form.validate(controls)
         except ValidationFailure, e_validation_failure:
-            print(e_validation_failure)
-
             request.session.flash(
                 _(u"Please note: There were errors, "
                   "please check the form below."),
@@ -244,8 +244,7 @@ def accountants_desk(request):
         _message = request.GET['message']
 
     # build version information for footer
-    import c3smembership
-    version_number = c3smembership.__version__
+    version_number = get_distribution('c3sMembership').version
     version_location_url = None
     version_location_name = None
     if 'c3smembership.runmode' in request.registry.settings and \
@@ -254,12 +253,16 @@ def accountants_desk(request):
         # displayed in development mode
         git_tag = GitTools.get_tag()
         branch_name = GitTools.get_branch()
-        if git_tag is None:
-            git_tag = '???'
-        version_number = '{0} (Tag {1}, Branch {2})'.format(
-            version_number, git_tag, branch_name)
+        version_metadata = [u'Version {0}'.format(version_number)]
+        if git_tag is not None:
+            version_metadata.append(u'Tag {0}'.format(git_tag))
+        if branch_name is not None:
+            version_metadata.append(u'Branch {0}'.format(branch_name))
+        version_information = ', '.join(version_metadata)
         version_location_name = GitTools.get_commit_hash()
         version_location_url = GitTools.get_github_commit_url()
+    else:
+        version_information = u'Version {0}'.format(version_number)
 
     return {
         '_number_of_datasets': _number_of_datasets,
@@ -274,7 +277,7 @@ def accountants_desk(request):
         'last_page': _last_page,
         'is_last_page': _page_to_show == _last_page,
         'is_first_page': _page_to_show == 0,
-        'version_number': version_number,
+        'version_information': version_information,
         'version_location_name': version_location_name,
         'version_location_url': version_location_url,
     }
@@ -344,10 +347,9 @@ def delete_entry(request):
 
         C3sMember.delete_by_id(_member.id)
         LOG.info(
-            "member.id %s was deleted by %s" % (
-                _member.id,
-                request.user.login,
-            )
+            "member.id %s was deleted by %s",
+            _member.id,
+            request.user.login,
         )
         _message = "member.id %s was deleted" % _member.id
         request.session.flash(_message, 'messages')
@@ -357,9 +359,9 @@ def delete_entry(request):
             request.route_url(
                 redirection_view,
                 _query={'message': _msgstr.format(
-                        memberid,
-                        member_lastname,
-                        member_firstname)}
+                    memberid,
+                    member_lastname,
+                    member_firstname)}
             ) + '#member_' + str(memberid)
         )
     else:
@@ -548,12 +550,12 @@ def member_detail(request):
         _cert_link = _member.firstname + _member.lastname
 
     _cert_link = _cert_link.replace(
-        u'&', u'+').replace(
-        u' ', u'_').replace(
-        u'.', u'').replace(
-        u'ä', u'ae').replace(
-        u'ö', u'oe').replace(
-        u'ü', u'ue').replace(
+        u'&', u'+').replace( \
+        u' ', u'_').replace( \
+        u'.', u'').replace( \
+        u'ä', u'ae').replace( \
+        u'ö', u'oe').replace( \
+        u'ü', u'ue').replace( \
         u'.', u'')
 
     # get the members invoices from the DB
