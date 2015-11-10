@@ -1,5 +1,5 @@
-Next Release
-============
+1.12-beta
+=========
 
 
 - Include version information into dashboard view and template. Create
