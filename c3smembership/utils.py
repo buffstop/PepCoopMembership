@@ -76,9 +76,9 @@ def generate_pdf(appstruct):
     import os
     here = os.path.dirname(__file__)
     declaration_pdf_de = os.path.join(
-        here, "../pdftk/C3S-SCE-AFM-v08-20141222-de.pdf")
+        here, "../pdftk/C3S-SCE-AFM-v09-20151110-de.pdf")
     declaration_pdf_en = os.path.join(
-        here, "../pdftk/C3S-SCE-AFM-v08-20141222-en.pdf")
+        here, "../pdftk/C3S-SCE-AFM-v09-20151110-en.pdf")
 
     # check for _LOCALE_, decide which language to use
     #print(appstruct['_LOCALE_'])

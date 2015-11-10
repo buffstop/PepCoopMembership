@@ -22,7 +22,7 @@ Next Release
 - Fix several German typos like "Nachnahme" instead of "Nachname", "Email"
   instead of "E-Mail" and "Addresse" instead of "Adresse".
 
-- Change certificate email templates from .pt to .txt as are plain
+- Change certificate email templates from .pt to .txt as they are plain
   text, therefore not compatible with .pt internationalization and causing 
   parsing errors.
 
@@ -57,6 +57,12 @@ Next Release
 
   - Mark password field on validation error and remind the user to re-enter
     it.
+
+- Fix minor issues of the membership application form:
+
+  - Old name "C3S SCE i.G." was used in German form.
+
+  - Bottom images were not exported to PDF.
 
 
 
