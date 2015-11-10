@@ -55,7 +55,7 @@ from datetime import (
     date,
 )
 import math
-from pkg_resources import get_distribution
+import os
 
 
 DEFORM_TEMPLATES = resource_filename('deform', 'templates')
@@ -244,7 +244,10 @@ def accountants_desk(request):
         _message = request.GET['message']
 
     # build version information for footer
-    version_number = get_distribution('c3sMembership').version
+    version_number = open(os.path.join(
+        os.path.abspath(os.path.dirname(__file__)),
+        '../',
+        'VERSION')).read()
     version_location_url = None
     version_location_name = None
     if 'c3smembership.runmode' in request.registry.settings and \
