@@ -178,7 +178,7 @@ contain all changes of the release from ``CHANGES.rst`` as its commit message.
    $ git add VERSION
    $ # Commit and push to remote:
    $ git commit -m "Set version number to 1.2.3."
-   $ git push release/1.2.3
+   $ git push origin release/1.2.3
    $ # Copy change notes from CHANGES.rst to the commit message of the tag:
    $ git tag -a 1.2.3
    $ git push origin 1.2.3

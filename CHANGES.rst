@@ -1,3 +1,12 @@
+Next Release
+============
+
+
+- Documentation: Fix git push command for pushing the version tag, 'origin'
+  was missing.
+
+
+
 1.12-beta
 =========
 
