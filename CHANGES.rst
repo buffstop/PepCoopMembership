@@ -1,9 +1,11 @@
-Next Release
+2Next Release
 ============
 
 
 - Documentation: Fix git push command for pushing the version tag, 'origin'
   was missing.
+
+- Add reference to membership dues regulations to membership application.
 
 
 
