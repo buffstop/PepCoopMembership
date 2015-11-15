@@ -1,5 +1,5 @@
-Next Release
-============
+1.12-beta.2
+===========
 
 
 - Documentation: Fix git push command for pushing the version tag, 'origin'
