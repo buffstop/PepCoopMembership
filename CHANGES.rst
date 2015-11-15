@@ -1,4 +1,4 @@
-2Next Release
+Next Release
 ============
 
 
@@ -6,6 +6,8 @@
   was missing.
 
 - Add reference to membership dues regulations to membership application.
+
+- Fix issue with certificate generation from backend member details page.
 
 
 

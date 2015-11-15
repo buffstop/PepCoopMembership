@@ -10,8 +10,6 @@ This module holds views for accountants to do accounting stuff.
 - Deletion of applications
 - ReGenerate a PDF for an application
 """
-# import tempfile
-# import unicodecsv
 
 from c3smembership.models import (
     C3sMember,
@@ -456,7 +454,6 @@ def member_detail(request):
     in the database can be seen here.
     """
     from decimal import Decimal as D
-    # import decimal
     logged_in = authenticated_userid(request)
     memberid = request.matchdict['memberid']
     LOG.info("member details of id %s checked by %s", memberid, logged_in)
@@ -473,94 +470,6 @@ def member_detail(request):
         return HTTPFound(  # back to base
             request.route_url('toolbox'))
 
-    # class ChangeDetails(colander.MappingSchema):
-    #     """
-    #     colander schema (form) to change details of member
-    #     """
-    #     signature_received = colander.SchemaNode(
-    #         colander.Bool(),
-    #         title=_(u"Have we received a good signature?")
-    #     )
-    #     payment_received = colander.SchemaNode(
-    #         colander.Bool(),
-    #         title=_(u"Have we received payment for the shares?")
-    #     )
-
-    # schema = ChangeDetails()
-    # form = deform.Form(
-    #     schema,
-    #     buttons=[
-    #         deform.Button('submit', _(u'Submit')),
-    #         deform.Button('reset', _(u'Reset'))
-    #     ],
-    #     use_ajax=True,
-    #     renderer=zpt_renderer
-    # )
-
-    # # if the form has been used and SUBMITTED, check contents
-    # if 'submit' in request.POST:
-    #     controls = request.POST.items()
-    #     try:
-    #         appstruct = form.validate(controls)
-    #     except ValidationFailure, e:  # pragma: no cover
-    #         log.info(e)
-    #         print(e)
-    #         request.session.flash(
-    #             _(u"Please note: There were errors, "
-    #               "please check the form below."),
-    #             'message_above_form',
-    #             allow_duplicate=False)
-    #         return{'form': e.render()}
-
-    #     # change info about member in database
-    #     test1 = (  # changed value through form (different from db)?
-    #         appstruct['signature_received'] == _member.signature_received)
-    #     if not test1:
-    #         log.info(
-    #             "info about signature of %s changed by %s to %s" % (
-    #                 _member.id,
-    #                 request.user.login,
-    #                 appstruct['signature_received']))
-    #         _member.signature_received = appstruct['signature_received']
-    #     test2 = (  # changed value through form (different from db)?
-    #         appstruct['payment_received'] == _member.payment_received)
-    #     if not test2:
-    #         log.info(
-    #             "info about payment of %s changed by %s to %s" % (
-    #                 _member.id,
-    #                 request.user.login,
-    #                 appstruct['payment_received']))
-    #         _member.payment_received = appstruct['payment_received']
-    #     # store appstruct in session
-    #     request.session['appstruct'] = appstruct
-
-    #     # show the updated details
-    #     HTTPFound(route_url('detail', request, memberid=memberid))
-
-    # # else: form was not submitted: just show member info and form
-    # else:
-    #     appstruct = {  # populate form with values from DB
-    #         'signature_received': _member.signature_received,
-    #         'payment_received': _member.payment_received}
-    #     form.set_appstruct(appstruct)
-    #     # print("the appstruct: %s") % appstruct
-    # html = form.render()
-
-    # make pretty link for certificate download
-    if _member.is_legalentity:
-        _cert_link = _member.lastname
-    else:
-        _cert_link = _member.firstname + _member.lastname
-
-    _cert_link = _cert_link.replace(
-        u'&', u'+').replace( \
-        u' ', u'_').replace( \
-        u'.', u'').replace( \
-        u'ä', u'ae').replace( \
-        u'ö', u'oe').replace( \
-        u'ü', u'ue').replace( \
-        u'.', u'')
-
     # get the members invoices from the DB
     _invoices = Dues15Invoice.get_by_membership_no(_member.membership_number)
 
@@ -568,7 +477,6 @@ def member_detail(request):
         'today': date.today().strftime('%Y-%m-%d'),
         'D': D,
         'member': _member,
-        'cert_link': _cert_link,
         'invoices': _invoices,
         # 'form': html
     }
