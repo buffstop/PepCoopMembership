@@ -1020,30 +1020,53 @@ class Dues15Invoice(Base):
         #     'month',
         #     Dues15Invoice.invoice_date)
         invoice_date_month = func.substr(Dues15Invoice.invoice_date, 1, 7)
+        payment_date_month = func.substr(C3sMember.dues15_paid_date, 1, 7)
 
-        month_stats_query = DBSession.query(
-                invoice_date_month,
+        # collect the invoice amounts per month
+        invoice_amounts_query = DBSession.query(
+                invoice_date_month.label('month'),
                 func.sum(expression.case(
                     [(
                         expression.not_(Dues15Invoice.is_reversal),
                         Dues15Invoice.invoice_amount)],
-                    else_=Decimal('0.0'))),
+                    else_=Decimal('0.0'))).label('amount_invoiced_normal'),
                 func.sum(expression.case(
                     [(
                         Dues15Invoice.is_reversal,
                         Dues15Invoice.invoice_amount)],
-                    else_=Decimal('0.0')))
+                    else_=Decimal('0.0'))).label('amount_invoiced_reversal'),
+                expression.literal_column('0').label('amount_paid')
             ) \
-            .group_by(invoice_date_month) \
-            .order_by(invoice_date_month)
-        for month_stat in month_stats_query.all():
+            .group_by(invoice_date_month)
+        # collect the payments per month
+        member_payments_query = DBSession.query(
+                payment_date_month.label('month'),
+                expression.literal_column('0').label('amount_invoiced_normal'),
+                expression.literal_column('0').label('amount_invoiced_reversal'),
+                func.sum(C3sMember.dues15_amount_paid).label('amount_paid')
+            ) \
+            .filter(C3sMember.dues15_paid_date.isnot(None)) \
+            .group_by(payment_date_month)
+        # union invoice amounts and payments
+        union_all_query = expression.union_all(member_payments_query, invoice_amounts_query)
+        # aggregate invoice amounts and payments by month
+        result_query = DBSession.query(
+                union_all_query.c.month.label('month'),
+                func.sum(union_all_query.c.amount_invoiced_normal).label('amount_invoiced_normal'),
+                func.sum(union_all_query.c.amount_invoiced_reversal).label('amount_invoiced_reversal'),
+                func.sum(union_all_query.c.amount_paid).label('amount_paid')
+            ) \
+            .group_by(union_all_query.c.month) \
+            .order_by(union_all_query.c.month)
+        for month_stat in result_query.all():
             result.append(
                 {
                     'month': datetime(
                         int(month_stat[0][0:4]),
                         int(month_stat[0][5:7]),
                         1),
-                    'normal_invoices_sum': month_stat[1],
-                    'reversal_invoices_sum': month_stat[2],
+                    'amount_invoiced_normal': month_stat[1],
+                    'amount_invoiced_reversal': month_stat[2],
+                    'amount_paid': month_stat[3]
                 })
         return result

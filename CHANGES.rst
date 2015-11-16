@@ -1,3 +1,14 @@
+Next Release
+============
+
+
+- Fix singular/plural phrasing issue in shares payment confirmation email
+  text.
+
+- Extend monthly membership invoice statistics by paid amounts.
+
+
+
 1.12-beta.2
 ===========
 
@@ -8,9 +19,6 @@
 - Add reference to membership dues regulations to membership application.
 
 - Fix issue with certificate generation from backend member details page.
-
-- Fix singular/plural phrasing issue in shares payment confirmation email
-  text.
 
 
 

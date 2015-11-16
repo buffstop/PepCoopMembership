@@ -8,15 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: markus.lorenz@c3s.cc\n"
-"POT-Creation-Date: 2015-11-08 15:46+0100\n"
+"POT-Creation-Date: 2015-11-16 21:32+0100\n"
 "PO-Revision-Date: 2015-09-10 12:58+0100\n"
 "Last-Translator: Christoph Scheid <christoph.scheid@c3s.cc>\n"
+"Language: de\n"
 "Language-Team: de <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.3\n"
+"Generated-By: Babel 2.1.1\n"
 
 #: c3smembership/accountants_views.py:111
 msgid "login"
@@ -41,7 +42,7 @@ msgstr "Absenden"
 msgid "Reset"
 msgstr "Löschen"
 
-#: c3smembership/accountants_views.py:139 c3smembership/administration.py:640
+#: c3smembership/accountants_views.py:137 c3smembership/administration.py:640
 #: c3smembership/annual_accounting.py:91 c3smembership/edit_member.py:363
 #: c3smembership/new_member.py:263 c3smembership/shares_views.py:111
 #: c3smembership/views/afm.py:435
@@ -533,25 +534,40 @@ msgstr "Mitgliedsbeiträge 2015"
 msgid "stats-dues-month"
 msgstr "Monat"
 
-#. Default: Normal invoices sum
+#. Default: Normal amount invoiced
 #: c3smembership/templates/stats.pt:84
-msgid "stats-dues-sum-normal"
-msgstr "Rechnungssumme Normal"
+msgid "stats-dues-amount-invoiced-normal"
+msgstr "Rechnungsbetrag Normal"
 
-#. Default: Reversal invoices sum
+#. Default: Reversal amount invoiced
 #: c3smembership/templates/stats.pt:85
-msgid "stats-dues-sum-reversal"
-msgstr "Rechnungssumme Reversal"
+msgid "stats-dues-amount-invoiced-reversal"
+msgstr "Rechnungsbetrag Reversal"
 
-#. Default: Invoices sum total
+#. Default: Amount invoiced
 #: c3smembership/templates/stats.pt:86
-msgid "stats-dues-sum-total"
-msgstr "Rechnungssumme Gesamt"
+msgid "stats-dues-amount-invoiced"
+msgstr "Rechnungsbetrag"
 
-#. Default: Total
-#: c3smembership/templates/stats.pt:112
-msgid "stats-dues-total"
-msgstr "Gesamt"
+#. Default: Amount paid
+#: c3smembership/templates/stats.pt:87
+msgid "stats-dues-amount-paid"
+msgstr "Zahlungseingänge"
+
+#. Default: Current amount invoiced
+#: c3smembership/templates/stats.pt:88
+msgid "stats-dues-amount-invoiced-current"
+msgstr "Laufender Rechnungsbetrag"
+
+#. Default: Current amount paid
+#: c3smembership/templates/stats.pt:89
+msgid "stats-dues-amount-paid-current"
+msgstr "Laufende Zahlungseingänge"
+
+#. Default: Summe
+#: c3smembership/templates/stats.pt:123
+msgid "stats-dues-sum"
+msgstr "Summe"
 
 #. Default: C3S SCE Statute
 #: c3smembership/templates/statute.pt:9
@@ -877,4 +893,10 @@ msgstr "[yes][ALERT] Prüfe die Log-Dateien."
 # | msgid "You must confirm to have access to the statute."
 #~ msgid "You must confirm to have access to the C3S SCE statute."
 #~ msgstr "Du musst bestätigen, Zugriff auf die Satzung gehabt zu haben."
+
+#~ msgid "stats-dues-sum-total"
+#~ msgstr "Rechnungssumme Gesamt"
+
+#~ msgid "stats-dues-total"
+#~ msgstr "Gesamt"
 
