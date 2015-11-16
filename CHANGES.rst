@@ -9,6 +9,9 @@
 
 - Fix issue with certificate generation from backend member details page.
 
+- Fix singular/plural phrasing issue in shares payment confirmation email
+  text.
+
 
 
 1.12-beta
