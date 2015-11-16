@@ -350,8 +350,8 @@ def join_c3s(request):
             colander.Bool(true_val=u'yes'),
             title=_(
                 u'An electronic copy of the temporary membership dues '
-                u'of the C3S SCE has been made available to me (see link '
-                u'below).'),
+                u'regulations of the C3S SCE has been made available to me '
+                u'(see link below).'),
             description=_(
                 u'You must confirm to have access to the temporary '
                 u'membership dues regulations.'),
