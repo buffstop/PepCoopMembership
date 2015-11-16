@@ -1,5 +1,5 @@
-Next Release
-============
+1.12-beta.3
+===========
 
 
 - Fix singular/plural phrasing issue in shares payment confirmation email
