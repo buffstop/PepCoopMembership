@@ -542,7 +542,7 @@ def mail_signature_confirmation(request):
     _member = C3sMember.get_by_id(_id)
     if _member.locale == 'de':
         _subject = u'[C3S AFM] Wir haben Deine Unterschrift ' + \
-            'erhalten. Dankeschön!'
+                   u'erhalten. Dankeschön!'
     else:
         _subject = u'[C3S AFM] We have received your signature. Thanks!'
 
