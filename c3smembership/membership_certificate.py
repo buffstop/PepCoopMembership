@@ -17,6 +17,7 @@ from datetime import (
     date,
     datetime
 )
+import os
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from pyramid.renderers import render
@@ -78,9 +79,11 @@ def send_certificate_email(request):
         print _url
         print '#'*60
 
-    message_body_file_name = \
-        'c3smembership/templates/mail/membership_certificate_' + \
-        _m.locale + '.txt'
+    here = os.path.dirname(__file__)
+    message_body_file_name = os.path.join(
+        here,  # construct path relative to *this* file
+        ('templates/mail/membership_certificate_' + \
+         _m.locale + '.txt'))
     with open(message_body_file_name, 'rb') as content_file:
         message_body = content_file.read().decode('utf-8')
         message_body = message_body.format(
