@@ -1,3 +1,11 @@
+Next Release
+============
+
+
+- Extend monthly membership invoice statistics by current balance.
+
+
+
 1.12-beta.3
 ===========
 
