@@ -97,17 +97,16 @@
               from babel import numbers
               from decimal import Decimal
 
-              amount_invoiced_normal = Decimal('0.0')
-              amount_invoiced_reversal = Decimal('0.0')
-              amount_invoiced = Decimal('0.0')
+              amount_invoiced_normal_total = Decimal('0.0')
+              amount_invoiced_reversal_total = Decimal('0.0')
               amount_invoiced_current = Decimal('0.0')
               amount_paid_current = Decimal('0.0')
           ?>
           <tr tal:repeat="dues_stat dues_stats">
               <?python
-                  amount_invoiced_normal = amount_invoiced_normal + Decimal(dues_stat['amount_invoiced_normal'])
-                  amount_invoiced_reversal = amount_invoiced_reversal + Decimal(dues_stat['amount_invoiced_reversal'])
-                  amount_invoiced = amount_invoiced_normal + amount_invoiced_reversal
+                  amount_invoiced = Decimal(dues_stat['amount_invoiced_normal']) + Decimal(dues_stat['amount_invoiced_reversal'])
+                  amount_invoiced_normal_total = amount_invoiced_normal_total + Decimal(dues_stat['amount_invoiced_normal'])
+                  amount_invoiced_reversal_total = amount_invoiced_reversal_total + Decimal(dues_stat['amount_invoiced_reversal'])
                   amount_invoiced_current = amount_invoiced_current + amount_invoiced
                   amount_paid_current = amount_paid_current + Decimal(dues_stat['amount_paid'])
               ?>
@@ -123,10 +122,10 @@
       </tbody>
       <tfoot>
           <tr>
-              <th i18n:translate="stats-dues-sum">Summe</th>
-              <th>${numbers.format_decimal(amount_invoiced_normal)}&nbsp;&euro;</th>
-              <th>${numbers.format_decimal(amount_invoiced_reversal)}&nbsp;&euro;</th>
-              <th>${numbers.format_decimal(amount_invoiced_normal + amount_invoiced_reversal)}&nbsp;&euro;</th>
+              <th i18n:translate="stats-dues-sum">Total</th>
+              <th>${numbers.format_decimal(amount_invoiced_normal_total)}&nbsp;&euro;</th>
+              <th>${numbers.format_decimal(amount_invoiced_reversal_total)}&nbsp;&euro;</th>
+              <th>${numbers.format_decimal(amount_invoiced_normal_total + amount_invoiced_reversal_total)}&nbsp;&euro;</th>
               <th>${numbers.format_decimal(amount_paid_current)}&nbsp;&euro;</th>
               <th></th>
               <th></th>
