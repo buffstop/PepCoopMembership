@@ -1035,14 +1035,14 @@ class Dues15Invoice(Base):
                         Dues15Invoice.is_reversal,
                         Dues15Invoice.invoice_amount)],
                     else_=Decimal('0.0'))).label('amount_invoiced_reversal'),
-                expression.literal_column('0').label('amount_paid')
+                expression.literal_column('\'0.0\'', SqliteDecimal).label('amount_paid')
             ) \
             .group_by(invoice_date_month)
         # collect the payments per month
         member_payments_query = DBSession.query(
                 payment_date_month.label('month'),
-                expression.literal_column('0').label('amount_invoiced_normal'),
-                expression.literal_column('0').label('amount_invoiced_reversal'),
+                expression.literal_column('\'0.0\'', SqliteDecimal).label('amount_invoiced_normal'),
+                expression.literal_column('\'0.0\'', SqliteDecimal).label('amount_invoiced_reversal'),
                 func.sum(C3sMember.dues15_amount_paid).label('amount_paid')
             ) \
             .filter(C3sMember.dues15_paid_date.isnot(None)) \

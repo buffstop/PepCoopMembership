@@ -104,11 +104,11 @@
           ?>
           <tr tal:repeat="dues_stat dues_stats">
               <?python
-                  amount_invoiced = Decimal(dues_stat['amount_invoiced_normal']) + Decimal(dues_stat['amount_invoiced_reversal'])
-                  amount_invoiced_normal_total = amount_invoiced_normal_total + Decimal(dues_stat['amount_invoiced_normal'])
-                  amount_invoiced_reversal_total = amount_invoiced_reversal_total + Decimal(dues_stat['amount_invoiced_reversal'])
+                  amount_invoiced = dues_stat['amount_invoiced_normal'] + dues_stat['amount_invoiced_reversal']
+                  amount_invoiced_normal_total = amount_invoiced_normal_total + dues_stat['amount_invoiced_normal']
+                  amount_invoiced_reversal_total = amount_invoiced_reversal_total + dues_stat['amount_invoiced_reversal']
                   amount_invoiced_current = amount_invoiced_current + amount_invoiced
-                  amount_paid_current = amount_paid_current + Decimal(dues_stat['amount_paid'])
+                  amount_paid_current = amount_paid_current + dues_stat['amount_paid']
               ?>
               <th>${dues_stat.month.strftime('%Y-%m')}</th>
               <td>${numbers.format_decimal(dues_stat.amount_invoiced_normal, locale=user_locale)}&nbsp;&euro;</td>
