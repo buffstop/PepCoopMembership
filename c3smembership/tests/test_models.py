@@ -599,11 +599,77 @@ class Dues15InvoiceModelTests(unittest.TestCase):
         Base.metadata.create_all(engine)
 
         with transaction.manager:
+            member1 = C3sMember(
+                firstname=u'SomeFirstnäme',
+                lastname=u'SomeLastnäme',
+                email=u'some@shri.de',
+                address1=u"addr one",
+                address2=u"addr two",
+                postcode=u"12345",
+                city=u"Footown Mäh",
+                country=u"Foocountry",
+                locale=u"DE",
+                date_of_birth=date.today(),
+                email_is_confirmed=False,
+                email_confirm_code=u'ABCDEFGFOO',
+                password=u'arandompassword',
+                date_of_submission=date.today(),
+                membership_type=u'normal',
+                member_of_colsoc=True,
+                name_of_colsoc=u"GEMA",
+                num_shares=u'23',
+            )
+            DBSession.add(member1)
+
+            member2 = C3sMember(
+                firstname=u'Franziska',
+                lastname=u'Musterfrau',
+                email=u'some@shri.de',
+                address1=u"addr one",
+                address2=u"addr two",
+                postcode=u"12345",
+                city=u"Footown Mäh",
+                country=u"Foocountry",
+                locale=u"DE",
+                date_of_birth=date.today(),
+                email_is_confirmed=False,
+                email_confirm_code=u'ABCDEFGFO1',
+                password=u'arandompassword',
+                date_of_submission=date.today(),
+                membership_type=u'normal',
+                member_of_colsoc=False,
+                name_of_colsoc=u'',
+                num_shares=u'23',
+            )
+            DBSession.add(member2)
+
+            member3 = C3sMember(
+                firstname=u'Jane',
+                lastname=u'Somebody',
+                email=u'some@shri.de',
+                address1=u"addr one",
+                address2=u"addr two",
+                postcode=u"12345",
+                city=u"Footown Mäh",
+                country=u"Foocountry",
+                locale=u"DE",
+                date_of_birth=date.today(),
+                email_is_confirmed=False,
+                email_confirm_code=u'ABCDEFGFO2',
+                password=u'arandompassword',
+                date_of_submission=date.today(),
+                membership_type=u'normal',
+                member_of_colsoc=False,
+                name_of_colsoc=u'',
+                num_shares=u'23',
+            )
+            DBSession.add(member3)
+
             dues1 = Dues15Invoice(
                 invoice_no=1,
                 invoice_no_string=u'C3S-dues15-0001',
                 invoice_date=date(2015, 10, 01),
-                invoice_amount=unicode(D('-37.50').to_eng_string()),
+                invoice_amount=D('-37.50'),
                 member_id=1,
                 membership_no=1,
                 email=u'uat.yes@c3s.cc',
@@ -615,7 +681,7 @@ class Dues15InvoiceModelTests(unittest.TestCase):
                 invoice_no=2,
                 invoice_no_string=u'C3S-dues15-0002-S',
                 invoice_date=date(2015, 10, 02),
-                invoice_amount=unicode(D('17.25').to_eng_string()),
+                invoice_amount=D('17.25'),
                 member_id=1,
                 membership_no=1,
                 email=u'uat.yes@c3s.cc',
@@ -628,9 +694,9 @@ class Dues15InvoiceModelTests(unittest.TestCase):
                 invoice_no=3,
                 invoice_no_string=u'C3S-dues15-0003',
                 invoice_date=date(2015, 11, 25),
-                invoice_amount=unicode(D('74.58').to_eng_string()),
+                invoice_amount=D('74.58'),
                 member_id=1,
-                membership_no=1,
+                membership_no=2,
                 email=u'uat.yes@c3s.cc',
                 token=u'Jleifjsw9e',
             )
@@ -640,9 +706,9 @@ class Dues15InvoiceModelTests(unittest.TestCase):
                 invoice_no=4,
                 invoice_no_string=u'C3S-dues15-0004-S',
                 invoice_date=date(2015, 11, 27),
-                invoice_amount=unicode(D('23.85').to_eng_string()),
+                invoice_amount=D('23.85'),
                 member_id=1,
-                membership_no=1,
+                membership_no=2,
                 email=u'uat.yes@c3s.cc',
                 token=u'f348h98sdf',
             )
@@ -653,9 +719,9 @@ class Dues15InvoiceModelTests(unittest.TestCase):
                 invoice_no=5,
                 invoice_no_string=u'C3S-dues15-0005',
                 invoice_date=date(2015, 11, 29),
-                invoice_amount=unicode(D('12.89').to_eng_string()),
+                invoice_amount=D('12.89'),
                 member_id=1,
-                membership_no=1,
+                membership_no=3,
                 email=u'uat.yes@c3s.cc',
                 token=u'sgdfoiddfg',
             )
@@ -665,16 +731,19 @@ class Dues15InvoiceModelTests(unittest.TestCase):
                 invoice_no=6,
                 invoice_no_string=u'C3S-dues15-0006-S',
                 invoice_date=date(2015, 11, 30),
-                invoice_amount=unicode(D('77.79').to_eng_string()),
+                invoice_amount=D('77.79'),
                 member_id=1,
-                membership_no=1,
+                membership_no=3,
                 email=u'uat.yes@c3s.cc',
                 token=u'3o948n',
             )
             dues6.is_reversal = True
             DBSession.add(dues6)
-
             DBSession.flush()
+
+            member1.set_dues15_payment(D('12.34'), date(2015, 10, 31))
+            member2.set_dues15_payment(D('95.65'), date(2015, 11, 5))
+            member3.set_dues15_payment(D('-85.12'), date(2015, 11, 30))
 
     def tearDown(self):
         self.session.close()
@@ -727,11 +796,13 @@ class Dues15InvoiceModelTests(unittest.TestCase):
         stats = Dues15Invoice.get_monthly_stats()
         self.assertEqual(len(stats), 2)
         self.assertEqual(stats[0]['month'], datetime(2015, 10, 1))
-        self.assertAlmostEqual(stats[0]['normal_invoices_sum'], D('-37.50'))
-        self.assertAlmostEqual(stats[0]['reversal_invoices_sum'], D('17.25'))
+        self.assertAlmostEqual(stats[0]['amount_invoiced_normal'], D('-37.50'))
+        self.assertAlmostEqual(stats[0]['amount_invoiced_reversal'], D('17.25'))
+        self.assertAlmostEqual(stats[0]['amount_paid'], D('12.34'))
         self.assertEqual(stats[1]['month'], datetime(2015, 11, 1))
-        self.assertAlmostEqual(stats[1]['normal_invoices_sum'], D('87.47'))
-        self.assertAlmostEqual(stats[1]['reversal_invoices_sum'], D('101.64'))
+        self.assertAlmostEqual(stats[1]['amount_invoiced_normal'], D('87.47'))
+        self.assertAlmostEqual(stats[1]['amount_invoiced_reversal'], D('101.64'))
+        self.assertAlmostEqual(stats[1]['amount_paid'], D('10.53'))
 
 
 

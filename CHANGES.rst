@@ -1,3 +1,13 @@
+1.12-beta.4
+===========
+
+
+- Extend monthly membership invoice statistics by current balance.
+
+- Fix backend membership certificate url.
+
+
+
 1.12-beta.3
 ===========
 

@@ -17,6 +17,7 @@ from datetime import (
     date,
     datetime
 )
+import os
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from pyramid.renderers import render
@@ -64,23 +65,20 @@ def send_certificate_email(request):
             status='404 Not Found',)
     # create a token for the certificate
     _m.certificate_token = make_random_token()
-    # construct mail
-    _name = re.sub(  # # replace characters
-        '[^0-9a-zA-Z]',  # other than these
-        '-',  # with a -
-        _m.lastname if _m.is_legalentity else (_m.lastname + _m.firstname))
 
     _url = request.route_url('certificate_pdf',
-                             id=_m.id, name=_name, token=_m.certificate_token)
+                             id=_m.id, name=_m.get_url_safe_name(), token=_m.certificate_token)
     if DEBUG:  # pragma: no cover
         print '#'*60
         print _m.certificate_token
         print _url
         print '#'*60
 
-    message_body_file_name = \
-        'c3smembership/templates/mail/membership_certificate_' + \
-        _m.locale + '.txt'
+    here = os.path.dirname(__file__)
+    message_body_file_name = os.path.join(
+        here,  # construct path relative to *this* file
+        ('templates/mail/membership_certificate_' + \
+         _m.locale + '.txt'))
     with open(message_body_file_name, 'rb') as content_file:
         message_body = content_file.read().decode('utf-8')
         message_body = message_body.format(

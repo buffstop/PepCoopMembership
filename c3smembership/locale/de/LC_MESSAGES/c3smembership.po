@@ -8,17 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: markus.lorenz@c3s.cc\n"
-"POT-Creation-Date: 2015-11-16 21:40+0100\n"
-"PO-Revision-Date: 2015-11-17 12:26+0100\n"
+"POT-Creation-Date: 2015-12-02 22:59+0100\n"
+"PO-Revision-Date: 2015-09-10 12:58+0100\n"
 "Last-Translator: Christoph Scheid <christoph.scheid@c3s.cc>\n"
-"Language: de\n"
 "Language-Team: de <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.1.1\n"
-"X-Generator: Poedit 1.5.4\n"
+"Generated-By: Babel 1.3\n"
 
 #: c3smembership/accountants_views.py:111
 msgid "login"
@@ -63,7 +61,8 @@ msgstr "Nein"
 
 #: c3smembership/administration.py:563 c3smembership/views/afm.py:266
 msgid ""
-"I want to become a ... (choose membership type, see C3S SCE statute sec. 4)"
+"I want to become a ... (choose membership type, see C3S SCE statute sec. "
+"4)"
 msgstr "Ich möchte ... (Art der Mitgliedschaft auswählen, siehe Satzung § 4)"
 
 #: c3smembership/administration.py:565 c3smembership/views/afm.py:268
@@ -72,15 +71,16 @@ msgstr "Wähle die Art der Mitgliedschaft."
 
 #: c3smembership/administration.py:569
 msgid ""
-"FULL member. Full members have to be natural persons who register at least "
-"three works with C3S they created themselves. This applies to composers, "
-"lyricists and remixers. They get a vote."
+"FULL member. Full members have to be natural persons who register at "
+"least three works with C3S they created themselves. This applies to "
+"composers, lyricists and remixers. They get a vote."
 msgstr ""
 "ORDENTLICHES Mitglied werden: Ordentliche (nutzende) Mitglieder müssen "
-"natürliche Personen sein und als Urheber_in oder Musiker_in mindestens drei "
-"eigene Werke mit eigener Beteiligung zur Wahrnehmung bei der C3S "
+"natürliche Personen sein und als Urheber_in oder Musiker_in mindestens "
+"drei eigene Werke mit eigener Beteiligung zur Wahrnehmung bei der C3S "
 "registrieren. Dies trifft z.B. auf Komponist_innen, Liedtexter_innen, "
-"Remixer_innen und ausübende Musiker_innen zu. Sie erhalten volles Stimmrecht."
+"Remixer_innen und ausübende Musiker_innen zu. Sie erhalten volles "
+"Stimmrecht."
 
 #: c3smembership/administration.py:574 c3smembership/views/afm.py:278
 msgid ""
@@ -88,16 +88,17 @@ msgid ""
 "private companies that do not register works with C3S. They do not get a "
 "vote, but may counsel."
 msgstr ""
-"INVESTIERENDES Mitglied werden: Investierende Mitglieder können natürliche "
-"oder juritische Personen oder Personengesellschaften sein und bei der C3S "
-"keine eigenen Werke registrieren. Dies trifft z.B. auf Verlage oder "
-"Rechtsnachfolger von  Urheber_innen zu. Sie erhalten kein Stimmrecht, können "
-"aber beraten."
+"INVESTIERENDES Mitglied werden: Investierende Mitglieder können "
+"natürliche oder juritische Personen oder Personengesellschaften sein und "
+"bei der C3S keine eigenen Werke registrieren. Dies trifft z.B. auf "
+"Verlage oder Rechtsnachfolger von  Urheber_innen zu. Sie erhalten kein "
+"Stimmrecht, können aber beraten."
 
 #: c3smembership/administration.py:584 c3smembership/views/afm.py:302
 msgid "Currently, I am a member of (at least) one other collecting society."
 msgstr ""
-"Ich bin derzeit Mitglied (mindestens) einer anderen Verwertungsgesellschaft."
+"Ich bin derzeit Mitglied (mindestens) einer anderen "
+"Verwertungsgesellschaft."
 
 #: c3smembership/administration.py:593
 msgid "If so, which one(s)? (comma separated)"
@@ -105,11 +106,11 @@ msgstr "Falls ja, welche? Mehrere Nennungen bitte durch Komma getrennt."
 
 #: c3smembership/administration.py:594
 msgid ""
-"Please tell us which collecting societies you are a member of. If more than "
-"one, please separate them by comma(s)."
+"Please tell us which collecting societies you are a member of. If more "
+"than one, please separate them by comma(s)."
 msgstr ""
-"Bitte nenne uns die Verwertungsgesellschaft(en), in denen Du Mitglied bist. "
-"Mehrere Nennungen bitte durch Komma getrennt."
+"Bitte nenne uns die Verwertungsgesellschaft(en), in denen Du Mitglied "
+"bist. Mehrere Nennungen bitte durch Komma getrennt."
 
 #: c3smembership/administration.py:608 c3smembership/edit_member.py:335
 #: c3smembership/new_member.py:213 c3smembership/templates/success.pt:36
@@ -135,11 +136,11 @@ msgstr "${val} liegt nach dem spätesten Datum ${max}"
 
 #: c3smembership/edit_member.py:196
 msgid ""
-"ist weiterer, späterer Mitgliedsantrag, gehört zu einem anderen Antrag oder "
-"einer bestehenden Mitgliedschaft."
+"ist weiterer, späterer Mitgliedsantrag, gehört zu einem anderen Antrag "
+"oder einer bestehenden Mitgliedschaft."
 msgstr ""
-"ist weiterer, späterer Mitgliedsantrag, gehört zu einem anderen Antrag oder "
-"einer bestehenden Mitgliedschaft."
+"ist weiterer, späterer Mitgliedsantrag, gehört zu einem anderen Antrag "
+"oder einer bestehenden Mitgliedschaft."
 
 #: c3smembership/edit_member.py:208
 msgid "Signature received"
@@ -350,8 +351,8 @@ msgstr "Eine E-Mail wurde verschickt,"
 #: c3smembership/templates/check-mail.pt:17
 msgid "check-email-paragraph-check-email"
 msgstr ""
-"Du wirst eine E-Mail von noreply@c3s.cc mit einem Bestätigungslink erhalten. "
-"Bitte rufe Deine E-Mails ab."
+"Du wirst eine E-Mail von noreply@c3s.cc mit einem Bestätigungslink "
+"erhalten. Bitte rufe Deine E-Mails ab."
 
 #. Default: The email subject line will read:
 #: c3smembership/templates/check-mail.pt:21
@@ -376,8 +377,8 @@ msgstr "Werde Mitglied in der Cultural Commons Collecting Society"
 #: c3smembership/templates/join.pt:38
 msgid "join-form-headline"
 msgstr ""
-"Mitgliedschaftsantrag für die Cultural Commons Collecting Society SCE mit "
-"beschränkter Haftung (C3S SCE)"
+"Mitgliedschaftsantrag für die Cultural Commons Collecting Society SCE mit"
+" beschränkter Haftung (C3S SCE)"
 
 #. Default: Please fill out the form. Later, you need to check your email for a
 #. verification code.
@@ -393,8 +394,8 @@ msgstr ""
 #: c3smembership/templates/join.pt:46
 msgid "join-form-nonhumans-p"
 msgstr ""
-"Die Mitgliedschaft für Unternehmen und Verbände kann über den folgenden Link "
-"beantragt werden:"
+"Die Mitgliedschaft für Unternehmen und Verbände kann über den folgenden "
+"Link beantragt werden:"
 
 #. Default: Membership for Companies and Institutions
 #: c3smembership/templates/join.pt:49
@@ -449,8 +450,7 @@ msgid "join-form-dues-regulations-linktitle-en"
 msgstr "(englisch)"
 
 #. Default: Disclaimer (Data Protection)
-#: c3smembership/templates/join.pt:114
-#: c3smembership/templates/mtype-form.pt:87
+#: c3smembership/templates/join.pt:114 c3smembership/templates/mtype-form.pt:87
 msgid "join-form-disclaimer-title"
 msgstr "Hinweis gem. § 4 BDSG:"
 
@@ -458,14 +458,13 @@ msgstr "Hinweis gem. § 4 BDSG:"
 #. administrative
 #. purposes and in order to protect your rights as an artist. Responsible
 #. authority: C3S SCE, Heyestraße 194, 40625 Düsseldorf.
-#: c3smembership/templates/join.pt:117
-#: c3smembership/templates/mtype-form.pt:90
+#: c3smembership/templates/join.pt:117 c3smembership/templates/mtype-form.pt:90
 msgid "join-form-disclaimer-paragraph"
 msgstr ""
 "Wir verarbeiten und nutzen Ihre personenbezogenen Daten für Zwecke der "
-"Mitgliederverwaltung der Genossenschaft und zur Wahrnehmung Ihrer Rechte als "
-"Urheber. Verantwortliche Stelle ist die C3S SCE, Heyestraße 194, 40625 "
-"Düsseldorf."
+"Mitgliederverwaltung der Genossenschaft und zur Wahrnehmung Ihrer Rechte "
+"als Urheber. Verantwortliche Stelle ist die C3S SCE, Heyestraße 194, "
+"40625 Düsseldorf."
 
 #: c3smembership/templates/mtype-form.pt:32
 msgid "Dear supporters,"
@@ -473,20 +472,20 @@ msgstr "Liebe Unterstützer_innen,"
 
 #: c3smembership/templates/mtype-form.pt:35
 msgid ""
-"as mentioned in our mail we would like to give you the opportunity to add "
-"some information to your C3S account. We need your help so we can tell if "
-"you are eligible to vote or not."
+"as mentioned in our mail we would like to give you the opportunity to add"
+" some information to your C3S account. We need your help so we can tell "
+"if you are eligible to vote or not."
 msgstr ""
 "wie wir bereits per Mail erklärt haben, habt Ihr hier Gelegenheit, Teile "
-"Eurer Angaben zu ergänzen. Ohne ein wenig Hilfe von Eurer Seite können wir "
-"Euch nicht mitteilen, ob Ihr stimmberechtigt seid oder nicht."
+"Eurer Angaben zu ergänzen. Ohne ein wenig Hilfe von Eurer Seite können "
+"wir Euch nicht mitteilen, ob Ihr stimmberechtigt seid oder nicht."
 
 #: c3smembership/templates/mtype-form.pt:38
 msgid ""
-"In case you are unsure, please take a look at our FAQ (see link below) or "
-"just send a mail to info@c3s.cc. However, for those of you who are curious "
-"to know more about the details, there’s a link to our statutes (see below). "
-"Be prepared to enjoy some legal talk..."
+"In case you are unsure, please take a look at our FAQ (see link below) or"
+" just send a mail to info@c3s.cc. However, for those of you who are "
+"curious to know more about the details, there’s a link to our statutes "
+"(see below). Be prepared to enjoy some legal talk..."
 msgstr ""
 "Falls Ihr Fragen habt, schaut bitte in unsere FAQ (siehe unten) oder "
 "schreibt an info@c3s.cc. Wer es ganz genau wissen möchte und vor "
@@ -510,11 +509,11 @@ msgstr "Das wars auch schon! Vielen Dank für die Hilfe."
 
 #: c3smembership/templates/mtype-thanks.pt:24
 msgid ""
-"We are looking forward to welcome you to our first general assembly on 23 "
-"August in Cologne, Germany."
+"We are looking forward to welcome you to our first general assembly on 23"
+" August in Cologne, Germany."
 msgstr ""
-"Wir freuen uns darauf, Dich bei der Generalversammlung am 23. August in Köln "
-"zu treffen."
+"Wir freuen uns darauf, Dich bei der Generalversammlung am 23. August in "
+"Köln zu treffen."
 
 #: c3smembership/templates/mtype-thanks.pt:27
 msgid "Your C3S Team"
@@ -557,15 +556,20 @@ msgstr "Zahlungseingänge"
 #. Default: Current amount invoiced
 #: c3smembership/templates/stats.pt:88
 msgid "stats-dues-amount-invoiced-current"
-msgstr "Laufender Rechnungsbetrag"
+msgstr "Fortlaufender Rechnungsbetrag"
 
 #. Default: Current amount paid
 #: c3smembership/templates/stats.pt:89
 msgid "stats-dues-amount-paid-current"
-msgstr "Laufende Zahlungseingänge"
+msgstr "Fortlaufende Zahlungseingänge"
 
-#. Default: Summe
-#: c3smembership/templates/stats.pt:123
+#. Default: Current balance
+#: c3smembership/templates/stats.pt:90
+msgid "stats-dues-amount-current"
+msgstr "Fortlaufendes Saldo"
+
+#. Default: Total
+#: c3smembership/templates/stats.pt:125
 msgid "stats-dues-sum"
 msgstr "Summe"
 
@@ -601,8 +605,8 @@ msgstr "Das hat funktioniert,"
 #: c3smembership/templates/success.pt:16
 msgid "success-paragraph-thanks"
 msgstr ""
-"Was nun passieren muss: Kontrolliere die Angaben unten, dann fordere eine "
-"Bestätigungs-E-Mail an, lade Dein PDF und sende es unterschrieben per "
+"Was nun passieren muss: Kontrolliere die Angaben unten, dann fordere eine"
+" Bestätigungs-E-Mail an, lade Dein PDF und sende es unterschrieben per "
 "Briefpost an uns zurück."
 
 #. Default: Your data we received
@@ -687,9 +691,10 @@ msgstr "Bestätige deine E-Mail-Adresse"
 #: c3smembership/templates/success.pt:62
 msgid "success-paragraph-verify-email"
 msgstr ""
-"Nach Anfordern der Bestätigungsmail schicken wir eine Mail an deine Adresse. "
-"Rufe deine E-Mails ab und nutze den Bestätigungslink, um dein PDF zu laden. "
-"Dieses muss ausgedruckt und unterschrieben an uns zurückgesandt werden."
+"Nach Anfordern der Bestätigungsmail schicken wir eine Mail an deine "
+"Adresse. Rufe deine E-Mails ab und nutze den Bestätigungslink, um dein "
+"PDF zu laden. Dieses muss ausgedruckt und unterschrieben an uns "
+"zurückgesandt werden."
 
 #: c3smembership/templates/success.pt:69
 msgid "Send Mail"
@@ -726,9 +731,9 @@ msgstr "Lade dein PDF..."
 #: c3smembership/templates/verify_password.pt:31
 msgid "load-pdf-download-instructions"
 msgstr ""
-"Manche Brower (bzw. Browser plugins) zeigen das Formular evtl. nicht bzw. "
-"nicht richtig an.  In diesem Falle versuche es mit Rechtsklick auf den oben "
-"stehenden Link, wähle \"Speichern unter\" und wähle den Speicherort."
+"Manche Brower (bzw. Browser plugins) zeigen das Formular evtl. nicht bzw."
+" nicht richtig an.  In diesem Falle versuche es mit Rechtsklick auf den "
+"oben stehenden Link, wähle \"Speichern unter\" und wähle den Speicherort."
 
 #. Default: To make your membership valid, please print the PDF, sign it and
 #. send
@@ -736,8 +741,8 @@ msgstr ""
 #: c3smembership/templates/verify_password.pt:48
 msgid "load-pdf-further-instructions"
 msgstr ""
-"Um den Beitritt als Mitglied zu vollziehen, musst Du das Formular ausdrucken "
-"und unterzeichnen. Bitte aufmerksam durchlesen."
+"Um den Beitritt als Mitglied zu vollziehen, musst Du das Formular "
+"ausdrucken und unterzeichnen. Bitte aufmerksam durchlesen."
 
 #. Default: When transfering money for your shares to us, please use the
 #. following
@@ -763,11 +768,11 @@ msgstr "Passwort (schützt Deine Daten)"
 
 #: c3smembership/views/afm.py:157
 msgid ""
-"We need a password to protect your data. After verifying your email you will "
-"have to enter it."
+"We need a password to protect your data. After verifying your email you "
+"will have to enter it."
 msgstr ""
-"Wir brauchen ein Passwort, um deine Daten zu schützen. Nach der Bestätigung "
-"der E-Mail-Adresse wird es abgefragt."
+"Wir brauchen ein Passwort, um deine Daten zu schützen. Nach der "
+"Bestätigung der E-Mail-Adresse wird es abgefragt."
 
 #: c3smembership/views/afm.py:173
 msgid "Postal Code"
@@ -775,36 +780,38 @@ msgstr "Postleitzahl"
 
 #: c3smembership/views/afm.py:272
 msgid ""
-"FULL member. Full members have to be natural persons who register at least "
-"three works they created themselves with C3S. This applies to composers, "
-"lyricists and remixers. They get a vote."
+"FULL member. Full members have to be natural persons who register at "
+"least three works they created themselves with C3S. This applies to "
+"composers, lyricists and remixers. They get a vote."
 msgstr ""
 "ORDENTLICHES Mitglied werden: Ordentliche (nutzende) Mitglieder müssen "
-"natürliche Personen sein und als Urheber_in oder Musiker_in mindestens drei "
-"eigene Werke mit eigener Beteiligung zur Wahrnehmung bei der C3S "
+"natürliche Personen sein und als Urheber_in oder Musiker_in mindestens "
+"drei eigene Werke mit eigener Beteiligung zur Wahrnehmung bei der C3S "
 "registrieren. Dies trifft z.B. auf Komponist_innen, Liedtexter_innen, "
-"Remixer_innen und ausübende Musiker_innen zu. Sie erhalten volles Stimmrecht."
+"Remixer_innen und ausübende Musiker_innen zu. Sie erhalten volles "
+"Stimmrecht."
 
 #: c3smembership/views/afm.py:312
 msgid ""
-"If so, which one(s)? Please separate multiple collecting societies by comma."
+"If so, which one(s)? Please separate multiple collecting societies by "
+"comma."
 msgstr "Falls ja, welche? Mehrere Nennungen bitte durch Komma getrennt."
 
 #: c3smembership/views/afm.py:314
 msgid ""
-"Please tell us which collecting societies you are a member of. If more than "
-"one, please separate them by comma."
+"Please tell us which collecting societies you are a member of. If more "
+"than one, please separate them by comma."
 msgstr ""
-"Bitte nenne uns die Verwertungsgesellschaft(en), in denen Du Mitglied bist. "
-"Mehrere Nennungen bitte durch Komma getrennt"
+"Bitte nenne uns die Verwertungsgesellschaft(en), in denen Du Mitglied "
+"bist. Mehrere Nennungen bitte durch Komma getrennt"
 
 #: c3smembership/views/afm.py:332
 msgid ""
-"An electronic copy of the statute of the C3S SCE has been made available to "
-"me (see link below)."
+"An electronic copy of the statute of the C3S SCE has been made available "
+"to me (see link below)."
 msgstr ""
-"Die Satzung wurde mir in elektronischer Form zur Verfügung gestellt (siehe "
-"Link unten)."
+"Die Satzung wurde mir in elektronischer Form zur Verfügung gestellt "
+"(siehe Link unten)."
 
 #: c3smembership/views/afm.py:335
 msgid "You must confirm to have access to the statute."
@@ -812,26 +819,27 @@ msgstr "Du musst bestätigen, Zugriff auf die Satzung gehabt zu haben."
 
 #: c3smembership/views/afm.py:351
 msgid ""
-"An electronic copy of the temporary membership dues regulations of the C3S "
-"SCE has been made available to me (see link below)."
+"An electronic copy of the temporary membership dues regulations of the "
+"C3S SCE has been made available to me (see link below)."
 msgstr ""
 "Die vorläufige Beitragsordnung wurde mir in elektronischer Form zur "
 "Verfügung gestellt (siehe Link unten)."
 
 #: c3smembership/views/afm.py:355
 msgid ""
-"You must confirm to have access to the temporary membership dues regulations."
+"You must confirm to have access to the temporary membership dues "
+"regulations."
 msgstr ""
-"Du musst bestätigen, Zugriff auf die vorläufige Beitragsordnung gehabt zu "
-"haben."
+"Du musst bestätigen, Zugriff auf die vorläufige Beitragsordnung gehabt zu"
+" haben."
 
 #: c3smembership/views/afm.py:373
 msgid ""
-"I want to buy the following number of Shares (50€ each, up to 3000€, see C3S "
-"statute sec. 5)"
+"I want to buy the following number of Shares (50€ each, up to 3000€, see "
+"C3S statute sec. 5)"
 msgstr ""
-"Ich erwerbe die folgende Anzahl Anteile (50 € pro Anteil, höchstens 3000 €, "
-"Satzung § 5):"
+"Ich erwerbe die folgende Anzahl Anteile (50 € pro Anteil, höchstens 3000 "
+"€, Satzung § 5):"
 
 #: c3smembership/views/afm.py:376
 msgid "You can choose any amount of shares between 1 and 60."
@@ -855,11 +863,11 @@ msgstr "C3S: Bestätige deine E-Mail-Adresse und lade Dein PDF"
 
 #: c3smembership/views/afm.py:701
 msgid ""
-"Not found. Check verification URL. If all seems right, please use the form "
-"again."
+"Not found. Check verification URL. If all seems right, please use the "
+"form again."
 msgstr ""
-"Nicht gefunden. Bitte Bestätigungs-URL überprüfen. Wenn alles richtig sein "
-"müsste, bitte das Formular nochmals benutzen."
+"Nicht gefunden. Bitte Bestätigungs-URL überprüfen. Wenn alles richtig "
+"sein müsste, bitte das Formular nochmals benutzen."
 
 #: c3smembership/views/afm.py:716
 msgid "Wrong Password!"
@@ -882,3 +890,4 @@ msgstr "[yes][ALERT] Prüfe die Log-Dateien."
 
 #~ msgid "Have we received payment for the shares?"
 #~ msgstr "Gab es einen Geldeingang in Höhe der Anteile?"
+

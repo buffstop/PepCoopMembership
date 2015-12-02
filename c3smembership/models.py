@@ -12,6 +12,7 @@ from datetime import (
 from decimal import Decimal
 import cryptacular.bcrypt
 import math
+import re
 
 from sqlalchemy import (
     Table,
@@ -616,7 +617,7 @@ class C3sMember(Base):
         return DBSession.query(
             cls).filter(
                 cls.membership_accepted == 1,
-                cls.membership_type == 'normal'
+                cls.membership_type == u'normal'
             ).count()
 
     @classmethod
@@ -627,7 +628,7 @@ class C3sMember(Base):
         return DBSession.query(
             cls).filter(
                 cls.membership_accepted == 1,
-                cls.membership_type == 'investing'
+                cls.membership_type == u'investing'
             ).count()
 
     @classmethod
@@ -638,8 +639,8 @@ class C3sMember(Base):
         _foo = DBSession.query(
             cls).filter(
                 cls.membership_accepted == 1,
-                cls.membership_type != 'normal',
-                cls.membership_type != 'investing',
+                cls.membership_type != u'normal',
+                cls.membership_type != u'investing',
             ).all()
         _other = {}
         for i in _foo:
@@ -915,6 +916,13 @@ class C3sMember(Base):
         else:
             self.dues15_amount_reduced = Decimal('NaN')
 
+    def get_url_safe_name(self):
+        return re.sub(  # # replace characters
+            '[^0-9a-zA-Z]',  # other than these
+            '-',  # with a -
+            self.lastname if self.is_legalentity else (self.lastname + self.firstname))
+
+
 
 class Dues15Invoice(Base):
     """
@@ -1035,14 +1043,14 @@ class Dues15Invoice(Base):
                         Dues15Invoice.is_reversal,
                         Dues15Invoice.invoice_amount)],
                     else_=Decimal('0.0'))).label('amount_invoiced_reversal'),
-                expression.literal_column('0').label('amount_paid')
+                expression.literal_column('\'0.0\'', SqliteDecimal).label('amount_paid')
             ) \
             .group_by(invoice_date_month)
         # collect the payments per month
         member_payments_query = DBSession.query(
                 payment_date_month.label('month'),
-                expression.literal_column('0').label('amount_invoiced_normal'),
-                expression.literal_column('0').label('amount_invoiced_reversal'),
+                expression.literal_column('\'0.0\'', SqliteDecimal).label('amount_invoiced_normal'),
+                expression.literal_column('\'0.0\'', SqliteDecimal).label('amount_invoiced_reversal'),
                 func.sum(C3sMember.dues15_amount_paid).label('amount_paid')
             ) \
             .filter(C3sMember.dues15_paid_date.isnot(None)) \
