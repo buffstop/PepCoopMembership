@@ -12,6 +12,7 @@ from datetime import (
 from decimal import Decimal
 import cryptacular.bcrypt
 import math
+import re
 
 from sqlalchemy import (
     Table,
@@ -616,7 +617,7 @@ class C3sMember(Base):
         return DBSession.query(
             cls).filter(
                 cls.membership_accepted == 1,
-                cls.membership_type == 'normal'
+                cls.membership_type == u'normal'
             ).count()
 
     @classmethod
@@ -627,7 +628,7 @@ class C3sMember(Base):
         return DBSession.query(
             cls).filter(
                 cls.membership_accepted == 1,
-                cls.membership_type == 'investing'
+                cls.membership_type == u'investing'
             ).count()
 
     @classmethod
@@ -638,8 +639,8 @@ class C3sMember(Base):
         _foo = DBSession.query(
             cls).filter(
                 cls.membership_accepted == 1,
-                cls.membership_type != 'normal',
-                cls.membership_type != 'investing',
+                cls.membership_type != u'normal',
+                cls.membership_type != u'investing',
             ).all()
         _other = {}
         for i in _foo:
@@ -914,6 +915,13 @@ class C3sMember(Base):
             self.dues15_amount_reduced = reduced_amount
         else:
             self.dues15_amount_reduced = Decimal('NaN')
+
+    def get_url_safe_name(self):
+        return re.sub(  # # replace characters
+            '[^0-9a-zA-Z]',  # other than these
+            '-',  # with a -
+            self.lastname if self.is_legalentity else (self.lastname + self.firstname))
+
 
 
 class Dues15Invoice(Base):

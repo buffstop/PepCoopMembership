@@ -168,7 +168,7 @@
                 href="${request.route_url('certificate_mail', id=member.id)}"
                 title="gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}"
                 class="btn btn-success"></a>
-                <a href="${request.route_url('certificate_pdf_staff', id=member.id, name=member.lastname+member.firstname)}"
+                <a href="${request.route_url('certificate_pdf_staff', id=member.id, name=member.get_url_safe_name())}"
                 title="Mitgliedschaftsurkunde ansehen"
                 class="btn btn-success">PDF</a>
             </td>

@@ -65,14 +65,9 @@ def send_certificate_email(request):
             status='404 Not Found',)
     # create a token for the certificate
     _m.certificate_token = make_random_token()
-    # construct mail
-    _name = re.sub(  # # replace characters
-        '[^0-9a-zA-Z]',  # other than these
-        '-',  # with a -
-        _m.lastname if _m.is_legalentity else (_m.lastname + _m.firstname))
 
     _url = request.route_url('certificate_pdf',
-                             id=_m.id, name=_name, token=_m.certificate_token)
+                             id=_m.id, name=_m.get_url_safe_name(), token=_m.certificate_token)
     if DEBUG:  # pragma: no cover
         print '#'*60
         print _m.certificate_token
