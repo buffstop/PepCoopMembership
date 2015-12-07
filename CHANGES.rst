@@ -1,3 +1,11 @@
+1.12
+====
+
+
+- Fix minor issues with application form templates.
+
+
+
 1.12-beta.4
 ===========
 
