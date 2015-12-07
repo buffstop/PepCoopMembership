@@ -1,5 +1,5 @@
-Next Release
-============
+1.12
+====
 
 
 - Fix minor issues with application form templates.
