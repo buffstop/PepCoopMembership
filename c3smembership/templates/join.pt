@@ -85,7 +85,8 @@ $(document).ready(function(){
 
     <h2 i18n:translate="join-form-headline-fine-print" class="deform">The Fine Print</h2>
     <p i18n:translate="" class="infoIndent">
-      <a href="https://www.c3s.cc/ueber-c3s/manifesto/" target="_blank"
+      <a href="https://www.c3s.cc/en/about-us/manifesto/" target="_blank"
+   i18n:attributes="href manifesto-link"
 	 i18n:name="join-form-manifesto-title"
 	 i18n:translate="join-form-manifesto-title">The Cultural Commons Manifesto</a>
     </p>
@@ -95,6 +96,19 @@ $(document).ready(function(){
 	 i18n:translate="join-form-statute-linktitle-de">(german)</a>
       <a href="http://archive.c3s.cc/legal/C3S_en_v1.0.pdf" target="_blank"
 	 i18n:translate="join-form-statute-linktitle-en">(english)</a>
+    </p>
+    <p class="infoIndent">
+      <span i18n:translate="join-form-dues-regulations">
+        The Temporary Membership Dues Regulations
+      </span>
+      <a href="https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf"
+        target="_blank" i18n:translate="join-form-dues-regulations-linktitle-de">
+          (german)
+      </a>
+      <a href="https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf"
+        target="_blank" i18n:translate="join-form-dues-regulations-linktitle-en">
+          (english)
+      </a>
     </p>
 
     <p i18n:translate="join-form-disclaimer-title" class="infoIndent">

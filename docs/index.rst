@@ -17,10 +17,13 @@ to cater for the whole life cycle of memberships.
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
+   :numbered:
 
    overview/index
    code/index
+   requirements/index
+   development/index
    models/index
    tests/index
    hacking/index

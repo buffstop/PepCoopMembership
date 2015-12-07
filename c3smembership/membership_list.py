@@ -90,7 +90,6 @@ def member_list_date_pdf_view(request):
     try:
         _date_m = request.matchdict['date']
         _date = datetime.strptime(_date_m, '%Y-%m-%d')
-        # print("the date: {}".format(_date))
     except:
         request.session.flash(
             'Invalid date! ',
@@ -217,19 +216,12 @@ def member_list_date_pdf_view(request):
             _address += '''\linebreak {}'''.format(
                 unicode(m.address2).encode('utf-8'))
         # add more...
-        _address += ''' \linebreak {} '''.format(  # postcode
+        _address += ''' \linebreak {} '''.format(
             unicode(m.postcode).encode('utf-8'))
         _address += '''{}'''.format(
-            unicode(m.city).encode('utf-8'))  # and city
+            unicode(m.city).encode('utf-8'))
         _address += ''' ({})'''.format(
-            unicode(m.country).encode('utf-8'))  # and country
-        # check membership type, prefix membership number
-        # print('membership type: {}'.format(m.membership_type))
-        # if u'investing' in m.membership_type:
-        #    _mship = 'i'
-        # else:
-        #    _mship = 'n'
-        # _mship += m.membership_number
+            unicode(m.country).encode('utf-8'))
         _mship = m.membership_number
 
         # check shares acquired until $date
@@ -266,7 +258,7 @@ def member_list_date_pdf_view(request):
     latex_file.seek(0)  # rewind
 
     # pdflatex latex_file to pdf_file
-    FNULL = open(os.devnull, 'w')  # hide output here ;-)
+    FNULL = open(os.devnull, 'w')  # hide output
     pdflatex_output = subprocess.call(
         [
             'pdflatex',
@@ -360,7 +352,6 @@ def membership_listing_backend(request):
         _order_by = request.matchdict['orderby']
         _order = request.matchdict['order']
     except:
-        # print("Using default values")
         _page_to_show = 0
         _order_by = 'id'
         _order = 'asc'
@@ -377,10 +368,8 @@ def membership_listing_backend(request):
             # choose default
             m_num_display = 20
     elif 'm_num_display' in request.cookies:
-        # print("found it in cookie")
         m_num_display = int(request.cookies['m_num_display'])
     else:
-        # print("setting default")
         if 'c3smembership.membership_number' in request.registry.settings:
             m_num_display = request.registry.settings[
                 'c3smembership.membership_number']
@@ -450,10 +439,6 @@ def merge_member_view(request):
             'you can only merge to accepted members!',
             'merge_message')
         HTTPFound(request.route_url('make_member', afm_id=_id))
-    # print "resulting number of shares: {}".format(
-    #    int(orig.num_shares) + int(merg.num_shares))
-    # print "resulting number of shares exceeds 60? {}".format(
-    #    int(orig.num_shares) + int(merg.num_shares) > 60)
     exceeds_60 = int(orig.num_shares) + int(merg.num_shares) > 60
     if exceeds_60:
         request.session.flash(
@@ -544,8 +529,6 @@ def make_member_view(request):
         'same_mships_email': C3sMember.get_same_email(_m.email),
         'same_mships_dob': C3sMember.get_same_date_of_birth(
             _m.date_of_birth),
-        # 'same_mships_city': C3sMember.get_same_city(_m.city),
-        # 'same_mships_postcode': C3sMember.get_same_postcode(_m.postcode),
     }
 
 
@@ -597,7 +580,6 @@ def flag_duplicates(request):
     ]
     # make sure the lastnames match and combined shares do not exceed 60
     for d in duplicates:
-        # print "--> d[0]: {}; d[1]: {}".format(d[0], d[1])
         orig = C3sMember.get_by_id(d[0])
         dupl = C3sMember.get_by_id(d[1])
         assert(orig.lastname == dupl.lastname)
@@ -628,15 +610,8 @@ def make_founders_members(request):
         last_id=1066,  # starting at 932, omit 1st 931
         order=u'asc')
     print "got {} items.".format(len(_founders))
-    # print "first:"
-    # print _founders[0].firstname
-    # print "last:"
-    # print _founders[49].firstname
     try:  # sanity check
         for _f in _founders:
-            # print u"founder id: {} firstname: {} refcode: {}".format(
-            # _f.id, _f.firstname, _f.email_confirm_code
-            # )
             assert(_f.email_confirm_code.split('_')[0].endswith('dungHH'))
             assert(_f.date_of_submission == datetime(2013, 9, 25))
             assert(_f.signature_received_date == datetime(2013, 9, 25))
@@ -653,7 +628,6 @@ def make_founders_members(request):
         _f.is_legalentity = False
         # prepare numbering
         _number = int(_f.email_confirm_code.split('_')[1])
-        # print "the number from refcode: {}".format(_number)
         # membership_number
         if _number < 20:
             _f.membership_number = _number
@@ -664,15 +638,6 @@ def make_founders_members(request):
         print "number given to id {}: {}".format(
             _f.id, _f.membership_number
         )
-        # debug
-        # print u"email_confirm_code: {}".format(_f.email_confirm_code)
-        # print "signature_received: {}".format(_f.signature_received)
-        # print "signature_received_date: {}".format(
-        #    _f.signature_received_date)
-        # print "payment_received: {}".format(_f.payment_received)
-        # print "payment_received_date: {}".format(_f.payment_received_date)
-        # print ": {}".format(_f.)
-
         # handle shares
         try:
             shares = Shares(
@@ -710,11 +675,7 @@ def make_crowdfounders_members(request):
     try:  # sanity check
         print "checking crowdfounder data"
         for _f in _crowdfounders:
-            # print u"crowdfounder id: {} firstname: {} refcode: {}".format(
-            #    _f.id, _f.firstname, _f.email_confirm_code
-            # )
             assert(_f.email_confirm_code.startswith('TR001'))
-            # assert(_f.date_of_submission == datetime(2014, 6, 27))
             assert(_f.signature_received_date == datetime(1970, 1, 1))
             assert(_f.payment_received_date == datetime(1970, 1, 1))
     except:
@@ -731,7 +692,6 @@ def make_crowdfounders_members(request):
         # make member
         _f.membership_accepted = True
         _f.membership_date = _f.date_of_submission
-        # print "DEBUG: date of membership: {}".format(_f.date_of_submission)
         _f.is_legalentity = False
 
         # handle shares
@@ -751,14 +711,10 @@ def make_crowdfounders_members(request):
         )
         DBSession.add(shares)  # persist
         _f.shares = [shares]
-        # print "number of shares before: {}".format(_f.num_shares)
-        # _f.num_shares += shares.number  # update number of shares
-        # print "number of shares after: {}".format(_f.num_shares)
 
     _cf_sorted = []
     _cf_sorted = sorted(
         _crowdfounders, key=lambda x: x.email_confirm_code)
-    # print len(_cf_sorted)
 
     highest_mem_num = 49  # we know this (see make_founders_members)
     print "giving membership numbers to crowdfounders..."

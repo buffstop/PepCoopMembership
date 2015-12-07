@@ -51,6 +51,8 @@ class JoinFormTests(SeleniumTestBase):
         time.sleep(0.1)
         self.driver.find_element_by_name('password').send_keys('foobar')
         time.sleep(0.1)
+        self.driver.find_element_by_name('password-confirm').send_keys('foobar')
+        time.sleep(0.1)
         self.driver.find_element_by_name('address1').send_keys('addr one')
         time.sleep(0.11)
         self.driver.find_element_by_name('address2').send_keys('addr two')
@@ -80,11 +82,13 @@ class JoinFormTests(SeleniumTestBase):
         time.sleep(0.1)
         self.driver.find_element_by_name('got_statute').click()
         time.sleep(0.1)
+        self.driver.find_element_by_name('got_dues_regulations').click()
+        time.sleep(0.1)
         self.driver.find_element_by_name('num_shares').send_keys('7')
 
         self.driver.find_element_by_name('submit').click()
 
-        self.failUnless('Email anfordern' in self.driver.page_source)
+        self.failUnless('E-Mail anfordern' in self.driver.page_source)
 
         # TODO: check contents of success page XXX
         self.assertTrue('Christoph' in self.driver.page_source)
@@ -145,9 +149,11 @@ class JoinFormTests(SeleniumTestBase):
 
         # verify we have to theck this again
         self.driver.find_element_by_name('got_statute').click()
+        self.driver.find_element_by_name('got_dues_regulations').click()
         self.driver.find_element_by_id('other_colsoc-1').click()  # No colsoc
         # enter password
         self.driver.find_element_by_name('password').send_keys('foobar')
+        self.driver.find_element_by_name('password-confirm').send_keys('foobar')
         time.sleep(0.1)
 
         self.driver.find_element_by_name('submit').click()

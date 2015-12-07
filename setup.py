@@ -5,7 +5,8 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.md')).read()
+CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
+VERSION = open(os.path.join(here, 'VERSION')).read()
 
 requires = [
     'alembic',  # migrate the database when introducing new fields
@@ -23,13 +24,14 @@ requires = [
     'pyramid_mailer',
     'pyramid_tm',
     'python-gnupg',
-    'repoze.sendmail>=4.1',
+    'repoze.sendmail==4.1',  # pin to 4.1 because of repoze/repoze.sendmail#31
+    # see https://github.com/repoze/repoze.sendmail/issues/31
     'SQLAlchemy',
     'transaction',
     'unicodecsv',
     'waitress',
     'zope.sqlalchemy',
-    'sphinx', # for generating the documentation
+    'sphinx',  # for generating the documentation
 ]
 # for the translations machinery using transifex you also need to
 # "pip install transifex-client"
@@ -37,6 +39,7 @@ test_requirements = [
     'coverage',
     'nose',
     'pdfminer',  # and its dependency
+    'mock',  # for creating mock objects
     'pyquery',
     'selenium',
     'slate',  # pdf to text helper
@@ -47,7 +50,7 @@ if sys.version_info[:3] < (2, 5, 0):
     requires.append('pysqlite')
 
 setup(name='c3smembership',
-      version='1.11.2',
+      version=VERSION,
       description='Membership Form for C3S (form, PDF, email)',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

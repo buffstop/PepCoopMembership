@@ -12,7 +12,7 @@ def make_payment_confirmation_emailbody(_input):
         _body = (u"""Liebes Neumitglied,
 
 Deine Überweisung für """ + str(_num_shares) +
-                 u""" Anteile (""" + str(_sum_shares) +
+                 u""" Anteil(e) (""" + str(_sum_shares) +
                  u""" Euro) ist auf
 unserem Konto eingegangen.
 
@@ -51,7 +51,7 @@ Das C3S-Team
         _body = (u"""Dear new member,
 
 Your transfer of """ + str(_sum_shares) + u" Euro for " + str(_num_shares) +
-                 u""" shares just showed in our bank account.
+                 u""" share(s) just showed in our bank account.
 
 In case of any problems please don't hesitate to contact us (yes@c3s.cc).
 

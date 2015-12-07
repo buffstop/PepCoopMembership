@@ -17,6 +17,7 @@ from datetime import (
     date,
     datetime
 )
+import os
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from pyramid.renderers import render
@@ -64,19 +65,26 @@ def send_certificate_email(request):
             status='404 Not Found',)
     # create a token for the certificate
     _m.certificate_token = make_random_token()
-    # construct mail
-    _name = re.sub(  # # replace characters
-        '[^0-9a-zA-Z]',  # other than these
-        '-',  # with a -
-        _m.lastname if _m.is_legalentity else (_m.lastname + _m.firstname))
 
     _url = request.route_url('certificate_pdf',
-                             id=_m.id, name=_name, token=_m.certificate_token)
+                             id=_m.id, name=_m.get_url_safe_name(), token=_m.certificate_token)
     if DEBUG:  # pragma: no cover
         print '#'*60
         print _m.certificate_token
         print _url
         print '#'*60
+
+    here = os.path.dirname(__file__)
+    message_body_file_name = os.path.join(
+        here,  # construct path relative to *this* file
+        ('templates/mail/membership_certificate_' + \
+         _m.locale + '.txt'))
+    with open(message_body_file_name, 'rb') as content_file:
+        message_body = content_file.read().decode('utf-8')
+        message_body = message_body.format(
+            name=_m.firstname,
+            url=_url
+        )
 
     mailer = get_mailer(request)
     the_message = Message(
@@ -84,14 +92,7 @@ def send_certificate_email(request):
             _m.locale == 'de') else u'C3S membership certificate',
         sender='office@c3s.cc',
         recipients=[_m.email, ],
-        body=render(
-            'templates/mail/membership_certificate_' + _m.locale + '.pt',
-            {
-                'name': _m.firstname,
-                'url': _url,
-            },
-            request=request,
-        )
+        body = message_body
     )
     if 'true' in request.registry.settings[
             'testing.mail_to_console']:  # pragma: no cover

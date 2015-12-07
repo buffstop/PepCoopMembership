@@ -1,9 +1,9 @@
-Hallo ${name},
+Hallo {name},
 
 Wir freuen uns, Dir Deine persönliche Mitgliederbescheinigung aushändigen
 zu können!
 
-  ${url}
+  {url}
 
 Bitte prüfe die darin enthaltenen Daten und antworte einfach auf diese
 Mail, sollte etwas nicht stimmen.

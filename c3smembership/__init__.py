@@ -1,6 +1,7 @@
 """
 This module holds the main method: config and route declarations
 """
+
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
@@ -13,6 +14,9 @@ from c3smembership.security import (
 from pyramid_beaker import session_factory_from_settings
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
+
+from pkg_resources import get_distribution
+__version__ = get_distribution('c3sMembership').version
 
 
 def main(global_config, **settings):
@@ -48,7 +52,7 @@ def main(global_config, **settings):
                            'c3smembership:static', cache_max_age=3600)
     config.add_static_view(
         'docs',
-        'static_docs', cache_max_age=3600)
+        '../docs/_build/html/', cache_max_age=3600)
 
     config.add_subscriber('c3smembership.subscribers.add_base_template',
                           'pyramid.events.BeforeRender')

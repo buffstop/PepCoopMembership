@@ -132,8 +132,8 @@ We are looking forward to welcome you at C3S!
 
 All the best
 
-Eva
-for the team of C3S
+
+the team of C3S
     '''.format(
         _member.firstname,
         _member.lastname,

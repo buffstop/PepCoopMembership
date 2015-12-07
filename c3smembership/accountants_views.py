@@ -10,13 +10,10 @@ This module holds views for accountants to do accounting stuff.
 - Deletion of applications
 - ReGenerate a PDF for an application
 """
-# import tempfile
-# import unicodecsv
 
 from c3smembership.models import (
     C3sMember,
     C3sStaff,
-    # DBSession,
     Dues15Invoice,
 )
 from c3smembership.utils import generate_pdf
@@ -33,6 +30,8 @@ from types import NoneType
 import colander
 import deform
 from deform import ValidationFailure
+
+from c3smembership.git_tools import GitTools
 
 from pyramid.i18n import (
     get_localizer,
@@ -53,16 +52,14 @@ from datetime import (
     datetime,
     date,
 )
-# from sqlalchemy.exc import (
-#    IntegrityError,
-#    ResourceClosedError,
-# )
 import math
+import os
 
-deform_templates = resource_filename('deform', 'templates')
-c3smembership_templates = resource_filename('c3smembership', 'templates')
 
-my_search_path = (deform_templates, c3smembership_templates)
+DEFORM_TEMPLATES = resource_filename('deform', 'templates')
+C3SMEMBERSHIP_TEMPLATES = resource_filename('c3smembership', 'templates')
+
+MY_SEARCH_PATH = (DEFORM_TEMPLATES, C3SMEMBERSHIP_TEMPLATES)
 
 _ = TranslationStringFactory('c3smembership')
 
@@ -70,24 +67,24 @@ _ = TranslationStringFactory('c3smembership')
 def translator(term):
     return get_localizer(get_current_request()).translate(term)
 
-my_template_dir = resource_filename('c3smembership', 'templates/')
-deform_template_dir = resource_filename('deform', 'templates/')
+MY_TEMPLATE_DIR = resource_filename('c3smembership', 'templates/')
+DEFORM_TEMPLATE_DIR = resource_filename('deform', 'templates/')
 
-zpt_renderer = deform.ZPTRendererFactory(
+# the ZPT_RENDERER is referred to within the demo.ini file by dotted name
+ZPT_RENDERER = deform.ZPTRendererFactory(
     [
-        my_template_dir,
-        deform_template_dir,
+        MY_TEMPLATE_DIR,
+        DEFORM_TEMPLATE_DIR,
     ],
     translator=translator,
 )
-# the zpt_renderer above is referred to within the demo.ini file by dotted name
 
 DEBUG = False
 LOGGING = True
 
 if LOGGING:  # pragma: no cover
     import logging
-    log = logging.getLogger(__name__)
+    LOG = logging.getLogger(__name__)
 
 
 @view_config(renderer='templates/login.pt',
@@ -99,13 +96,11 @@ def accountants_login(request):
     If a person is already logged in, she is forwarded to the dashboard.
     """
     logged_in = authenticated_userid(request)
-    # print("authenticated_userid: " + str(logged_in))
 
-    log.info("login by %s" % logged_in)
+    LOG.info("login by %s", logged_in)
 
-    if logged_in is not None:  # if user is already authenticated
-        return HTTPFound(  # redirect her to the dashboard
-            request.route_url('dashboard_only'))
+    if logged_in is not None:
+        return HTTPFound(request.route_url('dashboard_only'))
 
     class AccountantLogin(colander.MappingSchema):
         """
@@ -114,15 +109,13 @@ def accountants_login(request):
         login = colander.SchemaNode(
             colander.String(),
             title=_(u"login"),
-            oid="login",
-        )
+            oid="login")
         password = colander.SchemaNode(
             colander.String(),
             validator=colander.Length(min=5, max=100),
             widget=deform.widget.PasswordWidget(size=20),
             title=_(u"password"),
-            oid="password",
-        )
+            oid="password")
 
     schema = AccountantLogin()
 
@@ -132,25 +125,20 @@ def accountants_login(request):
             deform.Button('submit', _(u'Submit')),
             deform.Button('reset', _(u'Reset'))
         ],
-        # use_ajax=True,
-        # renderer=zpt_renderer
     )
 
     # if the form has been used and SUBMITTED, check contents
     if 'submit' in request.POST:
-        # print("the form was submitted")
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
-        except ValidationFailure, e:
-            print(e)
-
+        except ValidationFailure, e_validation_failure:
             request.session.flash(
                 _(u"Please note: There were errors, "
                   "please check the form below."),
                 'message_above_form',
                 allow_duplicate=False)
-            return{'form': e.render()}
+            return{'form': e_validation_failure.render()}
 
         # get user and check pw...
         login = appstruct['login']
@@ -161,18 +149,18 @@ def accountants_login(request):
         except AttributeError:  # pragma: no cover
             checked = False
         if checked:
-            log.info("password check for %s: good!" % login)
+            LOG.info("password check for %s: good!", login)
             headers = remember(request, login)
-            log.info("logging in %s" % login)
-            return HTTPFound(  # redirect to accountants dashboard
-                location=route_url(  # after successful login
+            LOG.info("logging in %s", login)
+            return HTTPFound(
+                location=route_url(
                     'dashboard_only',
                     request=request),
                 headers=headers)
         else:
-            log.info("password check: failed for %s." % login)
+            LOG.info("password check: failed for %s.", login)
     else:
-        request.session.pop('message_above_form')  # remove message fr. session
+        request.session.pop('message_above_form')
 
     html = form.render()
     return {'form': html, }
@@ -201,85 +189,48 @@ def accountants_desk(request):
     an application can be turned into a membership from here:
     a button shows up.
     """
-    # _number_of_datasets = C3sMember.get_num_nonmember_listing()
     _number_of_datasets = C3sMember.nonmember_listing_count()
-    # print "number of datasets: {}".format(_number_of_datasets)
-    # C3sMember.get_num_non_accepted()
-    try:  # check if page number, orderby and order were supplied with the URL
+    try:
         _page_to_show = int(request.matchdict['number'])
         _order_by = request.matchdict['orderby']
         _order = request.matchdict['order']
-    except:
-        # print("Using default values")
+    except (KeyError, ValueError):
         _page_to_show = 0
         _order_by = 'id'
         _order = 'asc'
 
-    # '''
-    # there used to be a form on this page allowing input of
-    # one 'code_to_show' in case you wanted to see it
-    # and be redirected there
-    # '''
-    # # check for input from "find dataset by confirm code" form
-    # if 'code_to_show' in request.POST:
-    #     try:
-    #         _code = request.POST['code_to_show']
-    #         log.info(
-    #             "%s searched for code %s" % (
-    #                 authenticated_userid(request), _code))
-    #         _entry = C3sMember.get_by_code(_code)
-
-    #         return HTTPFound(
-    #             location=request.route_url(
-    #                 'detail',
-    #                 memberid=_entry.id)
-    #         )
-    #     except:
-    #         pass
-
-    """
-    num_display determines how many items are to be shown on one page
-    """
     if 'num_to_show' in request.POST:
         try:
             _num = int(request.POST['num_to_show'])
             if isinstance(_num, type(1)):
                 num_display = _num
-        except:
-            # choose default
+        except (KeyError, ValueError):
             num_display = 20
     elif 'num_display' in request.cookies:
-        # print("found it in cookie")
         num_display = int(request.cookies['num_display'])
     else:
-        # print("setting default")
         num_display = request.registry.settings[
             'c3smembership.dashboard_number']
 
-    """
-    base_offset helps us to minimize impact on the database
-    when querying for results.
-    we can choose just those results we need for the page to show
-    """
+    # base_offset helps us to minimize impact on the database
+    # when querying for results.
+    # we can choose just those results we need for the page to show
     base_offset = int(_page_to_show) * int(num_display)
 
-    '''
-    load the list from the database
-    '''
-    # get data sets from DB
+    # load the list from the database
     _members = C3sMember.nonmember_listing(
         _order_by, how_many=num_display, offset=base_offset, order=_order)
-    # print "DEBUG: number of items in _members: {}".format(len(_members))
 
     # calculate next-previous-navi
-    next_page = (int(_page_to_show) + 1)
-    if (int(_page_to_show) > 0):
+    next_page = int(_page_to_show) + 1
+    if int(_page_to_show) > 0:
         previous_page = int(_page_to_show) - 1
     else:
         previous_page = int(_page_to_show)
     _last_page = int(math.ceil(_number_of_datasets / int(num_display)))
     if next_page > _last_page:
         next_page = _last_page
+
     # store info about current page in cookie
     request.response.set_cookie('on_page', value=str(_page_to_show))
     request.response.set_cookie('num_display', value=str(num_display))
@@ -290,19 +241,47 @@ def accountants_desk(request):
     if 'message' in request.GET:
         _message = request.GET['message']
 
-    return {'_number_of_datasets': _number_of_datasets,
-            'members': _members,
-            'num_display': num_display,
-            'next': next_page,
-            'previous': previous_page,
-            'current': _page_to_show,
-            'orderby': _order_by,
-            'order': _order,
-            'message': _message,
-            'last_page': _last_page,
-            'is_last_page': _page_to_show == _last_page,
-            'is_first_page': _page_to_show == 0,
-            }
+    # build version information for footer
+    version_number = open(os.path.join(
+        os.path.abspath(os.path.dirname(__file__)),
+        '../',
+        'VERSION')).read()
+    version_location_url = None
+    version_location_name = None
+    if 'c3smembership.runmode' in request.registry.settings and \
+            request.registry.settings['c3smembership.runmode'] == 'dev':
+        # retrieving git information is expensive and therefore only
+        # displayed in development mode
+        git_tag = GitTools.get_tag()
+        branch_name = GitTools.get_branch()
+        version_metadata = [u'Version {0}'.format(version_number)]
+        if git_tag is not None:
+            version_metadata.append(u'Tag {0}'.format(git_tag))
+        if branch_name is not None:
+            version_metadata.append(u'Branch {0}'.format(branch_name))
+        version_information = ', '.join(version_metadata)
+        version_location_name = GitTools.get_commit_hash()
+        version_location_url = GitTools.get_github_commit_url()
+    else:
+        version_information = u'Version {0}'.format(version_number)
+
+    return {
+        '_number_of_datasets': _number_of_datasets,
+        'members': _members,
+        'num_display': num_display,
+        'next': next_page,
+        'previous': previous_page,
+        'current': _page_to_show,
+        'orderby': _order_by,
+        'order': _order,
+        'message': _message,
+        'last_page': _last_page,
+        'is_last_page': _page_to_show == _last_page,
+        'is_first_page': _page_to_show == 0,
+        'version_information': version_information,
+        'version_location_name': version_location_name,
+        'version_location_url': version_location_url,
+    }
 
 
 @view_config(permission='manage',
@@ -313,7 +292,6 @@ def switch_sig(request):
     once their signature has arrived.
     """
     memberid = request.matchdict['memberid']
-    # log.info("the id: %s" % memberid)
 
     # store the dashboard page the admin came from
     dashboard_page = request.cookies['on_page']
@@ -328,12 +306,11 @@ def switch_sig(request):
         _member.signature_received = True
         _member.signature_received_date = datetime.now()
 
-    log.info(
-        "signature status of member.id %s changed by %s to %s" % (
-            _member.id,
-            request.user.login,
-            _member.signature_received
-        )
+    LOG.info(
+        "signature status of member.id %s changed by %s to %s",
+        _member.id,
+        request.user.login,
+        _member.signature_received
     )
 
     if 'dashboard' in request.referrer:
@@ -361,7 +338,7 @@ def delete_entry(request):
 
     deletion_confirmed = (request.params.get('deletion_confirmed', '0') == '1')
     redirection_view = request.params.get('redirect', 'dashboard_only')
-    log.info('redirect to: ' + str(redirection_view))
+    LOG.info('redirect to: ' + str(redirection_view))
 
     if deletion_confirmed:
         memberid = request.matchdict['memberid']
@@ -370,11 +347,10 @@ def delete_entry(request):
         member_firstname = _member.firstname
 
         C3sMember.delete_by_id(_member.id)
-        log.info(
-            "member.id %s was deleted by %s" % (
-                _member.id,
-                request.user.login,
-            )
+        LOG.info(
+            "member.id %s was deleted by %s",
+            _member.id,
+            request.user.login,
         )
         _message = "member.id %s was deleted" % _member.id
         request.session.flash(_message, 'messages')
@@ -384,9 +360,9 @@ def delete_entry(request):
             request.route_url(
                 redirection_view,
                 _query={'message': _msgstr.format(
-                        memberid,
-                        member_lastname,
-                        member_firstname)}
+                    memberid,
+                    member_lastname,
+                    member_firstname)}
             ) + '#member_' + str(memberid)
         )
     else:
@@ -420,12 +396,11 @@ def switch_pay(request):
         _member.payment_received = True
         _member.payment_received_date = datetime.now()
 
-    log.info(
-        "payment info of member.id %s changed by %s to %s" % (
-            _member.id,
-            request.user.login,
-            _member.payment_received
-        )
+    LOG.info(
+        "payment info of member.id %s changed by %s to %s",
+        _member.id,
+        request.user.login,
+        _member.payment_received
     )
     if 'dashboard' in request.referrer:
         return HTTPFound(
@@ -479,12 +454,9 @@ def member_detail(request):
     in the database can be seen here.
     """
     from decimal import Decimal as D
-    # import decimal
     logged_in = authenticated_userid(request)
-
     memberid = request.matchdict['memberid']
-    log.info("member details of id %s checked by %s" % (
-        memberid, logged_in))
+    LOG.info("member details of id %s checked by %s", memberid, logged_in)
 
     _member = C3sMember.get_by_id(memberid)
 
@@ -498,99 +470,6 @@ def member_detail(request):
         return HTTPFound(  # back to base
             request.route_url('toolbox'))
 
-    # class ChangeDetails(colander.MappingSchema):
-    #     """
-    #     colander schema (form) to change details of member
-    #     """
-    #     signature_received = colander.SchemaNode(
-    #         colander.Bool(),
-    #         title=_(u"Have we received a good signature?")
-    #     )
-    #     payment_received = colander.SchemaNode(
-    #         colander.Bool(),
-    #         title=_(u"Have we received payment for the shares?")
-    #     )
-
-    # schema = ChangeDetails()
-    # form = deform.Form(
-    #     schema,
-    #     buttons=[
-    #         deform.Button('submit', _(u'Submit')),
-    #         deform.Button('reset', _(u'Reset'))
-    #     ],
-    #     use_ajax=True,
-    #     renderer=zpt_renderer
-    # )
-
-    # # if the form has been used and SUBMITTED, check contents
-    # if 'submit' in request.POST:
-    #     controls = request.POST.items()
-    #     try:
-    #         appstruct = form.validate(controls)
-    #     except ValidationFailure, e:  # pragma: no cover
-    #         log.info(e)
-    #         # print("the appstruct from the form: %s \n") % appstruct
-    #         # for thing in appstruct:
-    #         #    print("the thing: %s") % thing
-    #         #    print("type: %s") % type(thing)
-    #         print(e)
-    #         request.session.flash(
-    #             _(u"Please note: There were errors, "
-    #               "please check the form below."),
-    #             'message_above_form',
-    #             allow_duplicate=False)
-    #         return{'form': e.render()}
-
-    #     # change info about member in database
-
-    #     test1 = (  # changed value through form (different from db)?
-    #         appstruct['signature_received'] == _member.signature_received)
-    #     if not test1:
-    #         log.info(
-    #             "info about signature of %s changed by %s to %s" % (
-    #                 _member.id,
-    #                 request.user.login,
-    #                 appstruct['signature_received']))
-    #         _member.signature_received = appstruct['signature_received']
-    #     test2 = (  # changed value through form (different from db)?
-    #         appstruct['payment_received'] == _member.payment_received)
-    #     if not test2:
-    #         log.info(
-    #             "info about payment of %s changed by %s to %s" % (
-    #                 _member.id,
-    #                 request.user.login,
-    #                 appstruct['payment_received']))
-    #         _member.payment_received = appstruct['payment_received']
-    #     # store appstruct in session
-    #     request.session['appstruct'] = appstruct
-
-    #     # show the updated details
-    #     HTTPFound(route_url('detail', request, memberid=memberid))
-
-    # # else: form was not submitted: just show member info and form
-    # else:
-    #     appstruct = {  # populate form with values from DB
-    #         'signature_received': _member.signature_received,
-    #         'payment_received': _member.payment_received}
-    #     form.set_appstruct(appstruct)
-    #     # print("the appstruct: %s") % appstruct
-    # html = form.render()
-
-    # make pretty link for certificate download
-    if _member.is_legalentity:
-        _cert_link = _member.lastname
-    else:
-        _cert_link = _member.firstname + _member.lastname
-
-    _cert_link = _cert_link.replace(
-        u'&', u'+').replace(
-        u' ', u'_').replace(
-        u'.', u'').replace(
-        u'ä', u'ae').replace(
-        u'ö', u'oe').replace(
-        u'ü', u'ue').replace(
-        u'.', u'')
-
     # get the members invoices from the DB
     _invoices = Dues15Invoice.get_by_membership_no(_member.membership_number)
 
@@ -598,7 +477,6 @@ def member_detail(request):
         'today': date.today().strftime('%Y-%m-%d'),
         'D': D,
         'member': _member,
-        'cert_link': _cert_link,
         'invoices': _invoices,
         # 'form': html
     }
@@ -613,8 +491,10 @@ def logout_view(request):
     request.session.invalidate()
     request.session.flash(u'Logged out successfully.')
     headers = forget(request)
-    return HTTPFound(location=route_url('login', request),
-                     headers=headers)
+    return HTTPFound(
+        location=route_url('login', request),
+        headers=headers
+    )
 
 
 @view_config(permission='manage',
@@ -626,9 +506,8 @@ def regenerate_pdf(request):
     _code = request.matchdict['code']
     _member = C3sMember.get_by_code(_code)
 
-    if _member is None:  # that memberid did not produce good results
-        return HTTPFound(  # back to base
-            request.route_url('dashboard_only'))
+    if _member is None:
+        return HTTPFound(request.route_url('dashboard_only'))
     _appstruct = {
         'firstname': _member.firstname,
         'lastname': _member.lastname,
@@ -645,9 +524,10 @@ def regenerate_pdf(request):
         'date_of_birth': _member.date_of_birth,
         'date_of_submission': _member.date_of_submission,
     }
-    log.info(
-        "%s regenerated the PDF for code %s" % (
-            authenticated_userid(request), _code))
+    LOG.info(
+        "%s regenerated the PDF for code %s",
+        authenticated_userid(request),
+        _code)
     return generate_pdf(_appstruct)
 
 
@@ -661,9 +541,8 @@ def mail_signature_confirmation(request):
     _id = request.matchdict['memberid']
     _member = C3sMember.get_by_id(_id)
     if _member.locale == 'de':
-        _subject = (
-            u'[C3S AFM] Wir haben Deine Unterschrift erhalten. '
-            u'Dankeschön!')
+        _subject = u'[C3S AFM] Wir haben Deine Unterschrift ' + \
+                   u'erhalten. Dankeschön!'
     else:
         _subject = u'[C3S AFM] We have received your signature. Thanks!'
 
@@ -673,16 +552,15 @@ def mail_signature_confirmation(request):
         recipients=[_member.email],
         body=make_signature_confirmation_emailbody(_member)
     )
-    # print(message.body)
     mailer = get_mailer(request)
     mailer.send(message)
     _member.signature_confirmed = True
     _member.signature_confirmed_date = datetime.now()
-    return HTTPFound(request.route_url('dashboard',
-                                       number=request.cookies['on_page'],
-                                       order=request.cookies['order'],
-                                       orderby=request.cookies['orderby'])
-                     )
+    return HTTPFound(request.route_url(
+        'dashboard',
+        number=request.cookies['on_page'],
+        order=request.cookies['order'],
+        orderby=request.cookies['orderby']))
 
 
 @view_config(permission='manage',
@@ -706,17 +584,15 @@ def mail_payment_confirmation(request):
         recipients=[_member.email],
         body=make_payment_confirmation_emailbody(_member)
     )
-    # print(message.body)
     mailer = get_mailer(request)
     mailer.send(message)
     _member.payment_confirmed = True
     _member.payment_confirmed_date = datetime.now()
-    return HTTPFound(request.route_url('dashboard',
-                                       number=request.cookies['on_page'],
-                                       order=request.cookies['order'],
-                                       orderby=request.cookies['orderby'],
-                                       )
-                     )
+    return HTTPFound(request.route_url(
+        'dashboard',
+        number=request.cookies['on_page'],
+        order=request.cookies['order'],
+        orderby=request.cookies['orderby']))
 
 
 @view_config(permission='manage',
@@ -740,24 +616,18 @@ def mail_signature_reminder(request):
                 order=request.cookies['order'],
                 orderby=request.cookies['orderby']))
 
-    # first reminder? second?
-    # if ((_member.sent_signature_reminder is None
-    # ) or (    ):
-    # _first =
     message = Message(
-        subject=(u"C3S: don't forget to send your form "
-                 "/ Bitte Beitrittsformular einsenden"),
+        subject=u"C3S: don't forget to send your form / Bitte " + \
+            'Beitrittsformular einsenden',
         sender='office@c3s.cc',
-        # bcc=[request.registry.settings['reminder_blindcopy']],
         recipients=[_member.email],
         body=make_signature_reminder_emailbody(_member)
     )
     mailer = get_mailer(request)
     mailer.send(message)
-    # print u"the mail: {}".format(message.body)
-    try:  # if value is int
+    try:
         _member.sent_signature_reminder += 1
-    except:  # pragma: no cover
+    except TypeError:
         # if value was None (after migration of DB schema)
         _member.sent_signature_reminder = 1
     _member.sent_signature_reminder_date = datetime.now()
@@ -765,8 +635,7 @@ def mail_signature_reminder(request):
         'dashboard',
         number=request.cookies['on_page'],
         order=request.cookies['order'],
-        orderby=request.cookies['orderby']) + '#member_' + str(_member.id)
-    )
+        orderby=request.cookies['orderby']) + '#member_' + str(_member.id))
 
 
 @view_config(permission='manage',
@@ -780,10 +649,9 @@ def mail_payment_reminder(request):
     _member = C3sMember.get_by_id(_id)
 
     message = Message(
-        subject=(u"C3S: don't forget to pay your shares "
-                 u"/ Bitte Anteile bezahlen"),
+        subject=u"C3S: don't forget to pay your shares / Bitte Anteile " + \
+            "bezahlen",
         sender='office@c3s.cc',
-        # bcc=[request.registry.settings['reminder_blindcopy']],
         recipients=[_member.email],
         body=make_payment_reminder_emailbody(_member)
     )
@@ -791,7 +659,7 @@ def mail_payment_reminder(request):
     mailer.send(message)
     try:  # if value is int
         _member.sent_payment_reminder += 1
-    except:  # pragma: no cover
+    except TypeError:  # pragma: no cover
         # if value was None (after migration of DB schema)
         _member.sent_payment_reminder = 1
     _member.sent_payment_reminder_date = datetime.now()
@@ -799,36 +667,8 @@ def mail_payment_reminder(request):
         'dashboard',
         number=request.cookies['on_page'],
         order=request.cookies['order'],
-        orderby=request.cookies['orderby']) + '#member_' + str(_member.id)
-    )
+        orderby=request.cookies['orderby']) + '#member_' + str(_member.id))
 
-
-# @view_config(permission='manage',
-#              route_name='mail_pay_confirmation')
-# def mail_passwd_reset(request):
-#     """
-#     send a mail to member to reset her password
-#     """
-#     _id = request.matchdict['memberid']
-#     _member = C3sMember.get_by_id(_id)
-
-#     message = Message(
-#         subject=_('[C3S AFM] Please reset your password!'),
-#         sender='yes@c3s.cc',
-#         recipients=[_member.email],
-#         body=make_password_reset_emailbody(_member)
-#     )
-#     #print(message.body)
-#     mailer = get_mailer(request)
-#     mailer.send(message)
-#     _member.password XXX = True
-#     _member. XXX = datetime.now()
-#     return HTTPFound(request.route_url('dashboard',
-#                                        number=request.cookies['on_page'],
-#                                        order=request.cookies['order'],
-#                                        orderby=request.cookies['orderby'],
-#                                        )
-#                      )
 
 @view_config(permission='manage', route_name='dashboard_only')
 def dashboard_only(request):
@@ -857,4 +697,6 @@ def dashboard_only(request):
         request.route_url(
             'dashboard',
             number=_number, orderby=_order_by,
-            order=_order, _query=request.GET))
+            order=_order, _query=request.GET
+        )
+    )

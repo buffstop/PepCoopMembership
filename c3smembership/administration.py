@@ -11,14 +11,12 @@ from c3smembership.models import (
 )
 from c3smembership.gnupg_encrypt import encrypt_with_gnupg
 import colander
-
 from datetime import (
     datetime,
     date
 )
 import deform
 from deform import ValidationFailure
-
 from pkg_resources import resource_filename
 from pyramid.i18n import (
     get_localizer,
@@ -49,6 +47,7 @@ def translator(term):
 my_template_dir = resource_filename('c3smembership', 'templates/')
 deform_template_dir = resource_filename('deform', 'templates/')
 
+# the zpt_renderer is referred to within the demo.ini file by dotted name
 zpt_renderer = deform.ZPTRendererFactory(
     [
         my_template_dir,
@@ -56,7 +55,6 @@ zpt_renderer = deform.ZPTRendererFactory(
     ],
     translator=translator,
 )
-# the zpt_renderer above is referred to within the demo.ini file by dotted name
 
 DEBUG = False
 LOGGING = True
@@ -135,14 +133,9 @@ def staff_view(request):
         try:
             _staffer = C3sStaff.get_by_id(int(request.POST['id']))
         except:
-            # print("exception!")
             return HTTPFound(location=request.route_url('staff'))
-        # print(request.POST['action'])
         if request.POST['action'] == u'delete':
-            # print("will delete staff id %s" % _staffer.id)
             C3sStaff.delete_by_id(_staffer.id)
-            # print("deleted staff id %s" % _staffer.id)
-            # send mail
             encrypted = encrypt_with_gnupg('''hi,
 %s was deleted from the backend by %s.
 
@@ -167,11 +160,9 @@ your membership tool''' % (_staffer.login,
             stafferform.set_appstruct(appstruct)
 
     if 'new_staffer' in request.POST:
-        # print "new staffer!"
         controls = request.POST.items()
         try:
             appstruct = stafferform.validate(controls)
-            # print('validated!')
         except ValidationFailure, e:
             return {
                 'stafferform': e.render()
@@ -179,7 +170,6 @@ your membership tool''' % (_staffer.login,
         # XXX login must be unique!
         existing = C3sStaff.get_by_login(appstruct['login'])
         if existing is not None:
-            # print "that staffer exists!"
             if u'_UNCHANGED_' in appstruct['password']:
                 pass
             else:
@@ -206,11 +196,9 @@ your membership tool''' % (existing.login,
                 email=u'',
             )
             staffer.groups = [Group.get_staffers_group()]
-            # print "about to add user"
             DBSession.add(staffer)
             DBSession.flush()
             print "added staffer"
-            # send mail
             encrypted = encrypt_with_gnupg('''hi,
 %s was added to the backend by %s.
 
@@ -266,8 +254,6 @@ def delete_afms(request):
         controls = request.POST.items()
         try:
             appstruct = delete_range_form.validate(controls)
-            # print('validated!')
-            # print appstruct
             _first = appstruct['first']
             _last = appstruct['last']
             assert(_first < _last)  # XXX TODO: how about just one id? test!
@@ -275,13 +261,9 @@ def delete_afms(request):
             return {
                 'resetform': e.render()
             }
-        # delete entries here :-)
         for i in range(_first, _last+1):
-            # print i
             try:
-                # _del = C3sMember.delete_by_id(i)
                 C3sMember.delete_by_id(i)
-                # print 'deleted %s' % _del
             except:
                 print 'id %s didnt exist'
         return HTTPFound(request.route_url('dashboard_only'))
@@ -305,10 +287,11 @@ def mail_mail_conf(request):
         request.session.flash(
             'id not found. no mail sent.',
             'messages')
-        return HTTPFound(request.route_url('dashboard',
-                                           number=request.cookies['on_page'],
-                                           order=request.cookies['order'],
-                                           orderby=request.cookies['orderby']))
+        return HTTPFound(request.route_url(
+            'dashboard',
+            number=request.cookies['on_page'],
+            order=request.cookies['order'],
+            orderby=request.cookies['orderby']))
 
     import random
     import string
@@ -327,8 +310,8 @@ gemeinsam mit Dir freuen wir uns auf die erste Generalversammlung der C3S SCE
 am 23. August, um 14:00 Uhr im Millowitsch-Theater in Köln. Details dazu
 erhältst Du in Kürze in einer separaten Einladung.
 
-Da wir die Einladungen per Email verschicken werden, möchten wir Dich bitten
-uns kurz zu bestätigen, dass diese Emailadresse korrekt ist und Du auf diesem
+Da wir die Einladungen per E-Mail verschicken werden, möchten wir Dich bitten
+uns kurz zu bestätigen, dass diese E-Mail-Adresse korrekt ist und Du auf diesem
 Wege erreichbar bist. Dafür brauchst Du nur den folgenden Link aufzurufen:
 
   {0}
@@ -337,7 +320,7 @@ Solltest Du nicht {1} {2} sein und diese Adresse nicht bei uns angegeben haben,
 antworte bitte kurz auf diese E-Mail. Dann werden wir die Adresse aus unser
 Datenbank streichen.
 
-Antworte bitte ebenfalls, falls Du die Email-Adresse ändern möchtest.
+Antworte bitte ebenfalls, falls Du die E-Mail-Adresse ändern möchtest.
 
 
 Viele Grüße :: Das C3S-Team
@@ -365,12 +348,12 @@ Should you want to change your email address please reply to this mail, too.
 
 Best wishes :: The C3S Team
     '''.format(
-        _url,  # {0}
-        afm.firstname,  # {1}
-        afm.lastname,  # {2}
+        _url, # {0}
+        afm.firstname, # {1}
+        afm.lastname, # {2}
     )
 
-    log.info("mailing mail confirmation to AFM # %s" % afm.id)
+    log.info("mailing mail confirmation to AFM # {0}".format(afm.id))
 
     message = Message(
         subject=(u'[C3S] Please confirm your email address! '
@@ -379,8 +362,6 @@ Best wishes :: The C3S Team
         recipients=[afm.email],
         body=_body
     )
-    # print(message.subject)
-    # print(message.body)
     mailer = get_mailer(request)
     mailer.send(message)
     afm.email_confirm_token = _looong_token
@@ -407,7 +388,6 @@ def verify_mailaddress_conf(request):
     # try to get entry from DB
     afm = C3sMember.get_by_code(refcode)
     if isinstance(afm, NoneType):  # no entry?
-        # print "entry not found"
         return {
             'confirmed': False,
             'firstname': 'foo',
@@ -416,14 +396,12 @@ def verify_mailaddress_conf(request):
         }
     # check token
     if ('_used' in afm.email_confirm_token):  # token was invalidated already
-        # print "the token is empty"
         return {
             'confirmed': False,
             'firstname': afm.firstname,
             'lastname': afm.lastname,
-            'result_msg': (
-                'your token is invalid. '
-                'please contact office@c3s.cc!'),
+            'result_msg': 'your token is invalid. please contact ' + \
+                'office@c3s.cc!',
         }
 
     try:
@@ -476,10 +454,11 @@ def mail_mtype_fixer_link(request):
         request.session.flash(
             'id not found. no mail sent.',
             'messages')
-        return HTTPFound(request.route_url('dashboard',
-                                           number=request.cookies['on_page'],
-                                           order=request.cookies['order'],
-                                           orderby=request.cookies['orderby']))
+        return HTTPFound(request.route_url(
+            'dashboard',
+            number=request.cookies['on_page'],
+            order=request.cookies['order'],
+            orderby=request.cookies['orderby']))
 
     import random
     import string
@@ -508,18 +487,17 @@ def mail_mtype_fixer_link(request):
             request.registry.settings['c3smembership.mailaddr']],
         body=_body
     )
-    # print(message.subject)
-    # print(message.body)
     mailer = get_mailer(request)
     mailer.send(message)
     afm.mtype_confirm_token = _looong_token
     afm.mtype_email_date = datetime.now()
     afm.membership_type = u'pending'
-    return HTTPFound(request.route_url('dashboard',
-                                       number=request.cookies['on_page'],
-                                       order=request.cookies['order'],
-                                       orderby=request.cookies['orderby']) +
-                     '#member_' + str(afm.id))
+    return HTTPFound(request.route_url(
+        'dashboard',
+        number=request.cookies['on_page'],
+        order=request.cookies['order'],
+        orderby=request.cookies['orderby']) +
+        '#member_' + str(afm.id))
 
 
 @view_config(renderer='templates/mtype-form.pt',
@@ -536,7 +514,6 @@ def membership_status_fixer(request):
     # try to get entry from DB
     afm = C3sMember.get_by_code(refcode)
     if isinstance(afm, NoneType):  # no entry?
-        # print "entry not found"
         request.session.flash(
             'bad URL / bad codes. please contact office@c3s.cc!',
             'message_above_form'
@@ -548,15 +525,8 @@ def membership_status_fixer(request):
             'lastname': 'bar',
             'result_msg': 'bad URL / bad codes. please contact office@c3s.cc!',
         }
-    # check token
-    # if isinstance(afm.mtype_confirm_token, NoneType):
-    #    #request.session.flash('no ')
-    #    #return HTTPFound(request.route_url('dashboard_only'))
-    # check token even more
     if (len(afm.mtype_confirm_token) == 0) or (
             afm.mtype_confirm_token.endswith('_used')):
-        # token was invalidated already
-        #    #print "the token is empty"
         request.session.flash(
             'your token is invalid. please contact office@c3s.cc!',
             'message_above_form'
@@ -564,10 +534,8 @@ def membership_status_fixer(request):
         return {
             'form': '',
             'confirmed': False,
-            # 'firstname': afm.firstname,
-            # 'lastname': afm.lastname,
-            'result_msg': ('your token is invalid. '
-                           'please contact office@c3s.cc!'),
+            'result_msg': 'your token is invalid. please contact ' + \
+                'office@c3s.cc!',
         }
 
     try:
@@ -583,8 +551,6 @@ def membership_status_fixer(request):
         return {
             'form': '',
             'confirmed': False,
-            #         'firstname': 'foo',
-            #         'lastname': 'bar',
             'result_msg': 'bad token/email. please contact office@c3s.cc!',
         }
 
@@ -621,7 +587,6 @@ def membership_status_fixer(request):
             validator=colander.OneOf([x[0] for x in yes_no]),
             widget=deform.widget.RadioChoiceWidget(values=yes_no),
             oid="other_colsoc",
-            # validator=colsoc_validator
         )
         name_of_colsoc = colander.SchemaNode(
             colander.String(),
@@ -651,7 +616,6 @@ def membership_status_fixer(request):
             deform.Button('submit', _(u'Submit')),
             deform.Button('reset', _(u'Reset'))
         ],
-        # use_ajax=True,
         renderer=zpt_renderer
     )
     # if the form has NOT been used and submitted, remove error messages if any
@@ -663,10 +627,6 @@ def membership_status_fixer(request):
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
-            # print("the appstruct from the form: %s \n") % appstruct
-            # for thing in appstruct:
-            #    print("the thing: %s") % thing
-            #    print("type: %s") % type(thing)
 
             # data sanity: if not in collecting society, don't save
             #  collsoc name even if it was supplied through form
@@ -676,12 +636,6 @@ def membership_status_fixer(request):
                 # print '-'*80
 
         except ValidationFailure, e:
-            # print("the controls from the form: %s \n") % controls
-            # for thing in appstruct:
-            #    print("the thing: %s") % thing
-            #    print("type: %s") % type(thing)
-            # print(e)
-            # message.append(
             request.session.flash(
                 _(u"Please note: There were errors, "
                   "please check the form below."),
@@ -692,12 +646,9 @@ def membership_status_fixer(request):
                 'form': e.render()}
         # all good, store the information
         afm.membership_type = appstruct['membership_info']['membership_type']
-        # print 'afm.membership_type: {}'.format(afm.membership_type)
         afm.member_of_colsoc = (
             appstruct['membership_info']['member_of_colsoc'] == u'yes')
-        # print 'afm.member_of_colsoc: {}'.format(afm.member_of_colsoc)
         afm.name_of_colsoc = appstruct['membership_info']['name_of_colsoc']
-        # print 'afm.name_of_colsoc: {}'.format(afm.name_of_colsoc)
 
         # remove old messages from the session
         request.session.pop_flash()

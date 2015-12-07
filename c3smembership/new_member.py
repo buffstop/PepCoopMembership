@@ -61,7 +61,7 @@ def new_member(request):
         )
         email = colander.SchemaNode(
             colander.String(),
-            title=_(u'Email'),
+            title=_(u'E-Mail'),
             validator=colander.Email(),
             oid="email",
         )
@@ -73,12 +73,12 @@ def new_member(request):
         )
         address1 = colander.SchemaNode(
             colander.String(),
-            title='Addresse Zeile 1'
+            title='Adresse Zeile 1'
         )
         address2 = colander.SchemaNode(
             colander.String(),
             missing=unicode(''),
-            title='Addresse Zeile 2'
+            title='Adresse Zeile 2'
         )
         postcode = colander.SchemaNode(
             colander.String(),

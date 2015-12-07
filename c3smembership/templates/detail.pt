@@ -89,52 +89,50 @@
       </table>
 
       <h3>Membership Meta</h3>
-      <table class="table table-striped">
+    <table class="table table-striped">
         <tr>
-          <td>membership_accepted</td>
-          <td>
-            ${'Yes' if member.membership_accepted else 'No'}
-          </td>
-        </tr>
-        <tr>
-        <tr tal:condition="member.membership_accepted">
-          <td>membership_number</td>
-          <td>
-            ${member.membership_number}
-          </td>
+            <td>membership_accepted</td>
+            <td>
+                ${'Yes' if member.membership_accepted else 'No'}
+            </td>
         </tr>
         <tr tal:condition="member.membership_accepted">
-          <td>membership_date</td>
-          <td>${member.membership_date}</td>
+            <td>membership_number</td>
+            <td>
+                ${member.membership_number}
+            </td>
+        </tr>
+        <tr tal:condition="member.membership_accepted">
+            <td>membership_date</td>
+            <td>${member.membership_date}</td>
         </tr>
         <tr>
-          <td>is_duplicate ?</td>
-          <td>${'Yes' if member.is_duplicate else 'No/Unknown'}</td>
+            <td>is_duplicate ?</td>
+            <td>${'Yes' if member.is_duplicate else 'No/Unknown'}</td>
         </tr>
         <tr tal:condition="member.is_duplicate">
-          <td>is duplicate of</td>
-          <td>
-            <a href="${request.route_url('detail', memberid=member.is_duplicate_of)}">
-              ${member.is_duplicate_of}
-            </a>
-          </td>
+            <td>is duplicate of</td>
+            <td>
+                <a href="${request.route_url('detail', memberid=member.is_duplicate_of)}">
+                    ${member.is_duplicate_of}
+                </a>
+            </td>
         </tr>
         <tr>
-          <td>
-          <a name="cancel"></a>kündigung erklärt?</td>
-          <td>$ off {member.account_canceled}</td>
+            <td>
+                <a name="cancel"></a>kündigung erklärt?</td>
+            <td>$ off {member.account_canceled}</td>
         </tr>
         <tr tal:condition="True or member.account_canceled">
-          <td>account cancellation date</td>
-          <td>$ off {member.account_canceled_date}</td>
+            <td>account cancellation date</td>
+            <td>$ off {member.account_canceled_date}</td>
         </tr>
         <tr>
-          <td>
-          <a name="comment"></a>staff comment</td>
-          <td>${member.accountant_comment}</td>
+            <td><a name="comment"></a>staff comment</td>
+            <td>${member.accountant_comment}</td>
         </tr>
-
-      </table>
+    </table>
+     
 
       <a name="membership_info"></a>
       <h3>Membership Info</h3>
@@ -268,13 +266,12 @@
         <table class="table table-striped">
           <tr>
             <td>
-              Versand Mitgliedsbescheinigungs-Email<br/>
+              Versand Mitgliedsbescheinigungs-E-Mail
               <small>
                 Ein Klick hier setzt ein (neues) Token und versendet eine Email mit Link.<br />
                 Der Link enthält auch das Token, ohne welches KEIN pdf generiert wird.<br />
                 Ausserdem wird überprüft, ob das Token älter ist als 14 Tage; in dem fall gibt es KEIN PDF.
               </small>
-
             </td>
             <td>
               <a tal:condition="not member.certificate_email"
@@ -285,12 +282,17 @@
                  href="${request.route_url('certificate_mail', id=member.id)}"
                  title="gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}"
                  class="btn btn-success">gesendet ${member.certificate_email_date.strftime('am %d.%m.%Y um %H:%M')}</a>
+              <small>
+                Ein Klick hier setzt ein (neues) Token und versendet eine E-Mail mit Link.<br />
+                Der Link enthält auch das Token, ohne welches KEIN pdf generiert wird.<br />
+                Ausserdem wird überprüft, ob das Token älter ist als 14 Tage; in dem fall gibt es KEIN PDF.
+              </small>
             </td>
           </tr>
           <tr>
             <td>PDF generieren (download)</td>
             <td>
-              <a href="${request.route_url('certificate_pdf_staff', id=member.id, name=cert_link)}"
+              <a href="${request.route_url('certificate_pdf_staff', id=member.id, name=member.get_url_safe_name())}"
                  title="Mitgliedschaftsurkunde ansehen"
                  class="btn btn-success">PDF generieren und laden</a>
             </td>
@@ -374,7 +376,7 @@
                       class="form-inline"
                       action="${request.route_url('dues15_reduction', member_id=member.id)}"
                       method="post">
-                  <label>ermäßigen auf:</label>
+                    <label>ermäßigen auf:</label>
                     <input type="hidden"
                            name="confirmed"
                            value="no" />
@@ -382,12 +384,12 @@
                            class="form-control"
                            title="foo"
                            name="amount"
-                           value="">
+                           value="" />
                     <input id="dues15_reduce_submit"
                            type="submit"
                            name="submit"
                            class="btn btn-primary"
-                           value="Reduce Dues">
+                           value="Reduce Dues" />
                 </form>
               </p>
               <p tal:define="messages request.session.pop_flash('dues15_message_to_staff')"
@@ -425,15 +427,17 @@
                            class="form-control"
                            title="foo"
                            name="amount"
-                           value=""><br />
+                           value="" />
+                     <br />
                      Eingangsdatum (yyyy-mm-dd):
                      <input name="payment_date"
                             class="form-control"
                             type="text"
-                            value="${today}"><br />
+                            value="${today}" />
+                     <br />
                      <input name="submit" type="submit"
                             class="btn btn-primary"
-                            value="Zahlungseingang bestätigen.">
+                            value="Zahlungseingang bestätigen." />
                 </form>
               </p>
               <p tal:define="messages request.session.pop_flash('dues15notice_message_to_staff')"

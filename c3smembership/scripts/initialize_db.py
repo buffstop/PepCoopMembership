@@ -12,6 +12,9 @@ from pyramid.paster import (
     setup_logging,
 )
 
+from alembic.config import Config
+from alembic import command
+
 from c3smembership.models import (
     DBSession,
     Group,
@@ -69,6 +72,12 @@ def main(argv=sys.argv):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
+    # Setup alembic database migration information.
+    # This creates the alembic_version table in the database
+    # which is the basis for migrations and the "alembic current"
+    # command.
+    alembic_cfg = Config('alembic.ini')
+    command.stamp(alembic_cfg, 'head')
     # add some content
     with transaction.manager:
         # a group for accountants/staff
@@ -314,6 +323,12 @@ def init():
     engine = engine_from_config({'sqlalchemy.url': 'sqlite://'})
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
+    # Setup alembic database migration information.
+    # This creates the alembic_version table in the database
+    # which is the basis for migrations and the "alembic current"
+    # command.
+    alembic_cfg = Config('alembic.ini')
+    command.stamp(alembic_cfg, 'head')
     # with transaction.manager:
     #     accountants_group = Group(name=u"staff")
     #     staffer1 = C3sStaff(
