@@ -29,6 +29,9 @@ and in the running app (if you have sphinx compile the docs to HTML):
    cd docs
    make html
 
+A compiled version of the documentation is available at:
+https://yes.c3s.cc/docs/
+
 
 Setup
 -----
@@ -36,19 +39,19 @@ Setup
 
 Install dependencies:
 
-- Development:
+Development:
 ::
 
    $ sudo apt-get install python-pip python-dev python2.7-dev python-virtualenv libxml2-dev libxslt1-dev build-essential pdftk zlib1g-dev
 
 
-- Fonts:
+Fonts:
 
 The .odt files for the membership application in pdftk require the font
 Signika which can be downloaded at:
-http://www.google.com/fonts/specimen/Signika
+https://www.google.com/fonts/specimen/Signika
 
-- LaTeX pdf compilation:
+LaTeX pdf compilation:
 ::
 
    $ sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra pgf texlive-lang-german
@@ -73,6 +76,7 @@ Creating an initial database:
 
 Run (in development mode)
 -------------------------
+
 ::
 
    $ env/bin/pserve development.ini --reload
