@@ -498,20 +498,20 @@ Share:
     4  2015-09-27 2015-09-27  Restitution
     == ========== =========== ===========
 
-    *ShareSplit:*
+    *ShareTransactionSplit:*
 
-    ============= == ======= =====
-    TransactionID ID Account Value
-    ============= == ======= =====
-    1             1  Member1 +10  
-    1             2  C3S     -10  
-    2             1  Member2 +20  
-    2             2  C3S     -20  
-    3             1  Member1 -10  
-    3             2  Member2 +10  
-    4             1  Member2 -30  
-    4             2  C3S     +30  
-    ============= == ======= =====
+    == ============= ======= =====
+    ID TransactionID Account Value
+    == ============= ======= =====
+    1  1             Member1 +10
+    2  1             C3S     -10
+    3  2             Member2 +20
+    4  2             C3S     -20
+    5  3             Member1 -10
+    6  3             Member2 +10
+    7  4             Member2 -30
+    8  4             C3S     +30
+    == ============= ======= =====
 
 - *Invoices should be sent for the acquisition and restitution. This is not necessarily the case at the moment.*
 
