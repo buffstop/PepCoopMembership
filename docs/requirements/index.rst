@@ -114,8 +114,8 @@ Membership Application
 A signed and fully filled membership application is required. Furthermore, the
 payment for the shares which shall be acquired must have arrived. One share is
 required for membership. Then the membership can be approved or declined by
-the governing board. The decision of the governing board must be recorded on
-the member's record in the membership list.
+the administrative board. The decision of the administrative board must
+berecorded on the member's record in the membership list.
 
 
 **TODO:** *Clarification of legal rules and regulations including the C3S
@@ -145,7 +145,7 @@ Implications of the membership resignation are:
 - All mandatory and voluntary shares are terminated when the resignation
   becomes effective (§ 8 I 3 [C3S_Statute]_).
 - The reimbursement value of signed shares depends on the decision of the
-  board of directors before drawing the balance sheet (§ 22 III
+  administrative board before drawing the balance sheet (§ 22 III
   [C3S_Statute]_).
 - Outstanding membership fees can be subtracted from the shares' reimbursement
   value.
@@ -190,8 +190,8 @@ A member can acquire additional shares by application. The number of shares
 must be at most 60. As one share costs 50 Euros this amounts to a maximum of
 3000 Euros any member can deposit.
 
-The payment for the additional shares needs to be received and the board of
-directory needs to approve.
+The payment for the additional shares needs to be received and the
+administrative board needs to approve.
 
 **TODO:** *Clarification of legal rules and regulations including the C3S
 statue which motivate the process.*
@@ -219,7 +219,7 @@ Implications of the shares termination are:
   ordinary notice period is unreasonable in the personal and economic
   circumstances of the member (§ 65 III [GenG]_).
 - The reimbursement value of signed shares depends on the decision of the
-  board of directors before drawing the balance sheet (§ 22 III
+  administrative board before drawing the balance sheet (§ 22 III
   [C3S_Statute]_).
 - Outstanding membership fees can be subtracted from the shares' reimbursement
   value.
@@ -684,14 +684,16 @@ Glossary
 - Annual financial statement (German "Jahresabschluss"): see [C3S_Statute]_
   § 22.
 
-- Board of directors (German "Verwaltungsrat"): see [C3S_Statute]_ § 12 II b,
-  § 17.
+- Administrative board (German "Verwaltungsrat", "board of directors" was used
+  in an old version of the [C3S_Statute]_): see [EU_SCE_Statute]_ section
+  "Structure of the SCE", [C3S_Statute]_ § 12 II b, § 17.
 
 - Court of arbitration (German "Schiedsgericht"): see [C3S_Statute]_ § 12 II
   d.
 
-- Executive directors (German "Geschäftsführende Direktoren"): see
-  [C3S_Statute]_ § 12 II c, § 16.
+- Managing directors (German "Geschäftsführende Direktoren", "executive
+  directors" was used in an old version of the [C3S_Statute]_): see
+  [EU_CR_1435_2003_SCE]_ Article 42 No. 1, [C3S_Statute]_ § 12 II c, § 16.
 
 - Full membership (German "Ordentliche Mitgliedschaft"): see [C3S_Statute]_
   § 4 I.
@@ -719,9 +721,19 @@ Bibliography
    Collecting Society SCE (C3S). http://archive.c3s.cc/legal/C3S_en_v1.0.pdf,
    https://archive.c3s.cc/aktuell/legal/C3S_SCE_de.pdf.
 
+.. [EU_CR_1435_2003_SCE] The council of the European Union, Council Regulation
+   (EC) No 1435/2003 of 22 July 2003 on the Statute for a European Cooperative
+   Society (SCE),
+   http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32003R1435
+
+.. [EU_SCE_Statute] Statute for a European Cooperative Society, EUR-Lex,
+   http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv%3Al26018
+
 .. [GenG] http://www.gesetze-im-internet.de/geng/
 
-.. [Pyramid] http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/introduction.html#pyramid-and-other-web-frameworks
+.. [Pyramid]
+   http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/introduction.html#pyramid-and-other-web-frameworks
 
-.. [Wiki_Kano] Wikipedia: Kano model. https://en.wikipedia.org/w/index.php?title=Kano_model&oldid=678655771
+.. [Wiki_Kano] Wikipedia: Kano model.
+   https://en.wikipedia.org/w/index.php?title=Kano_model&oldid=678655771
 
