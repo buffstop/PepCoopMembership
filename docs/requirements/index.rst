@@ -106,27 +106,35 @@ which helps living them.
 
 
 
-----------------------
-Membership Application
-----------------------
+-------------------------
+Acquisition of Membership
+-------------------------
 
 
-A signed and fully filled membership application is required. Furthermore, the
-payment for the shares which shall be acquired must have arrived. One share is
-required for membership. Then the membership can be approved or declined by
-the administrative board. The decision of the administrative board must
-berecorded on the member's record in the membership list.
-
-
-**TODO:** *Clarification of legal rules and regulations including the C3S
-statue which motivate the process.*
+The acquisition of membership must be approved by the administrative board
+([EU_CR_1435_2003_SCE]_ art. 14(1)).
 
 
 
--------------------------------
-Membership End Upon Resignation
--------------------------------
+**TODO:**
 
+- *Clarification of legal rules and regulations including the C3S statue which
+  motivate the process.*
+
+- *A signed and fully filled membership application is required. Furthermore,
+  the payment for the shares which shall be acquired must have arrived. One
+  share is required for membership. Then the membership can be approved or
+  declined by the administrative board. The decision of the administrative
+  board must berecorded on the member's record in the membership list.*
+
+
+
+-----------------------------------
+Loss of Membership Upon Resignation
+-----------------------------------
+
+
+Membership shall be lost upon resignation ([EU_CR_1435_2003_SCE]_ art. 15(1)).
 
 A member can resign from the C3S membership (§ 65 I [GenG]_, § 8
 [C3S_Statute]_). The following criteria must be met:
@@ -157,10 +165,25 @@ Implications of the membership resignation are:
 
 
 
--------------------------
-Membership End Upon Death
--------------------------
+---------------------------------
+Loss of Membership Upon Expulsion
+---------------------------------
 
+
+Membership shall be lost upon expulsion where the member commits a serious
+breach of his/her obligations or acts contrary to the interests of the SCE
+([EU_CR_1435_2003_SCE]_ art. 15(1)).
+
+**TODO:** *Describe the business process.*
+
+
+
+-----------------------------
+Loss of Membership Upon Death
+-----------------------------
+
+
+Membership shall be lost upon death ([EU_CR_1435_2003_SCE]_ art. 15(1)).
 
 **TODO:**
 
@@ -169,10 +192,27 @@ Membership End Upon Death
 
 
 
---------------------------------------------------------------------
-Membership End Upon Liquidation of a Legal Entity or Private Company
---------------------------------------------------------------------
+---------------------------------
+Loss of Membership Upon Bankrupsy
+---------------------------------
 
+
+Membership shall be lost upon bankrupsy ([EU_CR_1435_2003_SCE]_ art. 15(1)).
+
+**TODO:**
+
+- *Death or liquidation of a legal entity or private company (§§ 77a [GenG]_,
+  § 4 IV d [C3S_Statute]_)*
+
+
+
+----------------------------------
+Loss of Membership Upon Winding-Up
+----------------------------------
+
+
+Membership shall be lost upon winding-up in the case of a member that is not
+a natural person ([EU_CR_1435_2003_SCE]_ art. 15(1)).
 
 **TODO:**
 
@@ -674,22 +714,32 @@ Open Topics
 TODO...
 
 
+
 ========
 Glossary
 ========
 
+
+- Acquisition of membership (German "Erwerb der Mitgliedschaft")
+  [EU_CR_1435_2003_SCE]_ art. 14
+
+- Administrative board (German "Verwaltungsrat", "board of directors" was used
+  in an old version of the [C3S_Statute]_): see [EU_SCE_Statute]_ section
+  "Structure of the SCE", [C3S_Statute]_ § 12 II b, § 17.
 
 - Advisory board (German "Beirat"): see [C3S_Statute]_ § 12 II e.
 
 - Annual financial statement (German "Jahresabschluss"): see [C3S_Statute]_
   § 22.
 
-- Administrative board (German "Verwaltungsrat", "board of directors" was used
-  in an old version of the [C3S_Statute]_): see [EU_SCE_Statute]_ section
-  "Structure of the SCE", [C3S_Statute]_ § 12 II b, § 17.
+- Arbitration court (German "Schiedsgericht", the [C3S_Statue]_ used "court of
+  arbitration" before): see [C3S_Statute]_ § 12 II d.
 
-- Court of arbitration (German "Schiedsgericht"): see [C3S_Statute]_ § 12 II
-  d.
+- Bankrupsy (German "Konkurs"), see [EU_CR_1435_2003_SCE]_ art. 15(1)
+
+- Expulsion (German "Ausschluss"), see [EU_CR_1435_2003_SCE]_ art. 15(1)
+
+- Founding member (German "Gründungsmitglied"), see [EU_CR_1435_2003_SCE]_ art. 5(2)
 
 - Managing directors (German "Geschäftsführende Direktoren", "executive
   directors" was used in an old version of the [C3S_Statute]_): see
@@ -701,15 +751,21 @@ Glossary
 - General assembly (German "Generalversammlung"): see [C3S_Statute]_ § 12 II
   a, § 13.
 
-- Investing membership (German "Investierende Mitgliedschaft"): see
-  [C3S_Statute]_ § 4 II.
+- Investor (non-user) member (German "investierendes (nicht nutzendes)
+  Mitglied"): see [EU_CR_1435_2003_SCE]_ art. 14(1)
 
-- Resignation (German "Austritt"): see [C3S_Statute]_ § 8.
+- Legal body (German "juristische Person"): [EU_CR_1435_2003_SCE]_ art. 14(1)
 
-- Shares (German "Geschäftsanteile"): see [C3S_Statute]_ § 9.
+- Natural person (German "natürliche Person"): see [EU_CR_1435_2003_SCE]_ art.
+  14(1)
 
-- Statute (articles of association, German "Satzung") [C3S_Statute]_.
+- Resignation (German "Austritt"): see [EU_CR_1435_2003_SCE]_ art. 15(1), [C3S_Statute]_ § 8.
 
+- Share (German "Geschäftsanteil"): see [EU_CR_1435_2003_SCE]_ art. 1(2), [C3S_Statute]_ § 9.
+
+- Statute (articles of association, German "Satzung") [C3S_Statute]_
+
+- Winding-up (German "Auflösung"): see [EU_CR_1435_2003_SCE]_ art. 15(1)
 
 
 ============
