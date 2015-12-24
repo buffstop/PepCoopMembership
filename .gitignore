@@ -13,6 +13,7 @@ cover/
 dist/
 docs/_build/
 env/
+utils/
 off/
 pyramid.pid
 python-eggs/

@@ -36,7 +36,6 @@ https://yes.c3s.cc/docs/
 Setup
 -----
 
-
 Install dependencies:
 
 Development:
@@ -56,10 +55,13 @@ LaTeX pdf compilation:
 
    $ sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra pgf texlive-lang-german
 
-- Documentation diagram generation:
+Documentation:
 ::
 
-   $ sudo apt-get install graphviz
+   $ sudo apt-get install graphviz openjdk-8-jre
+   $ mkdir utils
+   $ wget 'http://downloads.sourceforge.net/project/plantuml/plantuml.jar' -O utils/plantuml.jar
+   $ env/bin/pip install sphinx sphinxcontrib-plantuml
 
 Setup:
 ::

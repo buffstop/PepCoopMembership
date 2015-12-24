@@ -16,10 +16,11 @@ import sys
 import os
 import alabaster
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+# If extensions (or modules to document with autodoc) are in another
+# directory, add these directories to sys.path here. If the directory is
+# relative to the documentation root, use os.path.abspath to make it absolute,
+# like shown here.
+# sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('..'))
 
 # -- General configuration ------------------------------------------------
@@ -36,13 +37,26 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
     'sphinx.ext.graphviz',
+    'sphinxcontrib.plantuml',
 ]
+
+# command for generating PlantUML diagrams
+plantuml = 'java -jar ../utils/plantuml.jar'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
+
+# Enable automatic number display for figures.
+numfig = True
+numfig_format = {
+  'figure': 'Figure %s:',
+  'table': 'Table %s:',
+  'code-block': 'Listing %s:',
+}
+numfig_secnum_depth = 1
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'

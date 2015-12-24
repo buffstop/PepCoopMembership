@@ -2,6 +2,7 @@
 Requirements Specification
 ##########################
 
+
 The requirements specification is used to track the requirements of the
 existing c3sMembership application as well as new requirements for future
 development.
@@ -52,9 +53,10 @@ Requirements Sources
 ====================
 
 
-The requirements are gathered from stakeholders and existing documentation.
+The requirements are gathered from stakeholders, legal regulations and
+existing documentation.
 
-Stakeholders are the uses of the application:
+Stakeholders are the users of the application:
 
 - Financial accounting: for working with membership applications, invoices,
   payments, analyses, working with certain membership data (e.g. adresses,
@@ -97,8 +99,8 @@ Business Processes
 ==================
 
 
-Business processes are the basis of the application. They would even function
-with pen and paper but shall be technically supported by the application.
+Business processes are the basis of the application. They would function with
+pen and paper but shall be technically supported by the application.
 Therefore, this chapter describes and explains the business processes from
 which use cases and the majority of business and technical requirements can be
 derived. The business processes themselves are independent from the technology
@@ -113,8 +115,6 @@ Acquisition of Membership
 
 The acquisition of membership must be approved by the administrative board
 ([EU_CR_1435_2003_SCE]_ art. 14(1)).
-
-
 
 **TODO:**
 
@@ -183,12 +183,10 @@ Loss of Membership Upon Death
 -----------------------------
 
 
-Membership shall be lost upon death ([EU_CR_1435_2003_SCE]_ art. 15(1)).
+Membership shall be lost upon death ([EU_CR_1435_2003_SCE]_ art. 15(1), § 77
+[GenG]_, § 4 IV d [C3S_Statute]_).
 
-**TODO:**
-
-- *Death or liquidation of a legal entity or private company (§§ 77 [GenG]_,
-  § 4 IV d [C3S_Statute]_)*
+**TODO:** *Elaborate.*
 
 
 
@@ -197,12 +195,10 @@ Loss of Membership Upon Bankrupsy
 ---------------------------------
 
 
-Membership shall be lost upon bankrupsy ([EU_CR_1435_2003_SCE]_ art. 15(1)).
+Membership shall be lost upon bankrupsy ([EU_CR_1435_2003_SCE]_ art. 15(1), §
+77a [GenG]_, § 4 IV d [C3S_Statute]_).
 
-**TODO:**
-
-- *Death or liquidation of a legal entity or private company (§§ 77a [GenG]_,
-  § 4 IV d [C3S_Statute]_)*
+**TODO:** *Elaborate.*
 
 
 
@@ -460,199 +456,6 @@ Financial Accounting
 **TODO:** *Elaborate.*
 
 
-----------
-Data model
-----------
-
-
-User:
-
-- ID
-- Email address
-- Password hash
-
-User-member association:
-
-- ID
-- User ID (FK)
-- Member ID (FK)
-
-Member:
-
-- ID
-- Membership number (business key)
-- Family name
-- Given name
-- Date of birth
-- Email address
-- First address line
-- Second address line
-- Postal code
-- City
-- Country
-- Language
-- Membership type: full/investing
-- Is legal entity
-- Court of law
-- Registration number
-- Is member of other collecting society
-- Collecting societies of additional membership
-- Accouting comment
-
-Membership status:
-
-- ID
-- Type: acquired/resigned/exclusion
-- Date
-- Member ID (FK)
-
-Discount:
-
-- ID
-- Begin date
-- End date
-- Discount type
-- Discount amount
-- Member ID (FK)
-
-Invoice:
-
-- ID
-- Invoice number (business key)
-- Creation date
-- Invoice date
-- Due date
-- Total amount (cancellation: negative amount)
-- Member ID (FK)
-
-Invoice line item:
-
-- ID
-- Description
-- Amount
-- Invoice ID (FK)
-
-Payment:
-
-- ID
-- Value (in EUR)
-- Booking date (date when the data was entered into the system)
-- Value date (date when the payment arrived, i.e. the cash was handed over or
-  the payment was received on the bank account)
-- Type: cash/transfer
-- Reference/comment (e.g. transfer purpose)
-- Invoice ID (FK)
-
-Membership application:
-
-- ID
-- Application date
-- Decision date
-- Share ID
-- Application incoming date
-- Payment incoming date
-- Member ID (FK)
-
-**TODO:** *Redundancy of payment incoming date if the payments are tracked in
-a seperate table. Resolve.*
-
-Membership resignation:
-
-- ID
-- Application date
-- Decision date
-- Member ID (FK)
-
-Share:
-
-- ID
-- Member ID (FK)
-- Application date
-- Decision date
-- Status: applied, paid, approved, denied, refunded
-- Type: acquisition/emission, transfer, restitution/redemption
-- Share count (negative for restitution in case of resignation and exclusion
-  as well as transfer)
-
-
-**Todo:**
-
-- *Payments*
-
-  - *Can be assigned to:*
-
-    - *Invoices for shares: acquisition, restitution*
-
-    - *Invoices for membership fees: fee payable, discount*
-
-- *Shares*
-
-  - *Can be acquired, transferred/sold and restituted.*
-  
-  - *For transfer/sale two members are involved which must be reflected in the
-    data model.*
-  
-  - *Have different states: applied for and not paid yet, paid for but not
-    approved yet, approved, denied but not refunded, refunded*
-
-  - *Shares should be stored in a double-entry bookkeeping style. This means
-    that shares are always transferred. If acquired by a new member, the C3S
-    "looses" the amount of shares and at the same time the new member "gains"
-    them. When shares are sold between members, the selling member "looses"
-    them and the buying member "gains" them. This leads to shares being
-    transactions between two entities.*
-
-    *ShareTransaction:*
-
-    == ========== =========== ===========
-    ID ValueDate  BookingDate Type       
-    == ========== =========== ===========
-    1  2015-09-20 2015-09-26  Acquisition
-    2  2015-09-21 2015-09-26  Acquisition
-    3  2015-09-25 2015-09-26  Transfer   
-    4  2015-09-27 2015-09-27  Restitution
-    == ========== =========== ===========
-
-    *ShareTransactionSplit:*
-
-    == ============= ======= =====
-    ID TransactionID Account Value
-    == ============= ======= =====
-    1  1             Member1 +10
-    2  1             C3S     -10
-    3  2             Member2 +20
-    4  2             C3S     -20
-    5  3             Member1 -10
-    6  3             Member2 +10
-    7  4             Member2 -30
-    8  4             C3S     +30
-    == ============= ======= =====
-
-- *Invoices should be sent for the acquisition and restitution. This is not
-  necessarily the case at the moment.*
-
-- *Email addresses might need to be abstracted. It is necessary to store
-  whether an email address was confirmed. Confirmation works through the
-  generation of a token which is sent to the email address. If the link
-  including the token is clicked, the email address is verified. Therefore,
-  the token as well as a flag about the successful verification need to be
-  stored. This can happen more than once in case a password reset is
-  requested.*
-  
-- *Check whether the changes to a member dataset must be stored in an
-  audit-proof way. It could also lead to privacy issues and needs to be
-  legally clarified.*
-
-- *Legal entities can also become members. Therefore, given name, family name
-  and name of the company or association need to be stored somehow.*
-
-  - *One solution would be to store all fields in the same data entity and
-    fill the appropriate ones.*
-  
-  - *Another solution is to put these fields into two additional data entities
-    and join them when necessary.*
-
-
 
 ======================
 Technical Requirements
@@ -707,14 +510,6 @@ Quality Requiremements
 
 
 
-===========
-Open Topics
-===========
-
-TODO...
-
-
-
 ========
 Glossary
 ========
@@ -732,18 +527,14 @@ Glossary
 - Annual financial statement (German "Jahresabschluss"): see [C3S_Statute]_
   § 22.
 
-- Arbitration court (German "Schiedsgericht", the [C3S_Statue]_ used "court of
-  arbitration" before): see [C3S_Statute]_ § 12 II d.
+- Arbitration court (German "Schiedsgericht", the [C3S_Statute]_ used "court
+  of arbitration" before): see [C3S_Statute]_ § 12 II d.
 
 - Bankrupsy (German "Konkurs"), see [EU_CR_1435_2003_SCE]_ art. 15(1)
 
 - Expulsion (German "Ausschluss"), see [EU_CR_1435_2003_SCE]_ art. 15(1)
 
 - Founding member (German "Gründungsmitglied"), see [EU_CR_1435_2003_SCE]_ art. 5(2)
-
-- Managing directors (German "Geschäftsführende Direktoren", "executive
-  directors" was used in an old version of the [C3S_Statute]_): see
-  [EU_CR_1435_2003_SCE]_ Article 42 No. 1, [C3S_Statute]_ § 12 II c, § 16.
 
 - Full membership (German "Ordentliche Mitgliedschaft"): see [C3S_Statute]_
   § 4 I.
@@ -756,6 +547,10 @@ Glossary
 
 - Legal body (German "juristische Person"): [EU_CR_1435_2003_SCE]_ art. 14(1)
 
+- Managing directors (German "Geschäftsführende Direktoren", "executive
+  directors" was used in an old version of the [C3S_Statute]_): see
+  [EU_CR_1435_2003_SCE]_ Article 42 No. 1, [C3S_Statute]_ § 12 II c, § 16.
+
 - Natural person (German "natürliche Person"): see [EU_CR_1435_2003_SCE]_ art.
   14(1)
 
@@ -767,29 +562,4 @@ Glossary
 
 - Winding-up (German "Auflösung"): see [EU_CR_1435_2003_SCE]_ art. 15(1)
 
-
-============
-Bibliography
-============
-
-
-.. [C3S_Statute] C3S: Articles of Association of the Cultural Commons
-   Collecting Society SCE (C3S). http://archive.c3s.cc/legal/C3S_en_v1.0.pdf,
-   https://archive.c3s.cc/aktuell/legal/C3S_SCE_de.pdf.
-
-.. [EU_CR_1435_2003_SCE] The council of the European Union, Council Regulation
-   (EC) No 1435/2003 of 22 July 2003 on the Statute for a European Cooperative
-   Society (SCE),
-   http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32003R1435
-
-.. [EU_SCE_Statute] Statute for a European Cooperative Society, EUR-Lex,
-   http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv%3Al26018
-
-.. [GenG] http://www.gesetze-im-internet.de/geng/
-
-.. [Pyramid]
-   http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/introduction.html#pyramid-and-other-web-frameworks
-
-.. [Wiki_Kano] Wikipedia: Kano model.
-   https://en.wikipedia.org/w/index.php?title=Kano_model&oldid=678655771
 

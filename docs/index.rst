@@ -1,18 +1,10 @@
-.. c3sMembership documentation master file, created by
-   sphinx-quickstart on Fri Jan 16 23:30:02 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+C3S Membership Administration (c3sMembership) documentation
+===========================================================
 
-
-Welcome to c3sMembership's documentation!
-=========================================
-
-This app handles membership for C3S SCE
-(Cultural Commons Collecting Society SCE mit beschränkter Haftung.
-
-It used to be the form to aquire members now has functionality
-to cater for the whole life cycle of memberships.
-
+This app handles membership administration for C3S SCE (Cultural Commons
+Collecting Society SCE mit beschränkter Haftung). It used to be the form to
+aquire members now has functionality to cater for the whole life cycle of
+memberships.
 
 Contents:
 
@@ -21,13 +13,16 @@ Contents:
    :numbered:
 
    overview/index
-   code/index
    requirements/index
+   design/index
    development/index
+   hacking/index
+   code/index
    models/index
    tests/index
-   hacking/index
    deployment/index
+   glossary/index
+   bibliography/index
    license_texts/index
 
 

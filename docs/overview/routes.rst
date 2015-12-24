@@ -8,7 +8,7 @@ The routes can be configured in several ways. In c3sMembership
 the routes are declared in the main method (in __init__.py),
 so this configuration is applied during app instanatiation.
 
-.. list-table:: **List of Routes and Patterns**
+.. list-table:: List of Routes and Patterns
    :widths: 30 30 30
    :header-rows: 1
 
@@ -23,7 +23,7 @@ so this configuration is applied during app instanatiation.
      - :ref:`code_docs_accountants`
    * - static
      - /static/
-     - :ref:`code_docs_init`
+     - :ref:`code_docs_init_main`
 
 
 

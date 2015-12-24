@@ -14,8 +14,10 @@ Copyright (c) 2015 Cultural Commons Collecting Society SCE mit
 beschränkter Haftung (C3S SCE) and contributors.
 
 
+
 Code
 ----
+
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,8 +33,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+
 Documentation
 -------------
+
 
 The documentation of this program is licensed under a Creative Commons
 Attribution 4.0 license (CC-BY 4.0).
@@ -51,23 +55,24 @@ this program.
 
 Redistributes works are copyright and licensed as follows:
 
-- jQuery -- Copyright (c) 2005, 2014 jQuery Foundation, Inc.  Licensed under
-  MIT (https://jquery.org/license/).
-
-- jQuery UI -- Copyright (c) 2013 jQuery Foundation and other contributors.
-  Licensed under MIT (https://jquery.org/license/).
-
 - Bootstrap -- Copyright (c) 2011-2014 Twitter, Inc.  Licensed under MIT
   (https://github.com/twbs/bootstrap/blob/master/LICENSE).
 
-- jQuery Form Plugin -- Copyright (c) 2006-2013 M. Alsup.  Dual licensed
-  under MIT and GPL (https://github.com/malsup/form/).
-
-- Masked Input plugin for jQuery -- Copyright (c) 2007-2009 Josh Bush.
-  Licensed under the MIT
-  (http://digitalbush.com/projects/masked-input-plugin/#license)
+- jQuery -- Copyright (c) 2005, 2014 jQuery Foundation, Inc.  Licensed under
+  MIT (https://jquery.org/license/).
 
 - jQuery timepicker addon -- Copyright (c) 2011 Trent Richardson. Dual
   licensed under the MIT and GPL
   (http://trentrichardson.com/Impromptu/GPL-LICENSE.txt,
   http://trentrichardson.com/Impromptu/MIT-LICENSE.txt).
+
+- jQuery Form Plugin -- Copyright (c) 2006-2013 M. Alsup.  Dual licensed
+  under MIT and GPL (https://github.com/malsup/form/).
+
+- jQuery UI -- Copyright (c) 2013 jQuery Foundation and other contributors.
+  Licensed under MIT (https://jquery.org/license/).
+
+- Masked Input plugin for jQuery -- Copyright (c) 2007-2009 Josh Bush.
+  Licensed under MIT
+  (http://digitalbush.com/projects/masked-input-plugin/#license)
+
