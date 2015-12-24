@@ -15,7 +15,7 @@ Data Model
 
 The data model is the basis of the application. It describes all data
 entities, their properties and relations. Abstraction and reusability are two
-of the main requirements the design aims to fufill.
+of the major requirements the design aims to fufill.
 
 The package diagram of the data model:
 
@@ -52,6 +52,29 @@ management. The class User stores only the necessary information for providing
 access to the application. User groups are used for granting permissions on
 certain functions of the application.
 
+UserGroup attributes:
+
+============== ========= =====================================================
+Attribute name Data type Description
+============== ========= =====================================================
+id             Integer   (Primary key) The technical id of the data record
+name           String    The name of the user group
+============== ========= =====================================================
+
+User attributes:
+
+==================== ========= ===============================================
+Attribute name       Data type Description
+==================== ========= ===============================================
+id                   Integer   (Primary key) The technical id of the data
+                               record
+email_address        String    (Business key) The email address of the user
+                               which also functions as a account identifier
+password_hash        String    The salted hash of the password for
+                               identification
+last_password_change Timestamp The timestamp of the last password change
+==================== ========= ===============================================
+
 .. uml::
    :caption: UML class diagram of the Users package.
 
@@ -71,8 +94,6 @@ certain functions of the application.
        }
 
        UserGroup "*" -- "*" User
-       class Staff
-       User <|-- Staff
    }
    @enduml
 
@@ -358,14 +379,17 @@ Membership Processes
 
        class MembershipApplication {
            id
+           share_transaction_id
            phase
            ' TODO: applied, admitted, rejected, withdrawn
            ' Wie können Datumswerte für rejected und withdrawn konsistent dargestellt werden?
            ' Normalisierung nötig?
+           application_date
            signature_received_date
            signature_confirmed_date,
-           payment_received_date
-           payment_confirmed_date
+           ' payment_received_date
+           ' payment_confirmed_date
+           decision_date
 
            ' TODO: Eigentlich müsste für MembershipApplication eine Rechnung
            ' ausgestellt und zu dieser ein Zahlungseingang verbucht werden.
@@ -378,7 +402,7 @@ Membership Processes
            notice_date
            notice_period_end_date
            effective_date
-           withdrawn_date
+           withdraw_date
 
            ' TODO: Wird für die Rückerstattung der Anteilsgebühr ein Beleg
            ' ausgestellt, ähnlich einer Storno-Rechnung? Dieser könnte mit der
@@ -464,6 +488,61 @@ Invoicing
 ---------
 
 
+Invoices are modeled as a general concept independently from any special
+purpose.
+
+Invoice attributes:
+
+============== ========= =====================================================
+Attribute name Data type Description
+============== ========= =====================================================
+id             Integer   (Primary key) Technical id of the data record
+number         String    (Business key) The invoice number which uniquely
+                         identifies the invoice
+invoice_date   Date      The date at which the invoice was issued
+due_date       Date      The date at which the invoiced amount is due
+type           String    The type of the invoice:
+
+                         - "normal": A normal invoice.
+                         - "cancellation": This invoice cancels another
+                           invoice
+============== ========= =====================================================
+
+InvoicePosition attributes:
+
+============== ========= =====================================================
+Attribute name Data type Description
+============== ========= =====================================================
+id             Integer   (Primary key) Technical id of the data record
+invoice_id     Integer   (Foreign key, Invoice.id) 
+number         Integer   (Business key) The number of the invoice position
+                         which identifies the position uniquely within the
+                         invoice
+name           String    The name of the invoice position which is displayed
+                         on the invoice
+unit_price     Decimal   The unit price of the invoice position
+currency       String    ISO 4217 currency code, e.g. EUR, USD, SEK, NOK, DKK,
+                         CHF
+quantity       Decimal   The quantity of the invoice position
+type           String    The type of the invoice position
+description    String    The description of the invoice position which
+                         provides details on the position name
+============== ========= =====================================================
+
+InvoiceCancellation attributes:
+
+======================= ========= ============================================
+Attribute name          Data type Description
+======================= ========= ============================================
+id                      Integer   (Primary key) Technical id of the data
+                                  record
+invoice_id              Integer   (Foreign key, Invoice.id) Identifies the
+                                  invoice which is being cancelled by the
+                                  other invoice
+cancellation_invoice_id Integer   (Foreign key, Invoice.id) Identifies the
+                                  invoice which cancels the original invoice.
+======================= ========= ============================================
+
 .. uml::
    :caption: UML class diagram of the Invoicing package.
 
@@ -475,7 +554,8 @@ Invoicing
        class Invoice {
            id
            number
-           date
+           invoice_date
+           due_date
            type
        }
 
@@ -516,15 +596,58 @@ Dues
 ----
 
 
+Dues attributes:
+
+============== ========= =====================================================
+Attribute name Data type Description
+============== ========= =====================================================
+id             Integer   (Primary key) Technical id of the data record
+name           String    The name of the dues, e.g. "Membership dues 2015"
+description    String    Detailed explanation of the dues
+============== ========= =====================================================
+
+DuesInvoice attributes (inherits Invoicing.Invoice):
+
+============== ========= =====================================================
+Attribute name Data type Description
+============== ========= =====================================================
+id             Integer   (Primary key) Technical id of the data record
+member_id      Integer   (Foreign key Member.id) The member to which the dues
+                         invoice is issued
+dues_id        Integer   (Foreign key, Dues.id) The dues which defines the
+                         context in which the dues invoice is issued
+============== ========= =====================================================
+
+DuesAttribute attributes (inherits Accounting.Account):
+
+============== ========= =====================================================
+Attribute name Data type Description
+============== ========= =====================================================
+id             Integer   (Primary key) Technical id of the data record
+member_id      Integer   (Foreign key Member.id) The member for which the
+                         account was created
+dues_id        Integer   (Foreign key, Dues.id) The dues which defines the
+                         account was created
+============== ========= =====================================================
+
+Implicitly, all account transactions for dues invoice positions are booked
+with account transaction splits on dues accounts.
+
 .. uml::
    :caption: UML class diagram of the Dues package.
 
    @startuml
    package Invoicing {
        class Invoice
+       class InvoicePosition
+       Invoice "1" <--"1..*" InvoicePosition
    }
    package Accounting {
        class Account
+       class AccountTransaction
+       Account "1" <-- "*" AccountTransactionSplit
+       AccountTransaction "1" <-- "*" AccountTransactionSplit
+       AccountTransaction "1" <-- "*" InvoicePosition
    }
    package Membership {
        class Member
@@ -558,77 +681,17 @@ Dues
 
 
 
-Discount:
-
-- ID
-- Begin date
-- End date
-- Discount type
-- Discount amount
-- Member ID (FK)
-
-Invoice:
-
-- ID
-- Invoice number (business key)
-- Creation date
-- Invoice date
-- Due date
-- Total amount (cancellation: negative amount)
-- Member ID (FK)
-
-Invoice position:
-
-- ID
-- Description
-- Amount
-- Invoice ID (FK)
-
-Payment:
-
-- ID
-- Value (in EUR)
-- Booking date (date when the data was entered into the system)
-- Value date (date when the payment arrived, i.e. the cash was handed over or
-  the payment was received on the bank account)
-- Type: cash/transfer
-- Reference/comment (e.g. transfer purpose)
-- Invoice ID (FK)
-
-Membership application:
-
-- ID
-- Application date
-- Decision date
-- Share ID
-- Application incoming date
-- Payment incoming date
-- Member ID (FK)
-
-**TODO:** *Redundancy of payment incoming date if the payments are tracked in
-a seperate table. Resolve.*
-
-Membership resignation:
-
-- ID
-- Application date
-- Decision date
-- Member ID (FK)
-
-Shares should be stored in a double-entry bookkeeping style. This means that
-shares are always transferred. If acquired by a new member, the C3S "looses"
-the amount of shares and at the same time the new member "gains" them. When
-shares are sold between members, the selling member "looses" them and the
-buying member "gains" them. This leads to shares being transactions between
-two entities.
-
-
 **Todo:**
 
-- *Members: Should member inherit from user or could multiple users be
-  associated with a user?*
+- *Discount: ID, Begin date, End date, Discount type, Discount amount, Member ID (FK)*
 
 - *Payments*
+
+  - *Attributes: ID, Value (in EUR), Booking date (date when the data was
+    *entered into the system), Value date (date when the payment arrived, i.e.
+    *the cash was handed over or the payment was received on the bank
+    *account), Type: cash/transfer, Reference/comment (e.g. transfer purpose),
+    *Invoice ID (FK)*
 
   - *Can be assigned to:*
 
