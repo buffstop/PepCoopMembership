@@ -24,7 +24,9 @@ The package diagram of the data model:
 
    @startuml
    package Data {
+       ' package Utilities
        package Users
+       ' Utilities <.. Users
        package Membership
        Users <.. Membership
        package MembershipProcesses
@@ -42,13 +44,49 @@ The package diagram of the data model:
 
 
 
+.. ---------
+.. Utilities
+.. ---------
+..
+..
+.. The Utilities package contains data entities which are used for providing
+.. services.
+..
+.. AccessToken attributes:
+..
+.. ============== ========= =====================================================
+.. Attribute name Data type Description
+.. ============== ========= =====================================================
+.. id             Integer   (Primary key) Technical id of the data record
+.. token          String    A randomly generated character string
+.. creation       Timestamp The time of creation of the token from which on it is
+..                          valid
+.. expiration     Timestamp The time of expiration of the token until which it is
+..                          valid
+.. ============== ========= =====================================================
+..
+.. .. uml::
+..
+..    @startuml
+..    package Utilities {
+..        class AccessToken {
+..            id
+..            token
+..            creation
+..            expiration
+..        }
+..    }
+..    @enduml
+
+
+
 -----
 Users
 -----
 
 
 The Users package defines the basic data entities for the application's user
-management. The class User stores only the necessary information for providing
+management. The class User stores the necessary information for providing
 access to the application. User groups are used for granting permissions on
 certain functions of the application.
 
@@ -57,8 +95,8 @@ UserGroup attributes:
 ============== ========= =====================================================
 Attribute name Data type Description
 ============== ========= =====================================================
-id             Integer   (Primary key) The technical id of the data record
-name           String    The name of the user group
+id             Integer   (Primary key) The technical id of the data record.
+name           String    The name of the user group.
 ============== ========= =====================================================
 
 User attributes:
@@ -67,12 +105,13 @@ User attributes:
 Attribute name       Data type Description
 ==================== ========= ===============================================
 id                   Integer   (Primary key) The technical id of the data
-                               record
+                               record.
 email_address        String    (Business key) The email address of the user
-                               which also functions as a account identifier
+                               which also functions as a account identifier.
 password_hash        String    The salted hash of the password for
-                               identification
-last_password_change Timestamp The timestamp of the last password change
+                               identification.
+registration         Timestamp The timestamp of the registration.
+last_password_change Timestamp The timestamp of the last password change.
 ==================== ========= ===============================================
 
 .. uml::
@@ -90,11 +129,19 @@ last_password_change Timestamp The timestamp of the last password change
            id
            email_address
            password_hash
+           registration
            last_password_change
        }
 
        UserGroup "*" -- "*" User
-   }
+
+       ' class EmailAddressConfirmationAccessToken {
+       '     member_id
+       ' }
+
+       ' AccessToken <|-- EmailAddressConfirmationAccessToken
+       ' Member "1" <-- "*" EmailAddressConfirmationAccessToken
+      }
    @enduml
 
 
@@ -104,23 +151,24 @@ Membership
 ----------
 
 
-The Membership package contains data entities for storing member specific
-information. The two types of members are natural persons and legal bodies
-which require different attributes.
+The Membership package stores member specific information which is necessary
+for the membership list and basic administrative purposes. Two types of
+members exists which are natural persons and legal bodies. Both have different
+attributes.
 
 Member attributes:
 
 ================= ========= ==================================================
 Attribute name    Data type Description
 ================= ========= ==================================================
-id                Integer   (Primary key) Technical id of the data record
-address_line_1    String    First address line of the postal address
-address_line_2    String    Second address line of the postal address
-postal_code       String    Postal code of the postal address
-city              String    City of the postal address
-country           String    Country of the postal address
+id                Integer   (Primary key) Technical id of the data record.
+address_line_1    String    First address line of the postal address.
+address_line_2    String    Second address line of the postal address.
+postal_code       String    Postal code of the postal address.
+city              String    City of the postal address.
+country           String    Country of the postal address.
 locale            String    Language which the member prefers to communicate
-                            in
+                            in.
 status            String    Possible values:
                             
                             - "applied": the member applied for membership
@@ -154,14 +202,14 @@ NaturalPersonMember attributes:
 =================== ========= ================================================
 Attribute name      Data type Description
 =================== ========= ================================================
-first_name          String    The given name of the member
-last_name           String    The family name of the member
-title               String    The title of the member
-date_of_birth       Date      The date of birth of the  member
+first_name          String    The given name of the member.
+last_name           String    The family name of the member.
+title               String    The title of the member.
+date_of_birth       Date      The date of birth of the  member.
 is_member_of_colsoc Boolean   Indicates whether the member is member of at
-                              least one other collecting society
+                              least one other collecting society.
 name_of_colsoc      String    The names of the other collecting societies the
-                              member is a member of
+                              member is a member of.
 =================== ========= ================================================
 
 LegalBodyMember attributes:
@@ -169,10 +217,11 @@ LegalBodyMember attributes:
 =================== ========= ================================================
 Attribute name      Data type Description
 =================== ========= ================================================
-name                String    The name of the legal body
-court_of_law        String    The court of law which registered the legal body
+name                String    The name of the legal body.
+court_of_law        String    The court of law which registered the legal
+                              body.
 registration_number String    The registration number of the legal body at the
-                              court of law
+                              court of law.
 =================== ========= ================================================
 
 The following figure shows the UML class diagram of the Membership package:
@@ -253,7 +302,7 @@ ShareTransaction:
 ================= ========= ==================================================
 Attribute name    Data type Description
 ================= ========= ==================================================
-id                Integer   (Primary key)
+id                Integer   (Primary key) Technical id of the data record.
 requested         Timestamp The time when the share transfer was requested,
                             e.g. for issuing share the time of the
                             membership application.
@@ -276,13 +325,13 @@ ShareTransactionSplit:
 ==================== ========= ===============================================
 Attribute name       Data type Description
 ==================== ========= ===============================================
-id                   Integer   (Primary key) Technical id of the data record
+id                   Integer   (Primary key) Technical id of the data record.
 share_transaction_id Integer   (Foreign Key, ShareTransaction.id) The
                                technical id of the share transaction to which
                                the split belongs.
 member_id            Integer   (Foreign key, Member.id) The technical id of
                                the member which is affected by the shares
-                               transfer
+                               transfer.
 quantity             Decimal   The quantity of shares which are transferred.
                                A positive quantity implies a gain and a
                                negative quantity the loss of shares. The
@@ -362,6 +411,12 @@ Membership Processes
 --------------------
 
 
+The Membership Processes package stores all information which is related to
+the business processes regarding the membership. This information is kept
+separate from the basic member information of the Membership package because
+it depends solely on the processes and not on the member attributes which must
+be recorded for the membership list.
+
 .. uml::
    :caption: UML class diagram of the Membership Processes package.
 
@@ -427,26 +482,29 @@ Membership Processes
 
 
 
------------------------
-Membership Certificates
------------------------
-
-
-.. uml::
-   :caption: UML class diagram of the Membership Certificates package.
-
-   @startuml
-   package Membership {
-       class Member
-   }
-   package MembershipCertificates {
-       class MemberCertificateAccessToken {
-           member_id
-       }
-       AccessToken <|-- MemberCertificateAccessToken
-       Member "1" <-- "*" MemberCertificateAccessToken
-   }
-   @enduml
+.. -----------------------
+.. Membership Certificates
+.. -----------------------
+..
+..
+.. .. uml::
+..    :caption: UML class diagram of the Membership Certificates package.
+..
+..    @startuml
+..     package Utilities {
+..        class AccessToken
+..    }
+..    package Membership {
+..        class Member
+..    }
+..    package MembershipCertificates {
+..        class MemberCertificateAccessToken {
+..            member_id
+..        }
+..        AccessToken <|-- MemberCertificateAccessToken
+..        Member "1" <-- "*" MemberCertificateAccessToken
+..    }
+..    @enduml
 
 
 
@@ -496,11 +554,11 @@ Invoice attributes:
 ============== ========= =====================================================
 Attribute name Data type Description
 ============== ========= =====================================================
-id             Integer   (Primary key) Technical id of the data record
+id             Integer   (Primary key) Technical id of the data record.
 number         String    (Business key) The invoice number which uniquely
-                         identifies the invoice
-invoice_date   Date      The date at which the invoice was issued
-due_date       Date      The date at which the invoiced amount is due
+                         identifies the invoice.
+invoice_date   Date      The date at which the invoice was issued.
+due_date       Date      The date at which the invoiced amount is due.
 type           String    The type of the invoice:
 
                          - "normal": A normal invoice.
@@ -513,20 +571,21 @@ InvoicePosition attributes:
 ============== ========= =====================================================
 Attribute name Data type Description
 ============== ========= =====================================================
-id             Integer   (Primary key) Technical id of the data record
-invoice_id     Integer   (Foreign key, Invoice.id) 
+id             Integer   (Primary key) Technical id of the data record.
+invoice_id     Integer   (Foreign key, Invoice.id) Reference of the invoice
+                         this position belongs to.
 number         Integer   (Business key) The number of the invoice position
                          which identifies the position uniquely within the
-                         invoice
+                         invoice.
 name           String    The name of the invoice position which is displayed
-                         on the invoice
-unit_price     Decimal   The unit price of the invoice position
+                         on the invoice.
+unit_price     Decimal   The unit price of the invoice position.
 currency       String    ISO 4217 currency code, e.g. EUR, USD, SEK, NOK, DKK,
-                         CHF
-quantity       Decimal   The quantity of the invoice position
-type           String    The type of the invoice position
+                         CHF.
+quantity       Decimal   The quantity of the invoice position.
+type           String    The type of the invoice position.
 description    String    The description of the invoice position which
-                         provides details on the position name
+                         provides details on the position name.
 ============== ========= =====================================================
 
 InvoiceCancellation attributes:
@@ -535,10 +594,10 @@ InvoiceCancellation attributes:
 Attribute name          Data type Description
 ======================= ========= ============================================
 id                      Integer   (Primary key) Technical id of the data
-                                  record
+                                  record.
 invoice_id              Integer   (Foreign key, Invoice.id) Identifies the
                                   invoice which is being cancelled by the
-                                  other invoice
+                                  other invoice.
 cancellation_invoice_id Integer   (Foreign key, Invoice.id) Identifies the
                                   invoice which cancels the original invoice.
 ======================= ========= ============================================
@@ -547,6 +606,9 @@ cancellation_invoice_id Integer   (Foreign key, Invoice.id) Identifies the
    :caption: UML class diagram of the Invoicing package.
 
    @startuml
+   ' package Utilities {
+   '     class AccessToken
+   ' }
    package Accounting {
        class AccountTransaction
    }
@@ -586,6 +648,13 @@ cancellation_invoice_id Integer   (Foreign key, Invoice.id) Identifies the
 
        Invoice "1" <-- "1" InvoiceCancellation : invoice
        Invoice "1" <-- "1" InvoiceCancellation : cancellation_invoice
+
+       ' class InvoiceAccessToken {
+       '     invoice_id
+       ' }
+
+       ' Invoice "1" <-- "*" InvoiceAccessToken
+       ' AccessToken <|-- InvoiceAccessToken
    }
    @enduml
 
@@ -611,11 +680,11 @@ DuesInvoice attributes (inherits Invoicing.Invoice):
 ============== ========= =====================================================
 Attribute name Data type Description
 ============== ========= =====================================================
-id             Integer   (Primary key) Technical id of the data record
+id             Integer   (Primary key) Technical id of the data record.
 member_id      Integer   (Foreign key Member.id) The member to which the dues
-                         invoice is issued
+                         invoice is issued.
 dues_id        Integer   (Foreign key, Dues.id) The dues which defines the
-                         context in which the dues invoice is issued
+                         context in which the dues invoice is issued.
 ============== ========= =====================================================
 
 DuesAttribute attributes (inherits Accounting.Account):
@@ -623,11 +692,11 @@ DuesAttribute attributes (inherits Accounting.Account):
 ============== ========= =====================================================
 Attribute name Data type Description
 ============== ========= =====================================================
-id             Integer   (Primary key) Technical id of the data record
+id             Integer   (Primary key) Technical id of the data record.
 member_id      Integer   (Foreign key Member.id) The member for which the
-                         account was created
+                         account was created.
 dues_id        Integer   (Foreign key, Dues.id) The dues which defines the
-                         account was created
+                         account was created.
 ============== ========= =====================================================
 
 Implicitly, all account transactions for dues invoice positions are booked
@@ -823,7 +892,3 @@ Application Architecture
   - Sphinx [Sphinx]_
   - Graphviz [Graphviz]_, [Sphinx-Graphviz]_ 
   - PlantUML [PlantUML]_
-
-
-**TODO**: *Elaborate on the architecture of the membership application.*
-
