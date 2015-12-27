@@ -16,7 +16,6 @@ Contents:
    requirements/index
    design/index
    development/index
-   hacking/index
    code/index
    models/index
    tests/index
