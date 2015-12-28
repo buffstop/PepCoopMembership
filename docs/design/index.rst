@@ -291,7 +291,7 @@ is moved form one cooperative entity to another, i.e. from the cooperative to
 a member, between members of from a member back to the cooperative.
 
 The share transaction is the data entity representing such a transfer of
-shares. I consists of (for now) exactly two splits, each for each cooperative
+shares. It currently consists of exactly two splits, each for each cooperative
 entity which either gives or receives the shares. A share is received when the
 quantity is positive and given when it is negative. The quantity sum of each
 share transaction must always be zero. The current quantity a cooperative
@@ -750,48 +750,6 @@ with account transaction splits on dues accounts.
 
 
 
-**Todo:**
-
-- *Discount: ID, Begin date, End date, Discount type, Discount amount, Member ID (FK)*
-
-- *Payments*
-
-  - *Attributes: ID, Value (in EUR), Booking date (date when the data was
-    *entered into the system), Value date (date when the payment arrived, i.e.
-    *the cash was handed over or the payment was received on the bank
-    *account), Type: cash/transfer, Reference/comment (e.g. transfer purpose),
-    *Invoice ID (FK)*
-
-  - *Can be assigned to:*
-
-    - *Invoices for shares: acquisition, restitution*
-
-    - *Invoices for membership fees: fee payable, discount*
-
-- *Shares*
-
-  - *Can be acquired, transferred/sold and restituted.*
-  
-  - *For transfer/sale two members are involved which must be reflected in the
-    data model.*
-  
-  - *Have different states: applied for and not paid yet, paid for but not
-    approved yet, approved, denied but not refunded, refunded*
-
-- *Invoices should be sent for the acquisition and restitution. This is not
-  necessarily the case at the moment.*
-
-- *Email addresses might need to be abstracted. It is necessary to store
-  whether an email address was confirmed. Confirmation works through the
-  generation of a token which is sent to the email address. If the link
-  including the token is clicked, the email address is verified. Therefore,
-  the token as well as a flag about the successful verification need to be
-  stored. This can happen more than once in case a password reset is
-  requested.*
-  
-- *Use SQLAlchemy-Continuum for keeping history where necessary.*
-
-
 ========================
 Environment Architecture
 ========================
@@ -892,3 +850,74 @@ Application Architecture
   - Sphinx [Sphinx]_
   - Graphviz [Graphviz]_, [Sphinx-Graphviz]_ 
   - PlantUML [PlantUML]_
+
+
+====
+Todo
+====
+
+
+- Membership status: What happens if a former member who terminated the
+  membership becomes a member again? Is the old membership number reactivated
+  or is a new one assigned? This might have an impact on the data model in
+  terms of keeping history and reusing member data records.
+
+- Discount: ID, Begin date, End date, Discount type, Discount amount, Member
+  ID (FK)
+
+- Payments
+
+  - Attributes: ID, Value (in EUR), Booking date (date when the data was
+    entered into the system), Value date (date when the payment arrived, i.e.
+    the cash was handed over or the payment was received on the bank
+    account), Type: cash/transfer, Reference/comment (e.g. transfer purpose),
+    Invoice ID (FK)
+
+  - Can be assigned to:
+
+    - Invoices for shares: acquisition, restitution
+
+    - Invoices for membership fees: fee payable, discount
+
+- Shares
+
+  - Can be
+
+    - acquired
+    - transferred (e.g. sold)
+    - restituted
+
+  - For transfer/sale two members are involved which must be reflected in the
+    data model.
+
+  - Can have states
+
+    - applied for and not paid yet
+    - paid for but not approved yet
+    - approved
+    - denied but not refunded
+    - refunded
+
+  - How are wrong bookings handled? Possibility to change bookings or only to
+    enter a reverse booking?
+
+  - How to store the information when a share transfer was requested and when
+    approved? It might be necessary to get statistics about how many share
+    transfers are pending.
+
+- Invoices should be sent for the acquisition and restitution. This is not
+  necessarily the case at the moment.
+
+- Email addresses might need to be abstracted. It is necessary to store
+  whether an email address was confirmed. Confirmation works through the
+  generation of a token which is sent to the email address. If the link
+  including the token is clicked, the email address is verified. Therefore,
+  the token as well as a flag about the successful verification need to be
+  stored. This can happen more than once in case a password reset is
+  requested. **Decision**: Email addresses are not abstracted but tokens are.
+  As the old email address can be recovered from the member data history, it
+  does not need a separate table. The tokens are abstracted in an own concept
+  as they are not only needed for email verification but also for invoice
+  as well as membership certificate access.
+
+- Use SQLAlchemy-Continuum for keeping history where necessary.
