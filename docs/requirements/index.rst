@@ -116,16 +116,31 @@ Acquisition of Membership
 The acquisition of membership must be approved by the administrative board
 ([EU_CR_1435_2003_SCE]_ art. 14(1)).
 
+- Only natural persons can become full members, legal bodies can only become
+  investor members ([C3S_Statute]_ § 4 I, II).
+
+- A signed and fully filled membership application is required
+  ([C3S_Statute]_ § 4 III).
+
+- The membership application must be admitted by the administrative board
+  ([C3S_Statute]_ § 4 III).
+
+- The acquisiton of at least one share is required for becoming a member
+  ([C3S_Statute]_ § 5 II 1).
+
+- The share must be paid for acquiring membership ([C3S_Statute]_ § 5 I 2).
+
+- A member can sign up to 60 shares ([C3S_Statute]_ § 5 II 2).
+
+- The nominal value of one share is 50 € ([C3S_Statute]_ § 5 I 1).
+
 **TODO:**
 
 - *Clarification of legal rules and regulations including the C3S statue which
   motivate the process.*
 
-- *A signed and fully filled membership application is required. Furthermore,
-  the payment for the shares which shall be acquired must have arrived. One
-  share is required for membership. Then the membership can be approved or
-  declined by the administrative board. The decision of the administrative
-  board must berecorded on the member's record in the membership list.*
+- *The decision of the administrative board must be recorded on the member's
+  record in the membership list.*
 
 
 
