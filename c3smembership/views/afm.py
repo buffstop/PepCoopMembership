@@ -28,11 +28,6 @@ from datetime import (
 )
 import deform
 from deform import ValidationFailure
-import peppercorn
-from colander import (
-    Invalid,
-    Range,
-)
 from c3smembership.deform_text_input_slider_widget import (
     TextInputSliderWidget
 )
@@ -77,6 +72,9 @@ DEFORM_TEMPLATE_DIR = resource_filename('deform', 'templates')
 
 
 def translator(term):
+    """
+    Template translator.
+    """
     return get_localizer(get_current_request()).translate(term)
 
 ZPT_RENDERER = deform.ZPTRendererFactory(
@@ -158,7 +156,6 @@ def join_c3s(request):
                           u'verifying your email you will have to enter it.'),
             oid='password',
         )
-
         address1 = colander.SchemaNode(
             colander.String(),
             title=_(u'Address Line 1')
@@ -178,10 +175,6 @@ def join_c3s(request):
             title=_(u'City'),
             oid="city",
         )
-        # region = colander.SchemaNode(
-        #      colander.String(),
-        #      title=_(u'Federal State / Province / County'),
-        #      missing=unicode(''))
         country = colander.SchemaNode(
             colander.String(),
             title=_(u'Country'),
@@ -190,10 +183,6 @@ def join_c3s(request):
                 values=country_codes),
             oid="country",
         )
-
-        # TODO:
-        # Date of birth (dd/mm/yyyy) (three fields)
-        # size doesn't have any effect?!
         date_of_birth = colander.SchemaNode(
             colander.Date(),
             title=_(u'Date of Birth'),
@@ -208,59 +197,16 @@ def join_c3s(request):
             ),
             oid="date_of_birth",
         )
-
-        # type_of_creator = (('composer', _(u'composer')),
-        #                    ('lyricist', _(u'lyricist')),
-        #                    ('music producer', _(u'music producer')),
-        #                    ('remixer', _(u'remixer')),
-        #                    ('dj', _(u'DJ')))
-
-        # activity = colander.SchemaNode(
-        #     deform.Set(allow_empty=True),
-        #     title=_(
-        #         u"I'm musically involved in creating at least three songs, "
-        #         "and I\'m considering to ask C3S to administer the rights "
-        #         " to some of my songs. I am active as a "
-        #         "(multiple selection possible)"),
-        #     widget=deform.widget.CheckboxChoiceWidget(
-        #         values=type_of_creator),
-        #     missing=unicode(''),
-        #     oid="activity",)
         _LOCALE_ = colander.SchemaNode(colander.String(),
                                        widget=deform.widget.HiddenWidget(),
                                        default=locale_name)
 
     class MembershipInfo(colander.Schema):
-
+        """
+        Basic member information.
+        """
         yes_no = ((u'yes', _(u'Yes')),
                   (u'no', _(u'No')))
-
-        #   at_least_three_works = colander.SchemaNode(
-        #       colander.String(),
-        #       title=_(u'I have been the (co-)creator of '
-        #               u'at least three titles '
-        #               u'in one of the functions mentioned under (1)'),
-        #       validator=colander.OneOf([x[0] for x in yes_no]),
-        #       widget=deform.widget.RadioChoiceWidget(values=yes_no))
-
-        # TODO: inColSocName if member_of_colsoc = yes
-        # css/jquery: fixed; TODO: validator
-        # def colsoc_validator(node, form):
-        #     log.info("validating...........................................")
-        #     print(value['member_of_colsoc'])
-        #     log.info(node.get('other_colsoc'))
-        #     log.info(node.get('other_colsoc-1'))
-        #     log.info(node.cstruct_children('other_colsoc'))
-        #     log.info(node.get_value('other_colsoc-1'))
-        #     log.info(dir(node))
-        #     log.info(node['member_of_colsoc'])
-        #     if value['member_of_colsoc']
-        #     exc = colander.Invalid(
-        #        form, "if colsoc, give name!")
-        #     exc['name_of_colsoc'] = "if colsoc, give name!"
-        #     log.info("end----------------------------------------")
-        #     pass
-
         membership_type = colander.SchemaNode(
             colander.String(),
             title=_(u'I want to become a ... '
@@ -268,35 +214,22 @@ def join_c3s(request):
             description=_(u'choose the type of membership.'),
             widget=deform.widget.RadioChoiceWidget(
                 values=(
-                    (u'normal',
-                     _(u'FULL member. Full members have to be natural '
-                        u'persons who register at least three works they '
-                        u'created themselves with C3S. This applies to '
-                        u'composers, lyricists and remixers. They get a '
-                        u'vote.')),
-                    (u'investing',
-                     _(u'INVESTING member. Investing members can be '
-                        u'natural or legal entities or private companies '
-                        u'that do not register works with C3S. They do '
-                        u'not get a vote, but may counsel.'))
+                    (
+                        u'normal',
+                        _(u'FULL member. Full members have to be natural '
+                          u'persons who register at least three works they '
+                          u'created themselves with C3S. This applies to '
+                          u'composers, lyricists and remixers. They get a '
+                          u'vote.')),
+                    (
+                        u'investing',
+                        _(u'INVESTING member. Investing members can be '
+                          u'natural or legal entities or private companies '
+                          u'that do not register works with C3S. They do '
+                          u'not get a vote, but may counsel.'))
                 ),
             )
         )
-
-        # member_is_artist = colander.SchemaNode(
-        #     colander.String(),
-        #     title=_(
-        #         u'I am at least one of: composer, lyricist, '
-        #         'remixer, arranger, producer, DJ (i.e. musician)'),
-        #     description=_(
-        #         u'You have to be a musician to become a regular member ' + \
-        #             u'of C3S SCE.'
-        #         'Or choose to become a supporting member.'),
-        #     validator=colander.OneOf([x[0] for x in yes_no]),
-        #     widget=deform.widget.RadioChoiceWidget(
-        #         values=(yes_no),
-        #     ),
-        # )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
             title=_(
@@ -310,8 +243,9 @@ def join_c3s(request):
         name_of_colsoc = colander.SchemaNode(
             colander.String(),
             title=_(u'If so, which one(s)? Please separate multiple '
-                u'collecting societies by comma.'),
-            description=_(u'Please tell us which collecting societies '
+                    u'collecting societies by comma.'),
+            description=_(
+                u'Please tell us which collecting societies '
                 u'you are a member of. '
                 u'If more than one, please separate them by comma.'),
             missing=unicode(''),
@@ -321,7 +255,11 @@ def join_c3s(request):
             # )
         )
 
+        @staticmethod
         def statute_validator(node, value):
+            """
+            Validator for statute confirmation.
+            """
             if not value:
                 # raise without additional error message as the description
                 # already explains the necessity of the checkbox
@@ -340,7 +278,11 @@ def join_c3s(request):
             label=_('Yes'),
         )
 
+        @staticmethod
         def dues_regulations_validator(node, value):
+            """
+            Validator for dues regulations confirmation.
+            """
             if not value:
                 # raise without additional error message as the description
                 # already explains the necessity of the checkbox
@@ -455,7 +397,7 @@ def join_c3s(request):
             """
             import random
             import string
-            return ''.join(
+            return u''.join(
                 random.choice(
                     string.ascii_uppercase + string.digits
                 ) for x in range(10))
@@ -463,7 +405,7 @@ def join_c3s(request):
         # make confirmation code and
         randomstring = make_random_string()
         # check if confirmation code is already used
-        while (C3sMember.check_for_existing_confirm_code(randomstring)):
+        while C3sMember.check_for_existing_confirm_code(randomstring):
             # create a new one, if the new one already exists in the database
             randomstring = make_random_string()  # pragma: no cover
 
@@ -482,20 +424,11 @@ def join_c3s(request):
             date_of_birth=appstruct['person']['date_of_birth'],
             email_is_confirmed=False,
             email_confirm_code=randomstring,
-            # is_composer=('composer' in appstruct['activity']),
-            # is_lyricist=('lyricist' in appstruct['activity']),
-            # is_producer=('music producer' in appstruct['activity']),
-            # is_remixer=('remixer' in appstruct['activity']),
-            # is_dj=('dj' in appstruct['activity']),
             date_of_submission=datetime.now(),
-            # invest_member=(
-            #    appstruct['membership_info']['invest_member'] == u'yes'),
             membership_type=appstruct['membership_info']['membership_type'],
             member_of_colsoc=(
                 appstruct['membership_info']['member_of_colsoc'] == u'yes'),
             name_of_colsoc=appstruct['membership_info']['name_of_colsoc'],
-            # opt_band=appstruct['opt_band'],
-            # opt_URL=appstruct['opt_URL'],
             num_shares=appstruct['shares']['num_shares'],
         )
         dbsession = DBSession()
@@ -512,7 +445,6 @@ def join_c3s(request):
         request.session['appstruct'] = appstruct
         request.session['appstruct']['_LOCALE_'] = \
             appstruct['person']['_LOCALE_']
-        #
         # empty the messages queue (as validation worked anyways)
         deleted_msg = request.session.pop_flash()
         del deleted_msg
@@ -523,10 +455,12 @@ def join_c3s(request):
     # if the form was submitted and gathered info shown on the success page,
     # BUT the user wants to correct their information:
     else:
+        if 'edit' in request.POST:
+            print(request.POST['edit'])
         # remove annoying message from other session
         deleted_msg = request.session.pop_flash()
         del deleted_msg
-        if ('appstruct' in request.session):
+        if 'appstruct' in request.session:
             appstruct = request.session['appstruct']
             # pre-fill the form with the values from last time
             form.set_appstruct(appstruct)
@@ -547,7 +481,7 @@ def show_success(request):
     and have an email set to the user for validation.
     """
     # check if user has used the form or 'guessed' this URL
-    if ('appstruct' in request.session):
+    if 'appstruct' in request.session:
         # we do have valid info from the form in the session
         appstruct = request.session['appstruct']
         # delete old messages from the session (from invalid form input)
@@ -573,7 +507,7 @@ def success_check_email(request):
     """
     # check if user has used the form (good) or 'guessed' this URL (bad)
 
-    if ('appstruct' in request.session):
+    if 'appstruct' in request.session:
         # we do have valid info from the form in the session (good)
         appstruct = request.session['appstruct']
         from pyramid_mailer.message import Message
@@ -581,10 +515,7 @@ def success_check_email(request):
             mailer = get_mailer(request)
         except:
             return HTTPFound(location=request.route_url('join'))
-            # ToDo: handle excpetion
 
-        # XXX TODO: check for locale, choose language for body text
-        # build the emails body
         if 'de' in appstruct['person']['_LOCALE_']:
             the_mail_body = u'''
 Hallo {} {}!
@@ -719,14 +650,14 @@ def success_verify_email(request):
         # check if info from DB makes sense
         # -member
 
-        if ((member.email == user_email) and correct):
+        if (member.email == user_email) and correct:
             # print("-- found member, code matches, password too. COOL!")
             # set the email_is_confirmed flag in the DB for this signee
             member.email_is_confirmed = True
             # dbsession.flush()
             namepart = member.firstname + member.lastname
             import re
-            PdfFileNamePart = re.sub(  # replace characters
+            pdf_file_name_part = re.sub(  # replace characters
                 '[^a-zA-Z0-9]',  # other than these
                 '_',  # with an underscore
                 namepart)
@@ -747,7 +678,8 @@ def success_verify_email(request):
                 # 'activity': set(activities),
                 # 'invest_member': u'yes' if member.invest_member else u'no',
                 'membership_type': member.membership_type,
-                'member_of_colsoc': u'yes' if member.member_of_colsoc else u'no',
+                'member_of_colsoc':
+                    u'yes' if member.member_of_colsoc else u'no',
                 'name_of_colsoc': member.name_of_colsoc,
                 # 'opt_band': signee.opt_band,
                 # 'opt_URL': signee.opt_URL,
@@ -756,14 +688,14 @@ def success_verify_email(request):
             request.session['appstruct'] = appstruct
 
             # log this person in, using the session
-            log.info('verified code and password for id %s' % member.id)
+            log.info('verified code and password for id %s', member.id)
             request.session.save()
             return {
                 'firstname': member.firstname,
                 'lastname': member.lastname,
                 'code': member.email_confirm_code,
                 'correct': True,
-                'namepart': PdfFileNamePart,
+                'namepart': pdf_file_name_part,
                 'result_msg': _("Success. Load your PDF!")
             }
     # else: code did not match OR SOMETHING...
@@ -794,7 +726,7 @@ def show_success_pdf(request):
     def success_verify_email below.
     """
     # check if user has used form or 'guessed' this URL
-    if ('appstruct' in request.session):
+    if 'appstruct' in request.session:
         # we do have valid info from the form in the session
         # print("-- valid session with data found")
         # send mail to accountants // prepare a mailer
