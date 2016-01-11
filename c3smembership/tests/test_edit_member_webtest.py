@@ -1,5 +1,8 @@
 #!/bin/env/python
 # -*- coding: utf-8 -*-
+"""
+Tests for c3smembership.edit_member
+"""
 
 import unittest
 from pyramid import testing
@@ -14,6 +17,8 @@ from c3smembership.models import (
 from sqlalchemy import engine_from_config
 import transaction
 from datetime import date
+from c3smembership import main
+from webtest import TestApp
 
 DEBUG = False
 
@@ -25,16 +30,16 @@ class EditMemberTests(unittest.TestCase):
     they also serve to get coverage for 'main'
     """
     def setUp(self):
+        """
+        Setup test cases
+        """
         self.config = testing.setUp()
         self.config.include('pyramid_mailer.testing')
         try:
             DBSession.close()
             DBSession.remove()
-            #print "closed and removed DBSession"
         except:
             pass
-            #print "no session to close"
-       # self.session = DBSession()
         my_settings = {
             'sqlalchemy.url': 'sqlite:///:memory:',
             'available_languages': 'da de en es fr',
@@ -51,9 +56,7 @@ class EditMemberTests(unittest.TestCase):
             try:
                 DBSession.add(accountants_group)
                 DBSession.flush()
-                #print("adding group staff")
             except:
-                #print("could not add group staff.")
                 pass
             # staff personnel
             staffer1 = C3sStaff(
@@ -67,69 +70,28 @@ class EditMemberTests(unittest.TestCase):
                 DBSession.add(staffer1)
                 DBSession.flush()
             except:
-                #print("it borked! (rut)")
                 pass
 
-        from c3smembership import main
         app = main({}, **my_settings)
-        from webtest import TestApp
         self.testapp = TestApp(app)
 
     def tearDown(self):
+        """
+        Tear down all test cases
+        """
         DBSession.close()
         DBSession.remove()
         testing.tearDown()
 
-    def test_edit_members(self):
-        '''
-        tests for the edit_member view
-        '''
-        # unauthorized access must be prevented
-        res = self.testapp.reset()  # delete cookie
-        res = self.testapp.get('/edit/1', status=403)
-        assert('Access was denied to this resource' in res.body)
-        res = self.testapp.get('/login', status=200)
-        self.failUnless('login' in res.body)
-        # try valid user
-        form = res.form
-        form['login'] = 'rut'
-        form['password'] = 'berries'
-        res2 = form.submit('submit', status=302)
-        # # being logged in ...
-        res3 = res2.follow()  # being redirected to dashboard_only
-        #print('>'*20)
-        #print(res3.body)
-        #print('<'*20)
-        res4 = res3.follow()  # being redirected to dashboard with parameters
-        self.failUnless(
-            'Dashboard' in res4.body)
-        # # now that we are logged in,
-        # # the login view should redirect us to the dashboard
-        # res5 = self.testapp.get('/login', status=302)
-        # # so yes: that was a redirect
-        # res6 = res5.follow()
-        # res6 = res6.follow()
-        # #print(res4.body)
-        # self.failUnless(
-        #     'Dashboard' in res6.body)
-        # # choose number of applications shown
-        # res6a = self.testapp.get(
-        #     '/dashboard',
-        #     status=302,
-        #     extra_environ={
-        #         'num_display': '30',
-        #     }
-        # )
-        # res6a = res6a.follow()
-
-        # no member in DB, so redirecting to dashboard
-        res = self.testapp.get('/edit/1', status=302)
-        res2 = res.follow()
-
+    def create_membership_applicant(self):
+        """
+        Create and return a membership applicant
+        """
+        member = None
         with transaction.manager:
-            member1 = C3sMember(  # german
+            member = C3sMember(  # german
                 firstname=u'SomeFirstnäme',
-                lastname=u'SomeLastnäme',
+                lastname=u'Membership Applicant',
                 email=u'some@shri.de',
                 address1=u"addr one",
                 address2=u"addr two",
@@ -147,24 +109,33 @@ class EditMemberTests(unittest.TestCase):
                 name_of_colsoc=u"GEMA",
                 num_shares=u'23',
             )
-        DBSession.add(member1)
+        return member
+
+    def test_edit_members(self):
+        '''
+        tests for the edit_member view
+        '''
+        # unauthorized access must be prevented
+        res = self.testapp.reset()  # delete cookie
+        res = self.testapp.get('/edit/1', status=403)
+        self.failUnless('Access was denied to this resource' in res.body)
+
+        self.login()
+
+        # no member in DB, so redirecting to dashboard
+        res = self.testapp.get('/edit/1', status=302)
+        self.validate_dashboard_redirect(res)
+
+        DBSession.add(self.create_membership_applicant())
+        DBSession.flush()
 
         # now there is a member in the DB
-        #
-        # letzt try invalid input
+        # let's try invalid input
         res = self.testapp.get('/edit/foo', status=302)
-        res2 = res.follow()
-        res3 = res2.follow()
-        self.failUnless('Dashboard' in res4.body)
+        self.validate_dashboard_redirect(res)
 
-        if DEBUG:
-            print '+' * 20
-            print res2.body
-            print '+' * 20
         # now try valid id
         res = self.testapp.get('/edit/1', status=200)
-        if DEBUG:
-            print(res.body)
         self.failUnless('Mitglied bearbeiten' in res.body)
 
         # now we change details, really editing that member
@@ -188,13 +159,12 @@ class EditMemberTests(unittest.TestCase):
         form['name_of_colsoc'] = ''
         form['num_shares'] = 42
 
-        # try to submit now. this must fail,
-        # because the date of birth is wrong
-        # ... and other dates are missing
+        # try to submit now. this must fail, because the date of birth is
+        # wrong ... and other dates are missing
         res2 = form.submit('submit', status=200)
-        #print res2.body
-        self.assertTrue(
-            'is earlier than earliest date 2013-09-24' in res2.body)
+        self.assertTrue('is later than latest date 2000-01-01' in res2.body)
+        self.assertTrue('EinVorname' in res2.body)
+
         # set the date correctly
         form2 = res2.form
         form2['date_of_birth'] = '1999-12-30'
@@ -202,31 +172,21 @@ class EditMemberTests(unittest.TestCase):
         form2['signature_received_date'] = '2013-09-24'
         form2['payment_received_date'] = '2013-09-24'
 
-        self.assertTrue('EinVorname' in res2.body)
-
         # submit again
         res2 = form2.submit('submit', status=302)
         res3 = res2.follow()
-        #print res3.body
+        self.validate_details_page(res3)
+        self.assertTrue('EinNachname' in res3.body)
+        self.assertTrue('info@c3s.cc' in res3.body)
+        self.assertTrue('adressteil 1' in res3.body)
+        self.assertTrue('adressteil 2' in res3.body)
+        self.assertTrue('12346' in res3.body)
+        self.assertTrue('die city' in res3.body)
+        self.assertTrue('FI' in res3.body)
+        self.assertTrue('investing' in res3.body)
+        self.assertTrue('42' in res3.body)
 
-        # more asserts
-        #self.assertTrue('EinNachname' in res3.body)
-        # self.assertTrue('info@c3s.cc' in res3.body)
-        # self.assertTrue('adressteil 1' in res3.body)
-        # self.assertTrue('adressteil 2' in res3.body)
-        # self.assertTrue('12346' in res3.body)
-        # self.assertTrue('die city' in res3.body)
-        # self.assertTrue('FI' in res3.body)
-        # self.assertTrue('investing' in res3.body)
-        # self.assertTrue('42' in res3.body)
-        #        self.assertTrue('' in res3.body)
-        #        self.assertTrue('' in res3.body)
-        #        self.assertTrue('' in res3.body)
-        #        self.assertTrue('' in res3.body)
-
-        '''
-        edit again ... changing membership acceptance status
-        '''
+        # edit again ... changing membership acceptance status
         res = self.testapp.get('/edit/1', status=200)
         self.failUnless('Mitglied bearbeiten' in res.body)
 
@@ -235,11 +195,39 @@ class EditMemberTests(unittest.TestCase):
         if DEBUG:
             print "form.fields: {}".format(form.fields)
 
-        #self.assertTrue(u'SomeFirstn\xe4me' in form['firstname'].value)
         form2['membership_accepted'] = True
         res2 = form2.submit('submit', status=302)
-        res3 = res2.follow()
+        res2.follow()
 
-        m1 = C3sMember.get_by_id(1)
-        if DEBUG:
-            print m1.shares  # yields []
+    def validate_details_page(self, res):
+        """
+        Validate that the resource in res is the details page
+        """
+        self.assertTrue('<h1>Details for' in res.body)
+
+    def login(self):
+        """
+        Log into the membership backend
+        """
+        res = self.testapp.get('/login', status=200)
+        self.failUnless('login' in res.body)
+        form = res.form
+        form['login'] = 'rut'
+        form['password'] = 'berries'
+        res = form.submit('submit', status=302)
+        # being logged in ...
+        self.validate_dashboard_redirect(res)
+
+    def validate_dashboard_redirect(self, res):
+        """
+        Validate that res is redirecting to the dashboard
+        """
+        res = res.follow()  # being redirected to dashboard_only
+        res = res.follow()  # being redirected to dashboard with parameters
+        self.validate_dashboard(res)
+
+    def validate_dashboard(self, res):
+        """
+        Validate that res is the dashboard
+        """
+        self.failUnless('Dashboard' in res.body)

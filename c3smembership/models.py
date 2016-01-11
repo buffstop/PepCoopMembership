@@ -49,6 +49,7 @@ crypt = cryptacular.bcrypt.BCRYPTPasswordManager()
 def hash_password(password):
     return unicode(crypt.encode(password))
 
+
 # TODO: Use standard SQLAlchemy Decimal when a database is used which supports
 # it.
 class SqliteDecimal(types.TypeDecorator):
@@ -96,7 +97,6 @@ class Group(Base):
         staff_group = dbsession.query(
             cls).filter(cls.name == groupname).first()
         return staff_group
-
 
 
 # table for relation between staffers and groups
@@ -359,10 +359,12 @@ class C3sMember(Base):
     dues15_amount = Column(  # calculated amount member has to pay by default
         DatabaseDecimal(12, 2), default=Decimal('NaN'))
     dues15_reduced = Column(Boolean, default=False)  # was reduced?
-    _dues15_amount_reduced = Column('dues15_amount_reduced',  # the amount reduced to
+    _dues15_amount_reduced = Column(
+        'dues15_amount_reduced',  # the amount reduced to
         DatabaseDecimal(12, 2), default=Decimal('NaN'))  # ..to xs
     # balance
-    _dues15_balance = Column('dues15_balance',  # the amount to be settled
+    _dues15_balance = Column(
+        'dues15_balance',  # the amount to be settled
         DatabaseDecimal(12, 2), default=Decimal('0'))
     dues15_balanced = Column(Boolean, default=True)  # was balanced?
     # payment
@@ -370,7 +372,7 @@ class C3sMember(Base):
     dues15_amount_paid = Column(  # how much paid?
         DatabaseDecimal(12, 2), default=Decimal('0'))
     dues15_paid_date = Column(DateTime())  # paid when?
-    
+
     def __init__(self, firstname, lastname, email, password,
                  address1, address2, postcode, city, country, locale,
                  date_of_birth, email_is_confirmed, email_confirm_code,
@@ -567,7 +569,6 @@ class C3sMember(Base):
         """return number of submissions (by counting rows in table)"""
         return DBSession.query(cls).count()
 
-
     @classmethod
     def get_num_members_accepted(cls):
         '''
@@ -581,12 +582,11 @@ class C3sMember(Base):
         '''
         count the members that have actually been accepted as members
         '''
-        return DBSession.query(
-            cls).filter(or_(
-                cls.membership_accepted != 1,
-                cls.membership_accepted == 0,
-                cls.membership_accepted == None,
-            )).count()
+        return DBSession.query(cls).filter(or_(
+            cls.membership_accepted != 1,
+            cls.membership_accepted == 0,
+            cls.membership_accepted is None,
+        )).count()
 
     @classmethod
     def get_num_mem_nat_acc(cls):
@@ -1011,7 +1011,6 @@ class Dues15Invoice(Base):
             return True
         else:
             return False
-
 
     @classmethod
     def get_monthly_stats(cls):

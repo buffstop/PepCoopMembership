@@ -7,6 +7,8 @@ Next Release
 - Extend documentation about production deployment of new application
   versions.
 
+- Fix tests.
+
 
 
 1.13.1

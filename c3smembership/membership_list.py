@@ -54,7 +54,7 @@ def member_list_aufstockers_view(request):
             # check membership number
             try:
                 assert(item.membership_number is not None)
-            except:
+            except AssertionError:
                 print "failed at id {} lastname {}".format(
                     item.id, item.lastname)
             # add this item to the list
@@ -90,7 +90,7 @@ def member_list_date_pdf_view(request):
     try:
         _date_m = request.matchdict['date']
         _date = datetime.strptime(_date_m, '%Y-%m-%d')
-    except:
+    except (KeyError, ValueError):
         request.session.flash(
             'Invalid date! ',
             'membership_list_errors'
@@ -127,13 +127,13 @@ def member_list_date_pdf_view(request):
             _members.append(item)
             _count_members += 1
             # also count their shares iff acquired in the timespan
-            for _s in item.shares:
+            for share in item.shares:
                 if (datetime(
-                        _s.date_of_acquisition.year,
-                        _s.date_of_acquisition.month,
-                        _s.date_of_acquisition.day,
+                        share.date_of_acquisition.year,
+                        share.date_of_acquisition.month,
+                        share.date_of_acquisition.day,
                 ) <= _date):
-                    _count_shares += _s.number
+                    _count_shares += share.number
 
     # sort members alphabetically
     import locale
@@ -167,11 +167,11 @@ def member_list_date_pdf_view(request):
 
     # construct latex data: header + variables
     latex_data = '''
-\input{%s}
-\def\\numMembers{%s}
-\def\\numShares{%s}
-\def\\sumShares{%s}
-\def\\today{%s}
+\\input{%s}
+\\def\\numMembers{%s}
+\\def\\numShares{%s}
+\\def\\sumShares{%s}
+\\def\\today{%s}
     ''' % (
         latex_header_tex,
         _count_members,
@@ -182,7 +182,7 @@ def member_list_date_pdf_view(request):
 
     # add to the latex document
     latex_data += '''
-\input{%s}''' % latex_footer_tex
+\\input{%s}''' % latex_footer_tex
 
     # print '*' * 70
     # print latex_data
@@ -190,82 +190,78 @@ def member_list_date_pdf_view(request):
     latex_file.write(latex_data.encode('utf-8'))
 
     # make table rows per member
-    for m in _members:
-        _address = '''\scriptsize{}'''
+    for member in _members:
+        _address = '''\\scriptsize{}'''
         _address += '''{}'''.format(
-            unicode(m.address1).encode('utf-8'))
-        # if (u'℅' not in m.address2) and m.address2 is not u'':
-        #    print("this is address2: {}".format(
-        #        unicode(m.address2).encode('utf-8')))
+            unicode(member.address1).encode('utf-8'))
 
         # check for contents of address2:
-        if m.address2 is u'':  # omit if empty
+        if member.address2 is u'':  # omit if empty
             # print('no address2 supplied')
             pass
-        elif u'℅' in m.address2:  # replace deadly signs to appease LaTeX
+        elif u'℅' in member.address2:  # replace deadly signs to appease LaTeX
             _address += '''\linebreak {}'''.format(
                 unicode(
-                    m.address2.replace(u'℅', 'bei ')
+                    member.address2.replace(u'℅', 'bei ')
                 ).encode('utf-8'))
-        elif u'&' in m.address2:  # replace deadly signs to appease LaTeX
+        elif u'&' in member.address2:  # replace deadly signs to appease LaTeX
             _address += '''\linebreak {}'''.format(
                 unicode(
-                    m.address2.replace(u'&', ' \& ')
+                    member.address2.replace(u'&', ' \& ')
                 ).encode('utf-8'))
         else:  # but DO print address2 if it exists
             _address += '''\linebreak {}'''.format(
-                unicode(m.address2).encode('utf-8'))
+                unicode(member.address2).encode('utf-8'))
+
         # add more...
-        _address += ''' \linebreak {} '''.format(
-            unicode(m.postcode).encode('utf-8'))
+        _address += ''' \\linebreak {} '''.format(
+            unicode(member.postcode)).encode('utf-8')
         _address += '''{}'''.format(
-            unicode(m.city).encode('utf-8'))
+            unicode(member.city)).encode('utf-8')
         _address += ''' ({})'''.format(
-            unicode(m.country).encode('utf-8'))
-        _mship = m.membership_number
+            unicode(member.country)).encode('utf-8')
 
         # check shares acquired until $date
         _acquired_shares_until_date = 0
-        for s in m.shares:
-            if (datetime(
-                s.date_of_acquisition.year,
-                s.date_of_acquisition.month,
-                s.date_of_acquisition.day,
-            ) <= _date):
-                _acquired_shares_until_date += s.number
-                _count_shares_printed += s.number
+        for share in member.shares:
+            if datetime(
+                    share.date_of_acquisition.year,
+                    share.date_of_acquisition.month,
+                    share.date_of_acquisition.day) <= _date:
+                _acquired_shares_until_date += share.number
+                _count_shares_printed += share.number
 
         latex_file.write(
-            ''' {0} & {1} & {2} & {3} & {4} & {5} & {6} \\\\\hline %
+            ''' {0} & {1} & {2} & {3} & {4} & {5} & {6} \\\\\\hline %
             '''.format(
-                m.lastname.encode('utf-8'),  # 0
-                ' \\footnotesize ' + m.firstname.encode('utf-8'),  # 1
-                ' \\footnotesize ' + str(_mship),  # 2
+                member.lastname.encode('utf-8'),  # 0
+                ' \\footnotesize ' + member.firstname.encode('utf-8'),  # 1
+                ' \\footnotesize ' + str(member.membership_number),  # 2
                 _address,  # 3
-                ' \\footnotesize ' + m.date_of_birth.strftime(
+                ' \\footnotesize ' + member.date_of_birth.strftime(
                     '%d.%m.%Y'),  # 4
-                ' \\footnotesize ' + m.membership_date.strftime(
+                ' \\footnotesize ' + member.membership_date.strftime(
                     '%d.%m.%Y'),  # 5
                 ' \\footnotesize ' + str(_acquired_shares_until_date)  # 6
             ))
 
     latex_file.write('''
-%\end{tabular}%
-\end{longtable}%
-\label{LastPage}
-\end{document}
+%\\end{tabular}%
+\\end{longtable}%
+\\label{LastPage}
+\\end{document}
 ''')
     latex_file.seek(0)  # rewind
 
     # pdflatex latex_file to pdf_file
-    FNULL = open(os.devnull, 'w')  # hide output
+    fnull = open(os.devnull, 'w')  # hide output
     pdflatex_output = subprocess.call(
         [
             'pdflatex',
             '-output-directory=%s' % _tempdir,
             latex_file.name
         ],
-        stdout=FNULL, stderr=subprocess.STDOUT  # hide output
+        stdout=fnull, stderr=subprocess.STDOUT  # hide output
     )
     print("the output of pdflatex run: %s" % pdflatex_output)
 
@@ -278,7 +274,7 @@ def member_list_date_pdf_view(request):
                     '-output-directory=%s' % _tempdir,
                     latex_file.name
                 ],
-                stdout=FNULL, stderr=subprocess.STDOUT  # hide output
+                stdout=fnull, stderr=subprocess.STDOUT  # hide output
             )
             print("run #{} finished.".format(i+1))
 
@@ -312,7 +308,7 @@ def member_list_print_view(request):
             # check membership number
             try:
                 assert(item.membership_number is not None)
-            except:
+            except AssertionError:
                 print "failed at id {} lastname {}".format(
                     item.id, item.lastname)
             # add this item to the list
@@ -351,20 +347,18 @@ def membership_listing_backend(request):
         _page_to_show = int(request.matchdict['number'])
         _order_by = request.matchdict['orderby']
         _order = request.matchdict['order']
-    except:
+    except ValueError:
         _page_to_show = 0
         _order_by = 'id'
         _order = 'asc'
 
-    """
-    num_display determines how many items are to be shown on one page
-    """
+    # num_display determines how many items are to be shown on one page
     if 'num_to_show' in request.POST:
         try:
             _num = int(request.POST['num_to_show'])
-            if isinstance(_num, type(1)):
+            if isinstance(_num, int):
                 m_num_display = _num
-        except:
+        except ValueError:
             # choose default
             m_num_display = 20
     elif 'm_num_display' in request.cookies:
@@ -376,11 +370,9 @@ def membership_listing_backend(request):
         else:
             m_num_display = 20
 
-    """
-    base_offset helps us to minimize impact on the database
-    when querying for results.
-    we can choose just those results we need for the page to show
-    """
+    # base_offset helps us to minimize impact on the database when querying
+    # for results. we can choose just those results we need for the page to
+    # show
 
     base_offset = int(_page_to_show) * int(m_num_display)
     # get data sets from DB
@@ -427,6 +419,9 @@ def membership_listing_backend(request):
 @view_config(permission='manage',
              route_name='merge_member')
 def merge_member_view(request):
+    """
+    Merges member duplicates into one member record.
+    """
     _id = request.matchdict['afm_id']
     _mid = request.matchdict['mid']
     print "shall merge {} to {}".format(_id, _mid)
@@ -447,7 +442,7 @@ def merge_member_view(request):
         return HTTPFound(request.route_url('make_member', afm_id=_id))
 
     # XXX TODO: this needs fixing!!!
-    # date mus be set manually according to date of approval of the board
+    # date must be set manually according to date of approval of the board
     _date_for_shares = merg.signature_received_date if (
         merg.signature_received_date > merg.payment_received_date
     ) else merg.payment_received_date
@@ -477,58 +472,62 @@ def merge_member_view(request):
              permission='manage',
              route_name='make_member')
 def make_member_view(request):
+    """
+    Makes a membership applicant into an accepted member.
+    """
     _id = request.matchdict['afm_id']
     try:  # does that id make sense? member exists?
-        _m = C3sMember.get_by_id(_id)
-        assert(isinstance(_m, C3sMember))  # is an application
-        # assert(isinstance(_m.membership_number, NoneType)  # not has number
-    except:
+        member = C3sMember.get_by_id(_id)
+        assert(isinstance(member, C3sMember))  # is an application
+        # assert(isinstance(member.membership_number, NoneType)
+        # not has number
+    except AssertionError:
         return HTTPFound(
             location=request.route_url('dashboard_only'))
-    if _m.membership_accepted:
+    if member.membership_accepted:
         # request.session.flash('id {} is already accepted member!')
-        return HTTPFound(request.route_url('detail', memberid=_m.id))
+        return HTTPFound(request.route_url('detail', memberid=member.id))
 
-    if not (_m.signature_received and _m.payment_received):
+    if not (member.signature_received and member.payment_received):
         request.session.flash('signature or payment missing!', 'messages')
         return HTTPFound(request.route_url('dashboard_only'))
 
     if 'make_member' in request.POST:
         # print "yes! contents: {}".format(request.POST['make_member'])
         try:
-            _m.membership_date = datetime.strptime(
+            member.membership_date = datetime.strptime(
                 request.POST['membership_date'], '%Y-%m-%d')
-        except ValueError, ve:
-            request.session.flash(ve.message, 'merge_message')
-            return HTTPFound(request.route_url('make_member', afm_id=_m.id))
+        except ValueError, value_error:
+            request.session.flash(value_error.message, 'merge_message')
+            return HTTPFound(request.route_url('make_member', afm_id=member.id))
 
-        _m.membership_accepted = True
-        if _m.is_legalentity:
-            _m.membership_type = 'investing'
+        member.membership_accepted = True
+        if member.is_legalentity:
+            member.membership_type = 'investing'
         else:
-            _m.is_legalentity = False
-        _m.membership_number = C3sMember.get_next_free_membership_number()
+            member.is_legalentity = False
+        member.membership_number = C3sMember.get_next_free_membership_number()
         shares = Shares(
-            number=_m.num_shares,
-            date_of_acquisition=_m.membership_date,
-            reference_code=_m.email_confirm_code,
-            signature_received=_m.signature_received,
-            signature_received_date=_m.signature_received_date,
-            payment_received=_m.payment_received,
-            payment_received_date=_m.payment_received_date
+            number=member.num_shares,
+            date_of_acquisition=member.membership_date,
+            reference_code=member.email_confirm_code,
+            signature_received=member.signature_received,
+            signature_received_date=member.signature_received_date,
+            payment_received=member.payment_received,
+            payment_received_date=member.payment_received_date
         )
         DBSession.add(shares)
-        _m.shares = [shares]
-        return HTTPFound(request.route_url('detail', memberid=_m.id))
+        member.shares = [shares]
+        return HTTPFound(request.route_url('detail', memberid=member.id))
 
     return {
-        'member': _m,
+        'member': member,
         'next_mship_number': C3sMember.get_next_free_membership_number(),
-        'same_mships_firstn': C3sMember.get_same_firstnames(_m.firstname),
-        'same_mships_lastn': C3sMember.get_same_lastnames(_m.lastname),
-        'same_mships_email': C3sMember.get_same_email(_m.email),
+        'same_mships_firstn': C3sMember.get_same_firstnames(member.firstname),
+        'same_mships_lastn': C3sMember.get_same_lastnames(member.lastname),
+        'same_mships_email': C3sMember.get_same_email(member.email),
         'same_mships_dob': C3sMember.get_same_date_of_birth(
-            _m.date_of_birth),
+            member.date_of_birth),
     }
 
 
@@ -579,16 +578,18 @@ def flag_duplicates(request):
         (173, 480),
     ]
     # make sure the lastnames match and combined shares do not exceed 60
-    for d in duplicates:
-        orig = C3sMember.get_by_id(d[0])
-        dupl = C3sMember.get_by_id(d[1])
+    for duplicate in duplicates:
+        orig = C3sMember.get_by_id(duplicate[0])
+        dupl = C3sMember.get_by_id(duplicate[1])
         assert(orig.lastname == dupl.lastname)
         assert(orig.num_shares + dupl.num_shares < 60)
 
-    for d in duplicates:
-        print "--> original: {}; duplicate: {}".format(d[0], d[1])
-        orig = C3sMember.get_by_id(d[0])
-        dupl = C3sMember.get_by_id(d[1])
+    for duplicate in duplicates:
+        print "--> original: {}; duplicate: {}".format(
+            duplicate[0],
+            duplicate[1])
+        orig = C3sMember.get_by_id(duplicate[0])
+        dupl = C3sMember.get_by_id(duplicate[1])
         # set flags
         dupl.is_duplicate = True
         dupl.is_duplicate_of = orig.id
@@ -611,48 +612,48 @@ def make_founders_members(request):
         order=u'asc')
     print "got {} items.".format(len(_founders))
     try:  # sanity check
-        for _f in _founders:
-            assert(_f.email_confirm_code.split('_')[0].endswith('dungHH'))
-            assert(_f.date_of_submission == datetime(2013, 9, 25))
-            assert(_f.signature_received_date == datetime(2013, 9, 25))
-            assert(_f.payment_received_date == datetime(2013, 9, 25))
-    except:
+        for founder in _founders:
+            assert(founder.email_confirm_code.split('_')[0].endswith('dungHH'))
+            assert(founder.date_of_submission == datetime(2013, 9, 25))
+            assert(founder.signature_received_date == datetime(2013, 9, 25))
+            assert(founder.payment_received_date == datetime(2013, 9, 25))
+    except AssertionError:
         print "failed sanity check!"
         request.session.flash('failed sanity check.', 'message_to_staff')
         return HTTPFound(location=request.route_url('toolbox'))
 
-    for _f in _founders:
+    for founder in _founders:
         # make member
-        _f.membership_accepted = True
-        _f.membership_date = datetime(2013, 9, 25)
-        _f.is_legalentity = False
+        founder.membership_accepted = True
+        founder.membership_date = datetime(2013, 9, 25)
+        founder.is_legalentity = False
         # prepare numbering
-        _number = int(_f.email_confirm_code.split('_')[1])
+        _number = int(founder.email_confirm_code.split('_')[1])
         # membership_number
         if _number < 20:
-            _f.membership_number = _number
+            founder.membership_number = _number
         elif _number == 20:  # the phorsicht case
-            _f.membership_number = 999999999
+            founder.membership_number = 999999999
         elif _number > 20:
-            _f.membership_number = _number - 1
+            founder.membership_number = _number - 1
         print "number given to id {}: {}".format(
-            _f.id, _f.membership_number
+            founder.id, founder.membership_number
         )
         # handle shares
         try:
             shares = Shares(
-                number=_f.num_shares,
+                number=founder.num_shares,
                 date_of_acquisition=datetime(2013, 9, 25),
-                reference_code=_f.email_confirm_code,
-                signature_received=_f.signature_received,
-                signature_received_date=_f.signature_received_date,
-                payment_received=_f.payment_received,
-                payment_received_date=_f.payment_received_date
+                reference_code=founder.email_confirm_code,
+                signature_received=founder.signature_received,
+                signature_received_date=founder.signature_received_date,
+                payment_received=founder.payment_received,
+                payment_received_date=founder.payment_received_date
             )
             DBSession.add(shares)
-            _f.shares = [shares]
+            founder.shares = [shares]
         except:
-            print "shares failed for id {}!".format(_f.id)
+            print "shares failed for id {}!".format(founder.id)
 
     request.session.flash('made founders members.', 'message_to_staff')
     return HTTPFound(
@@ -674,43 +675,43 @@ def make_crowdfounders_members(request):
     print "got {} items.".format(len(_crowdfounders))
     try:  # sanity check
         print "checking crowdfounder data"
-        for _f in _crowdfounders:
-            assert(_f.email_confirm_code.startswith('TR001'))
-            assert(_f.signature_received_date == datetime(1970, 1, 1))
-            assert(_f.payment_received_date == datetime(1970, 1, 1))
-    except:
+        for crowdfounder in _crowdfounders:
+            assert(crowdfounder.email_confirm_code.startswith('TR001'))
+            assert(crowdfounder.signature_received_date == datetime(1970, 1, 1))
+            assert(crowdfounder.payment_received_date == datetime(1970, 1, 1))
+    except AssertionError:
         print "failed sanity check!"
         return HTTPFound(location=request.route_url('toolbox'))
 
     print "about to flag crowdfounders as members and register their shares"
-    for _f in _crowdfounders:
+    for crowdfounder in _crowdfounders:
         # if it is a duplicate, don't
-        if _f.is_duplicate:
+        if crowdfounder.is_duplicate:
             print "found duplicate id {}, continuing with next...".format(
-                _f.id)
+                crowdfounder.id)
             continue
         # make member
-        _f.membership_accepted = True
-        _f.membership_date = _f.date_of_submission
-        _f.is_legalentity = False
+        crowdfounder.membership_accepted = True
+        crowdfounder.membership_date = crowdfounder.date_of_submission
+        crowdfounder.is_legalentity = False
 
         # handle shares
         shares = Shares(
-            number=_f.num_shares,
-            date_of_acquisition=_f.date_of_submission,  # this holds for
-            # all crowdfounders, because we imported it to that field.
-            # we had no better data. and we got them only upon entry
-            # into the register of cooperatives (genossenschaftsregister).
-            # but still we have order within the crowdfounders because we
-            # can use the startnext reference code for ordering
-            reference_code=_f.email_confirm_code,
-            signature_received=_f.signature_received,
-            signature_received_date=_f.signature_received_date,
-            payment_received=_f.payment_received,
-            payment_received_date=_f.payment_received_date,
+            number=crowdfounder.num_shares,
+            date_of_acquisition=crowdfounder.date_of_submission,
+            # this holds for all crowdfounders, because we imported it to that
+            # field. we had no better data. and we got them only upon entry
+            # into the register of cooperatives (genossenschaftsregister). but
+            # still we have order within the crowdfounders because we can use
+            # the startnext reference code for ordering
+            reference_code=crowdfounder.email_confirm_code,
+            signature_received=crowdfounder.signature_received,
+            signature_received_date=crowdfounder.signature_received_date,
+            payment_received=crowdfounder.payment_received,
+            payment_received_date=crowdfounder.payment_received_date,
         )
         DBSession.add(shares)  # persist
-        _f.shares = [shares]
+        crowdfounder.shares = [shares]
 
     _cf_sorted = []
     _cf_sorted = sorted(
@@ -758,6 +759,9 @@ def make_yesser_members(request):
 
     # iterate
     def make_members(_range):
+        """
+        Makes a range of membership applicants to members.
+        """
         # global yes_mergelater
         for i in _range:
             if i.is_duplicate:
@@ -796,7 +800,8 @@ def make_yesser_members(request):
                 i.membership_date = datetime(2014, 3, 29)  # XXX
                 # we don't have this date, do we?
                 i.is_legalentity = False
-                i.membership_number = C3sMember.get_next_free_membership_number()
+                i.membership_number = \
+                    C3sMember.get_next_free_membership_number()
                 # _next_mship_number
                 # _next_mship_number.__add__(1)
 
@@ -848,10 +853,10 @@ def merge_duplicates(request):
     '''
     the known duplicates must be attributed to their originals
     '''
-    dupes = C3sMember.get_duplicates()
-    for d in dupes:
-        orig = C3sMember.get_by_id(d.is_duplicate_of)
-        dupe = C3sMember.get_by_id(d.id)
+    duplicates = C3sMember.get_duplicates()
+    for duplicate in duplicates:
+        orig = C3sMember.get_by_id(duplicate.is_duplicate_of)
+        dupe = C3sMember.get_by_id(duplicate.id)
         assert(orig.membership_accepted)
         assert(orig.lastname == dupe.lastname)
         assert(orig.num_shares + dupe.num_shares < 60)

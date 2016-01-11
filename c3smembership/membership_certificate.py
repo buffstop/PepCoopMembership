@@ -53,7 +53,6 @@ def send_certificate_email(request):
     Send email to a member with a link
     so the member can get her membership certificate.
     '''
-    # print request.referrer  # note: will fail in tests
     _special_condition = False  # for redirects to referrer
 
     mid = request.matchdict['id']
@@ -70,7 +69,7 @@ def send_certificate_email(request):
         id=member.id,
         name=member.get_url_safe_name(),
         token=member.certificate_token)
-    if DEBUG:  # pragma: no cover
+    if DEBUG:
         print '#'*60
         print member.certificate_token
         print _url
@@ -97,7 +96,7 @@ def send_certificate_email(request):
         body=message_body
     )
     if 'true' in request.registry.settings[
-            'testing.mail_to_console']:  # pragma: no cover
+            'testing.mail_to_console']:
         print('== 8< ======================================================')
         print(the_message.body)
         print('====================================================== >8 ==')
@@ -107,12 +106,12 @@ def send_certificate_email(request):
     member.certificate_email_date = datetime.now()
 
     try:
-        if 'detail' in request.referrer:  # pragma: no cover
+        if 'detail' in request.referrer:
             _special_condition = True
-    except:
+    except TypeError:
         pass
 
-    if _special_condition:  # pragma: no cover
+    if _special_condition:
         return HTTPFound(
             location=request.referrer +
             '#certificate'
@@ -126,7 +125,7 @@ def send_certificate_email(request):
                     order=request.cookies['m_order'],
                     orderby=request.cookies['m_orderby']) +
                 '#member_' + str(member.id))
-        except:  # pragma: no cover  # iff no good cookie found
+        except KeyError:  # iff no good cookie found
             return HTTPFound(
                 location=request.route_url(
                     'membership_listing_backend',
@@ -148,7 +147,7 @@ def generate_certificate(request):
     try:
         member = C3sMember.get_by_id(mid)
 
-        if DEBUG:  # pragma: no cover
+        if DEBUG:
             print member.firstname
             print member.certificate_token
             print type(member.certificate_token)  # NoneType
@@ -161,15 +160,10 @@ def generate_certificate(request):
         from datetime import timedelta
         _2weeks = timedelta(weeks=2)
         token_date = member.certificate_email_date
-        # print "token_date: {}".format(token_date)
         present = datetime.now()
         _delta = present - token_date
-        # if (_delta > _2weeks):
-        #    print "more than two weeks!"
-        # else:
-        #    print "less than two weeks!"
         assert(_delta < _2weeks)
-    except:
+    except AssertionError:
         return Response(
             'Not found. Please contact office@c3s.cc. <br /><br /> '
             'Nicht gefunden. Bitte office@c3s.cc kontaktieren.',
@@ -189,7 +183,7 @@ def generate_certificate_staff(request):
     try:
         member = C3sMember.get_by_id(mid)
         assert(not isinstance(member, NoneType))
-    except:
+    except AssertionError:
         return Response(
             'Not found. Please check URL.',
         )
@@ -202,30 +196,22 @@ def gen_cert(member):
     '''
     here = os.path.dirname(__file__)
 
-    # print '#'*60
-    # print member.locale
-    # print '#'*60
-
     if 'de' in member.locale:
         latex_background_image = os.path.abspath(
             os.path.join(here, '../certificate/Urkunde_Hintergrund_blank.pdf'))
         # latex header and footer
         latex_header_tex = os.path.abspath(
             os.path.join(here, '../certificate/urkunde_header_de.tex'))
-        # print("latex header file: %s" % latex_header_tex)
         latex_footer_tex = os.path.abspath(
             os.path.join(here, '../certificate/urkunde_footer_de.tex'))
-        # print("latex footer file: %s" % latex_footer_tex)
     else:
         latex_background_image = os.path.abspath(
             os.path.join(here, '../certificate/Urkunde_Hintergrund_blank.pdf'))
         # latex header and footer
         latex_header_tex = os.path.abspath(
             os.path.join(here, '../certificate/urkunde_header_en.tex'))
-        # print("latex header file: %s" % latex_header_tex)
         latex_footer_tex = os.path.abspath(
             os.path.join(here, '../certificate/urkunde_footer_en.tex'))
-        # print("latex footer file: %s" % latex_footer_tex)
 
     sign_meik = os.path.abspath(
         os.path.join(here, '../certificate/sign_meik.png'))
@@ -234,14 +220,12 @@ def gen_cert(member):
 
     # a temporary directory for the latex run
     _tempdir = tempfile.mkdtemp()
-    # print("new temporary directory: %s" % _tempdir)
 
     latex_file = tempfile.NamedTemporaryFile(
         suffix='.tex',
         dir=_tempdir,
         delete=False,  # directory will be deleted anyways
     )
-    # print "the latex file: {}".format(latex_file.name)
 
     # using tempfile
     pdf_file = tempfile.NamedTemporaryFile(
@@ -252,9 +236,6 @@ def gen_cert(member):
     pdf_file.name += '.pdf'
 
     is_founder = True if 'dungHH_' in member.email_confirm_code else False
-    # print u"email confirm code: {}".format(member.email_confirm_code)
-    # print u"is a founding member? {}".format(
-    #    True if 'dungHH_' in member.email_confirm_code else False)
     # prepare the certificate text
     if member.locale == 'de':  # german
         hereby_confirmed = u'Hiermit wird bestätigt, dass'
@@ -333,16 +314,16 @@ def gen_cert(member):
         is_member,
         mship_num,
         confirm_date,
-        datetime.strftime(
-            date.today(), "%d.%m.%Y") \
-                if member.locale == 'de' \
-                else date.today(),
+        (
+            datetime.strftime(date.today(), "%d.%m.%Y")
+            if member.locale == 'de'
+            else date.today()),
         sign_meik,
         sign_max,
         exec_dir,
         mship_num_text
     )
-    if DEBUG:  # pragma: no cover
+    if DEBUG:
         print('#'*60)
         print(member.is_legalentity)
         print(member.lastname)
@@ -370,8 +351,7 @@ def gen_cert(member):
     # finish the latex document
     latex_data += '\n\\input{%s}' % latex_footer_tex
 
-    # DEBUG = True
-    if DEBUG:  # pragma: no cover
+    if DEBUG:
         print '*' * 70
         print('*' * 30, 'latex data: ', '*' * 30)
         print '*' * 70
@@ -381,7 +361,6 @@ def gen_cert(member):
     latex_file.seek(0)  # rewind
 
     # pdflatex latex_file to pdf_file
-    fnull = open(os.devnull, 'w')  # hide output here ;-)
     # pdflatex_output =
     subprocess.call(
         [
@@ -389,18 +368,9 @@ def gen_cert(member):
             '-output-directory=%s' % _tempdir,
             latex_file.name
         ],
-        stdout=fnull, stderr=subprocess.STDOUT  # hide output
+        stdout=open(os.devnull, 'w'),
+        stderr=subprocess.STDOUT  # hide output
     )
-    # print("the output of pdflatex run: %s" % pdflatex_output)
-
-    # debug: open the PDF in a viewer
-    # subprocess.call(
-    #    [
-    #        'evince',
-    #        pdf_file.name
-    #    ],
-    #    stdout=fnull, stderr=subprocess.STDOUT  # hide output
-    # )
 
     # return a pdf file
     response = Response(content_type='application/pdf')

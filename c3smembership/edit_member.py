@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Views for editing member data including form generation from schema.
+"""
 
 from c3smembership.models import (
     C3sMember,
@@ -26,26 +29,24 @@ from pyramid.security import authenticated_userid
 from pyramid.view import view_config
 from types import NoneType
 
-country_default = u'DE'
-locale_default = u'de'
+COUNTRY_DEFAULT = u'DE'
+LOCALE_DEFAULT = u'de'
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
-@view_config(route_name="edit",
-             permission="manage",
-             renderer="templates/edit_member.pt")
+@view_config(route_name='edit',
+             permission='manage',
+             renderer='templates/edit_member.pt')
 def edit_member(request):
-    '''
-    let staff edit a member entry
-
-    XXX should be saved under existing id/code
-    '''
+    """
+    Let staff edit a member entry.
+    """
     try:
         _id = request.matchdict['_id']
         assert(isinstance(int(_id), int))
-        _m = C3sMember.get_by_id(_id)
-        if isinstance(_m, NoneType):
+        member = C3sMember.get_by_id(_id)
+        if isinstance(member, NoneType):
             return HTTPFound(request.route_url('dashboard_only'))
     except:
         return HTTPFound(request.route_url('dashboard_only'))
@@ -53,62 +54,63 @@ def edit_member(request):
     # if we have a valid id, we can load a members data from the db
     # and put the data in an appstruct to fill the form
     appstruct = {}
-    _email_is_confirmed = 'yes' if _m.email_is_confirmed else 'no'
+    email_is_confirmed = 'yes' if member.email_is_confirmed else 'no'
     appstruct['person'] = {
-        'firstname': _m.firstname,
-        'lastname': _m.lastname,
-        'email': _m.email,
-        'email_is_confirmed': _email_is_confirmed,
-        'address1': _m.address1,
-        'address2': _m.address2,
-        'postcode': _m.postcode,
-        'city': _m.city,
-        'country': _m.country,
-        'date_of_birth': _m.date_of_birth,
-        '_LOCALE_': _m.locale,
+        'firstname': member.firstname,
+        'lastname': member.lastname,
+        'email': member.email,
+        'email_is_confirmed': email_is_confirmed,
+        'address1': member.address1,
+        'address2': member.address2,
+        'postcode': member.postcode,
+        'city': member.city,
+        'country': member.country,
+        'date_of_birth': member.date_of_birth,
+        '_LOCALE_': member.locale,
     }
 
     appstruct['membership_meta'] = {
-        'membership_accepted': _m.membership_accepted,
-        'membership_date': _m.membership_date,
-        'is_duplicate': _m.is_duplicate,
-        'is_duplicate_of': '' if (
-            _m.is_duplicate_of is None) else _m.is_duplicate_of,
-        'accountant_comment': _m.accountant_comment,
-        'signature_received': _m.signature_received,
-        'signature_received_date': _m.signature_received_date,
-        'payment_received': _m.payment_received,
-        'payment_received_date': _m.payment_received_date,
+        'membership_accepted': member.membership_accepted,
+        'membership_date': member.membership_date,
+        'is_duplicate': member.is_duplicate,
+        'is_duplicate_of': (
+            u'' if member.is_duplicate_of is None
+            else member.is_duplicate_of),
+        'accountant_comment': member.accountant_comment,
+        'signature_received': member.signature_received,
+        'signature_received_date': member.signature_received_date,
+        'payment_received': member.payment_received,
+        'payment_received_date': member.payment_received_date,
     }
     appstruct['membership_info'] = {
-        'membership_type': _m.membership_type,
-        'entity_type': u'legalentity' if _m.is_legalentity else 'person',
-        'member_of_colsoc': 'yes' if _m.member_of_colsoc else 'no',
-        'name_of_colsoc': _m.name_of_colsoc,
+        'membership_type': member.membership_type,
+        'entity_type': u'legalentity' if member.is_legalentity else 'person',
+        'member_of_colsoc': 'yes' if member.member_of_colsoc else 'no',
+        'name_of_colsoc': member.name_of_colsoc,
     }
     appstruct['shares'] = {
-        'num_shares': _m.num_shares
+        'num_shares': member.num_shares
     }
 
     class PersonalData(colander.MappingSchema):
         """
-        colander schema for membership application form
+        Colander schema of the personal data for editing member data.
         """
         firstname = colander.SchemaNode(
             colander.String(),
             title='Vorname',
-            oid="firstname",
+            oid='firstname',
         )
         lastname = colander.SchemaNode(
             colander.String(),
             title='Nachname',
-            oid="lastname",
+            oid='lastname',
         )
         email = colander.SchemaNode(
             colander.String(),
             title=_(u'E-Mail-Adresse'),
             validator=colander.Email(),
-            oid="email",
+            oid='email',
         )
         email_is_confirmed = colander.SchemaNode(
             colander.String(),
@@ -118,7 +120,7 @@ def edit_member(request):
                     (u'yes', u'Ja, bestätigt'),
                     (u'no', u'Nein, unklar'),)),
             missing=u'',
-            oid="email_is_confirmed",
+            oid='email_is_confirmed',
         )
 
         passwort = colander.SchemaNode(
@@ -133,26 +135,26 @@ def edit_member(request):
         )
         address2 = colander.SchemaNode(
             colander.String(),
-            missing=unicode(''),
-            title='Adresse Zeile 2'
+            missing=u'',
+            title=u'Adresse Zeile 2'
         )
         postcode = colander.SchemaNode(
             colander.String(),
             title='Postleitzahl',
-            oid="postcode"
+            oid='postcode'
         )
         city = colander.SchemaNode(
             colander.String(),
             title='Ort',
-            oid="city",
+            oid='city',
         )
         country = colander.SchemaNode(
             colander.String(),
             title='Land',
-            default=country_default,
+            default=COUNTRY_DEFAULT,
             widget=deform.widget.SelectWidget(
                 values=country_codes),
-            oid="country",
+            oid='country',
         )
         date_of_birth = colander.SchemaNode(
             colander.Date(),
@@ -164,17 +166,20 @@ def edit_member(request):
                 min_err=_(u'${val} is earlier than earliest date ${min}'),
                 max_err=_(u'${val} is later than latest date ${max}')
             ),
-            oid="date_of_birth",
+            oid='date_of_birth',
         )
         _LOCALE_ = colander.SchemaNode(
             colander.String(),
             title='Locale',
             widget=deform.widget.SelectWidget(
                 values=locale_codes),
-            missing='',
+            missing=u'',
         )
 
     class MembershipMeta(colander.Schema):
+        """
+        Colander schema of the meta data for editing member data.
+        """
         membership_accepted = colander.SchemaNode(
             colander.Boolean(),
             title='ist aufgenommenes Mitglied'
@@ -189,24 +194,25 @@ def edit_member(request):
                 max_err=_(u'${val} is later than latest date ${max}')
             ),
             missing=date(1970, 1, 1),
-            oid="membership_date",
+            oid='membership_date',
         )
         is_duplicate = colander.SchemaNode(
             colander.Boolean(),
-            title=_(u'ist weiterer, späterer Mitgliedsantrag, gehört zu einem '
-                    u'anderen Antrag oder einer bestehenden Mitgliedschaft.'),
-            oid="is_duplicate",
+            title=_(u'ist weiterer, späterer Mitgliedsantrag, gehört zu '
+                    u'einem anderen Antrag oder einer bestehenden '
+                    u'Mitgliedschaft.'),
+            oid='is_duplicate',
         )
         is_duplicate_of = colander.SchemaNode(
             colander.String(),
-            title='Id',
-            missing='',
-            oid="duplicate_of",
+            title=u'Id',
+            missing=u'',
+            oid='duplicate_of',
         )
         signature_received = colander.SchemaNode(
             colander.Boolean(),
             title=_(u'Signature received'),
-            oid="signature_received",
+            oid='signature_received',
         )
         signature_received_date = colander.SchemaNode(
             colander.Date(),
@@ -233,18 +239,19 @@ def edit_member(request):
                 max_err=_(u'${val} is later than latest date ${max}')
             ),
             missing=date(1970, 1, 1),
-            oid="_received_date",
+            oid='_received_date',
         )
-
         accountant_comment = colander.SchemaNode(
             colander.String(),
-            title='Staff Comment: (255 letters)',
-            missing='',
-            oid="accountant_comment",
+            title=u'Staff Comment: (255 letters)',
+            missing=u'',
+            oid='accountant_comment',
         )
 
     class MembershipInfo(colander.Schema):
-
+        """
+        Colander schema of the additional data for editing member data.
+        """
         yes_no = ((u'yes', _(u'Yes')),
                   (u'no', _(u'No')),
                   (u'dontknow', u'Unbekannt'),)
@@ -261,8 +268,8 @@ def edit_member(request):
                      u'Körperschaft'),
                 ),
             ),
-            missing=unicode(''),
-            oid="entity_type",
+            missing=u'',
+            oid='entity_type',
         )
         membership_type = colander.SchemaNode(
             colander.String(),
@@ -285,38 +292,34 @@ def edit_member(request):
             colander.String(),
             title='Mitglied einer Verwertungsgesellschaft?',
             widget=deform.widget.RadioChoiceWidget(values=yes_no),
-            oid="other_colsoc",
+            oid='other_colsoc',
             default=u'',
-            missing=unicode(''),
+            missing=u'',
         )
         name_of_colsoc = colander.SchemaNode(
             colander.String(),
-            title=(u'Falls ja, welche?'),
-            description=u' Mehrere Mitgliedschaften bitte durch Kommata ' + \
-                'voneinander trennen.',
-            missing=unicode(''),
-            oid="colsoc_name",
+            title=u'Falls ja, welche?',
+            description=u' Mehrere Mitgliedschaften bitte durch Kommata '
+                        u'voneinander trennen.',
+            missing=u'',
+            oid='colsoc_name',
         )
-
 
     class Shares(colander.Schema):
         """
         the number of shares a member wants to hold
-
-        this involves a slider widget: added to deforms widgets.
-        see README.Slider.rst
         """
         num_shares = colander.SchemaNode(
             colander.Integer(),
             title='Anzahl Anteile (1-60)',
-            default="1",
+            default='1',
             validator=colander.Range(
                 min=1,
                 max=60,
                 min_err=u'mindestens 1',
                 max_err=u'höchstens 60',
             ),
-            oid="num_shares")
+            oid='num_shares')
 
     class MembershipForm(colander.Schema):
         """
@@ -326,16 +329,16 @@ def edit_member(request):
         - Shares
         """
         person = PersonalData(
-            title=_(u"Personal Data"),
+            title=_(u'Personal Data'),
         )
         membership_meta = MembershipMeta(
-            title=_(u"Membership Bureaucracy")
+            title=_(u'Membership Bureaucracy')
         )
         membership_info = MembershipInfo(
-            title=_(u"Membership Requirements")
+            title=_(u'Membership Requirements')
         )
         shares = Shares(
-            title=_(u"Shares")
+            title=_(u'Shares')
         )
 
     schema = MembershipForm()
@@ -349,7 +352,8 @@ def edit_member(request):
         use_ajax=True,
     )
 
-    # if the form has NOT been used and submitted, remove error messages if any
+    # if the form has NOT been used and submitted, remove error messages if
+    # any
     if not 'submit' in request.POST:
         request.session.pop_flash()
 
@@ -358,86 +362,110 @@ def edit_member(request):
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
-        except ValidationFailure as e:
+        except ValidationFailure as validationfailure:
             request.session.flash(
-                _(u"Please note: There were errors, "
-                  "please check the form below."),
+                _(u'Please note: There were errors, '
+                  u'please check the form below.'),
                 'message_above_form',
                 allow_duplicate=False)
-            return{'form': e.render()}
+            return{'form': validationfailure.render()}
 
-        # to store the data in the DB, the old objet is updated
+        # to store the data in the DB, the old object is updated
         listing = [  # map data attributes to appstruct items
             ('firstname', appstruct['person']['firstname']),
             ('lastname', appstruct['person']['lastname']),
             ('date_of_birth', appstruct['person']['date_of_birth']),
             ('email', appstruct['person']['email']),
-            ('email_is_confirmed',
-             1 if (appstruct['person']['email_is_confirmed'] == 'yes') else 0),
+            (
+                'email_is_confirmed',
+                1 if appstruct['person']['email_is_confirmed'] == 'yes'
+                else 0
+            ),
             ('address1', appstruct['person']['address1']),
             ('address2', appstruct['person']['address2']),
             ('postcode', appstruct['person']['postcode']),
             ('city', appstruct['person']['city']),
             ('country', appstruct['person']['country']),
             ('locale', appstruct['person']['_LOCALE_']),
-            ('membership_date',
-             appstruct['membership_meta']['membership_date']),
-            ('is_duplicate',
-             appstruct['membership_meta']['is_duplicate']),
-            ('is_duplicate_of',
-             appstruct['membership_meta']['is_duplicate_of']),
-            ('accountant_comment',
-             appstruct['membership_meta']['accountant_comment']),
-            ('membership_type', appstruct[
-                'membership_info']['membership_type']),
-            ('is_legalentity', 1 if (appstruct[
-                'membership_info']['entity_type'] == 'legalentity') else 0),
-            ('name_of_colsoc', appstruct['membership_info']['name_of_colsoc']),
+            (
+                'membership_date',
+                appstruct['membership_meta']['membership_date']
+            ),
+            ('is_duplicate', appstruct['membership_meta']['is_duplicate']),
+            (
+                'is_duplicate_of',
+                appstruct['membership_meta']['is_duplicate_of']
+            ),
+            (
+                'accountant_comment',
+                appstruct['membership_meta']['accountant_comment']
+            ),
+            (
+                'membership_type',
+                appstruct['membership_info']['membership_type']
+            ),
+            (
+                'is_legalentity',
+                1 if (appstruct['membership_info']['entity_type'] ==
+                      'legalentity')
+                else 0
+            ),
+            (
+                'name_of_colsoc',
+                appstruct['membership_info']['name_of_colsoc']
+            ),
             ('num_shares', appstruct['shares']['num_shares']),
-            ('signature_received',
-             appstruct['membership_meta']['signature_received']),
-            ('signature_received_date',
-             appstruct['membership_meta']['signature_received_date']),
-            ('payment_received',
-             appstruct['membership_meta']['payment_received']),
-            ('payment_received_date',
-             appstruct['membership_meta']['payment_received_date']),
-
+            (
+                'signature_received',
+                appstruct['membership_meta']['signature_received']
+            ),
+            (
+                'signature_received_date',
+                appstruct['membership_meta']['signature_received_date']
+            ),
+            (
+                'payment_received',
+                appstruct['membership_meta']['payment_received']
+            ),
+            (
+                'payment_received_date',
+                appstruct['membership_meta']['payment_received_date']
+            ),
         ]
 
         for thing in listing:
-            v = thing[0]
+            attribute_name = thing[0]
+            attribute_value = thing[1]
 
-            if _m.__getattribute__(v) == thing[1]:
+            if member.__getattribute__(attribute_name) == attribute_value:
                 pass
             else:
-                log.info(  # XXX this needs to go into the logs
-                    "%s changes %s of id %s to %s" % (
+                LOG.info(
+                    u'{0} changes {1} of id {2} to {3}'.format(
                         authenticated_userid(request),
-                        thing[0],
-                        _m.id,
-                        thing[1]
+                        attribute_name,
+                        member.id,
+                        attribute_value
                     )
                 )
-                setattr(_m, v, thing[1])
+                setattr(member, attribute_name, attribute_value)
 
         # membership acceptance status can be set or unset.
-        # TODO: mark end of term/date_canceled for quitters
         if appstruct['membership_meta'][
-                'membership_accepted'] == _m.membership_accepted:
+                'membership_accepted'] == member.membership_accepted:
             pass
         else:
-            _m.membership_accepted = appstruct[
+            member.membership_accepted = appstruct[
                 'membership_meta']['membership_accepted']
-            if isinstance(_m.membership_number, NoneType) \
-                    and _m.membership_accepted:
-                _m.membership_number = \
+            if isinstance(member.membership_number, NoneType) \
+                    and member.membership_accepted:
+                member.membership_number = \
                     C3sMember.get_next_free_membership_number()
 
         if appstruct['membership_info']['entity_type'] == 'legalentity':
-            _m.is_legalentity = True
+            member.is_legalentity = True
         else:
-            _m.is_legalentity = False
+            member.is_legalentity = False
 
         # empty the messages queue (as validation worked anyways)
         deleted_msg = request.session.pop_flash()
@@ -445,7 +473,7 @@ def edit_member(request):
         return HTTPFound(  # redirect to details page
             location=request.route_url(
                 'detail',
-                memberid=_m.id),
+                memberid=member.id),
         )
 
     form.set_appstruct(appstruct)

@@ -1,8 +1,7 @@
 from deform import widget
 from colander import (
-    Invalid,
     null,
-    )
+)
 
 '''
 this custom made widget needs to be patched into the deform widget.py

@@ -179,16 +179,11 @@ def new_member(request):
     class Shares(colander.Schema):
         """
         the number of shares a member wants to hold
-
-        this involves a slider widget: added to deforms widgets.
-        see README.Slider.rst
         """
         num_shares = colander.SchemaNode(
             colander.Integer(),
             title='Anzahl Anteile (1-60)',
             default="1",
-            # widget=deform.widget.TextInputSliderWidget(
-            #    size=3, css_class='num_shares_input'),
             validator=colander.Range(
                 min=1,
                 max=60,
