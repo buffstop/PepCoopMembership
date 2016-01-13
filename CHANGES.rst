@@ -1,3 +1,11 @@
+Next Release
+============
+
+
+- Update executive director. (This must be moved to configuration!)
+
+
+
 1.12
 ====
 
