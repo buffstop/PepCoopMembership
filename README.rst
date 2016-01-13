@@ -53,7 +53,7 @@ https://www.google.com/fonts/specimen/Signika
 LaTeX pdf compilation:
 ::
 
-   $ sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra pgf texlive-lang-german
+   $ sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra pgf texlive-lang-german texlive-luatex
 
 Documentation:
 ::
