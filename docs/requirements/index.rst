@@ -273,6 +273,57 @@ Implications of the shares termination are:
 
 
 
+----------------------
+Membership Certificate
+----------------------
+
+
+Members are provided with a membership certificate and states:
+
+- Member information
+
+  - Last name
+  - First name
+  - Postal address
+  - Membership number
+  - Number of signed shares
+  - Membership registration date
+
+- C3S information
+
+  - Official C3S name
+  - Address
+  - Email
+  - URL
+  - Court of law
+  - Registration number
+  - Name of the chairperson of the administrative board
+  - Names of executive directors
+  - Images of executive directors' signatures
+
+**TODO:** *Legal requirements?*
+
+
+
+Certificate Issuance
+====================
+
+
+The membership certificate must be created and sent to the member.
+Certificates might be issued to a member more than once. The certificate must
+contain the member's current information.
+
+
+
+C3S Information Changes
+=======================
+
+
+All changes to the C3S information must be adjusted in the certificate
+template.
+
+
+
 --------------------------------------
 Invitation for Annual General Assembly
 --------------------------------------
