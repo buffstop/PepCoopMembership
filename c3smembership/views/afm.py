@@ -255,7 +255,6 @@ def join_c3s(request):
             # )
         )
 
-        @staticmethod
         def statute_validator(node, value):
             """
             Validator for statute confirmation.
@@ -278,7 +277,6 @@ def join_c3s(request):
             label=_('Yes'),
         )
 
-        @staticmethod
         def dues_regulations_validator(node, value):
             """
             Validator for dues regulations confirmation.
