@@ -348,7 +348,7 @@ def join_c3s(request):
     form = deform.Form(
         schema,
         buttons=[
-            deform.Button('submit', _(u'Submit')),
+            deform.Button('submit', _(u'Next')),
             deform.Button('reset', _(u'Reset'))
         ],
         use_ajax=True,

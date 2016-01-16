@@ -4,6 +4,8 @@ Next Release
 
 - Update executive director. (This must be moved to configuration!)
 
+- Add progress bar to membership application process.
+
 
 
 1.12
