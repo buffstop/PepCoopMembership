@@ -6,6 +6,8 @@ Next Release
 
 - Add progress bar to membership application process.
 
+- Fix C3S Statute reference to use the version independent URL.
+
 
 
 1.12
