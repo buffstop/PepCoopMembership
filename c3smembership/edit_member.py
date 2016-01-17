@@ -18,6 +18,7 @@ from colander import (
 )
 from datetime import (
     date,
+    datetime,
 )
 import deform
 from deform import ValidationFailure
@@ -66,21 +67,35 @@ def edit_member(request):
         'city': member.city,
         'country': member.country,
         'date_of_birth': member.date_of_birth,
-        '_LOCALE_': member.locale,
+        'locale': member.locale,
     }
 
     appstruct['membership_meta'] = {
         'membership_accepted': member.membership_accepted,
-        'membership_date': member.membership_date,
+        'membership_date': (
+            # this is necessary because membership_date's default is
+            # 1970-01-01 which should be changed to None in the future
+            u''
+            if member.membership_date == datetime(1970, 1, 1)
+            else member.membership_date),
         'is_duplicate': member.is_duplicate,
         'is_duplicate_of': (
-            u'' if member.is_duplicate_of is None
+            u''
+            if member.is_duplicate_of is None
             else member.is_duplicate_of),
-        'accountant_comment': member.accountant_comment,
+        'accountant_comment': (
+            u''
+            if member.accountant_comment is None
+            else member.accountant_comment),
         'signature_received': member.signature_received,
         'signature_received_date': member.signature_received_date,
         'payment_received': member.payment_received,
         'payment_received_date': member.payment_received_date,
+        'membership_loss_date': member.membership_loss_date,
+        'membership_loss_type': (
+            u''
+            if member.membership_loss_type is None
+            else member.membership_loss_type),
     }
     appstruct['membership_info'] = {
         'membership_type': member.membership_type,
@@ -91,6 +106,14 @@ def edit_member(request):
     appstruct['shares'] = {
         'num_shares': member.num_shares
     }
+    membership_loss_types = (
+        ('', _(u'(Select)')),
+        ('resignation', _(u'Resignation')),
+        ('expulsion', _(u'Expulsion')),
+        ('death', _(u'Death')),
+        ('bankrupsy', _(u'Bankrupsy')),
+        ('shares_transfer', _(u'Transfer of remaining shares'))
+    )
 
     class PersonalData(colander.MappingSchema):
         """
@@ -168,13 +191,27 @@ def edit_member(request):
             ),
             oid='date_of_birth',
         )
-        _LOCALE_ = colander.SchemaNode(
+        locale = colander.SchemaNode(
             colander.String(),
             title='Locale',
             widget=deform.widget.SelectWidget(
                 values=locale_codes),
             missing=u'',
         )
+
+    @colander.deferred
+    def deferred_membership_loss_date_widget(node, kw):
+        if kw.get('membership_accepted'):
+            return deform.widget.TextInputWidget()
+        else:
+            return deform.widget.HiddenWidget()
+
+    @colander.deferred
+    def deferred_membership_loss_type_widget(node, kw):
+        if kw.get('membership_accepted'):
+            return deform.widget.SelectWidget(values=membership_loss_types)
+        else:
+            return deform.widget.HiddenWidget()
 
     class MembershipMeta(colander.Schema):
         """
@@ -240,6 +277,22 @@ def edit_member(request):
             ),
             missing=date(1970, 1, 1),
             oid='_received_date',
+        )
+        membership_loss_date = colander.SchemaNode(
+            colander.Date(),
+            widget=deferred_membership_loss_date_widget,
+            title=_(u'Date of the loss of membership'),
+            default=None,
+            missing=None,
+            oid='membership_loss_date',
+        )
+        membership_loss_type = colander.SchemaNode(
+            colander.String(),
+            widget=deferred_membership_loss_type_widget,
+            title=_(u'Type of membership loss'),
+            default=None,
+            missing=None,
+            oid='membership_loss_type',
         )
         accountant_comment = colander.SchemaNode(
             colander.String(),
@@ -321,18 +374,57 @@ def edit_member(request):
             ),
             oid='num_shares')
 
+    def loss_type_and_date_set_validator(form, value):
+        """
+        Validates whether the membership loss type is set.
+
+        Membership date and type must both be either set or unset.
+        """
+        if (value['membership_loss_date'] is None) != \
+                (value['membership_loss_type'] is None):
+            exc = colander.Invalid(form)
+            exc['membership_loss_type'] = \
+                _(u'Date and type of membership loss must be set both or '
+                  u'none.')
+            exc['membership_loss_date'] = \
+                _(u'Date and type of membership loss must be set both or '
+                  u'none.')
+            raise exc
+
+    def loss_date_larger_acceptance_validator(form, value):
+        """
+        Validates that the membership loss date is not smaller than the
+        membership acceptance date.
+
+        As the membership can't be lost before it was granted the membership
+        loss date must be larger than the membership acceptance date.
+        """
+        if (value['membership_loss_date'] is not None
+                and (
+                    value['membership_loss_date'] < value['membership_date']
+                    or
+                    not value['membership_accepted'])):
+            exc = colander.Invalid(form)
+            exc['membership_loss_date'] = \
+                _(u'Date membership loss must be larger than membership '
+                  u'acceptance date.')
+            raise exc
+
     class MembershipForm(colander.Schema):
         """
-        The Form consists of
-        - Personal Data
-        - Membership Information
-        - Shares
+        The form for editing membership information combining all forms for
+        the subject areas.
         """
         person = PersonalData(
             title=_(u'Personal Data'),
         )
         membership_meta = MembershipMeta(
-            title=_(u'Membership Bureaucracy')
+            title=_(u'Membership Bureaucracy'),
+            validator=colander.All(
+                loss_type_and_date_set_validator,
+                loss_date_larger_acceptance_validator)
+        ).bind(
+            membership_accepted=member.membership_accepted,
         )
         membership_info = MembershipInfo(
             title=_(u'Membership Requirements')
@@ -342,7 +434,6 @@ def edit_member(request):
         )
 
     schema = MembershipForm()
-
     form = deform.Form(
         schema,
         buttons=[
@@ -386,7 +477,7 @@ def edit_member(request):
             ('postcode', appstruct['person']['postcode']),
             ('city', appstruct['person']['city']),
             ('country', appstruct['person']['country']),
-            ('locale', appstruct['person']['_LOCALE_']),
+            ('locale', appstruct['person']['locale']),
             (
                 'membership_date',
                 appstruct['membership_meta']['membership_date']
@@ -430,6 +521,14 @@ def edit_member(request):
             (
                 'payment_received_date',
                 appstruct['membership_meta']['payment_received_date']
+            ),
+            (
+                'membership_loss_type',
+                appstruct['membership_meta'].get('membership_loss_type', None)
+            ),
+            (
+                'membership_loss_date',
+                appstruct['membership_meta'].get('membership_loss_date', None)
             ),
         ]
 

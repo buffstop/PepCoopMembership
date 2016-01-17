@@ -104,7 +104,7 @@
         </tr>
         <tr tal:condition="member.membership_accepted">
             <td>membership_date</td>
-            <td>${member.membership_date}</td>
+            <td>${member.membership_date.strftime('%Y-%m-%d') if member.membership_date is not None else ''}</td>
         </tr>
         <tr>
             <td>is_duplicate ?</td>
@@ -119,13 +119,12 @@
             </td>
         </tr>
         <tr>
-            <td>
-                <a name="cancel"></a>kündigung erklärt?</td>
-            <td>$ off {member.account_canceled}</td>
+            <td>membership loss date</td>
+            <td>${member.membership_loss_date.strftime('%Y-%m-%d') if member.membership_loss_date is not None else ''}</td>
         </tr>
-        <tr tal:condition="True or member.account_canceled">
-            <td>account cancellation date</td>
-            <td>$ off {member.account_canceled_date}</td>
+        <tr>
+            <td>membership loss type</td>
+            <td>${member.membership_loss_type}</td>
         </tr>
         <tr>
             <td><a name="comment"></a>staff comment</td>

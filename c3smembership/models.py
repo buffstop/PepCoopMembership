@@ -328,11 +328,24 @@ class C3sMember(Base):
     membership_type = Column(Unicode(255))
     member_of_colsoc = Column(Boolean, default=False)
     name_of_colsoc = Column(Unicode(255))
-    # bureaucracy
+    # acquisition of membership
     membership_accepted = Column(Boolean, default=False)
     membership_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
     membership_number = Column(Integer())
+
+    ## loss of membership
+    # the date on which the membership terminates, i.e. the date of
+    # membership and the day after which the membership does no longer exist
+    membership_loss_date = Column(DateTime())
+    # the membership can be lost upon:
+    # - resignation
+    # - expulsion
+    # - death
+    # - bankrupsy
+    # - transfer of remaining shares
+    membership_loss_type = Column(Unicode(255))
+
     # startnex repair operations
     mtype_confirm_token = Column(Unicode(255))
     mtype_email_date = Column(DateTime(), default=datetime(1970, 1, 1))

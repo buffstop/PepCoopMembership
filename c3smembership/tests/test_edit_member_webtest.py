@@ -16,9 +16,10 @@ from c3smembership.models import (
 )
 from sqlalchemy import engine_from_config
 import transaction
-from datetime import date
+from datetime import date, timedelta
 from c3smembership import main
 from webtest import TestApp
+import webtest
 
 DEBUG = False
 
@@ -111,6 +112,36 @@ class EditMemberTests(unittest.TestCase):
             )
         return member
 
+    def create_accepted_member_full(self):
+        """
+        Creates and returns an accepted full member
+        """
+        member = None
+        with transaction.manager:
+            member = C3sMember(  # german
+                firstname=u'SomeFirstnäme',
+                lastname=u'Accepted Full Member',
+                email=u'some@shri.de',
+                address1=u"addr one",
+                address2=u"addr two",
+                postcode=u"12345",
+                city=u"Footown Mäh",
+                country=u"Foocountry",
+                locale=u"DE",
+                date_of_birth=date(1970, 1, 1),
+                email_is_confirmed=False,
+                email_confirm_code=u'ABCDEFGFOO',
+                password=u'arandompassword',
+                date_of_submission=date(2014, 1, 1),
+                membership_type=u'normal',
+                member_of_colsoc=True,
+                name_of_colsoc=u"GEMA",
+                num_shares=u'23',
+            )
+            member.membership_accepted = True
+            member.membership_date = date(2015, 1, 1)
+        return member
+
     def test_edit_members(self):
         '''
         tests for the edit_member view
@@ -128,8 +159,8 @@ class EditMemberTests(unittest.TestCase):
 
         DBSession.add(self.create_membership_applicant())
         DBSession.flush()
-
         # now there is a member in the DB
+
         # let's try invalid input
         res = self.testapp.get('/edit/foo', status=302)
         self.validate_dashboard_redirect(res)
@@ -155,6 +186,7 @@ class EditMemberTests(unittest.TestCase):
         form['city'] = 'die city'
         form['country'] = 'FI'
         form['membership_type'] = 'investing'
+        form['entity_type'] = 'legalentity'
         form['other_colsoc'] = 'no'
         form['name_of_colsoc'] = ''
         form['num_shares'] = 42
@@ -162,9 +194,9 @@ class EditMemberTests(unittest.TestCase):
         # try to submit now. this must fail, because the date of birth is
         # wrong ... and other dates are missing
         res2 = form.submit('submit', status=200)
-        self.assertTrue('is later than latest date 2000-01-01' in res2.body)
-        self.assertTrue('EinVorname' in res2.body)
-
+        # print res2.body
+        self.assertTrue(
+            'is later than latest date 2000-01-01' in res2.body)
         # set the date correctly
         form2 = res2.form
         form2['date_of_birth'] = '1999-12-30'
@@ -231,3 +263,129 @@ class EditMemberTests(unittest.TestCase):
         Validate that res is the dashboard
         """
         self.failUnless('Dashboard' in res.body)
+
+    def test_edit_members_membership_loss(self):
+        '''
+        Test membership loss
+
+        Test cases for:
+
+        - editing non member
+
+          - hidden loss inputs should not make any problem and therefore
+            submit without changes should work
+          - try setting hidden values -> error
+
+        - editing member
+
+          - set neither loss date nor type -> success
+          - set only loss date -> error, set both
+          - set only loss type -> error, set both
+          - set loss type, set loss date to date prior to
+            membership_acceptance -> error, set larger date
+          - set both to valid values -> success
+
+        '''
+        # setup
+        res = self.testapp.reset()
+        self.login()
+        member = self.create_membership_applicant()
+        DBSession.add(member)
+        DBSession.flush()
+
+        # hidden loss inputs should not make any problem and therefore submit
+        # without changes should work
+        res = self.testapp.get(
+            '/edit/{0}'.format(member.id),
+            status=200)
+        self.failUnless('Mitglied bearbeiten' in res.body)
+        self.assertFalse(res.form['membership_accepted'].checked)
+        self.assertTrue(type(res.form['membership_loss_date']) == webtest.forms.Hidden)
+        self.assertTrue(res.form['membership_loss_date'].value == '')
+        self.assertTrue(type(res.form['membership_loss_type']) == webtest.forms.Hidden)
+        self.assertTrue(res.form['membership_loss_type'].value == '')
+
+        # try setting hidden values -> error
+        res.form['membership_loss_date'] = date.today()
+        res.form['membership_loss_type'] = 'resignation'
+        res = res.form.submit('submit', status=200)
+        self.assertTrue(
+            'Please note: There were errors, please check the form below.' in
+            res.body)
+
+        # create full member
+        member = self.create_accepted_member_full()
+        DBSession.add(member)
+        DBSession.flush()
+        res = self.testapp.get(
+            '/edit/{0}'.format(member.id),
+            status=200)
+        self.failUnless('Mitglied bearbeiten' in res.body)
+        # accepted full member show membership loss fields
+        self.assertTrue(res.form['membership_accepted'].checked)
+        self.assertTrue(type(res.form['membership_loss_date']) == webtest.forms.Text)
+        self.assertTrue(res.form['membership_loss_date'].value == '')
+        self.assertTrue(type(res.form['membership_loss_type']) == webtest.forms.Select)
+        self.assertTrue(res.form['membership_loss_type'].value == '')
+
+        # set neither loss date nor type -> success
+        res = res.form.submit('submit', status=302)
+        res = res.follow()
+        self.validate_details_page(res)
+
+        # set only loss date -> error, set both
+        res = self.testapp.get(
+            '/edit/{0}'.format(member.id),
+            status=200)
+        self.failUnless('Mitglied bearbeiten' in res.body)
+        res.form['membership_loss_date'] = date(2016, 12, 31)
+        res = res.form.submit('submit', status=200)
+        self.assertTrue(
+            'Please note: There were errors, please check the form below.' in
+            res.body)
+        self.assertTrue(
+            'Date and type of membership loss must be set both or none.' in
+            res.body)
+
+        # set only loss type -> error, set both
+        res = self.testapp.get(
+            '/edit/{0}'.format(member.id),
+            status=200)
+        self.failUnless('Mitglied bearbeiten' in res.body)
+        res.form['membership_loss_type'] = 'resignation'
+        res = res.form.submit('submit', status=200)
+        self.assertTrue(
+            'Please note: There were errors, please check the form below.' in
+            res.body)
+        self.assertTrue(
+            'Date and type of membership loss must be set both or none.' in
+            res.body)
+
+        # set loss type, set loss date to date prior to membership_acceptance
+        # -> error, set larger date
+        res = self.testapp.get(
+            '/edit/{0}'.format(member.id),
+            status=200)
+        self.failUnless('Mitglied bearbeiten' in res.body)
+        res.form['membership_loss_date'] = member.membership_date - \
+            timedelta(days=1)
+        res.form['membership_loss_type'] = 'resignation'
+        res = res.form.submit('submit', status=200)
+        self.assertTrue(
+            'Please note: There were errors, please check the form below.' in
+            res.body)
+        self.assertTrue(
+            'Date membership loss must be larger than membership acceptance '
+            'date.' in res.body)
+
+        # set both to valid values -> success
+        res = self.testapp.get(
+            '/edit/{0}'.format(member.id),
+            status=200)
+        self.failUnless('Mitglied bearbeiten' in res.body)
+        res.form['membership_loss_date'] = member.membership_date + \
+            timedelta(days=365)
+        res.form['membership_loss_type'] = 'resignation'
+        res = res.form.submit('submit', status=302)
+        res = res.follow()
+        self.validate_details_page(res)

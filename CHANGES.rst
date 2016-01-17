@@ -20,6 +20,9 @@ Next Release
 - Extend documentation about production deployment of new application
   versions.
 
+- Handle loss of membership including resignation, expulsion, death,
+  bankrupsy and transfer of remaining shares.
+
 
 
 1.13

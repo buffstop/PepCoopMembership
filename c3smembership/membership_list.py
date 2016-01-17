@@ -231,8 +231,15 @@ def member_list_date_pdf_view(request):
                 _acquired_shares_until_date += share.number
                 _count_shares_printed += share.number
 
+        membership_loss = u''
+        if member.membership_loss_date is not None:
+            membership_loss += \
+                member.membership_loss_date.strftime('%d.%m.%Y') + \
+                '\linebreak '
+        if member.membership_loss_type is not None:
+            membership_loss += member.membership_loss_type
         latex_file.write(
-            ''' {0} & {1} & {2} & {3} & {4} & {5} & {6} \\\\\\hline %
+            ''' {0} & {1} & {2} & {3} & {4} & {5} & {6} & {7} \\\\\\hline %
             '''.format(
                 member.lastname.encode('utf-8'),  # 0
                 ' \\footnotesize ' + member.firstname.encode('utf-8'),  # 1
@@ -242,7 +249,8 @@ def member_list_date_pdf_view(request):
                     '%d.%m.%Y'),  # 4
                 ' \\footnotesize ' + member.membership_date.strftime(
                     '%d.%m.%Y'),  # 5
-                ' \\footnotesize ' + str(_acquired_shares_until_date)  # 6
+                ' \\footnotesize ' + membership_loss + ' ',  # 6
+                ' \\footnotesize ' + str(_acquired_shares_until_date)  # 7
             ))
 
     latex_file.write('''
