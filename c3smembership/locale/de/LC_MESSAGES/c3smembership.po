@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the c3smembership
 # project.
 # Christoph Scheid <christoph.scheid@c3s.cc>, 2013.
-# Markus Lorenz <markus.lorenz@c3s.cc>, 2015
+# Markus Lorenz <markus.lorenz@c3s.cc>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: markus.lorenz@c3s.cc\n"
-"POT-Creation-Date: 2016-01-16 19:08+0100\n"
-"PO-Revision-Date: 2015-09-10 12:58+0100\n"
+"POT-Creation-Date: 2016-01-18 20:29+0100\n"
+"PO-Revision-Date: 2016-01-18 19:57+0100\n"
 "Last-Translator: Markus Lorenz <mrks@lrnz.name>\n"
 "Language: de\n"
 "Language-Team: de <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr "Login"
 
 #. Default: Password
 #: c3smembership/accountants_views.py:117
-#: c3smembership/templates/verify_password.pt:53
+#: c3smembership/templates/verify_password.pt:57
 msgid "password"
 msgstr "Passwort"
 
@@ -344,7 +344,7 @@ msgstr "C3S Mitgliedsantrag: Bitte E-Mails abrufen."
 #: c3smembership/templates/check-mail.pt:24 c3smembership/templates/join.pt:69
 #: c3smembership/templates/success.pt:22
 #: c3smembership/templates/verify_password.pt:24
-#: c3smembership/templates/verify_password.pt:63
+#: c3smembership/templates/verify_password.pt:67
 msgid "reg-process-enter-data"
 msgstr "1. Daten eingeben"
 
@@ -352,7 +352,7 @@ msgstr "1. Daten eingeben"
 #: c3smembership/templates/check-mail.pt:31 c3smembership/templates/join.pt:76
 #: c3smembership/templates/success.pt:29
 #: c3smembership/templates/verify_password.pt:31
-#: c3smembership/templates/verify_password.pt:70
+#: c3smembership/templates/verify_password.pt:74
 msgid "reg-process-check-data"
 msgstr "2. Daten prüfen"
 
@@ -360,17 +360,17 @@ msgstr "2. Daten prüfen"
 #: c3smembership/templates/check-mail.pt:38 c3smembership/templates/join.pt:83
 #: c3smembership/templates/success.pt:36
 #: c3smembership/templates/verify_password.pt:38
-#: c3smembership/templates/verify_password.pt:77
+#: c3smembership/templates/verify_password.pt:81
 msgid "reg-process-verify-email-address"
 msgstr "3. E-Mail-Adresse bestätigen"
 
-#. Default: 4. Download application form
+#. Default: 4. Mail application form
 #: c3smembership/templates/check-mail.pt:45 c3smembership/templates/join.pt:90
 #: c3smembership/templates/success.pt:43
 #: c3smembership/templates/verify_password.pt:45
-#: c3smembership/templates/verify_password.pt:84
-msgid "reg-process-download-application-form"
-msgstr "4. Antragsformular herunterladen"
+#: c3smembership/templates/verify_password.pt:88
+msgid "reg-process-mail-application-form"
+msgstr "4. Antragsformular verschicken"
 
 #. Default: An email was sent,
 #: c3smembership/templates/check-mail.pt:53
@@ -392,7 +392,7 @@ msgid "check-email-paragraph-check-email-hint"
 msgstr "Der Betreff der E-Mail lautet: "
 
 #. Default: C3S: confirm your email address and load your PDF
-#: c3smembership/templates/check-mail.pt:66
+#: c3smembership/templates/check-mail.pt:66 c3smembership/views/afm.py:544
 msgid "check-email-paragraph-check-email-subject"
 msgstr "C3S: E-Mail-Adresse bestätigen und Formular abrufen"
 
@@ -712,7 +712,7 @@ msgstr "Falls oben alle Angaben richtig sind..."
 #. Default: Verify your email address
 #: c3smembership/templates/success.pt:98
 msgid "success-headline-verify-email"
-msgstr "Bestätige deine E-Mail-Adresse"
+msgstr "Bestätige Deine E-Mail-Adresse"
 
 #. Default: Click the button to have an email sent to your email address. Then
 #. check your email and use the link which we send you to get your membership
@@ -720,8 +720,8 @@ msgstr "Bestätige deine E-Mail-Adresse"
 #: c3smembership/templates/success.pt:101
 msgid "success-paragraph-verify-email"
 msgstr ""
-"Nach Anfordern der Bestätigungsmail schicken wir eine Mail an deine "
-"Adresse. Rufe deine E-Mails ab und nutze den Bestätigungslink, um dein "
+"Nach Anfordern der Bestätigungsmail schicken wir eine Mail an Deine "
+"Adresse. Rufe Deine E-Mails ab und nutze den Bestätigungslink, um Dein "
 "PDF zu laden. Dieses muss ausgedruckt und unterschrieben an uns "
 "zurückgesandt werden."
 
@@ -747,81 +747,93 @@ msgstr "Danke!"
 msgid "get your pdf"
 msgstr "Hier geht es zum PDF..."
 
-#. Default: Load your PDF...
-#: c3smembership/templates/verify_password.pt:59
-msgid "load-your-PDF"
-msgstr "Lade dein PDF..."
+#. Default: Please enter your password in order to verify your email address.
+#: c3smembership/templates/verify_password.pt:52
+msgid "reg-email-verification-password-message"
+msgstr "Bitte gib Dein Passwort ein, um Deine E-Mail-Adresse zu bestätigen."
 
-#. Default: Some browsers and PDF viewers (or browser plugins) can cause
-#. problems
-#. loading and displaying your form. If you do *not* get a PDF download when
-#. clicking the following link, try *right-clicking* the link above and choose
-#. 'Save as...' and choose a location.
-#: c3smembership/templates/verify_password.pt:94
-msgid "load-pdf-download-instructions"
-msgstr ""
-"Manche Brower (bzw. Browser plugins) zeigen das Formular evtl. nicht bzw."
-" nicht richtig an.  In diesem Falle versuche es mit Rechtsklick auf den "
-"oben stehenden Link, wähle \"Speichern unter\" und wähle den Speicherort."
+#. Default: Load your PDF...
+#: c3smembership/templates/verify_password.pt:63
+msgid "load-your-PDF"
+msgstr "Lade Dein PDF..."
 
 #. Default: Thank you for successfully verifying your email address. Please
 #. follow
 #. these steps in order to finish the membership application process:
-#: c3smembership/templates/verify_password.pt:103
+#: c3smembership/templates/verify_password.pt:95
 msgid "load-pdf-follow-steps"
 msgstr ""
 "Vielen Dank für die erfolgreiche Bestätigung Deiner E-Mail-Adresse. Bitte"
 " folge diesen Schritten, um den Antragsprozess abzuschließen:"
 
 #. Default: Download and print the membership application form.
-#: c3smembership/templates/verify_password.pt:110
+#: c3smembership/templates/verify_password.pt:102
 msgid "load-pdf-download-form"
-msgstr "Lade das Antragsformular hterunter und drucke es aus."
+msgstr "Lade das Antragsformular herunter und drucke es aus."
+
+#. Default: Some browsers and PDF viewers (or browser plugins) can cause
+#. problems
+#. loading and displaying your form. If you do *not* get a PDF download when
+#. clicking the following link, try *right-clicking* the link above and choose
+#. 'Save as...' and choose a location.
+#: c3smembership/templates/verify_password.pt:113
+msgid "load-pdf-download-instructions"
+msgstr ""
+"Manche Brower (bzw. Browser plugins) zeigen das Formular evtl. nicht bzw."
+" nicht richtig an.  In diesem Falle versuche es mit Rechtsklick auf den "
+"oben stehenden Link, wähle \"Speichern unter\" und wähle den Speicherort."
 
 #. Default: Read the membership application form carefully.
-#: c3smembership/templates/verify_password.pt:120
+#: c3smembership/templates/verify_password.pt:122
 msgid "load-pdf-read-form"
 msgstr "Lies das Antragsformular sorgfältig durch."
 
 #. Default: Sign the membership application form and don't forget to write city
 #. and
 #. date on it as well.
-#: c3smembership/templates/verify_password.pt:123
+#: c3smembership/templates/verify_password.pt:125
 msgid "load-pdf-sign-form"
 msgstr ""
 "Unterschreibe das Antragsformular und vergiss nicht, Ort und Datum "
 "anzugeben"
 
-#. Default: Send the signed membership application form to us. The postal
-#. address
-#. is written on the form.
-#: c3smembership/templates/verify_password.pt:127
+#. Default: Send the signed membership application form to us via postal mail.
+#. The
+#. postal address is written on the form. Unfortunately, we cannot accept
+#. (digital)
+#. copies due to legal requirements. We need your original signature on
+#. physical
+#. paper.
+#: c3smembership/templates/verify_password.pt:129
 msgid "load-pdf-send-form"
 msgstr ""
-"Schicke das unterzeichnete Antragsformular an uns. Die Anschrift steht "
-"auf dem Formular."
+"Schicke das unterzeichnete Antragsformular per Post an uns. Die Anschrift"
+" steht auf dem Formular. Leider können wir aufgrund rechtlicher "
+"Anforderungen keine (digitalen) Kopien annehmen. Wir benötigen Deine "
+"originale Unterschrift auf einem physischen Blatt Papier."
 
 #. Default: Transfer the money for your shares to us. The bank account and
 #. reference code are stated on the form.
-#: c3smembership/templates/verify_password.pt:131
+#: c3smembership/templates/verify_password.pt:136
 msgid "load-pdf-send-money"
 msgstr ""
 "Überweise den Geldbetrag für Deine Anteile an uns. Die Bankverbindung und"
 " den Überweisungszweck findet Du im Formular."
 
-#. Default: You will be notified as soon as your membership application has
-#. been
-#. processed.
-#: c3smembership/templates/verify_password.pt:136
+#. Default: We will confirm receiving your membership application and money
+#. transfer each with a notification email. Afterwards, the administrative
+#. board
+#. will decide about your membership on its following meeting. Upon your
+#. acceptance
+#. you will be sent a membership certificate.
+#: c3smembership/templates/verify_password.pt:141
 msgid "load-pdf-notification"
 msgstr ""
-"Um den Beitritt als Mitglied zu vollziehen, musst Du das Formular "
-"ausdrucken und unterzeichnen. Bitte aufmerksam durchlesen."
-
-#. Default: Thank you for your interest in the C3S.
-#: c3smembership/templates/verify_password.pt:140
-msgid "load-pdf-thanks"
-msgstr "Dank für dein Interesse an der C3S."
+"Bei Eingang des Formulars und Geldes schicken wir Dir jeweils eine "
+"Bestätigungs-E-Mail. Nachdem beides bei uns eingegangen ist, muss der "
+"Verwaltungsrat in seiner darauffolgenden Sitzung die Zustimmung zu Deiner"
+" Aufnahme geben. Anschließend erhältst Du eine Mitgliedsbescheinigung per"
+" E-Mail."
 
 #: c3smembership/views/afm.py:146
 msgid "Email Address"
@@ -836,7 +848,7 @@ msgid ""
 "We need a password to protect your data. After verifying your email you "
 "will have to enter it."
 msgstr ""
-"Wir brauchen ein Passwort, um deine Daten zu schützen. Nach der "
+"Wir brauchen ein Passwort, um Deine Daten zu schützen. Nach der "
 "Bestätigung der E-Mail-Adresse wird es abgefragt."
 
 #: c3smembership/views/afm.py:170
@@ -926,11 +938,7 @@ msgstr "Weiter"
 msgid "Please re-enter your password."
 msgstr "Bitte Dein Passwort erneut eingeben."
 
-#: c3smembership/views/afm.py:544
-msgid "C3S: confirm your email address and load your PDF"
-msgstr "C3S: Bestätige deine E-Mail-Adresse und lade Dein PDF"
-
-#: c3smembership/views/afm.py:630
+#: c3smembership/views/afm.py:632
 msgid ""
 "Not found. Check verification URL. If all seems right, please use the "
 "form again."
@@ -938,18 +946,19 @@ msgstr ""
 "Nicht gefunden. Bitte Bestätigungs-URL überprüfen. Wenn alles richtig "
 "sein müsste, bitte das Formular nochmals benutzen."
 
-#: c3smembership/views/afm.py:645
+#: c3smembership/views/afm.py:647
 msgid "Wrong Password!"
 msgstr "Falsches Passwort"
 
-#: c3smembership/views/afm.py:697
+#: c3smembership/views/afm.py:699
 msgid "Success. Load your PDF!"
 msgstr "Erfolg. Lade Dein PDF!"
 
-#: c3smembership/views/afm.py:702
+#: c3smembership/views/afm.py:704
 msgid "Please enter your password."
 msgstr "Bitte das Passwort eingeben."
 
-#: c3smembership/views/afm.py:747
+#: c3smembership/views/afm.py:749
 msgid "[yes][ALERT] check the logs!"
 msgstr "[yes][ALERT] Prüfe die Log-Dateien."
+

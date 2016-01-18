@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 1.12\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-01-16 19:08+0100\n"
+"POT-Creation-Date: 2016-01-18 20:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #. Default: Password
 #: c3smembership/accountants_views.py:117
-#: c3smembership/templates/verify_password.pt:53
+#: c3smembership/templates/verify_password.pt:57
 msgid "password"
 msgstr ""
 
@@ -322,7 +322,7 @@ msgstr ""
 #: c3smembership/templates/check-mail.pt:24 c3smembership/templates/join.pt:69
 #: c3smembership/templates/success.pt:22
 #: c3smembership/templates/verify_password.pt:24
-#: c3smembership/templates/verify_password.pt:63
+#: c3smembership/templates/verify_password.pt:67
 msgid "reg-process-enter-data"
 msgstr ""
 
@@ -330,7 +330,7 @@ msgstr ""
 #: c3smembership/templates/check-mail.pt:31 c3smembership/templates/join.pt:76
 #: c3smembership/templates/success.pt:29
 #: c3smembership/templates/verify_password.pt:31
-#: c3smembership/templates/verify_password.pt:70
+#: c3smembership/templates/verify_password.pt:74
 msgid "reg-process-check-data"
 msgstr ""
 
@@ -338,16 +338,16 @@ msgstr ""
 #: c3smembership/templates/check-mail.pt:38 c3smembership/templates/join.pt:83
 #: c3smembership/templates/success.pt:36
 #: c3smembership/templates/verify_password.pt:38
-#: c3smembership/templates/verify_password.pt:77
+#: c3smembership/templates/verify_password.pt:81
 msgid "reg-process-verify-email-address"
 msgstr ""
 
-#. Default: 4. Download application form
+#. Default: 4. Mail application form
 #: c3smembership/templates/check-mail.pt:45 c3smembership/templates/join.pt:90
 #: c3smembership/templates/success.pt:43
 #: c3smembership/templates/verify_password.pt:45
-#: c3smembership/templates/verify_password.pt:84
-msgid "reg-process-download-application-form"
+#: c3smembership/templates/verify_password.pt:88
+msgid "reg-process-mail-application-form"
 msgstr ""
 
 #. Default: An email was sent,
@@ -367,7 +367,7 @@ msgid "check-email-paragraph-check-email-hint"
 msgstr ""
 
 #. Default: C3S: confirm your email address and load your PDF
-#: c3smembership/templates/check-mail.pt:66
+#: c3smembership/templates/check-mail.pt:66 c3smembership/views/afm.py:544
 msgid "check-email-paragraph-check-email-subject"
 msgstr ""
 
@@ -691,62 +691,66 @@ msgstr ""
 msgid "get your pdf"
 msgstr ""
 
+#. Default: Please enter your password in order to verify your email address.
+#: c3smembership/templates/verify_password.pt:52
+msgid "reg-email-verification-password-message"
+msgstr ""
+
 #. Default: Load your PDF...
-#: c3smembership/templates/verify_password.pt:59
+#: c3smembership/templates/verify_password.pt:63
 msgid "load-your-PDF"
+msgstr ""
+
+#. Default: Thank you for successfully verifying your email address. Please follow
+#. these steps in order to finish the membership application process:
+#: c3smembership/templates/verify_password.pt:95
+msgid "load-pdf-follow-steps"
+msgstr ""
+
+#. Default: Download and print the membership application form.
+#: c3smembership/templates/verify_password.pt:102
+msgid "load-pdf-download-form"
 msgstr ""
 
 #. Default: Some browsers and PDF viewers (or browser plugins) can cause problems
 #. loading and displaying your form. If you do *not* get a PDF download when
 #. clicking the following link, try *right-clicking* the link above and choose
 #. 'Save as...' and choose a location.
-#: c3smembership/templates/verify_password.pt:94
+#: c3smembership/templates/verify_password.pt:113
 msgid "load-pdf-download-instructions"
 msgstr ""
 
-#. Default: Thank you for successfully verifying your email address. Please follow
-#. these steps in order to finish the membership application process:
-#: c3smembership/templates/verify_password.pt:103
-msgid "load-pdf-follow-steps"
-msgstr ""
-
-#. Default: Download and print the membership application form.
-#: c3smembership/templates/verify_password.pt:110
-msgid "load-pdf-download-form"
-msgstr ""
-
 #. Default: Read the membership application form carefully.
-#: c3smembership/templates/verify_password.pt:120
+#: c3smembership/templates/verify_password.pt:122
 msgid "load-pdf-read-form"
 msgstr ""
 
 #. Default: Sign the membership application form and don't forget to write city and
 #. date on it as well.
-#: c3smembership/templates/verify_password.pt:123
+#: c3smembership/templates/verify_password.pt:125
 msgid "load-pdf-sign-form"
 msgstr ""
 
-#. Default: Send the signed membership application form to us. The postal address
-#. is written on the form.
-#: c3smembership/templates/verify_password.pt:127
+#. Default: Send the signed membership application form to us via postal mail. The
+#. postal address is written on the form. Unfortunately, we cannot accept (digital)
+#. copies due to legal requirements. We need your original signature on physical
+#. paper.
+#: c3smembership/templates/verify_password.pt:129
 msgid "load-pdf-send-form"
 msgstr ""
 
 #. Default: Transfer the money for your shares to us. The bank account and
 #. reference code are stated on the form.
-#: c3smembership/templates/verify_password.pt:131
+#: c3smembership/templates/verify_password.pt:136
 msgid "load-pdf-send-money"
 msgstr ""
 
-#. Default: You will be notified as soon as your membership application has been
-#. processed.
-#: c3smembership/templates/verify_password.pt:136
+#. Default: We will confirm receiving your membership application and money
+#. transfer each with a notification email. Afterwards, the administrative board
+#. will decide about your membership on its following meeting. Upon your acceptance
+#. you will be sent a membership certificate.
+#: c3smembership/templates/verify_password.pt:141
 msgid "load-pdf-notification"
-msgstr ""
-
-#. Default: Thank you for your interest in the C3S.
-#: c3smembership/templates/verify_password.pt:140
-msgid "load-pdf-thanks"
 msgstr ""
 
 #: c3smembership/views/afm.py:146
@@ -830,29 +834,25 @@ msgstr ""
 msgid "Please re-enter your password."
 msgstr ""
 
-#: c3smembership/views/afm.py:544
-msgid "C3S: confirm your email address and load your PDF"
-msgstr ""
-
-#: c3smembership/views/afm.py:630
+#: c3smembership/views/afm.py:632
 msgid ""
 "Not found. Check verification URL. If all seems right, please use the form "
 "again."
 msgstr ""
 
-#: c3smembership/views/afm.py:645
+#: c3smembership/views/afm.py:647
 msgid "Wrong Password!"
 msgstr ""
 
-#: c3smembership/views/afm.py:697
+#: c3smembership/views/afm.py:699
 msgid "Success. Load your PDF!"
 msgstr ""
 
-#: c3smembership/views/afm.py:702
+#: c3smembership/views/afm.py:704
 msgid "Please enter your password."
 msgstr ""
 
-#: c3smembership/views/afm.py:747
+#: c3smembership/views/afm.py:749
 msgid "[yes][ALERT] check the logs!"
 msgstr ""
 
