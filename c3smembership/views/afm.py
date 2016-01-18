@@ -541,7 +541,9 @@ thanks!
 Your C3S team
             '''
         the_mail = Message(
-            subject=_("C3S: confirm your email address and load your PDF"),
+            subject=_(
+                'check-email-paragraph-check-email-subject',
+                default=u'C3S: confirm your email address and load your PDF'),
             sender="noreply@c3s.cc",
             recipients=[appstruct['person']['email']],
             body=the_mail_body.format(

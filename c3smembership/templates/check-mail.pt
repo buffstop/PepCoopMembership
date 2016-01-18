@@ -44,8 +44,8 @@
             <div class="btn-group" role="group">
                 <button type="button"
                         class="btn btn-default"
-                        i18n:translate="reg-process-download-application-form">
-                    4. Download application form
+                        i18n:translate="reg-process-mail-application-form">
+                    4. Mail application form
                 </button>
             </div>
         </div>

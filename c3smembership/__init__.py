@@ -65,13 +65,18 @@ def main(global_config, **settings):
                           'pyramid.events.NewRequest')
     config.add_renderer(name='csv',
                         factory='c3smembership.renderers.CSVRenderer')
-    # home is /, the membership application form
-    config.add_route('join', '/')
 
-    # success and further steps
+    ## Membership application process
+    # Step 1 (join.pt): home is /, the membership application form
+    config.add_route('join', '/')
+    # Step 2 (success.pt): check and edit data
     config.add_route('success', '/success')
+    # Step 3 email was sent (check-mail.pt): send verification email address
     config.add_route('success_check_email', '/check_email')
+    # Still step 3 (verify_password.pt): enter password
+    # and step 4 (verify_password.pt): download form
     config.add_route('verify_email_password', '/verify/{email}/{code}')  # PDF
+    # PDF download of Step 4.
     config.add_route('success_pdf', '/C3S_SCE_AFM_{namepart}.pdf')  # download
     # confirm email address later (30c3 cases)
     config.add_route(
