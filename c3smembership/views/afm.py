@@ -541,9 +541,9 @@ thanks!
 Your C3S team
             '''
         the_mail = Message(
-            subject=_(
+            subject=request.localizer.translate(_(
                 'check-email-paragraph-check-email-subject',
-                default=u'C3S: confirm your email address and load your PDF'),
+                default=u'C3S: confirm your email address and load your PDF')),
             sender="noreply@c3s.cc",
             recipients=[appstruct['person']['email']],
             body=the_mail_body.format(
@@ -556,6 +556,8 @@ Your C3S team
         )
         if 'true' in request.registry.settings['testing.mail_to_console']:
             # print(the_mail.body)
+            log.info(the_mail.subject)
+            log.info(the_mail.recipients)
             log.info(the_mail.body)
             # just logging, not printing, b/c test fails otherwise:
             # env/bin/nosetests
