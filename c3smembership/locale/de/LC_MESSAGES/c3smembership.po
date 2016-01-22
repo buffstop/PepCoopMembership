@@ -454,12 +454,12 @@ msgstr "Das Kleingedruckte"
 #. Default: https://www.c3s.cc/en/about-us/manifesto/
 #: c3smembership/templates/join.pt:122 c3smembership/templates/mtype-form.pt:69
 msgid "manifesto-link"
-msgstr "https://www.c3s.cc/ueber-c3s/manifesto/"
+msgstr "https://www.c3s.cc/ueber-c3s/manifest/"
 
 #. Default: The Cultural Commons Manifesto
 #: c3smembership/templates/join.pt:122 c3smembership/templates/mtype-form.pt:69
 msgid "join-form-manifesto-title"
-msgstr "Das Cultural Commons Manifesto"
+msgstr "Das Cultural-Commons-Manifest"
 
 #. Default: The C3S SCE Statute
 #: c3smembership/templates/join.pt:131 c3smembership/templates/mtype-form.pt:80

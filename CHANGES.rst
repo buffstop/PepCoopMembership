@@ -10,6 +10,8 @@ Next Release
 
 - Fix C3S Statute reference to use the version independent URL.
 
+- Fix German Cultural Commons Manifesto link and title.
+
 
 
 1.12
