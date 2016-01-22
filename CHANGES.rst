@@ -4,6 +4,8 @@ Next Release
 
 - Update executive director. (This must be moved to configuration!)
 
+- Extend requirements specification and documentation of business processes.
+
 
 
 1.12

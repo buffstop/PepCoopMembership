@@ -108,31 +108,82 @@ which helps living them.
 
 
 
+---------------
+Membership List
+---------------
+
+
+The membership list must be maintained (§ 30 [GenG]_). For each member is must
+contain the following attributes:
+
+- For natural persons (§ 30 II 1 1. [GenG]_)
+
+  - Family name,
+  - Given name and
+  - Postal address
+
+- For legal bodies (§ 30 II 1 1. [GenG]_)
+
+  - Company name and
+  - Postal address
+
+- For bodies of persons (§ 30 II 1 1. [GenG]_)
+
+  - Either
+
+    - Name and
+    - Postal address
+
+  - Or
+
+    - Family names,
+    - Given names and
+    - Postal addresses of the members
+
+- Number of shares (§ 30 II 1 2. [GenG]_)
+- Date of acquisition of membership (§ 30 II 2 [GenG]_)
+- Justifying facts of the acquisition of membership (§ 30 II 2 [GenG]_), e.g.
+  decision of the administrative board
+- Date of loss of membership (§ 30 II 1 3. [GenG]_)
+- Justifying facts of the loss of membership (§ 30 II 2 [GenG]_), e.g.
+  resignation, expulsion, death, bankrupsy
+
+Documents which are related to the acquisition or loss of membership must be
+kept for three years until the end of the year in which the loss of membership
+became effective (§ 30 III [GenG]_).
+
+Members and third parties with legitimate interest review the membership list
+at the cooperative (§ 31 I 2 [GenG]_).
+
+The register court demand a copy of the membership list (§ 32 [GenG]_).
+
+
+
 -------------------------
 Acquisition of Membership
 -------------------------
 
 
 The acquisition of membership must be approved by the administrative board
-([EU_CR_1435_2003_SCE]_ art. 14(1)).
+(art. 14(1) [EU_CR_1435_2003_SCE]_).
 
 - Only natural persons can become full members, legal bodies can only become
-  investor members ([C3S_Statute]_ § 4 I, II).
+  investor members (§ 4 I, II [C3S_Statute]_).
 
 - A signed and fully filled membership application is required
-  ([C3S_Statute]_ § 4 III).
+  (§ 4 III [C3S_Statute]_).
 
 - The membership application must be admitted by the administrative board
-  ([C3S_Statute]_ § 4 III).
+  (§ 4 III [C3S_Statute]_).
 
 - The acquisiton of at least one share is required for becoming a member
-  ([C3S_Statute]_ § 5 II 1).
+  (§ 5 II 1 [C3S_Statute]_).
 
-- The share must be paid for acquiring membership ([C3S_Statute]_ § 5 I 2).
+- The share must be paid for acquiring membership (§ 5 I 2 [C3S_Statute]_).
 
-- A member can sign up to 60 shares ([C3S_Statute]_ § 5 II 2).
+- A member can sign up to 60 shares (§ 5 II 2 [C3S_Statute]_).
 
-- The nominal value of one share is 50 € ([C3S_Statute]_ § 5 I 1).
+- The nominal value of one share is 50 € (§ 5 I 1 [C3S_Statute]_).
 
 **TODO:**
 
@@ -154,7 +205,7 @@ Upon Resignation
 ================
 
 
-Membership shall be lost upon resignation ([EU_CR_1435_2003_SCE]_ art. 15(1)).
+Membership shall be lost upon resignation (art. 15(1) [EU_CR_1435_2003_SCE]_).
 
 A member can resign from the C3S membership (§ 65 I [GenG]_, § 8
 [C3S_Statute]_). The following criteria must be met:
@@ -191,7 +242,7 @@ Upon Expulsion
 
 Membership shall be lost upon expulsion where the member commits a serious
 breach of his/her obligations or acts contrary to the interests of the SCE
-([EU_CR_1435_2003_SCE]_ art. 15(1)).
+(art. 15(1) [EU_CR_1435_2003_SCE]_).
 
 **TODO:** *Describe the business process.*
 
@@ -201,7 +252,7 @@ Upon Death
 ==========
 
 
-Membership shall be lost upon death ([EU_CR_1435_2003_SCE]_ art. 15(1), § 77
+Membership shall be lost upon death (art. 15(1) [EU_CR_1435_2003_SCE]_, § 77
 [GenG]_, § 4 IV d [C3S_Statute]_).
 
 **TODO:** *Elaborate.*
@@ -212,7 +263,7 @@ Upon Bankrupsy
 ==============
 
 
-Membership shall be lost upon bankrupsy ([EU_CR_1435_2003_SCE]_ art. 15(1), §
+Membership shall be lost upon bankrupsy (art. 15(1) [EU_CR_1435_2003_SCE]_, §
 77a [GenG]_, § 4 IV d [C3S_Statute]_).
 
 **TODO:** *Elaborate.*
@@ -301,7 +352,9 @@ Members are provided with a membership certificate and states:
   - Names of executive directors
   - Images of executive directors' signatures
 
-**TODO:** *Legal requirements?*
+**TODO:** *Legal requirements? "Abschriften aus der Mitgliederliste sind dem
+Mitglied hinsichtlich der ihn betreffenden Eintragungen auf Verlangen zu
+erteilen." § 31 I 2 [GenG]_.*
 
 
 
@@ -340,8 +393,9 @@ Annual Financial Statement
 --------------------------
 
 
-The annual financial statement must be provided which requires statistics from
-the membership list.
+The annual financial statement (§ 33 I 2 [GenG]_) must be provided which
+requires information about member payments such as the payment and
+reimbursement of shares as well as membership fees.
 
 **TODO:** *Elaborate.*
 
