@@ -31,6 +31,8 @@ Next Release
 
 - Fix German Cultural Commons Manifesto link and title.
 
+- Extend requirements specification and documentation of business processes.
+
 
 
 1.12
