@@ -23,13 +23,13 @@ from pyramid.view import view_config
 from pyramid.response import Response
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
-import re
 import shutil
 import subprocess
 import tempfile
 from types import NoneType
 
 from c3smembership.models import C3sMember
+from c3smembership.tex_tools import TexTools
 
 DEBUG = False
 
@@ -304,15 +304,15 @@ def gen_cert(member):
         latex_header_tex,
         latex_background_image,
         hereby_confirmed,
-        member.firstname,
-        member.lastname,
-        member.address1,
-        member.postcode,
-        member.city,
+        TexTools.escape(member.firstname),
+        TexTools.escape(member.lastname),
+        TexTools.escape(member.address1),
+        TexTools.escape(member.postcode),
+        TexTools.escape(member.city),
         member.num_shares,
         member.num_shares-1,
         is_member,
-        mship_num,
+        TexTools.escape(mship_num),
         confirm_date,
         (
             datetime.strftime(date.today(), "%d.%m.%Y")
@@ -329,9 +329,9 @@ def gen_cert(member):
         print(member.lastname)
         print('#'*60)
     if member.is_legalentity:
-        latex_data += '\n\\def\\company{%s}' % member.lastname
+        latex_data += '\n\\def\\company{%s}' % TexTools.escape(member.lastname)
     if member.address2 is not u'':  # add address part 2 iff exists
-        latex_data += '\n\\def\\addressTwo{%s}' % member.address2
+        latex_data += '\n\\def\\addressTwo{%s}' % TexTools.escape(member.address2)
     if member.num_shares > 1:  # how many shares?
         if member.num_shares == 2:  # iff member has exactely two shares...
             latex_data += '\n\\def\\txtBlkAddShares{%s.}' % one_more_share
@@ -343,10 +343,6 @@ def gen_cert(member):
             )
     else:  # iff member has exactely one share..
         latex_data += '\n\\def\\txtBlkAddShares{.}'
-
-    # escape some characters to appease LaTeX
-    latex_data = re.sub('&', '\\&', latex_data)
-    latex_data = re.sub('#', '\\#', latex_data)
 
     # finish the latex document
     latex_data += '\n\\input{%s}' % latex_footer_tex

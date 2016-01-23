@@ -23,6 +23,8 @@ Next Release
 - Handle loss of membership including resignation, expulsion, death,
   bankrupsy and transfer of remaining shares.
 
+- Introduce tex tools for escaping special characters.
+
 
 
 1.13

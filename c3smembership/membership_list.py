@@ -33,6 +33,7 @@ from c3smembership.models import (
     C3sMember,
     Shares,
 )
+from c3smembership.tex_tools import TexTools
 
 
 @view_config(renderer='templates/aufstockers_list.pt',
@@ -193,33 +194,19 @@ def member_list_date_pdf_view(request):
     for member in _members:
         _address = '''\\scriptsize{}'''
         _address += '''{}'''.format(
-            unicode(member.address1).encode('utf-8'))
+            unicode(TexTools.escape(member.address1)).encode('utf-8'))
 
         # check for contents of address2:
-        if member.address2 is u'':  # omit if empty
-            # print('no address2 supplied')
-            pass
-        elif u'℅' in member.address2:  # replace deadly signs to appease LaTeX
-            _address += '''\linebreak {}'''.format(
-                unicode(
-                    member.address2.replace(u'℅', 'bei ')
-                ).encode('utf-8'))
-        elif u'&' in member.address2:  # replace deadly signs to appease LaTeX
-            _address += '''\linebreak {}'''.format(
-                unicode(
-                    member.address2.replace(u'&', ' \& ')
-                ).encode('utf-8'))
-        else:  # but DO print address2 if it exists
-            _address += '''\linebreak {}'''.format(
-                unicode(member.address2).encode('utf-8'))
-
+        if len(member.address2) > 0:
+            _address += '''\\linebreak {}'''.format(
+                unicode(TexTools.escape(member.address2)).encode('utf-8'))
         # add more...
         _address += ''' \\linebreak {} '''.format(
-            unicode(member.postcode)).encode('utf-8')
+            unicode(TexTools.escape(member.postcode)).encode('utf-8'))
         _address += '''{}'''.format(
-            unicode(member.city)).encode('utf-8')
+            unicode(TexTools.escape(member.city)).encode('utf-8'))
         _address += ''' ({})'''.format(
-            unicode(member.country)).encode('utf-8')
+            unicode(TexTools.escape(member.country)).encode('utf-8'))
 
         # check shares acquired until $date
         _acquired_shares_until_date = 0
@@ -241,9 +228,9 @@ def member_list_date_pdf_view(request):
         latex_file.write(
             ''' {0} & {1} & {2} & {3} & {4} & {5} & {6} & {7} \\\\\\hline %
             '''.format(
-                member.lastname.encode('utf-8'),  # 0
-                ' \\footnotesize ' + member.firstname.encode('utf-8'),  # 1
-                ' \\footnotesize ' + str(member.membership_number),  # 2
+                TexTools.escape(member.lastname).encode('utf-8'),  # 0
+                ' \\footnotesize ' + TexTools.escape(member.firstname).encode('utf-8'),  # 1
+                ' \\footnotesize ' + TexTools.escape(str(member.membership_number)),  # 2
                 _address,  # 3
                 ' \\footnotesize ' + member.date_of_birth.strftime(
                     '%d.%m.%Y'),  # 4
