@@ -4,6 +4,9 @@ Next Release
 
 - Extend requirements specification and documentation of business processes.
 
+- Extend documentation about production deployment of new application
+  versions.
+
 
 
 1.13

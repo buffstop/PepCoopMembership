@@ -275,17 +275,43 @@ Therefore, the final release gets merged into the production branch.
 .. code-block:: console
 
    $ git checkout production
-   $ git merge 1.2.3
+   $ # Merging the new release into production is possible as
+   $ # fast-forward without merge commit.
+   $ git merge 1.2.3 --ff-only
    $ git push origin production
 
-A pull command gets the production server the code it needs:
+No commits are made to the production branch. It is merely a pointer to the
+release which is currently determined for the production server.
+
+The new application version can now be installed on the production server:
 
 .. code-block:: console
 
-   user@prod:~/c3sMembership$ git pull
-
-No commits are made to the production branch except for merges with final
-releases.
+   me@prod:~$ # Create application backup including virtual environment
+   me@prod:~$ tar -cvzf c3sMembership.$(date "+%Y-%m-%d_%H-%M-%S").tgz c3sMembership
+   me@prod:~$ # Stash production configuration
+   me@prod:~$ cd c3sMembership
+   me@prod:~/c3sMembership$ git stash
+   me@prod:~/c3sMembership$ # Pull new release from production
+   me@prod:~/c3sMembership$ # branch
+   me@prod:~/c3sMembership$ git pull
+   me@prod:~/c3sMembership$ # Pull from private certificate repository
+   me@prod:~/c3sMembership$ cd certificate
+   me@prod:~/c3sMembership/certificate$ git pull
+   me@prod:~/c3sMembership/certificate$ cd ..
+   me@prod:~/c3sMembership$ # Re-apply stashed configuration
+   me@prod:~/c3sMembership$ git stash pop
+   me@prod:~/c3sMembership$ # Install new application version
+   me@prod:~/c3sMembership$ env/bin/python setup.py develop
+   me@prod:~/c3sMembership$ # Create database backup
+   me@prod:~/c3sMembership$ cp c3sMembership.db c3sMembership.db.$(date "+%Y-%m-%d_%H-%M-%S")
+   me@prod:~/c3sMembership$ # Migrate database
+   me@prod:~/c3sMembership$ env/bin/alembic upgrade head
+   me@prod:~/c3sMembership$ # Build documentation
+   me@prod:~/c3sMembership$ cd docs
+   me@prod:~/c3sMembership/docs$ make html
+   me@prod:~/c3sMembership/docs$ # Restart the web server
+   me@prod:~/c3sMembership/docs$ sudo service apache2 restart
 
 
 
