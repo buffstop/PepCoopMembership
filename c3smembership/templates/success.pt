@@ -60,10 +60,10 @@
         <p>
             <span i18n:translate=''>(Real) First Name</span>:&nbsp; ${firstname}<br />
             <span i18n:translate=''>(Real) Last Name</span>:&nbsp; ${lastname}<br />
-            <span i18n:translate=''>Email</span>:&nbsp; ${request.session['appstruct']['person']['email']}<br />
+            <span i18n:translate=''>Email Address</span>:&nbsp; ${request.session['appstruct']['person']['email']}<br />
             <span i18n:translate=''>Address Line 1</span>:&nbsp; ${request.session['appstruct']['person']['address1']}<br />
             <span i18n:translate=''>Address Line 2</span>:&nbsp; ${request.session['appstruct']['person']['address2']}<br />
-            <span i18n:translate=''>Post Code</span>:&nbsp; ${request.session['appstruct']['person']['postcode']}<br />
+            <span i18n:translate=''>Postal Code</span>:&nbsp; ${request.session['appstruct']['person']['postcode']}<br />
             <span i18n:translate=''>City</span>:&nbsp; ${request.session['appstruct']['person']['city']}<br />
             <span i18n:translate=''>Country</span>:&nbsp; ${request.session['appstruct']['person']['country']}<br />
             <span i18n:translate=''>Date of Birth</span>:&nbsp; ${request.session['appstruct']['person']['date_of_birth']}<br />

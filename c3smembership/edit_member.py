@@ -29,6 +29,29 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.security import authenticated_userid
 from pyramid.view import view_config
 from types import NoneType
+from pyramid.i18n import (
+    get_localizer,
+)
+from pyramid.threadlocal import get_current_request
+from pkg_resources import resource_filename
+
+
+def translator(term):
+    """
+    Template translator.
+    """
+    return get_localizer(get_current_request()).translate(term)
+
+MY_TEMPLATE_DIR = resource_filename('c3smembership', 'templates')
+DEFORM_TEMPLATE_DIR = resource_filename('deform', 'templates')
+
+ZPT_RENDERER = deform.ZPTRendererFactory(
+    [
+        MY_TEMPLATE_DIR,
+        DEFORM_TEMPLATE_DIR,
+    ],
+    translator=translator,
+)
 
 COUNTRY_DEFAULT = u'DE'
 LOCALE_DEFAULT = u'de'
@@ -121,27 +144,27 @@ def edit_member(request):
         """
         firstname = colander.SchemaNode(
             colander.String(),
-            title='Vorname',
+            title=_(u'(Real) First Name'),
             oid='firstname',
         )
         lastname = colander.SchemaNode(
             colander.String(),
-            title='Nachname',
+            title=_(u'(Real) Last Name'),
             oid='lastname',
         )
         email = colander.SchemaNode(
             colander.String(),
-            title=_(u'E-Mail-Adresse'),
+            title=_(u'Email Address'),
             validator=colander.Email(),
             oid='email',
         )
         email_is_confirmed = colander.SchemaNode(
             colander.String(),
-            title=u'E-Mail-Adresse bestätigt?',
+            title=_(u'Email Address Confirmed'),
             widget=deform.widget.RadioChoiceWidget(
                 values=(
-                    (u'yes', u'Ja, bestätigt'),
-                    (u'no', u'Nein, unklar'),)),
+                    (u'yes', _(u'Yes, confirmed')),
+                    (u'no', _(u'No, not confirmed')),)),
             missing=u'',
             oid='email_is_confirmed',
         )
@@ -154,26 +177,26 @@ def edit_member(request):
         )
         address1 = colander.SchemaNode(
             colander.String(),
-            title='Adesse Zeile 1'
+            title=_(u'Addess Line 1'),
         )
         address2 = colander.SchemaNode(
             colander.String(),
             missing=u'',
-            title=u'Adresse Zeile 2'
+            title=_(u'Address Line 2'),
         )
         postcode = colander.SchemaNode(
             colander.String(),
-            title='Postleitzahl',
+            title=_(u'Postal Code'),
             oid='postcode'
         )
         city = colander.SchemaNode(
             colander.String(),
-            title='Ort',
+            title=_(u'City'),
             oid='city',
         )
         country = colander.SchemaNode(
             colander.String(),
-            title='Land',
+            title=_(u'Country'),
             default=COUNTRY_DEFAULT,
             widget=deform.widget.SelectWidget(
                 values=country_codes),
@@ -181,7 +204,7 @@ def edit_member(request):
         )
         date_of_birth = colander.SchemaNode(
             colander.Date(),
-            title='Geburtsdatum',
+            title=_(u'Date of Birth'),
             default=date(2013, 1, 1),
             validator=Range(
                 min=date(1913, 1, 1),
@@ -193,7 +216,7 @@ def edit_member(request):
         )
         locale = colander.SchemaNode(
             colander.String(),
-            title='Locale',
+            title=_(u'Locale'),
             widget=deform.widget.SelectWidget(
                 values=locale_codes),
             missing=u'',
@@ -219,11 +242,11 @@ def edit_member(request):
         """
         membership_accepted = colander.SchemaNode(
             colander.Boolean(),
-            title='ist aufgenommenes Mitglied'
+            title=_(u'Membership Accepted')
         )
         membership_date = colander.SchemaNode(
             colander.Date(),
-            title='Aufnahmedatum',
+            title=_(u'Membership Acceptance Date'),
             validator=Range(
                 min=date(2013, 9, 24),
                 max=date.today(),
@@ -235,25 +258,23 @@ def edit_member(request):
         )
         is_duplicate = colander.SchemaNode(
             colander.Boolean(),
-            title=_(u'ist weiterer, späterer Mitgliedsantrag, gehört zu '
-                    u'einem anderen Antrag oder einer bestehenden '
-                    u'Mitgliedschaft.'),
+            title=_(u'Is Duplicate'),
             oid='is_duplicate',
         )
         is_duplicate_of = colander.SchemaNode(
             colander.String(),
-            title=u'Id',
+            title=_(u'Duplicate Id'),
             missing=u'',
             oid='duplicate_of',
         )
         signature_received = colander.SchemaNode(
             colander.Boolean(),
-            title=_(u'Signature received'),
+            title=_(u'Signature Received'),
             oid='signature_received',
         )
         signature_received_date = colander.SchemaNode(
             colander.Date(),
-            title=_('Datum Unterschriftseingang'),
+            title=_('Signature Receipt Date'),
             validator=Range(
                 min=date(1070, 1, 1),
                 max=date.today(),
@@ -264,11 +285,11 @@ def edit_member(request):
         )
         payment_received = colander.SchemaNode(
             colander.Boolean(),
-            title=_(u'Zahlung eingegangen'),
+            title=_(u'Payment Received'),
         )
         payment_received_date = colander.SchemaNode(
             colander.Date(),
-            title='Datum Zahlungserhalt',
+            title=_(u'Payment Receipt Date'),
             validator=Range(
                 min=date(1970, 1, 1),
                 max=date.today(),
@@ -296,7 +317,7 @@ def edit_member(request):
         )
         accountant_comment = colander.SchemaNode(
             colander.String(),
-            title=u'Staff Comment: (255 letters)',
+            title=_(u'Staff Comment: (255 letters)'),
             missing=u'',
             oid='accountant_comment',
         )
@@ -305,20 +326,20 @@ def edit_member(request):
         """
         Colander schema of the additional data for editing member data.
         """
-        yes_no = ((u'yes', _(u'Yes')),
-                  (u'no', _(u'No')),
-                  (u'dontknow', u'Unbekannt'),)
+        yes_no = (
+            (u'yes', _(u'Yes')),
+            (u'no', _(u'No')),
+            (u'dontknow', _(u'Unknwon')),
+        )
 
         entity_type = colander.SchemaNode(
             colander.String(),
-            title=(u'Person oder Körperschaft?'),
-            description=u'Bitte die Kategorie des Mitglied auswählen.',
+            title=_(u'Member Category'),
+            description=_(u'Please choose the member category.'),
             widget=deform.widget.RadioChoiceWidget(
                 values=(
-                    (u'person',
-                     (u'Person')),
-                    (u'legalentity',
-                     u'Körperschaft'),
+                    (u'person', _(u'Person')),
+                    (u'legalentity', _(u'Legal Entity')),
                 ),
             ),
             missing=u'',
@@ -326,16 +347,13 @@ def edit_member(request):
         )
         membership_type = colander.SchemaNode(
             colander.String(),
-            title=(u'Art der Mitgliedschaft (lt. Satzung, §4)'),
-            description=u'Bitte die Art der Mitgliedschaft auswählen.',
+            title=_(u'Type of Membership (C3S Statute § 4)'),
+            description=_(u'Please choose the type of membership.'),
             widget=deform.widget.RadioChoiceWidget(
                 values=(
-                    (u'normal',
-                     (u'Normales Mitglied')),
-                    (u'investing',
-                     u'Investierendes Mitglied'),
-                    (u'unknown',
-                     u'Unbekannt.'),
+                    (u'normal', _(u'Member')),
+                    (u'investing', _(u'Investing (non-user) member')),
+                    (u'unknown', _(u'Unknown')),
                 ),
             ),
             missing=u'',
@@ -343,7 +361,7 @@ def edit_member(request):
         )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
-            title='Mitglied einer Verwertungsgesellschaft?',
+            title=_('Member of a Collecting Society'),
             widget=deform.widget.RadioChoiceWidget(values=yes_no),
             oid='other_colsoc',
             default=u'',
@@ -351,9 +369,9 @@ def edit_member(request):
         )
         name_of_colsoc = colander.SchemaNode(
             colander.String(),
-            title=u'Falls ja, welche?',
-            description=u' Mehrere Mitgliedschaften bitte durch Kommata '
-                        u'voneinander trennen.',
+            title=_(u'Names of Collecting Societies'),
+            description=_(u'Please separate multiple collecting societies by '
+                          u'comma.'),
             missing=u'',
             oid='colsoc_name',
         )
@@ -364,13 +382,13 @@ def edit_member(request):
         """
         num_shares = colander.SchemaNode(
             colander.Integer(),
-            title='Anzahl Anteile (1-60)',
+            title=_('Number of Shares (1-60)'),
             default='1',
             validator=colander.Range(
                 min=1,
                 max=60,
-                min_err=u'mindestens 1',
-                max_err=u'höchstens 60',
+                min_err=_(u'at least 1'),
+                max_err=_(u'at most 60'),
             ),
             oid='num_shares')
 
@@ -438,8 +456,9 @@ def edit_member(request):
         schema,
         buttons=[
             deform.Button('submit', _(u'Submit')),
-            deform.Button('reset', _(u'Reset'))
+            deform.Button('reset', _(u'Reset')),
         ],
+        renderer=ZPT_RENDERER,
         use_ajax=True,
     )
 
