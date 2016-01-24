@@ -15,6 +15,9 @@ Next Release
 
 - Fix URL for corporation membership application form.
 
+- Extend documentation about production deployment of new application
+  versions.
+
 
 
 1.13
