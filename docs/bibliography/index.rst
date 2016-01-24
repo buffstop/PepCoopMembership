@@ -6,7 +6,8 @@ Bibliography
 .. [Bootstrap] Bootstrap CSS framework, https://getbootstrap.com/
 
 .. [C3S_Statute] C3S: Articles of Association of the Cultural Commons
-   Collecting Society SCE (C3S). http://archive.c3s.cc/legal/C3S_en_v1.0.pdf,
+   Collecting Society SCE (C3S).
+   https://archive.c3s.cc/aktuell/legal/C3S_SCE_en.pdf,
    https://archive.c3s.cc/aktuell/legal/C3S_SCE_de.pdf.
 
 .. [Chameleon] Chameleon template engine for Python,

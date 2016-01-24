@@ -2,9 +2,23 @@ Next Release
 ============
 
 
+- Extend requirements specification and documentation of business processes.
+
+
+
+1.13
+====
+
+
 - Update executive director. (This must be moved to configuration!)
 
-- Extend requirements specification and documentation of business processes.
+- Add progress bar to membership application process.
+
+- Improve usability of membership application process.
+
+- Fix C3S Statute reference to use the version independent URL.
+
+- Fix German Cultural Commons Manifesto link and title.
 
 
 

@@ -3,6 +3,10 @@
 html, body, #top, #container {
     background-color:#d9f0c8 !important;
 }
+.registration-progress-bar {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
 .ueberschrift{
     color:#4dbd38;
     font-weight: bold;

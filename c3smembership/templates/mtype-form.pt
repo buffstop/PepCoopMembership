@@ -78,9 +78,9 @@ $(document).ready(function(){
     </p>
     <p class="infoIndent">
       <span i18n:translate="join-form-statute">The C3S SCE Statute</span>
-      <a href="http://archive.c3s.cc/legal/C3S_de_v1.0.pdf" target="_blank"
+      <a href="https://archive.c3s.cc/aktuell/legal/C3S_SCE_de.pdf" target="_blank"
 	 i18n:translate="join-form-statute-linktitle-de">(german)</a>
-      <a href="http://archive.c3s.cc/legal/C3S_en_v1.0.pdf" target="_blank"
+      <a href="https://archive.c3s.cc/aktuell/legal/C3S_SCE_en.pdf" target="_blank"
 	 i18n:translate="join-form-statute-linktitle-en">(english)</a>
     </p>
 
