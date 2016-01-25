@@ -9,6 +9,14 @@ Next Release
 
 
 
+1.13.1
+======
+
+
+- Fix URL for corporation membership application form.
+
+
+
 1.13
 ====
 
