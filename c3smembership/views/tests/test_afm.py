@@ -96,7 +96,7 @@ class TestViews(unittest.TestCase):
         # self.assertEqual(mailer.outbox[0]., "hello world")
 
         verif_link = "https://yes.c3s.cc/verify/bar@shri.de/12345678"
-        self.assertTrue("hallo foo bar!" in mailer.outbox[0].body)
+        self.assertTrue("Hallo foo bar!" in mailer.outbox[0].body)
         self.assertTrue(verif_link in mailer.outbox[0].body)
 
     def test_success_check_email_redirect(self):
