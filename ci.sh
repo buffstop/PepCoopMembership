@@ -9,6 +9,7 @@
 virtualenv env
 # update setuptools if neccessary
 env/bin/pip install --upgrade pip
+env/bin/pip install -U setuptools
 # set it up
 # this will take a little while and install all necessary dependencies.
 env/bin/python setup.py develop
