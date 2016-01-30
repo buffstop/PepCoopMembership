@@ -9,6 +9,9 @@ Next Release
 
 - Fix tests.
 
+- Cleanup ci.sh. Manual copying of TextInputSliderWidget is not necessary
+  anymore since 1.12-beta.
+
 
 
 1.13.1

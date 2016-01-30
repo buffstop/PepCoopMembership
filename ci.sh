@@ -19,9 +19,6 @@ rm c3sMembership.db
 env/bin/initialize_c3sMembership_db development.ini
 # prepare for tests
 env/bin/pip install nose coverage pep8 pylint pyflakes pyquery
-# customized TextInputSliderWidget needs to be copied in place
-cp  deform/widget.py env/lib/python2.7/site-packages/deform-0.9.9-py2.7.egg/deform/widget.py
-cp  deform/slider.pt env/lib/python2.7/site-packages/deform-0.9.9-py2.7.egg/deform/templates/slider.pt
 #
 # test preparation
 #
