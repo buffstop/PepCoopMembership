@@ -306,6 +306,7 @@ def make_mail_body(appstruct):
     unencrypted = u"""
 Yay!
 we got a membership application through the form: \n
+date of submission:             %s
 first name:                     %s
 last name:                      %s
 date of birth:                  %s
@@ -323,6 +324,7 @@ member of coll. soc.:           %s
   name of coll. soc.:           %s
 
 that's it.. bye!""" % (
+        appstruct['date_of_submission'],
         appstruct['firstname'],
         appstruct['lastname'],
         appstruct['date_of_birth'],  # .strftime("%d.%m.%Y")),  # XXX

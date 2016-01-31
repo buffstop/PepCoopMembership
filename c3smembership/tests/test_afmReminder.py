@@ -98,6 +98,7 @@ class TestReminderViews(unittest.TestCase):
         request.cookies['on_page'] = 1
         request.cookies['order'] = 'asc'
         request.cookies['orderby'] = 'id'
+        request.referrer = ''
 
         mailer = get_mailer(request)
         result = mail_signature_reminder(request)
@@ -125,6 +126,7 @@ class TestReminderViews(unittest.TestCase):
         request.cookies['on_page'] = 1
         request.cookies['order'] = 'asc'
         request.cookies['orderby'] = 'id'
+        request.referrer = ''
 
         mailer = get_mailer(request)
         result = mail_payment_reminder(request)

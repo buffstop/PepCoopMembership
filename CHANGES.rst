@@ -19,6 +19,9 @@ Next Release
 - Add links for sending payment and signature confirmation emails to details
   page.
 
+- Include submission date into membership application notification email to
+  yes@c3s.cc.
+
 
 
 1.13.1

@@ -229,6 +229,7 @@ class TestUtilities(unittest.TestCase):
             'name_of_colsoc': u'Buma',
             'membership_type': u'investing',
             'num_shares': u"23",
+            'date_of_submission': datetime.datetime.now(),
         }
         result = make_mail_body(my_appstruct)
 
@@ -266,6 +267,7 @@ class TestUtilities(unittest.TestCase):
             'num_shares': 7,
             # hä?
             'message_recipient': 'yes@c3s.cc',
+            'date_of_submission': datetime.datetime.now(),
         }
         result = accountant_mail(my_appstruct)
         print result.body
