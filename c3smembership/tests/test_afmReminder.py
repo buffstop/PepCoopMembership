@@ -5,7 +5,6 @@ from pyramid import testing
 from sqlalchemy import engine_from_config
 import transaction
 import unittest
-from sqlalchemy.ext.declarative import declarative_base
 
 from c3smembership.models import (
     C3sMember,
@@ -108,14 +107,10 @@ class TestReminderViews(unittest.TestCase):
         self.assertEqual(len(mailer.outbox), 1)
         self.assertEqual(
             mailer.outbox[0].subject,
-            u"C3S: don't forget to send your form "
-            u"/ Bitte Beitrittsformular einsenden"
+            u"C3S: don't forget to send your membership application form"
         )
-
         self.assertTrue(
             u"Dear SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)
-        self.assertTrue(
-            u"Liebe_r SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)
 
     def test_reminder_payment(self):
         """
@@ -139,11 +134,8 @@ class TestReminderViews(unittest.TestCase):
         self.assertEqual(len(mailer.outbox), 1)
         self.assertEqual(
             mailer.outbox[0].subject,
-            u"C3S: don't forget to pay your shares "
-            u"/ Bitte Anteile bezahlen"
+            u"C3S: don't forget to pay your shares"
         )
 
         self.assertTrue(
             u"Dear SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)
-        self.assertTrue(
-            u"Liebe_r SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)

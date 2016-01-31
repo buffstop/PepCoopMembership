@@ -14,6 +14,8 @@ Next Release
 
 - Update more executive directors. (This must be moved to configuration!)
 
+- Cleanup email templating.
+
 
 
 1.13.1

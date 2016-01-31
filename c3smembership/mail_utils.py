@@ -3,187 +3,78 @@
 Compiles email texts for payment confirmation and signature confirmation
 emails.
 """
+import os
+from pyramid_mailer import get_mailer
 
 
-def make_payment_confirmation_emailbody(member):
+LOCALE_DEFINITIONS = {
+    'de': {
+        'date_format': '%d. %m. %Y',
+    },
+    'en': {
+        'date_format': '%d %b %Y',
+    },
+}
+
+
+def get_locale(locale):
+    return locale if locale in LOCALE_DEFINITIONS else 'en'
+
+
+def get_template_text(template_name, locale):
+    return open(
+        '{base_path}/templates/mail/{template_name}_{locale}.txt'.format(
+            base_path=os.path.dirname(__file__),
+            template_name=template_name,
+            locale=get_locale(locale)),
+        'rb').read().decode('utf-8')
+
+
+def format_date(date, locale):
+    return date.strftime(
+        LOCALE_DEFINITIONS[get_locale(locale)]['date_format'])
+
+
+def get_email_footer(locale):
+    return get_template_text('email_footer', locale)
+
+
+def make_payment_confirmation_email(member):
     """
-    An email body to confirm reception of payment for shares.
+    Gets an email subject and body to confirm the reception of the payment
+    for shares.
     """
-    num_shares = member.num_shares
-    sum_shares = num_shares * 50
-
-    if 'de' in member.locale:
-        body = (
-            u"""Liebes Neumitglied,
-
-Deine Überweisung für """ +
-            unicode(num_shares) +
-            u' Anteil(e) (' +
-            unicode(sum_shares) +
-            u""" Euro) ist auf
-unserem Konto eingegangen.
-
-Falls Probleme aufgetreten sind, melde Dich bitte bei uns (yes@c3s.cc).
-
-Danke für Deinen Beitrag zur C3S!
+    return (
+        get_template_text('payment_confirmation_subject', member.locale),
+        get_template_text('payment_confirmation_body', member.locale).format(
+            num_shares=member.num_shares,
+            sum_shares=member.num_shares * 50,
+            footer=get_email_footer(member.locale)))
 
 
-Liebe Grüße,
-
-Das C3S-Team
-
---""" +
-            u' ' +  # avoid trailing whitespace code formatting error
-            u"""
-      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
-      ::: dein beitrag zu fairer bezahlung für musiker :::
-      :::            https://sustain.c3s.cc            :::
-      ::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-                      :
-              C3S SCE : Cultural Commons Collecting Society
-                      : SCE mit beschränkter Haftung
-                      : Heyestraße 194 : 40625 Düsseldorf : Germany
-                      : https://C3S.cc
-
-       M.eik Michalke :
-          Max Gössler : Geschäftsführende Direktoren
-                      :
-   Meinhard Starostik : Vorsitzender des Verwaltungsrates
-                      :
-              GnR 506 : Genossenschaftsregister AG Düsseldorf
-               USt-ID : DE294690528
-""")
-    else:
-        body = (
-            u"""Dear new member,
-
-Your transfer of """ +
-            unicode(sum_shares) +
-            u' Euro for ' +
-            unicode(num_shares) +
-            u""" share(s) just showed in our bank account.
-
-In case of any problems please don't hesitate to contact us (yes@c3s.cc).
-
-Thanks a lot for your contribution to the C3S!
-
-
-Best wishes,
-
-The C3S Team
-
---""" +
-            u' ' +  # avoid trailing whitespace code formatting error
-            u"""
-      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
-      :::     support fair remuneration for artists    :::
-      :::          https://sustain.c3s.cc/?en          :::
-      ::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-                      :
-              C3S SCE : Cultural Commons Collecting Society
-                      : SCE mit beschränkter Haftung
-                      : Heyestraße 194 : 40625 Düsseldorf : Germany
-                      : https://C3S.cc
-
-       M.eik Michalke :
-          Max Gössler : executive directors
-                      :
-   Meinhard Starostik : chairperson of the board of directors
-                      :
-              GnR 506 : Genossenschaftsregister AG Düsseldorf
-               USt-ID : DE294690528
-""")
-    return body
-
-
-def make_signature_confirmation_emailbody(member):
+def make_signature_confirmation_email(member):
     """
     An email body to confirm reception of signature
     """
-    num_shares = member.num_shares
-    sum_shares = num_shares * 50
-
-    if 'de' in member.locale:
-        body = (
-            u"""Liebes Neumitglied,
-
-Dein Beitrittsformular zur Zeichnung von """ +
-            unicode(num_shares) +
-            u' Anteilen (' +
-            unicode(sum_shares) + u""" Euro) ist sicher bei uns gelandet.
-
-Falls Probleme aufgetreten sind, melde Dich bitte bei uns (yes@c3s.cc).
-
-Schön, dass Du ein Teil der C3S werden möchtest!
+    return (
+        get_template_text('signature_confirmation_subject', member.locale),
+        get_template_text('signature_confirmation_body', member.locale).format(
+            num_shares=member.num_shares,
+            sum_shares=member.num_shares * 50,
+            footer=get_email_footer(member.locale)))
 
 
-Liebe Grüße,
+def send_message(request, message):
+    """
+    Sends a message through the mailer.
 
-Das C3S-Team
-
---""" +
-            u' ' +  # avoid trailing whitespace code formatting error
-            u"""
-      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
-      ::: dein beitrag zu fairer bezahlung für musiker :::
-      :::            https://sustain.c3s.cc            :::
-      ::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-                      :
-              C3S SCE : Cultural Commons Collecting Society
-                      : SCE mit beschränkter Haftung
-                      : Heyestraße 194 : 40625 Düsseldorf : Germany
-                      : https://C3S.cc
-
-       M.eik Michalke :
-          Max Gössler : Geschäftsführende Direktoren
-                      :
-   Meinhard Starostik : Vorsitzender des Verwaltungsrates
-                      :
-              GnR 506 : Genossenschaftsregister AG Düsseldorf
-               USt-ID : DE294690528
-""")
+    In debugging mode the message will be written to the console.
+    """
+    if 'true' in request.registry.settings['testing.mail_to_console']:
+        print(u'Sender: ' + unicode(message.sender))
+        print(u'Receipients: ' + unicode(message.recipients))
+        print(u'Subject: ' + unicode(message.subject))
+        print(message.body.encode('utf-8'))
     else:
-        body = (
-            u"""Dear new member,
-
-Your membership application form to sign """ +
-            unicode(num_shares) +
-            u' shares (' +
-            unicode(sum_shares) +
-            u""" Euro) safely arrived at our homebase.
-
-In case of any problems please don't hesitate to contact us (yes@c3s.cc).
-
-Great that you want to become a part of the C3S!
-
-
-Best wishes,
-
-The C3S Team
-
---""" +
-            u' ' +  # avoid trailing whitespace code formatting error
-            u"""
-      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
-      :::     support fair remuneration for artists    :::
-      :::          https://sustain.c3s.cc/?en          :::
-      ::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-                      :
-              C3S SCE : Cultural Commons Collecting Society
-                      : SCE mit beschränkter Haftung
-                      : Heyestraße 194 : 40625 Düsseldorf : Germany
-                      : https://C3S.cc
-
-       M.eik Michalke :
-          Max Gössler : executive directors
-                      :
-   Meinhard Starostik : chairperson of the board of directors
-                      :
-              GnR 506 : Genossenschaftsregister AG Düsseldorf
-               USt-ID : DE294690528
-""")
-    return body
+        mailer = get_mailer(request)
+        mailer.send(message)

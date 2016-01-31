@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import transaction
-from sqlalchemy import engine_from_config
 from pyramid import testing
-from c3smembership.models import hash_password
 from datetime import date
-from c3smembership.mail_reminders_util import make_payment_reminder_emailbody
+from c3smembership.mail_reminders_util import make_payment_reminder_email
 
 from c3smembership.models import (
     C3sMember,
     DBSession,
-    Base,
 )
+
 
 class TestMailMailConfirmationViews(unittest.TestCase):
 
@@ -44,38 +41,22 @@ class TestMailMailConfirmationViews(unittest.TestCase):
         testing.tearDown()
 
     def test_make_payment_reminder_emailbody(self):
-        payment_reminder_body = make_payment_reminder_emailbody(self.__member)
+        payment_reference_code = u'C3Shares ABCDEFGFOO'
 
-        # make sure the payment reference code is mentioned in the German as 
-        # well as in the English section of the body.
-
-        language_divider = u'+++++++++++++++'
-        language_divider_index = payment_reminder_body.find(language_divider)
-        german_part = payment_reminder_body[:language_divider_index]
-        english_part = payment_reminder_body[language_divider_index + len(language_divider):]
-
-        # make sure the German part is German
-        self.assertTrue(german_part.find('Liebe_r') > 0)
-        self.assertTrue(german_part.find('das Team der C3S') > 0)
-        self.assertTrue(english_part.find('Liebe_r') < 0)
-        self.assertTrue(english_part.find('das Team der C3S') < 0)
+        # test English
+        self.__member.locale = 'en'
+        email_subject, email_body = make_payment_reminder_email(self.__member)
 
         # make sure the English part is English
-        self.assertTrue(english_part.find('Dear') > 0)
-        self.assertTrue(english_part.find('All the best') > 0)
-        self.assertTrue(german_part.find('Dear') < 0)
-        self.assertTrue(german_part.find('All the best') < 0)
+        self.assertTrue('Dear' in email_body)
+        self.assertTrue('All the best' in email_body)
+        self.assertTrue(payment_reference_code in email_body)
 
-        parts = [german_part, english_part]
-        for part in parts:
-            payment_reference_code = u'C3Shares ABCDEFGFOO'
-            occurances = 0
-            index = part.find(payment_reference_code)
-            while index > -1:
-                occurances += 1
-                index = part.find(
-                    payment_reference_code,
-                    index + len(payment_reference_code))
+        # test German
+        self.__member.locale = 'de'
+        email_subject, email_body = make_payment_reminder_email(self.__member)
 
-        	self.assertTrue(occurances == 1)
-
+        # make sure the German part is German
+        self.assertTrue('Liebe_r' in email_body)
+        self.assertTrue('Das Team der C3S' in email_body)
+        self.assertTrue(payment_reference_code in email_body)

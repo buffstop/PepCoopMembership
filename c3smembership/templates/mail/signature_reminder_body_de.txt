@@ -1,0 +1,25 @@
+Liebe_r {first_name} {last_name},
+
+vielen Dank, dass Du Mitglied der C3S werden und uns unterstützen
+möchtest!
+
+Du hast Deine Beitrittserklärung am {submission_date} ausgefüllt. Leider
+fehlt uns aber noch das Formular. Bitte sende es unterschrieben und per Post
+an:
+
+C3S SCE
+Heyestraße 194
+40625 Düsseldorf
+
+Falls Du Deine Beitrittserklärung nicht mehr findest oder andere Fragen
+zum Beitritt hast, melde Dich bitte unter office@c3s.cc.
+
+Wenn Deine Beitrittserklärung eingegangen ist, erhältst Du eine Eingangs-
+bestätigung per E-Mail.
+
+Wir freuen uns darauf, Dich bei der C3S willkommen zu heißen!
+
+Liebe Grüße,
+Das Team der C3S
+
+{footer}

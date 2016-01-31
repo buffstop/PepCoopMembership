@@ -1,0 +1,13 @@
+Dear new member,
+
+Your transfer of {sum_shares}  Euro for {num_shares} share(s) just showed
+in our bank account.
+
+In case of any problems please don't hesitate to contact us (yes@c3s.cc).
+
+Thanks a lot for your contribution to the C3S!
+
+Best wishes,
+The C3S Team
+
+{footer}

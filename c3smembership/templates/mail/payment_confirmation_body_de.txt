@@ -1,0 +1,13 @@
+Liebes Neumitglied,
+
+Deine Überweisung für {num_shares} Anteil(e) im Wert von {sum_shares} Euro
+ist auf unserem Konto eingegangen.
+
+Falls Probleme aufgetreten sind, melde Dich bitte bei uns (yes@c3s.cc).
+
+Danke für Deinen Beitrag zur C3S!
+
+Liebe Grüße
+Das C3S-Team
+
+{footer}
