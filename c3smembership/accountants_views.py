@@ -634,11 +634,16 @@ def mail_signature_reminder(request):
         # if value was None (after migration of DB schema)
         member.sent_signature_reminder = 1
     member.sent_signature_reminder_date = datetime.now()
-    return HTTPFound(request.route_url(
-        'dashboard',
-        number=request.cookies['on_page'],
-        order=request.cookies['order'],
-        orderby=request.cookies['orderby']) + '#member_' + str(member.id))
+    if 'detail' in request.referrer:
+        return HTTPFound(request.route_url(
+            'detail',
+            memberid=request.matchdict['memberid']))
+    else:
+        return HTTPFound(request.route_url(
+            'dashboard',
+            number=request.cookies['on_page'],
+            order=request.cookies['order'],
+            orderby=request.cookies['orderby']) + '#member_' + str(member.id))
 
 
 @view_config(permission='manage',
@@ -665,11 +670,16 @@ def mail_payment_reminder(request):
         # if value was None (after migration of DB schema)
         member.sent_payment_reminder = 1
     member.sent_payment_reminder_date = datetime.now()
-    return HTTPFound(request.route_url(
-        'dashboard',
-        number=request.cookies['on_page'],
-        order=request.cookies['order'],
-        orderby=request.cookies['orderby']) + '#member_' + str(member.id))
+    if 'detail' in request.referrer:
+        return HTTPFound(request.route_url(
+            'detail',
+            memberid=request.matchdict['memberid']))
+    else:
+        return HTTPFound(request.route_url(
+            'dashboard',
+            number=request.cookies['on_page'],
+            order=request.cookies['order'],
+            orderby=request.cookies['orderby']) + '#member_' + str(member.id))
 
 
 @view_config(permission='manage', route_name='dashboard_only')
