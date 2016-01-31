@@ -1,4 +1,4 @@
-Hallo {name},
+Hallo {first_name} {last_name},
 
 wir freuen uns, Dir Deine persönliche Mitgliederbescheinigung aushändigen
 zu können!
@@ -23,22 +23,4 @@ gezeichnet wurden.
 Viele Grüße
 Dein C3S-Team
 
--- 
-      :::::::::::::::::: I sustain C3S! ::::::::::::::::::
-      ::: dein beitrag zu fairer bezahlung für musiker :::
-      :::            https://sustain.c3s.cc            :::
-      ::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-                      :
-              C3S SCE : Cultural Commons Collecting Society
-                      : SCE mit beschränkter Haftung
-                      : Heyestraße 194 : 40625 Düsseldorf : Germany
-                      : https://C3S.cc
-
-       M.eik Michalke :
-          Max Gössler : Geschäftsführende Direktoren
-                      :
-   Meinhard Starostik : Vorsitzender des Verwaltungsrates
-                      :
-              GnR 506 : Genossenschaftsregister AG Düsseldorf
-               USt-ID : DE294690528
+{footer}

@@ -39,6 +39,24 @@ def get_email_footer(locale):
     return get_template_text('email_footer', locale)
 
 
+def make_membership_certificate_email(request, member):
+    """
+    Gets an email subject and body to delivery a link to the membership
+    certificate PDF.
+    """
+    return (
+        get_template_text('membership_certificate_subject', member.locale),
+        get_template_text('membership_certificate_body', member.locale).format(
+            first_name=member.firstname,
+            last_name=member.lastname,
+            url=request.route_url(
+                'certificate_pdf',
+                id=member.id,
+                name=member.get_url_safe_name(),
+                token=member.certificate_token),
+            footer=get_email_footer(member.locale)))
+
+
 def make_payment_confirmation_email(member):
     """
     Gets an email subject and body to confirm the reception of the payment

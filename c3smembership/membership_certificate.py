@@ -27,6 +27,10 @@ import shutil
 import subprocess
 import tempfile
 from types import NoneType
+from c3smembership.mail_utils import (
+    make_membership_certificate_email,
+    send_message,
+)
 
 from c3smembership.models import C3sMember
 from c3smembership.tex_tools import TexTools
@@ -64,44 +68,18 @@ def send_certificate_email(request):
     # create a token for the certificate
     member.certificate_token = make_random_token()
 
-    _url = request.route_url(
-        'certificate_pdf',
-        id=member.id,
-        name=member.get_url_safe_name(),
-        token=member.certificate_token)
-    if DEBUG:
-        print '#'*60
-        print member.certificate_token
-        print _url
-        print '#'*60
+    email_subject, email_body = make_membership_certificate_email(
+        request,
+        member)
 
-    here = os.path.dirname(__file__)
-    message_body_file_name = os.path.join(
-        here,  # construct path relative to *this* file
-        ('templates/mail/membership_certificate_' +
-         member.locale + '.txt'))
-    with open(message_body_file_name, 'rb') as content_file:
-        message_body = content_file.read().decode('utf-8')
-        message_body = message_body.format(
-            name=member.firstname,
-            url=_url
-        )
-
-    mailer = get_mailer(request)
     the_message = Message(
-        subject=u'C3S-Mitgliedsbescheinigung' if (
-            member.locale == 'de') else u'C3S membership certificate',
+        subject=email_subject,
         sender='office@c3s.cc',
-        recipients=[member.email, ],
-        body=message_body
+        recipients=[member.email],
+        body=email_body
     )
-    if 'true' in request.registry.settings[
-            'testing.mail_to_console']:
-        print('== 8< ======================================================')
-        print(the_message.body)
-        print('====================================================== >8 ==')
-    else:
-        mailer.send(the_message)
+    send_message(request, the_message)
+
     member.certificate_email = True
     member.certificate_email_date = datetime.now()
 

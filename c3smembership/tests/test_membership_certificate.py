@@ -167,7 +167,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
         )
         # print mailer.outbox[0].body
         self.assertTrue(
-            u"Hallo SomeFirstnäme," in mailer.outbox[0].body)
+            u"Hallo SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)
         self.assertTrue(
             u"Deine persönliche Mitgliederbescheinig" in mailer.outbox[0].body)
 
@@ -224,7 +224,8 @@ class TestMembershipCertificateViews(unittest.TestCase):
         )
         # print mailer.outbox[0].body
         self.assertTrue(
-            u"Hello AAASomeFirstnäme," in mailer.outbox[0].body)
+            u"Hello AAASomeFirstnäme XXXSomeLastnäme,"
+            in mailer.outbox[0].body)
         self.assertTrue(
             u"your personal membership certificate" in mailer.outbox[0].body)
 
