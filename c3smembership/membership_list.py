@@ -513,8 +513,19 @@ def make_member_view(request):
         )
         DBSession.add(shares)
         member.shares = [shares]
+        # return the user to the page she came from
+        if 'referrer' in request.POST:
+            if request.POST['referrer'] == 'dashboard':
+                return HTTPFound(request.route_url('dashboard_only'))
+            if request.POST['referrer'] == 'detail':
+                return HTTPFound(request.route_url('detail', memberid=member.id))
         return HTTPFound(request.route_url('detail', memberid=member.id))
 
+    referrer = ''
+    if 'dashboard' in request.referrer:
+        referrer = 'dashboard'
+    if 'detail' in request.referrer:
+        referrer = 'detail'
     return {
         'member': member,
         'next_mship_number': C3sMember.get_next_free_membership_number(),
@@ -523,6 +534,9 @@ def make_member_view(request):
         'same_mships_email': C3sMember.get_same_email(member.email),
         'same_mships_dob': C3sMember.get_same_date_of_birth(
             member.date_of_birth),
+        # keep information about the page the user came from in order to
+        # return her to this page
+        'referrer': referrer,
     }
 
 

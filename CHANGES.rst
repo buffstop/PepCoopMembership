@@ -22,6 +22,9 @@ Next Release
 - Include submission date into membership application notification email to
   yes@c3s.cc.
 
+- Let make member function return to page of origin, either dashboard or
+  details page.
+
 
 
 1.13.1

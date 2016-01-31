@@ -43,6 +43,8 @@
                      size="3" maxlength="3"
                      value="${member.id}"
                      class="form-control"/>
+              <input name="referrer" type="hidden"
+                     value="${referrer}"/>
               Mitgliedschaftsdatum (yyyy-mm-dd):
               <input name="membership_date" type="text"/>
               <input name="submit" type="submit"
