@@ -1,19 +1,26 @@
 # -*- coding: utf-8 -*-
+"""
+Compiles email texts for payment confirmation and signature confirmation
+emails.
+"""
 
 
-def make_payment_confirmation_emailbody(_input):
+def make_payment_confirmation_emailbody(member):
     """
-    a mail body to confirm reception of payment for shares
+    An email body to confirm reception of payment for shares.
     """
-    _num_shares = _input.num_shares
-    _sum_shares = _num_shares * 50
+    num_shares = member.num_shares
+    sum_shares = num_shares * 50
 
-    if 'de' in _input.locale:
-        _body = (u"""Liebes Neumitglied,
+    if 'de' in member.locale:
+        body = (
+            u"""Liebes Neumitglied,
 
-Deine Überweisung für """ + str(_num_shares) +
-                 u""" Anteil(e) (""" + str(_sum_shares) +
-                 u""" Euro) ist auf
+Deine Überweisung für """ +
+            unicode(num_shares) +
+            u' Anteil(e) (' +
+            unicode(sum_shares) +
+            u""" Euro) ist auf
 unserem Konto eingegangen.
 
 Falls Probleme aufgetreten sind, melde Dich bitte bei uns (yes@c3s.cc).
@@ -25,7 +32,9 @@ Liebe Grüße,
 
 Das C3S-Team
 
--- 
+--""" +
+            u' ' +  # avoid trailing whitespace code formatting error
+            u"""
       :::::::::::::::::: I sustain C3S! ::::::::::::::::::
       ::: dein beitrag zu fairer bezahlung für musiker :::
       :::            https://sustain.c3s.cc            :::
@@ -44,14 +53,16 @@ Das C3S-Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-
-"""
-                 )
+""")
     else:
-        _body = (u"""Dear new member,
+        body = (
+            u"""Dear new member,
 
-Your transfer of """ + str(_sum_shares) + u" Euro for " + str(_num_shares) +
-                 u""" share(s) just showed in our bank account.
+Your transfer of """ +
+            unicode(sum_shares) +
+            u' Euro for ' +
+            unicode(num_shares) +
+            u""" share(s) just showed in our bank account.
 
 In case of any problems please don't hesitate to contact us (yes@c3s.cc).
 
@@ -62,7 +73,9 @@ Best wishes,
 
 The C3S Team
 
--- 
+--""" +
+            u' ' +  # avoid trailing whitespace code formatting error
+            u"""
       :::::::::::::::::: I sustain C3S! ::::::::::::::::::
       :::     support fair remuneration for artists    :::
       :::          https://sustain.c3s.cc/?en          :::
@@ -81,28 +94,25 @@ The C3S Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
+""")
+    return body
 
 
-"""
-                 )
-
-    return _body
-
-
-def make_signature_confirmation_emailbody(_input):
+def make_signature_confirmation_emailbody(member):
     """
-    a mail body to confirm reception of signature
+    An email body to confirm reception of signature
     """
-    _num_shares = _input.num_shares
-    _sum_shares = _num_shares * 50
+    num_shares = member.num_shares
+    sum_shares = num_shares * 50
 
-    if 'de' in _input.locale:
-        _body = (u"""Liebes Neumitglied,
+    if 'de' in member.locale:
+        body = (
+            u"""Liebes Neumitglied,
 
 Dein Beitrittsformular zur Zeichnung von """ +
-                 str(_num_shares) +
-                 u' Anteilen (' +
-                 str(_sum_shares) + u""" Euro) ist sicher bei uns gelandet.
+            unicode(num_shares) +
+            u' Anteilen (' +
+            unicode(sum_shares) + u""" Euro) ist sicher bei uns gelandet.
 
 Falls Probleme aufgetreten sind, melde Dich bitte bei uns (yes@c3s.cc).
 
@@ -113,7 +123,9 @@ Liebe Grüße,
 
 Das C3S-Team
 
--- 
+--""" +
+            u' ' +  # avoid trailing whitespace code formatting error
+            u"""
       :::::::::::::::::: I sustain C3S! ::::::::::::::::::
       ::: dein beitrag zu fairer bezahlung für musiker :::
       :::            https://sustain.c3s.cc            :::
@@ -132,16 +144,16 @@ Das C3S-Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-
 """)
     else:
-        _body = (u"""Dear new member,
+        body = (
+            u"""Dear new member,
 
 Your membership application form to sign """ +
-                 str(_num_shares) +
-                 u' shares (' +
-                 str(_sum_shares) +
-                 u""" Euro) safely arrived at our homebase.
+            unicode(num_shares) +
+            u' shares (' +
+            unicode(sum_shares) +
+            u""" Euro) safely arrived at our homebase.
 
 In case of any problems please don't hesitate to contact us (yes@c3s.cc).
 
@@ -152,7 +164,9 @@ Best wishes,
 
 The C3S Team
 
--- 
+--""" +
+            u' ' +  # avoid trailing whitespace code formatting error
+            u"""
       :::::::::::::::::: I sustain C3S! ::::::::::::::::::
       :::     support fair remuneration for artists    :::
       :::          https://sustain.c3s.cc/?en          :::
@@ -171,6 +185,5 @@ The C3S Team
                       :
               GnR 506 : Genossenschaftsregister AG Düsseldorf
                USt-ID : DE294690528
-
 """)
-    return _body
+    return body

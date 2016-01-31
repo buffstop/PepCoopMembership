@@ -78,6 +78,7 @@ class TestReminderViews(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         self.config.include('pyramid_mailer.testing')
+        self.config.registry.settings['testing.mail_to_console'] = 'false'
         DBSession.remove()
         self.session = _initTestingDB()
 

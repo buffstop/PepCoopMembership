@@ -498,7 +498,7 @@ def make_member_view(request):
 
         member.membership_accepted = True
         if member.is_legalentity:
-            member.membership_type = 'investing'
+            member.membership_type = u'investing'
         else:
             member.is_legalentity = False
         member.membership_number = C3sMember.get_next_free_membership_number()

@@ -65,6 +65,9 @@ _ = TranslationStringFactory('c3smembership')
 
 
 def translator(term):
+    """
+    Translater factory.
+    """
     return get_localizer(get_current_request()).translate(term)
 
 MY_TEMPLATE_DIR = resource_filename('c3smembership', 'templates/')
@@ -538,24 +541,29 @@ def mail_signature_confirmation(request):
     Send a mail to a membership applicant
     informing her about reception of signature.
     """
-    _id = request.matchdict['memberid']
-    _member = C3sMember.get_by_id(_id)
-    if _member.locale == 'de':
-        _subject = u'[C3S AFM] Wir haben Deine Unterschrift ' + \
-                   u'erhalten. Dankeschön!'
+    member = C3sMember.get_by_id(request.matchdict['memberid'])
+    if member.locale == 'de':
+        subject = u'[C3S AFM] Wir haben Deine Unterschrift ' + \
+                  u'erhalten. Dankeschön!'
     else:
-        _subject = u'[C3S AFM] We have received your signature. Thanks!'
+        subject = u'[C3S AFM] We have received your signature. Thanks!'
 
     message = Message(
-        subject=_subject,
+        subject=subject,
         sender='yes@c3s.cc',
-        recipients=[_member.email],
-        body=make_signature_confirmation_emailbody(_member)
+        recipients=[member.email],
+        body=make_signature_confirmation_emailbody(member)
     )
-    mailer = get_mailer(request)
-    mailer.send(message)
-    _member.signature_confirmed = True
-    _member.signature_confirmed_date = datetime.now()
+
+    # print to console or send mail
+    if 'true' in request.registry.settings['testing.mail_to_console']:
+        print(message.body.encode('utf-8'))
+    else:
+        mailer = get_mailer(request)
+        mailer.send(message)
+
+    member.signature_confirmed = True
+    member.signature_confirmed_date = datetime.now()
     return HTTPFound(request.route_url(
         'dashboard',
         number=request.cookies['on_page'],
@@ -570,24 +578,29 @@ def mail_payment_confirmation(request):
     Send a mail to a membership applicant
     informing her about reception of payment.
     """
-    _id = request.matchdict['memberid']
-    _member = C3sMember.get_by_id(_id)
+    member = C3sMember.get_by_id(request.matchdict['memberid'])
 
-    if _member.locale == 'de':
-        _subject = u'[C3S AFM] Wir haben Deine Zahlung erhalten. Dankeschön!'
+    if member.locale == 'de':
+        subject = u'[C3S AFM] Wir haben Deine Zahlung erhalten. Dankeschön!'
     else:
-        _subject = u'[C3S AFM] We have received your payment. Thanks!'
+        subject = u'[C3S AFM] We have received your payment. Thanks!'
 
     message = Message(
-        subject=_subject,
+        subject=subject,
         sender='yes@c3s.cc',
-        recipients=[_member.email],
-        body=make_payment_confirmation_emailbody(_member)
+        recipients=[member.email],
+        body=make_payment_confirmation_emailbody(member)
     )
-    mailer = get_mailer(request)
-    mailer.send(message)
-    _member.payment_confirmed = True
-    _member.payment_confirmed_date = datetime.now()
+
+    # print to console or send mail
+    if 'true' in request.registry.settings['testing.mail_to_console']:
+        print(message.body.encode('utf-8'))
+    else:
+        mailer = get_mailer(request)
+        mailer.send(message)
+
+    member.payment_confirmed = True
+    member.payment_confirmed_date = datetime.now()
     return HTTPFound(request.route_url(
         'dashboard',
         number=request.cookies['on_page'],
@@ -602,9 +615,8 @@ def mail_signature_reminder(request):
     Send a mail to a membership applicant
     reminding her about lack of signature.
     """
-    _id = request.matchdict['memberid']
-    _member = C3sMember.get_by_id(_id)
-    if isinstance(_member, NoneType):
+    member = C3sMember.get_by_id(request.matchdict['memberid'])
+    if isinstance(member, NoneType):
         request.session.flash(
             'that member was not found! (id: {})'.format(_id),
             'messages'
@@ -617,25 +629,32 @@ def mail_signature_reminder(request):
                 orderby=request.cookies['orderby']))
 
     message = Message(
-        subject=u"C3S: don't forget to send your form / Bitte " + \
-            'Beitrittsformular einsenden',
+        subject=(
+            u'C3S: don\'t forget to send your form / Bitte '
+            u'Beitrittsformular einsenden'),
         sender='office@c3s.cc',
-        recipients=[_member.email],
-        body=make_signature_reminder_emailbody(_member)
+        recipients=[member.email],
+        body=make_signature_reminder_emailbody(member)
     )
-    mailer = get_mailer(request)
-    mailer.send(message)
+
+    # print to console or send mail
+    if 'true' in request.registry.settings['testing.mail_to_console']:
+        print(message.body.encode('utf-8'))
+    else:
+        mailer = get_mailer(request)
+        mailer.send(message)
+
     try:
-        _member.sent_signature_reminder += 1
+        member.sent_signature_reminder += 1
     except TypeError:
         # if value was None (after migration of DB schema)
-        _member.sent_signature_reminder = 1
-    _member.sent_signature_reminder_date = datetime.now()
+        member.sent_signature_reminder = 1
+    member.sent_signature_reminder_date = datetime.now()
     return HTTPFound(request.route_url(
         'dashboard',
         number=request.cookies['on_page'],
         order=request.cookies['order'],
-        orderby=request.cookies['orderby']) + '#member_' + str(_member.id))
+        orderby=request.cookies['orderby']) + '#member_' + str(member.id))
 
 
 @view_config(permission='manage',
@@ -649,14 +668,21 @@ def mail_payment_reminder(request):
     _member = C3sMember.get_by_id(_id)
 
     message = Message(
-        subject=u"C3S: don't forget to pay your shares / Bitte Anteile " + \
-            "bezahlen",
+        subject=(
+            u'C3S: don\'t forget to pay your shares / Bitte Anteile '
+            u'bezahlen'),
         sender='office@c3s.cc',
         recipients=[_member.email],
         body=make_payment_reminder_emailbody(_member)
     )
-    mailer = get_mailer(request)
-    mailer.send(message)
+
+    # print to console or send mail
+    if 'true' in request.registry.settings['testing.mail_to_console']:
+        print(message.body.encode('utf-8'))
+    else:
+        mailer = get_mailer(request)
+        mailer.send(message)
+
     try:  # if value is int
         _member.sent_payment_reminder += 1
     except TypeError:  # pragma: no cover

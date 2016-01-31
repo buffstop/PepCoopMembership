@@ -219,17 +219,17 @@ def gen_cert(member):
         os.path.join(here, '../certificate/sign_max.png'))
 
     # a temporary directory for the latex run
-    _tempdir = tempfile.mkdtemp()
+    tempdir = tempfile.mkdtemp()
 
     latex_file = tempfile.NamedTemporaryFile(
         suffix='.tex',
-        dir=_tempdir,
+        dir=tempdir,
         delete=False,  # directory will be deleted anyways
     )
 
     # using tempfile
     pdf_file = tempfile.NamedTemporaryFile(
-        dir=_tempdir,
+        dir=tempdir,
         delete=False,  # directory will be deleted anyways
     )
     pdf_file.name = latex_file.name.rstrip('.tex')  # + '.pdf'
@@ -361,7 +361,7 @@ def gen_cert(member):
     subprocess.call(
         [
             'pdflatex',
-            '-output-directory=%s' % _tempdir,
+            '-output-directory=%s' % tempdir,
             latex_file.name
         ],
         stdout=open(os.devnull, 'w'),
@@ -371,5 +371,5 @@ def gen_cert(member):
     # return a pdf file
     response = Response(content_type='application/pdf')
     response.app_iter = open(pdf_file.name, "r")
-    shutil.rmtree(_tempdir, ignore_errors=True)  # delete temporary directory
+    shutil.rmtree(tempdir, ignore_errors=True)  # delete temporary directory
     return response
