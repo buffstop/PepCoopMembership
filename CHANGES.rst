@@ -16,6 +16,9 @@ Next Release
 
 - Cleanup email templating.
 
+- Add links for sending payment and signature confirmation emails to details
+  page.
+
 
 
 1.13.1

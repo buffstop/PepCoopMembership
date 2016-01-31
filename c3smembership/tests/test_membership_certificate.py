@@ -154,6 +154,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
         request.cookies['m_on_page'] = 23
         request.cookies['m_order'] = 'asc'
         request.cookies['m_orderby'] = 'id'
+        request.referrer = 'dashboard'
 
         result = send_certificate_email(request)
         # print result
@@ -210,6 +211,7 @@ class TestMembershipCertificateViews(unittest.TestCase):
         request.cookies['m_on_page'] = 23
         request.cookies['m_order'] = 'asc'
         request.cookies['m_orderby'] = 'id'
+        request.referrer = 'dashboard'
 
         result = send_certificate_email(request)
         # print result

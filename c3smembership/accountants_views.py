@@ -554,11 +554,16 @@ def mail_signature_confirmation(request):
 
     member.signature_confirmed = True
     member.signature_confirmed_date = datetime.now()
-    return HTTPFound(request.route_url(
-        'dashboard',
-        number=request.cookies['on_page'],
-        order=request.cookies['order'],
-        orderby=request.cookies['orderby']))
+    if 'detail' in request.referrer:
+        return HTTPFound(request.route_url(
+            'detail',
+            memberid=request.matchdict['memberid']))
+    else:
+        return HTTPFound(request.route_url(
+            'dashboard',
+            number=request.cookies['on_page'],
+            order=request.cookies['order'],
+            orderby=request.cookies['orderby']))
 
 
 @view_config(permission='manage',
@@ -581,11 +586,16 @@ def mail_payment_confirmation(request):
 
     member.payment_confirmed = True
     member.payment_confirmed_date = datetime.now()
-    return HTTPFound(request.route_url(
-        'dashboard',
-        number=request.cookies['on_page'],
-        order=request.cookies['order'],
-        orderby=request.cookies['orderby']))
+    if 'detail' in request.referrer:
+        return HTTPFound(request.route_url(
+            'detail',
+            memberid=request.matchdict['memberid']))
+    else:
+        return HTTPFound(request.route_url(
+            'dashboard',
+            number=request.cookies['on_page'],
+            order=request.cookies['order'],
+            orderby=request.cookies['orderby']))
 
 
 @view_config(permission='manage',

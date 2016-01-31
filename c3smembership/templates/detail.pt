@@ -194,6 +194,14 @@
                  class="btn btn-success"
                  title="${member.signature_received_date} (anklicken zum verneinen)">
                 Ja</a>
+              <a href="${request.route_url('mail_sig_confirmation', memberid=member.id)}"
+                 class="btn btn-success"
+                 tal:condition="not member.signature_confirmed">
+                Bestätigungs-E-Mail verschicken</a>
+              <a href="${request.route_url('mail_sig_confirmation', memberid=member.id)}"
+                 class="btn btn-success"
+                 tal:condition="member.signature_confirmed">
+                Bestätigungs-E-Mail erneut verschicken</a>
             </div>
           </td>
         </tr>
@@ -225,6 +233,14 @@
                  class="btn btn-success"
                  title="${member.payment_received_date} (anklicken zum verneinen)">
                 Ja</a>
+              <a href="${request.route_url('mail_pay_confirmation', memberid=member.id)}"
+                 class="btn btn-success"
+                 tal:condition="not member.payment_confirmed">
+                Bestätigungs-E-Mail verschicken</a>
+              <a href="${request.route_url('mail_pay_confirmation', memberid=member.id)}"
+                 class="btn btn-success"
+                 tal:condition="member.payment_confirmed">
+                Bestätigungs-E-Mail erneut verschicken</a>
             </div>
           </td>
         </tr>
