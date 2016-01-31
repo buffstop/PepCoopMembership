@@ -38,7 +38,7 @@ Das C3S-Team
                       : https://C3S.cc
 
        M.eik Michalke :
- Dr. Holger Schwetter : Geschäftsführende Direktoren
+          Max Gössler : Geschäftsführende Direktoren
                       :
    Meinhard Starostik : Vorsitzender des Verwaltungsrates
                       :
@@ -75,7 +75,7 @@ The C3S Team
                       : https://C3S.cc
 
        M.eik Michalke :
- Dr. Holger Schwetter : executive directors
+          Max Gössler : executive directors
                       :
    Meinhard Starostik : chairperson of the board of directors
                       :
@@ -126,7 +126,7 @@ Das C3S-Team
                       : https://C3S.cc
 
        M.eik Michalke :
- Dr. Holger Schwetter : Geschäftsführende Direktoren
+          Max Gössler : Geschäftsführende Direktoren
                       :
    Meinhard Starostik : Vorsitzender des Verwaltungsrates
                       :
@@ -165,7 +165,7 @@ The C3S Team
                       : https://C3S.cc
 
        M.eik Michalke :
- Dr. Holger Schwetter : executive directors
+          Max Gössler : executive directors
                       :
    Meinhard Starostik : chairperson of the board of directors
                       :

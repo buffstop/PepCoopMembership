@@ -1,6 +1,6 @@
 Hallo {name},
 
-Wir freuen uns, Dir Deine persönliche Mitgliederbescheinigung aushändigen
+wir freuen uns, Dir Deine persönliche Mitgliederbescheinigung aushändigen
 zu können!
 
   {url}
@@ -36,7 +36,7 @@ Dein C3S-Team
                       : https://C3S.cc
 
        M.eik Michalke :
- Dr. Holger Schwetter : Geschäftsführende Direktoren
+          Max Gössler : Geschäftsführende Direktoren
                       :
    Meinhard Starostik : Vorsitzender des Verwaltungsrates
                       :

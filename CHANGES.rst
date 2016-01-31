@@ -12,6 +12,8 @@ Next Release
 - Cleanup ci.sh. Manual copying of TextInputSliderWidget is not necessary
   anymore since 1.12-beta.
 
+- Update more executive directors. (This must be moved to configuration!)
+
 
 
 1.13.1
