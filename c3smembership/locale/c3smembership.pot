@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 1.13.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-01-30 20:22+0100\n"
+"POT-Creation-Date: 2016-02-01 22:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,20 +28,20 @@ msgid "password"
 msgstr ""
 
 #: c3smembership/accountants_views.py:125 c3smembership/administration.py:616
-#: c3smembership/annual_accounting.py:66 c3smembership/edit_member.py:460
-#: c3smembership/new_member.py:224 c3smembership/shares_views.py:94
+#: c3smembership/annual_accounting.py:66 c3smembership/edit_member.py:458
+#: c3smembership/new_member.py:219 c3smembership/shares_views.py:94
 msgid "Submit"
 msgstr ""
 
 #: c3smembership/accountants_views.py:126 c3smembership/administration.py:617
-#: c3smembership/edit_member.py:461 c3smembership/new_member.py:225
+#: c3smembership/edit_member.py:459 c3smembership/new_member.py:220
 #: c3smembership/views/afm.py:352
 msgid "Reset"
 msgstr ""
 
 #: c3smembership/accountants_views.py:137 c3smembership/administration.py:640
-#: c3smembership/annual_accounting.py:91 c3smembership/edit_member.py:479
-#: c3smembership/new_member.py:263 c3smembership/shares_views.py:111
+#: c3smembership/annual_accounting.py:91 c3smembership/edit_member.py:477
+#: c3smembership/new_member.py:258 c3smembership/shares_views.py:111
 #: c3smembership/views/afm.py:375
 msgid "Please note: There were errors, please check the form below."
 msgstr ""
@@ -93,8 +93,8 @@ msgid ""
 "one, please separate them by comma(s)."
 msgstr ""
 
-#: c3smembership/administration.py:608 c3smembership/edit_member.py:450
-#: c3smembership/new_member.py:213 c3smembership/templates/success.pt:71
+#: c3smembership/administration.py:608 c3smembership/edit_member.py:448
+#: c3smembership/new_member.py:208 c3smembership/templates/success.pt:71
 #: c3smembership/views/afm.py:340
 msgid "Membership Requirements"
 msgstr ""
@@ -116,7 +116,7 @@ msgid "Death"
 msgstr ""
 
 #: c3smembership/edit_member.py:137
-msgid "Bankrupsy"
+msgid "Bankruptcy"
 msgstr ""
 
 #: c3smembership/edit_member.py:138
@@ -291,36 +291,36 @@ msgstr ""
 msgid "Please separate multiple collecting societies by comma."
 msgstr ""
 
-#: c3smembership/edit_member.py:387
+#: c3smembership/edit_member.py:385
 msgid "Number of Shares (1-60)"
 msgstr ""
 
-#: c3smembership/edit_member.py:392
+#: c3smembership/edit_member.py:390
 msgid "at least 1"
 msgstr ""
 
-#: c3smembership/edit_member.py:393
+#: c3smembership/edit_member.py:391
 msgid "at most 60"
 msgstr ""
 
-#: c3smembership/edit_member.py:407 c3smembership/edit_member.py:410
+#: c3smembership/edit_member.py:405 c3smembership/edit_member.py:408
 msgid "Date and type of membership loss must be set both or none."
 msgstr ""
 
-#: c3smembership/edit_member.py:429
+#: c3smembership/edit_member.py:427
 msgid "Date membership loss must be larger than membership acceptance date."
 msgstr ""
 
-#: c3smembership/edit_member.py:439 c3smembership/new_member.py:208
+#: c3smembership/edit_member.py:437 c3smembership/new_member.py:203
 #: c3smembership/templates/success.pt:59 c3smembership/views/afm.py:337
 msgid "Personal Data"
 msgstr ""
 
-#: c3smembership/edit_member.py:442
+#: c3smembership/edit_member.py:440
 msgid "Membership Bureaucracy"
 msgstr ""
 
-#: c3smembership/edit_member.py:453 c3smembership/new_member.py:216
+#: c3smembership/edit_member.py:451 c3smembership/new_member.py:211
 #: c3smembership/templates/success.pt:79 c3smembership/views/afm.py:343
 msgid "Shares"
 msgstr ""
