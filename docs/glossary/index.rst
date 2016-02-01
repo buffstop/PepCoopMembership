@@ -18,7 +18,7 @@ Glossary
 - Arbitration court (German "Schiedsgericht", the [C3S_Statute]_ used "court
   of arbitration" before), see [C3S_Statute]_ § 12 II d.
 
-- Bankrupsy (German "Konkurs"), see [EU_CR_1435_2003_SCE]_ art. 15(1)
+- Bankruptcy (German "Konkurs"), see [EU_CR_1435_2003_SCE]_ art. 15(1)
 
 - Chairperson of the administrative board (German "Vorsitzende(r) des
   Verwaltungsrats"), see [EU_CR_1435_2003_SCE]_ art. 38(1) [C3S_Statute]_ § 15

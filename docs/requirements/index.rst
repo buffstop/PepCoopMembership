@@ -146,7 +146,7 @@ contain the following attributes:
   decision of the administrative board
 - Date of loss of membership (§ 30 II 1 3. [GenG]_)
 - Justifying facts of the loss of membership (§ 30 II 2 [GenG]_), e.g.
-  resignation, expulsion, death, bankrupsy
+  resignation, expulsion, death, bankruptcy
 
 Documents which are related to the acquisition or loss of membership must be
 kept for three years until the end of the year in which the loss of membership
@@ -259,12 +259,12 @@ Membership shall be lost upon death (art. 15(1) [EU_CR_1435_2003_SCE]_, § 77
 
 
 
-Upon Bankrupsy
-==============
+Upon Bankruptcy
+===============
 
 
-Membership shall be lost upon bankrupsy (art. 15(1) [EU_CR_1435_2003_SCE]_, §
-77a [GenG]_, § 4 IV d [C3S_Statute]_).
+Membership shall be lost upon bankruptcy (art. 15(1) [EU_CR_1435_2003_SCE]_, §§
+66a, 77a [GenG]_, § 4 IV d [C3S_Statute]_).
 
 **TODO:** *Elaborate.*
 

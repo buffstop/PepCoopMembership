@@ -134,7 +134,7 @@ def edit_member(request):
         ('resignation', _(u'Resignation')),
         ('expulsion', _(u'Expulsion')),
         ('death', _(u'Death')),
-        ('bankrupsy', _(u'Bankrupsy')),
+        ('bankruptcy', _(u'Bankruptcy')),
         ('shares_transfer', _(u'Transfer of remaining shares'))
     )
 
