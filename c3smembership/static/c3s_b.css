@@ -75,7 +75,9 @@ input[type=text], select {
 }
 /* error messages: enlarge font a bit */
 .error {
-    font-size:120%;}
+    font-size: 120%;
+    color: #a94442;
+}
 /* the number of shares display */
 .num_shares_input {
     border: 0; color: #4dbd38; font-weight: bold;
