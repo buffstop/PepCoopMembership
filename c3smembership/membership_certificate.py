@@ -136,11 +136,10 @@ def generate_certificate(request):
         assert(str(token) in str(member.certificate_token))
         # check age of token
         from datetime import timedelta
-        _2weeks = timedelta(weeks=2)
-        token_date = member.certificate_email_date
-        present = datetime.now()
-        _delta = present - token_date
-        assert(_delta < _2weeks)
+        two_weeks = timedelta(weeks=2)
+        assert(member.certificate_email_date is not None)
+        delta = datetime.now() - member.certificate_email_date
+        assert(delta < two_weeks)
     except AssertionError:
         return Response(
             'Not found. Please contact office@c3s.cc. <br /><br /> '
