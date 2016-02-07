@@ -312,7 +312,7 @@ def new_member(request):
         )
         if 'legalentity' in appstruct['membership_info']['entity_type']:
             # print "this is a legal entity"
-            member.membership_type = 'investing'
+            member.membership_type = u'investing'
             member.is_legalentity = True
 
         dbsession = DBSession()

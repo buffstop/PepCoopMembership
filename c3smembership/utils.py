@@ -247,8 +247,8 @@ def generate_csv(appstruct):
         appstruct['postcode'],
         appstruct['city'],
         appstruct['country'],  # # # country
-        'investing' if appstruct[
-            'membership_type'] == 'investing' else 'normal',
+        u'investing' if appstruct[
+            'membership_type'] == u'investing' else u'normal',
         #appstruct['opt_URL'],
         #appstruct['opt_band'],
         appstruct['date_of_birth'],
