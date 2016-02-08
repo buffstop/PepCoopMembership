@@ -1,5 +1,5 @@
-Next Release
-============
+1.14
+====
 
 
 - Extend requirements specification and documentation of business processes.
@@ -11,6 +11,9 @@ Next Release
 
 - Cleanup ci.sh. Manual copying of TextInputSliderWidget is not necessary
   anymore since 1.12-beta.
+
+- Handle loss of membership including resignation, expulsion, death,
+  bankrupsy, winding-up and transfer of remaining shares.
 
 
 
