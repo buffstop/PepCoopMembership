@@ -55,6 +55,20 @@ LaTeX pdf compilation:
 
    $ sudo apt-get install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra pgf texlive-lang-german texlive-luatex
 
+Setup:
+::
+
+   $ virtualenv env
+   $ env/bin/python setup.py develop
+
+You might have to update the version of setuptools in your virtual environment
+to get a recent version, then repeat the step above:
+::
+   > mock requires setuptools>=17.1. Aborting installation
+   > error: Setup script exited with 1
+
+   $ env/bin/pip install -U setuptools
+
 Documentation:
 ::
 
@@ -62,12 +76,6 @@ Documentation:
    $ mkdir utils
    $ wget 'http://downloads.sourceforge.net/project/plantuml/plantuml.jar' -O utils/plantuml.jar
    $ env/bin/pip install sphinx sphinxcontrib-plantuml
-
-Setup:
-::
-
-   $ virtualenv env
-   $ env/bin/python setup.py develop
 
 Creating an initial database:
 ::
