@@ -2,6 +2,24 @@ Next Release
 ============
 
 
+- Update more executive directors. (This must be moved to configuration!)
+
+- Cleanup email templating.
+
+- Add links for sending payment and signature confirmation emails to details
+  page.
+
+- Include submission date into membership application notification email.
+
+- Let make member function return to page of origin, either dashboard or
+  details page.
+
+
+
+1.14
+====
+
+
 - Extend requirements specification and documentation of business processes.
 
 - Extend documentation about production deployment of new application
@@ -12,18 +30,8 @@ Next Release
 - Cleanup ci.sh. Manual copying of TextInputSliderWidget is not necessary
   anymore since 1.12-beta.
 
-- Update more executive directors. (This must be moved to configuration!)
-
-- Cleanup email templating.
-
-- Add links for sending payment and signature confirmation emails to details
-  page.
-
-- Include submission date into membership application notification email to
-  yes@c3s.cc.
-
-- Let make member function return to page of origin, either dashboard or
-  details page.
+- Handle loss of membership including resignation, expulsion, death,
+  bankrupsy, winding-up and transfer of remaining shares.
 
 
 
@@ -37,7 +45,7 @@ Next Release
   versions.
 
 - Handle loss of membership including resignation, expulsion, death,
-  bankrupsy and transfer of remaining shares.
+  bankruptcy and transfer of remaining shares.
 
 - Introduce tex tools for escaping special characters.
 

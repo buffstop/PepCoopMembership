@@ -342,7 +342,7 @@ class C3sMember(Base):
     # - resignation
     # - expulsion
     # - death
-    # - bankrupsy
+    # - bankruptcy
     # - transfer of remaining shares
     membership_loss_type = Column(Unicode(255))
 
