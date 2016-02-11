@@ -21,11 +21,11 @@ import os
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 from pyramid.response import Response
-from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 import shutil
 import subprocess
 import tempfile
+import time
 from types import NoneType
 from c3smembership.mail_utils import (
     make_membership_certificate_email,
@@ -308,7 +308,8 @@ def gen_cert(member):
     if member.is_legalentity:
         latex_data += '\n\\def\\company{%s}' % TexTools.escape(member.lastname)
     if member.address2 is not u'':  # add address part 2 iff exists
-        latex_data += '\n\\def\\addressTwo{%s}' % TexTools.escape(member.address2)
+        latex_data += '\n\\def\\addressTwo{%s}' % TexTools.escape(
+            member.address2)
     if member.num_shares > 1:  # how many shares?
         if member.num_shares == 2:  # iff member has exactely two shares...
             latex_data += '\n\\def\\txtBlkAddShares{%s.}' % one_more_share
@@ -344,6 +345,11 @@ def gen_cert(member):
         stdout=open(os.devnull, 'w'),
         stderr=subprocess.STDOUT  # hide output
     )
+    # add some time for things to settle down. that might fix tests and
+    # user experience, because sometimes the PDF seems incomplete
+    # when trying to ship it:
+    # > [Errno 2] No such file or directory: '/tmp/tmp34xF73/tmpKJ5Iq.pdf'
+    time.sleep(1)
 
     # return a pdf file
     response = Response(content_type='application/pdf')
