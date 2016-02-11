@@ -47,7 +47,7 @@ test_requirements = [
 
 docs_require = [
     'sphinx',  # for generating the documentation
-    'sphinxcontrib.plantuml',
+    'sphinxcontrib-plantuml',
 ]
 
 if sys.version_info[:3] < (2, 5, 0):
