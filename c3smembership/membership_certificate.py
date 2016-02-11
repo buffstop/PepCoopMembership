@@ -227,8 +227,7 @@ def gen_cert(member):
         dir=tempdir,
         delete=False,  # directory will be deleted anyways
     )
-    pdf_file.name = latex_file.name.rstrip('.tex')  # + '.pdf'
-    pdf_file.name += '.pdf'
+    pdf_file.name = latex_file.name.replace('.tex', '.pdf')
 
     is_founder = True if 'dungHH_' in member.email_confirm_code else False
     # prepare the certificate text
@@ -363,11 +362,6 @@ def gen_cert(member):
         stdout=open(os.devnull, 'w'),
         stderr=subprocess.STDOUT  # hide output
     )
-    # add some time for things to settle down. that might fix tests and
-    # user experience, because sometimes the PDF seems incomplete
-    # when trying to ship it:
-    # > [Errno 2] No such file or directory: '/tmp/tmp34xF73/tmpKJ5Iq.pdf'
-    time.sleep(1)
 
     # return a pdf file
     response = Response(content_type='application/pdf')
