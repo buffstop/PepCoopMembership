@@ -20,10 +20,12 @@ While developing these tests, it comes in handy to have Xephyr installed,
 a nested X server, so you see what is going on:
 selenium/webdriver makes the browser do things.
 """
+import logging
 import os
 # from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.remote_connection import LOGGER
 from subprocess import call
 import time
 import unittest
@@ -33,6 +35,7 @@ from webdriver_utils import (
     Client
 )
 
+LOGGER.setLevel(logging.WARNING)  # silence logging
 
 """
 this setting controls whether the browser will be visible (1) or not (0)
