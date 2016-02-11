@@ -83,13 +83,13 @@ def send_certificate_email(request):
     member.certificate_email = True
     member.certificate_email_date = datetime.now()
 
-    try:
+    try:  # pragma: no cover
         if 'detail' in request.referrer:
             _special_condition = True
-    except TypeError:
+    except TypeError:  # pragma: no cover
         pass
 
-    if _special_condition:
+    if _special_condition:  # pragma: no cover
         return HTTPFound(
             location=request.referrer +
             '#certificate'
@@ -103,7 +103,8 @@ def send_certificate_email(request):
                     order=request.cookies['m_order'],
                     orderby=request.cookies['m_orderby']) +
                 '#member_' + str(member.id))
-        except KeyError:  # iff no good cookie found
+        except KeyError:  # pragma: no cover
+            # iff no good cookie found
             return HTTPFound(
                 location=request.route_url(
                     'membership_listing_backend',
@@ -118,6 +119,9 @@ def send_certificate_email(request):
 def generate_certificate(request):
     '''
     Generate a membership_certificate for a member.
+
+    Member must posess a link containing an id and a valid token.
+    Headquarters sends links to members upon request.
     '''
     mid = request.matchdict['id']
     token = request.matchdict['token']
@@ -125,15 +129,20 @@ def generate_certificate(request):
     try:
         member = C3sMember.get_by_id(mid)
 
-        if DEBUG:
+        if DEBUG:  # pragma: no cover
             print member.firstname
             print member.certificate_token
             print type(member.certificate_token)  # NoneType
             print token
             print type(token)  # unicode
+
+        # token may not ne None
         assert(member.certificate_token is not None)
+        # token must match entry in database
         assert(str(member.certificate_token) in str(token))
+        # and database entry must match token
         assert(str(token) in str(member.certificate_token))
+
         # check age of token
         from datetime import timedelta
         two_weeks = timedelta(weeks=2)
@@ -142,7 +151,8 @@ def generate_certificate(request):
         assert(delta < two_weeks)
     except AssertionError:
         return Response(
-            'Not found. Please contact office@c3s.cc. <br /><br /> '
+            'Not found. Or invalid credentials.  <br /><br /> '
+            'Please contact office@c3s.cc. <br /><br /> '
             'Nicht gefunden. Bitte office@c3s.cc kontaktieren.',
             status='404 Not Found',
         )
@@ -153,17 +163,25 @@ def generate_certificate(request):
              route_name='certificate_pdf_staff')
 def generate_certificate_staff(request):
     '''
-    Generate a membership_certificate for staffers.
+    Generate the membership_certificate of any member for staffers.
     '''
     mid = request.matchdict['id']
+    # print("Member id from matchdict: {}".format(mid))
 
+    # chech if member exists
     try:
         member = C3sMember.get_by_id(mid)
-        assert(not isinstance(member, NoneType))
+        assert(member is not None)
     except AssertionError:
         return Response(
             'Not found. Please check URL.',
         )
+    # check if her membership was accepted
+    try:
+        assert(member.membership_accepted)
+    except AssertionError:
+        return Response(
+            'Member with this id ({}) is not an accepted member!'.format(mid))
     return gen_cert(member)
 
 
@@ -300,7 +318,7 @@ def gen_cert(member):
         exec_dir,
         mship_num_text
     )
-    if DEBUG:
+    if DEBUG:  # pragma: no cover
         print('#'*60)
         print(member.is_legalentity)
         print(member.lastname)
@@ -325,7 +343,7 @@ def gen_cert(member):
     # finish the latex document
     latex_data += '\n\\input{%s}' % latex_footer_tex
 
-    if DEBUG:
+    if DEBUG:  # pragma: no cover
         print '*' * 70
         print('*' * 30, 'latex data: ', '*' * 30)
         print '*' * 70
