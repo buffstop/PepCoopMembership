@@ -259,13 +259,15 @@ def import_db(request):
 @view_config(renderer='templates/import.pt',
              permission='manage',
              route_name='import_with_ids')
-def import_db_with_ids(request):
+def import_db_with_ids(request):  # pragma: no cover
     """
     Import the contents of import.csv to the database
     and **retain the given ids**.
 
     This is a special case.
     Can be useful when restoring datasets from backups.
+
+    XXX TODO: implement a test-case
     """
     try:  # check if the file exists
         with open('import/import.csv', 'r') as f:
@@ -491,9 +493,11 @@ def export_db(request):
 @view_config(renderer='csv',
              permission='manage',
              route_name='export_yes_emails')
-def export_yes_emails(request):
+def export_yes_emails(request):  # pragma: no cover
     """
     Export the members email addresses to a CSV file.
+
+    XXX TODO: implement a test-case
     """
     datasets = C3sMember.member_listing(
         "id", how_many=C3sMember.get_number(), order='asc')
@@ -510,9 +514,11 @@ def export_yes_emails(request):
 @view_config(renderer='csv',
              permission='manage',
              route_name='export_members')
-def export_memberships(request):
+def export_memberships(request):  # pragma: no cover
     """
     Export the database to a CSV file.
+
+    XXX TODO: implement a test-case
     """
     _num = C3sMember.get_number()
     datasets = C3sMember.get_members(

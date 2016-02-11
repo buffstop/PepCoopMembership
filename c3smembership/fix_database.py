@@ -14,7 +14,7 @@ from c3smembership.models import (
 @view_config(
     route_name='fix_dob',
     permission='manage')
-def fix_date_of_acquisition(request):
+def fix_date_of_acquisition(request):  # pragma: no cover
     '''
     fix the database: date of acquisition for shares must be corrected
 
@@ -54,7 +54,7 @@ def fix_date_of_acquisition(request):
 
 @view_config(route_name='fix_database',
              permission='manage')
-def fix_database(request):
+def fix_database(request):  # pragma: no cover
     '''
     fix the database: correct values/codes for countries
     '''

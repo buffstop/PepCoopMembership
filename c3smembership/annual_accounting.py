@@ -36,10 +36,11 @@ from c3smembership.views import _
     permission='manage',
     route_name='annual_reporting'
 )
-def annual_report(request):
+def annual_report(request):  # pragma: no cover
     """
     Sift, sort, count and calculate data for the report of a given timeframe.
 
+    XXX TODO write testcases for this
     """
     # defaults
     start_date = datetime(date.today().year, 1, 1)  # first day of this year

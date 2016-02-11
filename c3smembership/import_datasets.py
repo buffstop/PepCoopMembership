@@ -32,7 +32,7 @@ import unicodecsv
 
 @view_config(permission='manage',
              route_name='import_founders')
-def import_founders(request):
+def import_founders(request):  # pragma: no cover
     '''
     Import the list of founders (CSV).
     '''
@@ -144,7 +144,7 @@ def import_founders(request):
 
 @view_config(permission='manage',
              route_name='import_crowdfunders')
-def import_crowdfunders(request):
+def import_crowdfunders(request):  # pragma: no cover
     '''
     Import the list of crowdfunders (CSV) to the membership database.
     '''
@@ -349,7 +349,7 @@ def import_crowdfunders(request):
 
 @view_config(permission='manage',
              route_name='fix_import_crowdfunders')
-def fix_import_crowdfunders(request):
+def fix_import_crowdfunders(request):   # pragma: no cover
     '''
     Fix the import of
     the list of crowdfunders to the membership database.

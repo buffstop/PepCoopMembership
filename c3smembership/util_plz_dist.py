@@ -8,8 +8,10 @@ from c3smembership.models import C3sMember
     renderer='templates/postal_codes_de.pt',
     permission='manage',
     route_name='plz_dist')
-def plz_dist(request):
-
+def plz_dist(request):  # pragma: no cover
+    """
+    XXX TODO: write a test case
+    """
     codes = C3sMember.get_postal_codes_de()
 
     codes_and_freq = {}

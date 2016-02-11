@@ -86,7 +86,7 @@ def main(argv=sys.argv):
             DBSession.add(accountants_group)
             DBSession.flush()
             # print("adding group staff")
-        except:
+        except:  # pragma: no cover
             print("could not add group staff.")
             # pass
     with transaction.manager:
@@ -101,7 +101,7 @@ def main(argv=sys.argv):
             DBSession.add(staffer1)
             # print("adding staff rut")
             DBSession.flush()
-        except:
+        except:  # pragma: no cover
             print("it borked! (rut)")
             # pass
     # one more staffer
@@ -116,7 +116,7 @@ def main(argv=sys.argv):
             DBSession.add(staffer2)
             # print("adding staff reel")
             DBSession.flush()
-        except:
+        except:  # pragma: no cover
             print("it borked! (reel)")
             # pass
     # a member, actually a membership form submission
@@ -144,7 +144,7 @@ def main(argv=sys.argv):
         try:
             DBSession.add(member1)
             # print("adding Firstnäme")
-        except:
+        except:  # pragma: no cover
             pass
 
     with transaction.manager:
@@ -277,7 +277,6 @@ def main(argv=sys.argv):
         legal_entity_en.is_legalentity = True
         DBSession.add(legal_entity_en)
 
-
         # even more members
         # import random
         # import string
@@ -329,6 +328,7 @@ def init():
     # command.
     alembic_cfg = Config('alembic.ini')
     command.stamp(alembic_cfg, 'head')
+
     # with transaction.manager:
     #     accountants_group = Group(name=u"staff")
     #     staffer1 = C3sStaff(
