@@ -27,3 +27,17 @@ Continuous Integration
 ----------------------
 
 We have a Jenkins instance run our codes tests after every new commit.
+
+
+Test Documentation
+------------------
+
+The documentation particles below are generated from the docstrings in the
+actual Python test code. 
+
+
+.. toctree::
+   :maxdepth: 2
+   :glob:
+
+   *

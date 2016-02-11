@@ -1,4 +1,19 @@
 # -*- coding: utf-8 -*-
+"""
+This module holds some Unit Tests for the 2015 Membership Dues functionality.
+
+* send a single email
+* send many emails (batch mode)
+* reduce somebodies dues
+* acknowledge incoming payments
+
+A helper function named *_initTestingDB* is used to set up a database
+for these tests: have some test data.
+
+* normal members (english/german)
+* investing members (english/german)
+* legal entities (english/german)
+"""
 
 from datetime import (
     date,
@@ -19,6 +34,9 @@ from c3smembership.models import (
 
 
 def _initTestingDB():
+    """
+    Set up a database for these tests: have some test data.
+    """
     my_settings = {'sqlalchemy.url': 'sqlite:///:memory:', }
     engine = engine_from_config(my_settings)
     DBSession.configure(bind=engine)
@@ -158,7 +176,7 @@ def _initTestingDB():
 
 class TestDues15Views(unittest.TestCase):
     """
-    very basic tests for the main views
+    Basic tests for the views concerning membership dues (2015 edition)
     """
     def setUp(self):
         self.config = testing.setUp()
@@ -181,6 +199,11 @@ class TestDues15Views(unittest.TestCase):
         assert len(res) == 10
 
     def test_calculate_partial_dues15(self):
+        """
+        A test to check if partial dues are calculated the right way.
+
+        "Partial dues" means you have to pay for half a year only, for example.
+        """
         from c3smembership.views.membership_dues import (
             calculate_partial_dues15)
         member = C3sMember.get_by_id(1)
@@ -211,6 +234,9 @@ class TestDues15Views(unittest.TestCase):
         assert res == (u'q4_2015', D('12.50'))
 
     def test_string_start_quarter(self):
+        """
+        Tests for the strings used for partial time spans.
+        """
         from c3smembership.views.membership_dues import (
             string_start_quarter)
         member = C3sMember.get_by_id(1)
@@ -714,8 +740,8 @@ class TestDues15Views(unittest.TestCase):
         _number_of_invoices_after_reduction = len(Dues15Invoice.get_all())
 
         assert(  # two new invoices must have been issued
-            (_number_of_invoices_before_reduction + 2)
-            == _number_of_invoices_after_reduction)
+            (_number_of_invoices_before_reduction + 2) ==
+            _number_of_invoices_after_reduction)
         assert(_number_of_invoices_after_reduction == 4)
         assert('detail' in res_reduce.headers['Location'])  # 302 to detail p.
         assert(_m1_amount_reduced != m1.dues15_amount_reduced)  # changed!
@@ -904,7 +930,8 @@ class TestDues15Views(unittest.TestCase):
         self.assertEqual(m1.dues15_paid_date,
                          datetime(2015, 9, 11, 0, 0))
         # the balance is the original amount subtracted by the partial payment
-        self.assertEqual(m1.dues15_balance, D(m1.dues15_amount) - partial_payment_amount)
+        self.assertEqual(
+            m1.dues15_balance, D(m1.dues15_amount) - partial_payment_amount)
         # and the account is not balanced.
         self.assertEqual(m1.dues15_balanced, False)
 

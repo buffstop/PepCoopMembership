@@ -12,7 +12,9 @@ from c3smembership.models import (
 
 
 class TestMailMailConfirmationViews(unittest.TestCase):
-
+    """
+    Test the emails that are sent to confirm email addresses.
+    """
     def setUp(self):
         self.__member = C3sMember(  # german
             firstname=u'SomeFirstnäme',
@@ -41,6 +43,9 @@ class TestMailMailConfirmationViews(unittest.TestCase):
         testing.tearDown()
 
     def test_make_payment_reminder_emailbody(self):
+        """
+        test creation of email bodies for both english and german versions
+        """
         payment_reference_code = u'C3Shares ABCDEFGFOO'
 
         # test English

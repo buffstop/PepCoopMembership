@@ -5,21 +5,21 @@ from pyramid import testing
 from sqlalchemy import engine_from_config
 import transaction
 import unittest
-from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy.ext.declarative import declarative_base
 
 from c3smembership.models import (
     C3sMember,
     DBSession,
     Base,
 )
-#Base = declarative_base()
+# Base = declarative_base()
 
 
 def _initTestingDB():
-    #from sqlalchemy import create_engine
-    #from c3smembership.models import initialize_sql
-    #session = initialize_sql(create_engine('sqlite:///memory'))
-    #session = DBSession
+    # from sqlalchemy import create_engine
+    # from c3smembership.models import initialize_sql
+    # session = initialize_sql(create_engine('sqlite:///memory'))
+    # session = DBSession
     my_settings = {
         'sqlalchemy.url': 'sqlite:///:memory:', }
     engine = engine_from_config(my_settings)
@@ -74,7 +74,7 @@ def _initTestingDB():
 
 class TestMTypeQueryViews(unittest.TestCase):
     """
-    tests for the membership statusquery views
+    tests for the membership status query views
     """
     def setUp(self):
         self.config = testing.setUp()
@@ -96,7 +96,7 @@ class TestMTypeQueryViews(unittest.TestCase):
         from c3smembership.administration import mail_mtype_fixer_link
         self.config.add_route('join', '/')
         self.config.add_route('dashboard', '/dashboard/0/id/asc')
-        #from pyramid_mailer import get_mailer
+        # from pyramid_mailer import get_mailer
         request = testing.DummyRequest()
         request.matchdict = {'afmid': '10000'}  # invalid!
         request.cookies['on_page'] = 1
@@ -183,7 +183,7 @@ class TestMTypeQueryViews(unittest.TestCase):
         request.cookies['order'] = 'asc'
         request.cookies['orderby'] = 'id'
 
-        mailer = get_mailer(request)
+        # mailer = get_mailer(request)
         result = membership_status_fixer(request)
 
         self.assertTrue(

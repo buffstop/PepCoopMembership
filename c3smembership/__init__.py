@@ -66,7 +66,7 @@ def main(global_config, **settings):
     config.add_renderer(name='csv',
                         factory='c3smembership.renderers.CSVRenderer')
 
-    ## Membership application process
+    # ## Membership application process
     # Step 1 (join.pt): home is /, the membership application form
     config.add_route('join', '/')
     # Step 2 (success.pt): check and edit data

@@ -22,7 +22,7 @@ from datetime import (
 
 class ImportExportTests(unittest.TestCase):
     """
-    check import of CVS data
+    check import of CSV data
     """
     def setUp(self):
         self.config = testing.setUp()

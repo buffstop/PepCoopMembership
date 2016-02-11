@@ -429,16 +429,28 @@ class TestMembershipCertificateViews(unittest.TestCase):
             generate_certificate_staff
         request = testing.DummyRequest()
 
+        # wrong id
         request.matchdict = {
             'id': '1000',  # token is not necessary here
         }
         result = generate_certificate_staff(request)
         self.assertTrue('Not found. Please check URL.' in result.body)
+
+        # membership not accepted
         request.matchdict = {
             'id': '1',  # token is not necessary here
         }
         result = generate_certificate_staff(request)
+        self.assertTrue('is not an accepted member' in result.body)
 
+        # accepted member
+        m1 = C3sMember.get_by_id(1)
+        m1.membership_accepted = True
+        request.matchdict = {
+            'id': '1',  # token is not necessary here
+        }
+        result = generate_certificate_staff(request)
+        # print("result: {}".format(result))
         if DEBUG:  # pragma: no cover
             print("size of resulting certificate PDF: {}".format(
                 len(result.body)))
