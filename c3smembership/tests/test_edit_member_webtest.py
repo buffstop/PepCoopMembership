@@ -36,11 +36,8 @@ class EditMemberTests(unittest.TestCase):
         """
         self.config = testing.setUp()
         self.config.include('pyramid_mailer.testing')
-        try:
-            DBSession.close()
-            DBSession.remove()
-        except:
-            pass
+        DBSession.close()
+        DBSession.remove()
         my_settings = {
             'sqlalchemy.url': 'sqlite:///:memory:',
             'available_languages': 'da de en es fr',
@@ -54,11 +51,8 @@ class EditMemberTests(unittest.TestCase):
         with transaction.manager:
                 # a group for accountants/staff
             accountants_group = Group(name=u"staff")
-            try:
-                DBSession.add(accountants_group)
-                DBSession.flush()
-            except:
-                pass
+            DBSession.add(accountants_group)
+            DBSession.flush()
             # staff personnel
             staffer1 = C3sStaff(
                 login=u"rut",
@@ -66,12 +60,9 @@ class EditMemberTests(unittest.TestCase):
                 email=u"noreply@c3s.cc",
             )
             staffer1.groups = [accountants_group]
-            try:
-                DBSession.add(accountants_group)
-                DBSession.add(staffer1)
-                DBSession.flush()
-            except:
-                pass
+            DBSession.add(accountants_group)
+            DBSession.add(staffer1)
+            DBSession.flush()
 
         app = main({}, **my_settings)
         self.testapp = TestApp(app)
@@ -84,7 +75,8 @@ class EditMemberTests(unittest.TestCase):
         DBSession.remove()
         testing.tearDown()
 
-    def create_membership_applicant(self):
+    @staticmethod
+    def __create_membership_applicant():
         """
         Create and return a membership applicant
         """
@@ -100,11 +92,11 @@ class EditMemberTests(unittest.TestCase):
                 city=u"Footown Mäh",
                 country=u"Foocountry",
                 locale=u"DE",
-                date_of_birth=date.today(),
+                date_of_birth=date(1970, 1, 1),
                 email_is_confirmed=False,
                 email_confirm_code=u'ABCDEFGFOO',
                 password=u'arandompassword',
-                date_of_submission=date.today(),
+                date_of_submission=date(2015, 1, 1),
                 membership_type=u'normal',
                 member_of_colsoc=True,
                 name_of_colsoc=u"GEMA",
@@ -112,7 +104,8 @@ class EditMemberTests(unittest.TestCase):
             )
         return member
 
-    def create_accepted_member_full(self):
+    @staticmethod
+    def __create_accepted_member_full():
         """
         Creates and returns an accepted full member
         """
@@ -151,93 +144,171 @@ class EditMemberTests(unittest.TestCase):
         res = self.testapp.get('/edit/1', status=403)
         self.failUnless('Access was denied to this resource' in res.body)
 
-        self.login()
+        self.__login()
 
         # no member in DB, so redirecting to dashboard
         res = self.testapp.get('/edit/1', status=302)
-        self.validate_dashboard_redirect(res)
+        self.__validate_dashboard_redirect(res)
 
-        DBSession.add(self.create_membership_applicant())
+        member = EditMemberTests.__create_membership_applicant()
+        DBSession.add(member)
         DBSession.flush()
         # now there is a member in the DB
 
         # let's try invalid input
         res = self.testapp.get('/edit/foo', status=302)
-        self.validate_dashboard_redirect(res)
+        self.__validate_dashboard_redirect(res)
 
         # now try valid id
-        res = self.testapp.get('/edit/1', status=200)
-        self.failUnless('Mitglied bearbeiten' in res.body)
-
-        # now we change details, really editing that member
-        form = res.form
-
-        if DEBUG:
-            print "form.fields: {}".format(form.fields)
-
-        self.assertTrue(u'SomeFirstn\xe4me' in form['firstname'].value)
-
-        form['firstname'] = 'EinVorname'
-        form['lastname'] = 'EinNachname'
-        form['email'] = 'info@c3s.cc'
-        form['address1'] = 'adressteil 1'
-        form['address2'] = 'adressteil 2'
-        form['postcode'] = '12346'
-        form['city'] = 'die city'
-        form['country'] = 'FI'
-        form['membership_type'] = 'investing'
-        form['entity_type'] = 'legalentity'
-        form['other_colsoc'] = 'no'
-        form['name_of_colsoc'] = ''
-        form['num_shares'] = 42
+        res = self.__get_edit_member(member.id)
 
         # try to submit now. this must fail, because the date of birth is
         # wrong ... and other dates are missing
-        res2 = form.submit('submit', status=200)
-        # print res2.body
-        self.assertTrue(
-            'is later than latest date 2000-01-01' in res2.body)
-        # set the date correctly
-        form2 = res2.form
-        form2['date_of_birth'] = '1999-12-30'
-        form2['membership_date'] = '2013-09-24'
-        form2['signature_received_date'] = '2013-09-24'
-        form2['payment_received_date'] = '2013-09-24'
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'firstname': 'EinVorname',
+                'lastname': 'EinNachname',
+                'email': 'info@c3s.cc',
+                'address1': 'adressteil 1',
+                'address2': 'adressteil 2',
+                'postcode': '12346',
+                'city': 'die city',
+                'country': 'FI',
+                'membership_type': 'investing',
+                'entity_type': 'legalentity',
+                'other_colsoc': 'no',
+                'name_of_colsoc': '',
+                'num_shares': 42,
+                'date_of_birth': date.today(),
+            },
+            ['is later than latest date 2000-01-01'])
 
-        # submit again
-        res2 = form2.submit('submit', status=302)
-        res3 = res2.follow()
-        self.validate_details_page(res3)
-        self.assertTrue('EinNachname' in res3.body)
-        self.assertTrue('info@c3s.cc' in res3.body)
-        self.assertTrue('adressteil 1' in res3.body)
-        self.assertTrue('adressteil 2' in res3.body)
-        self.assertTrue('12346' in res3.body)
-        self.assertTrue('die city' in res3.body)
-        self.assertTrue('FI' in res3.body)
-        self.assertTrue('investing' in res3.body)
-        self.assertTrue('42' in res3.body)
+        # set the date correctly
+        self.__validate_successful_edit(
+            member.id,
+            {
+                'firstname': 'EinVorname',
+                'lastname': 'EinNachname',
+                'email': 'info@c3s.cc',
+                'address1': 'adressteil 1',
+                'address2': 'adressteil 2',
+                'postcode': '12346',
+                'city': 'die city',
+                'country': 'FI',
+                'membership_type': 'investing',
+                'entity_type': 'legalentity',
+                'other_colsoc': 'no',
+                'name_of_colsoc': '',
+                'num_shares': 42,
+                'date_of_birth': '1999-12-30',
+                'membership_date': '2013-09-24',
+                'signature_received_date': '2013-09-24',
+                'payment_received_date': '2013-09-24',
+            },
+            [
+                'EinNachname',
+                'info@c3s.cc',
+                'adressteil 1',
+                'adressteil 2',
+                '12346',
+                'die city',
+                'FI',
+                'investing',
+                '42',
+            ])
 
         # edit again ... changing membership acceptance status
-        res = self.testapp.get('/edit/1', status=200)
-        self.failUnless('Mitglied bearbeiten' in res.body)
+        self.__validate_successful_edit(
+            member.id,
+            {
+                'membership_accepted': True,
+            })
 
-        # now we change details, really editing that member
-        form = res.form
-        if DEBUG:
-            print "form.fields: {}".format(form.fields)
-
-        form2['membership_accepted'] = True
-        res2 = form2.submit('submit', status=302)
-        res2.follow()
-
-    def validate_details_page(self, res):
+    def __validate_details_page(self, res):
         """
         Validate that the resource in res is the details page
         """
         self.assertTrue('<h1>Details for' in res.body)
 
-    def login(self):
+    def __validate_successful_submit(self, res):
+        """
+        Submit the resource, validate that it was successful and return the
+        resulting resource.
+        """
+        res = res.form.submit('submit', status=302)
+        res = res.follow()
+        self.__validate_details_page(res)
+        return res
+
+    def __validate_body_content(self, res, body_content_parts):
+        """
+        Validate that the body_content_parts occur within the resource's body.
+        """
+        if body_content_parts is not None:
+            for body_content_part in body_content_parts:
+                self.assertTrue(body_content_part in res.body)
+
+    @staticmethod
+    def __validate_submit_error(res):
+        """
+        Submit the resource, validate that it was not successful and return
+        the resulting resource
+        """
+        return res.form.submit('submit', status=200)
+
+    @staticmethod
+    def __set_form_properties(
+            res,
+            properties):
+        """
+        Set the properties of the form in the resource.
+        """
+        for key, value in properties.iteritems():
+            res.form[key] = value
+
+    def __validate_successful_edit(
+            self,
+            member_id,
+            properties=None,
+            body_content_parts=None):
+        """
+        Edit the member's properties, validate that it was successful,
+        validate the body of the resulting resource and return it.
+        """
+        res = self.__get_edit_member(member_id)
+        EditMemberTests.__set_form_properties(res, properties)
+        res = self.__validate_successful_submit(res)
+        self.__validate_body_content(res, body_content_parts)
+        return res
+
+    def __validate_abortive_edit(
+            self,
+            member_id,
+            properties=None,
+            body_content_parts=None):
+        """
+        Edit the member's properties, validate that it was not successful,
+        validate the body of the resulting resource and return it.
+        """
+        res = self.__get_edit_member(member_id)
+        EditMemberTests.__set_form_properties(res, properties)
+        res = EditMemberTests.__validate_submit_error(res)
+        self.__validate_body_content(res, body_content_parts)
+        return res
+
+    def __get_edit_member(self, member_id):
+        """
+        Get the edit page for the member and validate it's successful
+        retrieval.
+        """
+        res = self.testapp.get(
+            '/edit/{0}'.format(member_id),
+            status=200)
+        self.failUnless('Mitglied bearbeiten' in res.body)
+        return res
+
+    def __login(self):
         """
         Log into the membership backend
         """
@@ -248,144 +319,291 @@ class EditMemberTests(unittest.TestCase):
         form['password'] = 'berries'
         res = form.submit('submit', status=302)
         # being logged in ...
-        self.validate_dashboard_redirect(res)
+        self.__validate_dashboard_redirect(res)
 
-    def validate_dashboard_redirect(self, res):
+    def __validate_dashboard_redirect(self, res):
         """
         Validate that res is redirecting to the dashboard
         """
         res = res.follow()  # being redirected to dashboard_only
         res = res.follow()  # being redirected to dashboard with parameters
-        self.validate_dashboard(res)
+        self.__validate_dashboard(res)
 
-    def validate_dashboard(self, res):
+    def __validate_dashboard(self, res):
         """
         Validate that res is the dashboard
         """
         self.failUnless('Dashboard' in res.body)
 
-    def test_edit_members_membership_loss(self):
+    def test_membership_loss(self):
         '''
-        Test membership loss
+        Test the loss of membership.
 
         Test cases for:
 
-        - editing non member
+        1 Editing non members
 
-          - hidden loss inputs should not make any problem and therefore
-            submit without changes should work
-          - try setting hidden values -> error
+          1.1 Loss inputs must be hidden
+          1.1 Hidden loss inputs should not make any problem and therefore
+              submit without changes should work
+          1.2 Try setting hidden values -> error
 
-        - editing member
+        2 Editing members
 
-          - set neither loss date nor type -> success
-          - set only loss date -> error, set both
-          - set only loss type -> error, set both
-          - set loss type, set loss date to date prior to
-            membership_acceptance -> error, set larger date
-          - set both to valid values -> success
+          2.1 Loss inputs must not be hidden
 
+          2.2 Loss date and loss type must both be either set or unset
+
+            2.2.1 Set only loss date -> error, set both
+            2.2.2 Set only loss type -> error, set both
+            2.2.3 Set neither loss date nor type -> success
+            2.2.4 Set loss date and type to valid values -> success
+
+          2.3 Loss date must be larger than acceptance date
+
+            2.3.1 Set loss date prior to membership acceptance date -> error,
+                  set date larger membership acceptance
+            2.3.2 Set loss date after membership acceptance date -> success
+
+          2.4 Loss date for resignation must be 31st of December
+
+            2.4.1 Set loss type to resignation and loss date other than 31st
+                  of December -> fail
+            2.4.2 Set loss type to resignation and loss date to 31st but not
+                  December -> fail
+            2.4.3 Set loss type to resignation and loss date to December but
+                  not 31st -> fail
+            2.4.4 Set loss type to resignation and loss date to 31st of
+                  December succeed
+
+          2.5 Only natural persons can be set to loss type death
+
+            2.5.1 Set loss type to death and entity type to legal entity ->
+                  error
+            2.5.2 Set loss type to death and entity type to natural person ->
+                  success
+
+          2.6 Only legal entites can be set to loss type winding-up
+
+            2.6.1 Set loss type to winding-up and entity type to natural
+                  person error
+            2.6.2 Set loss type to winding-up and entity type to legal entity
+                  -> success
         '''
         # setup
         res = self.testapp.reset()
-        self.login()
-        member = self.create_membership_applicant()
+        self.__login()
+        member = EditMemberTests.__create_membership_applicant()
         DBSession.add(member)
         DBSession.flush()
 
-        # hidden loss inputs should not make any problem and therefore submit
-        # without changes should work
-        res = self.testapp.get(
-            '/edit/{0}'.format(member.id),
-            status=200)
-        self.failUnless('Mitglied bearbeiten' in res.body)
+        # 1 Editing non members
+        res = self.__get_edit_member(member.id)
         self.assertFalse(res.form['membership_accepted'].checked)
-        self.assertTrue(type(res.form['membership_loss_date']) == webtest.forms.Hidden)
+
+        # 1.1 Loss inputs must be hidden
+        res = self.__get_edit_member(member.id)
+        self.assertTrue(
+            type(res.form['membership_loss_date']) == webtest.forms.Hidden)
         self.assertTrue(res.form['membership_loss_date'].value == '')
-        self.assertTrue(type(res.form['membership_loss_type']) == webtest.forms.Hidden)
+        self.assertTrue(
+            type(res.form['membership_loss_type']) == webtest.forms.Hidden)
         self.assertTrue(res.form['membership_loss_type'].value == '')
 
-        # try setting hidden values -> error
-        res.form['membership_loss_date'] = date.today()
-        res.form['membership_loss_type'] = 'resignation'
-        res = res.form.submit('submit', status=200)
-        self.assertTrue(
-            'Please note: There were errors, please check the form below.' in
-            res.body)
+        # 1.2 Hidden loss inputs should not make any problem and therefore
+        #     submit without changes should work
+        res = self.__get_edit_member(member.id)
+        self.__validate_successful_submit(res)
 
-        # create full member
-        member = self.create_accepted_member_full()
+        # 1.3 Try setting hidden values -> error
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'membership_loss_date': date.today(),
+                'membership_loss_type': 'resignation',
+            },
+            ['Please note: There were errors, please check the form below.'])
+
+        # 2 Editing members
+        member = EditMemberTests.__create_accepted_member_full()
         DBSession.add(member)
         DBSession.flush()
-        res = self.testapp.get(
-            '/edit/{0}'.format(member.id),
-            status=200)
-        self.failUnless('Mitglied bearbeiten' in res.body)
-        # accepted full member show membership loss fields
+        res = self.__get_edit_member(member.id)
+        # make sure default values are valid
+        self.__validate_successful_submit(res)
+
+        # 2.1 Loss inputs must not be hidden
+        res = self.__get_edit_member(member.id)
         self.assertTrue(res.form['membership_accepted'].checked)
-        self.assertTrue(type(res.form['membership_loss_date']) == webtest.forms.Text)
+        self.assertTrue(
+            type(res.form['membership_loss_date']) == webtest.forms.Text)
         self.assertTrue(res.form['membership_loss_date'].value == '')
-        self.assertTrue(type(res.form['membership_loss_type']) == webtest.forms.Select)
+        self.assertTrue(
+            type(res.form['membership_loss_type']) == webtest.forms.Select)
         self.assertTrue(res.form['membership_loss_type'].value == '')
 
-        # set neither loss date nor type -> success
-        res = res.form.submit('submit', status=302)
-        res = res.follow()
-        self.validate_details_page(res)
+        # 2.2.1 Set only loss date -> error, set both
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'membership_loss_date': date(2016, 12, 31),
+            },
+            [
+                'Please note: There were errors, please check the form '
+                'below.',
+                'Date and type of membership loss must be set both or none.',
+            ])
 
-        # set only loss date -> error, set both
-        res = self.testapp.get(
-            '/edit/{0}'.format(member.id),
-            status=200)
-        self.failUnless('Mitglied bearbeiten' in res.body)
-        res.form['membership_loss_date'] = date(2016, 12, 31)
-        res = res.form.submit('submit', status=200)
-        self.assertTrue(
-            'Please note: There were errors, please check the form below.' in
-            res.body)
-        self.assertTrue(
-            'Date and type of membership loss must be set both or none.' in
-            res.body)
+        # 2.2.2 Set only loss type -> error, set both
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'membership_loss_type': 'resignation',
+            },
+            [
+                'Please note: There were errors, please check the form '
+                'below.',
+                'Date and type of membership loss must be set both or none.',
+            ])
 
-        # set only loss type -> error, set both
-        res = self.testapp.get(
-            '/edit/{0}'.format(member.id),
-            status=200)
-        self.failUnless('Mitglied bearbeiten' in res.body)
-        res.form['membership_loss_type'] = 'resignation'
-        res = res.form.submit('submit', status=200)
-        self.assertTrue(
-            'Please note: There were errors, please check the form below.' in
-            res.body)
-        self.assertTrue(
-            'Date and type of membership loss must be set both or none.' in
-            res.body)
+        # 2.2.3 Set neither loss date nor type -> success
+        self.__validate_successful_edit(
+            member.id,
+            {
+                'membership_loss_type': '',
+                'membership_loss_date': '',
+            })
 
-        # set loss type, set loss date to date prior to membership_acceptance
-        # -> error, set larger date
-        res = self.testapp.get(
-            '/edit/{0}'.format(member.id),
-            status=200)
-        self.failUnless('Mitglied bearbeiten' in res.body)
-        res.form['membership_loss_date'] = member.membership_date - \
-            timedelta(days=1)
-        res.form['membership_loss_type'] = 'resignation'
-        res = res.form.submit('submit', status=200)
-        self.assertTrue(
-            'Please note: There were errors, please check the form below.' in
-            res.body)
-        self.assertTrue(
-            'Date membership loss must be larger than membership acceptance '
-            'date.' in res.body)
+        # 2.2.4 Set loss date and type to valid values -> success
+        self.__validate_successful_edit(
+            member.id,
+            {
+                'membership_loss_type': 'resignation',
+                'membership_loss_date': date(2016, 12, 31),
+            })
 
-        # set both to valid values -> success
-        res = self.testapp.get(
-            '/edit/{0}'.format(member.id),
-            status=200)
-        self.failUnless('Mitglied bearbeiten' in res.body)
-        res.form['membership_loss_date'] = member.membership_date + \
-            timedelta(days=365)
-        res.form['membership_loss_type'] = 'resignation'
-        res = res.form.submit('submit', status=302)
-        res = res.follow()
-        self.validate_details_page(res)
+        # 2.3 Loss date must be larger than acceptance date
+
+        # 2.3.1 Set loss date prior to membership acceptance date -> error,
+        #       set date larger membership acceptance
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'membership_loss_date': (
+                    member.membership_date - timedelta(days=1)),
+                'membership_loss_type': 'resignation',
+            },
+            [
+                'Please note: There were errors, please check the form '
+                'below.',
+                'Date membership loss must be larger than membership '
+                'acceptance date.',
+            ])
+
+        # 2.3.2 Set loss date after membership acceptance date -> success
+        self.__validate_successful_edit(
+            member.id,
+            {
+                'membership_loss_date': date(2016, 12, 31),
+                'membership_loss_type': 'resignation',
+            })
+
+        # 2.4 Loss date for resignation must be 31st of December
+
+        # 2.4.1 Set loss type to resignation and loss date other than 31st
+        #       of December -> fail
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'membership_loss_date': date(2016, 5, 28),
+                'membership_loss_type': 'resignation',
+            },
+            [
+                'Please note: There were errors, please check the form '
+                'below.',
+                'Resignations are only allowed to the 31st of December of a '
+                'year.',
+            ])
+
+        # 2.4.2 Set loss type to resignation and loss date to 31st but not
+        #       December -> fail
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'membership_loss_date': date(2016, 10, 31),
+                'membership_loss_type': 'resignation',
+            },
+            [
+                'Please note: There were errors, please check the form '
+                'below.',
+                'Resignations are only allowed to the 31st of December of a '
+                'year.',
+            ])
+
+        # 2.4.3 Set loss type to resignation and loss date to December but
+        #       not 31st -> fail
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'membership_loss_date': date(2016, 12, 30),
+                'membership_loss_type': 'resignation',
+            },
+            ['Resignations are only allowed to the 31st of December of a '
+             'year.'])
+
+        # 2.4.4 Set loss type to resignation and loss date to 31st of
+        #       December succeed
+        self.__validate_successful_edit(
+            member.id,
+            {
+                'membership_loss_date': date(2016, 12, 31),
+                'membership_loss_type': 'resignation',
+            })
+
+        # 2.5 Only natural persons can be set to loss type death
+
+        # 2.5.1 Set loss type to death and entity type to legal entity ->
+        #       error
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'entity_type': 'legalentity',
+                'membership_loss_date': date(2016, 3, 25),
+                'membership_loss_type': 'death',
+            },
+            ['The membership loss type \'death\' is only allowed for natural '
+             'person members and not for legal entity members.'])
+
+        # 2.5.2 Set loss type to death and entity type to natural person ->
+        #       success
+        self.__validate_successful_edit(
+            member.id,
+            {
+                'entity_type': 'person',
+                'membership_loss_date': date(2016, 3, 25),
+                'membership_loss_type': 'death',
+            })
+
+        # 2.6 Only legal entites can be set to loss type winding-up
+
+        # 2.6.1 Set loss type to winding-up and entity type to natural
+        #       person error
+        self.__validate_abortive_edit(
+            member.id,
+            {
+                'entity_type': 'person',
+                'membership_loss_date': date(2016, 3, 25),
+                'membership_loss_type': 'winding-up',
+            },
+            ['The membership loss type \'winding-up\' is only allowed for '
+             'legal entity members and not for natural person members.'])
+
+        # 2.6.2 Set loss type to winding-up and entity type to legal entity
+        #       -> success
+        self.__validate_successful_edit(
+            member.id,
+            {
+                'entity_type': 'legalentity',
+                'membership_loss_date': date(2016, 3, 25),
+                'membership_loss_type': 'winding-up',
+            })

@@ -59,6 +59,18 @@ LOCALE_DEFAULT = u'de'
 LOG = logging.getLogger(__name__)
 
 
+def get_child_position(form, child_node):
+    """
+    Gets the position of a child node within its form.
+    """
+    position = 0
+    for child in form:
+        if child == child_node:
+            return position
+        position += 1
+    return None
+
+
 @view_config(route_name='edit',
              permission='manage',
              renderer='templates/edit_member.pt')
@@ -134,7 +146,8 @@ def edit_member(request):
         ('resignation', _(u'Resignation')),
         ('expulsion', _(u'Expulsion')),
         ('death', _(u'Death')),
-        ('bankrupsy', _(u'Bankrupsy')),
+        ('bankruptcy', _(u'Bankruptcy')),
+        ('winding-up', _(u'Winding-up')),
         ('shares_transfer', _(u'Transfer of remaining shares'))
     )
 
@@ -209,8 +222,8 @@ def edit_member(request):
             validator=Range(
                 min=date(1913, 1, 1),
                 max=date(2000, 1, 1),
-                min_err=_(u'${val} is earlier than earliest date ${min}'),
-                max_err=_(u'${val} is later than latest date ${max}')
+                min_err=_(u'${val} is earlier than earliest date ${min}.'),
+                max_err=_(u'${val} is later than latest date ${max}.')
             ),
             oid='date_of_birth',
         )
@@ -223,15 +236,23 @@ def edit_member(request):
         )
 
     @colander.deferred
-    def deferred_membership_loss_date_widget(node, kw):
-        if kw.get('membership_accepted'):
+    def membership_loss_date_widget(node, keywords):
+        """
+        Returns a text or hidden input depending on the value of
+        membership_accepted within the keywords.
+        """
+        if keywords.get('membership_accepted'):
             return deform.widget.TextInputWidget()
         else:
             return deform.widget.HiddenWidget()
 
     @colander.deferred
-    def deferred_membership_loss_type_widget(node, kw):
-        if kw.get('membership_accepted'):
+    def membership_loss_type_widget(node, keywords):
+        """
+        Returns a select or hidden input depending on the value of
+        membership_accepted within the keywords.
+        """
+        if keywords.get('membership_accepted'):
             return deform.widget.SelectWidget(values=membership_loss_types)
         else:
             return deform.widget.HiddenWidget()
@@ -250,8 +271,8 @@ def edit_member(request):
             validator=Range(
                 min=date(2013, 9, 24),
                 max=date.today(),
-                min_err=_(u'${val} is earlier than earliest date ${min}'),
-                max_err=_(u'${val} is later than latest date ${max}')
+                min_err=_(u'${val} is earlier than earliest date ${min}.'),
+                max_err=_(u'${val} is later than latest date ${max}.')
             ),
             missing=date(1970, 1, 1),
             oid='membership_date',
@@ -278,8 +299,8 @@ def edit_member(request):
             validator=Range(
                 min=date(1070, 1, 1),
                 max=date.today(),
-                min_err=_(u'${val} is earlier than earliest date ${min}'),
-                max_err=_(u'${val} is later than latest date ${max}')
+                min_err=_(u'${val} is earlier than earliest date ${min}.'),
+                max_err=_(u'${val} is later than latest date ${max}.')
             ),
             missing=date(1970, 1, 1),
         )
@@ -293,15 +314,15 @@ def edit_member(request):
             validator=Range(
                 min=date(1970, 1, 1),
                 max=date.today(),
-                min_err=_(u'${val} is earlier than earliest date ${min}'),
-                max_err=_(u'${val} is later than latest date ${max}')
+                min_err=_(u'${val} is earlier than earliest date ${min}.'),
+                max_err=_(u'${val} is later than latest date ${max}.')
             ),
             missing=date(1970, 1, 1),
             oid='_received_date',
         )
         membership_loss_date = colander.SchemaNode(
             colander.Date(),
-            widget=deferred_membership_loss_date_widget,
+            widget=membership_loss_date_widget,
             title=_(u'Date of the loss of membership'),
             default=None,
             missing=None,
@@ -309,7 +330,7 @@ def edit_member(request):
         )
         membership_loss_type = colander.SchemaNode(
             colander.String(),
-            widget=deferred_membership_loss_type_widget,
+            widget=membership_loss_type_widget,
             title=_(u'Type of membership loss'),
             default=None,
             missing=None,
@@ -387,8 +408,8 @@ def edit_member(request):
             validator=colander.Range(
                 min=1,
                 max=60,
-                min_err=_(u'at least 1'),
-                max_err=_(u'at most 60'),
+                min_err=_(u'At least one share must be acquired.'),
+                max_err=_(u'At most 60 shares can be acquired.'),
             ),
             oid='num_shares')
 
@@ -428,6 +449,24 @@ def edit_member(request):
                   u'acceptance date.')
             raise exc
 
+    def loss_date_resignation_validator(form, value):
+        """
+        Validates that the membership loss date for resignations is the 31st
+        of December of any year.
+
+        Resignations are only allowed to the end of the year.
+        """
+        if (value.get('membership_loss_type', '') == 'resignation'
+                and value['membership_loss_date'] is not None
+                and not (
+                    value['membership_loss_date'].day == 31
+                    and value['membership_loss_date'].month == 12)):
+            exc = colander.Invalid(form)
+            exc['membership_loss_date'] = \
+                _(u'Resignations are only allowed to the 31st of December '
+                  u'of a year.')
+            raise exc
+
     class MembershipForm(colander.Schema):
         """
         The form for editing membership information combining all forms for
@@ -440,7 +479,8 @@ def edit_member(request):
             title=_(u'Membership Bureaucracy'),
             validator=colander.All(
                 loss_type_and_date_set_validator,
-                loss_date_larger_acceptance_validator)
+                loss_date_larger_acceptance_validator,
+                loss_date_resignation_validator)
         ).bind(
             membership_accepted=member.membership_accepted,
         )
@@ -451,7 +491,55 @@ def edit_member(request):
             title=_(u'Shares')
         )
 
-    schema = MembershipForm()
+    def membership_loss_type_entity_type_validator(form, value):
+        """
+        Validates that only natural persons can have loss type 'death' and
+        only legal entites 'winding-up'.
+        """
+        if (value['membership_meta']['membership_loss_type'] == 'death'
+                and value['membership_info']['entity_type'] != 'person'):
+            exc_type = colander.Invalid(
+                form['membership_meta']['membership_loss_type'],
+                _(u'The membership loss type \'death\' is only allowed for '
+                  u'natural person members and not for legal entity members.'))
+            exc_meta = colander.Invalid(form['membership_meta'])
+            exc_meta.add(
+                exc_type,
+                get_child_position(
+                    form['membership_meta'],
+                    form['membership_meta']['membership_loss_type']))
+            exc = colander.Invalid(form)
+            exc.add(
+                exc_meta,
+                get_child_position(
+                    form,
+                    form['membership_meta']))
+            raise exc
+        if (value['membership_meta']['membership_loss_type'] == 'winding-up'
+                and value['membership_info']['entity_type'] != 'legalentity'):
+            exc_type = colander.Invalid(
+                form['membership_meta']['membership_loss_type'],
+                _(u'The membership loss type \'winding-up\' is only allowed '
+                  u'for legal entity members and not for natural person '
+                  u'members.'))
+            exc_meta = colander.Invalid(form['membership_meta'])
+            exc_meta.add(
+                exc_type,
+                get_child_position(
+                    form['membership_meta'],
+                    form['membership_meta']['membership_loss_type']))
+            exc = colander.Invalid(form)
+            exc.add(
+                exc_meta,
+                get_child_position(
+                    form,
+                    form['membership_meta']))
+            raise exc
+
+    schema = MembershipForm(
+        validator=colander.All(
+            membership_loss_type_entity_type_validator,
+        ))
     form = deform.Form(
         schema,
         buttons=[
@@ -461,6 +549,17 @@ def edit_member(request):
         renderer=ZPT_RENDERER,
         use_ajax=True,
     )
+
+    def clean_error_messages(error):
+        if error.msg is not None and type(error.msg) == list:
+            error.msg = list(set(error.msg))
+            if None in error.msg:
+                error.msg.remove(None)
+            if '' in error.msg:
+                error.msg.remove('')
+            error.msg = ' '.join(list(set(error.msg)))
+        for child in error.children:
+            clean_error_messages(child)
 
     # if the form has NOT been used and submitted, remove error messages if
     # any
@@ -473,6 +572,7 @@ def edit_member(request):
         try:
             appstruct = form.validate(controls)
         except ValidationFailure as validationfailure:
+            clean_error_messages(validationfailure.error)
             request.session.flash(
                 _(u'Please note: There were errors, '
                   u'please check the form below.'),

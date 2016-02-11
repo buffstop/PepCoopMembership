@@ -146,7 +146,7 @@ contain the following attributes:
   decision of the administrative board
 - Date of loss of membership (§ 30 II 1 3. [GenG]_)
 - Justifying facts of the loss of membership (§ 30 II 2 [GenG]_), e.g.
-  resignation, expulsion, death, bankrupsy
+  resignation, expulsion, death, bankruptcy
 
 Documents which are related to the acquisition or loss of membership must be
 kept for three years until the end of the year in which the loss of membership
@@ -232,7 +232,10 @@ Implications of the membership resignation are:
   in the membership list and the member must be notified about this event
   immediately (§ 69 [GenG]_).
 
-**TODO:** *Describe the business process.*
+**TODO:**
+
+- *Describe the business process.*
+- *§ 67a [GenG]_*
 
 
 
@@ -248,6 +251,28 @@ breach of his/her obligations or acts contrary to the interests of the SCE
 
 
 
+Upon Transfer of All Shares
+===========================
+
+
+Membership shall be lost upon the transfer of all shares held to a member or a
+natural person or legal entity which has acquired membership (art. 15(1)
+[EU_CR_1435_2003_SCE]_, § 4 IV c [C3S_Statute]_).
+
+**TODO:** *Elaborate.*
+
+
+
+Upon Winding-up
+===============
+
+
+Membership shall be lost upon winding-up in the case of a member that is not a
+natural person (Art. 15(1) [EU_CR_1435_2003_SCE]_, § 77a [GenG]_, § 4 IV d
+[C3S_Statute]_).
+
+
+
 Upon Death
 ==========
 
@@ -259,12 +284,12 @@ Membership shall be lost upon death (art. 15(1) [EU_CR_1435_2003_SCE]_, § 77
 
 
 
-Upon Bankrupsy
-==============
+Upon Bankruptcy
+===============
 
 
-Membership shall be lost upon bankrupsy (art. 15(1) [EU_CR_1435_2003_SCE]_, §
-77a [GenG]_, § 4 IV d [C3S_Statute]_).
+Membership shall be lost upon bankruptcy (art. 15(1) [EU_CR_1435_2003_SCE]_, §§
+66a, 77a [GenG]_, § 4 IV d [C3S_Statute]_).
 
 **TODO:** *Elaborate.*
 
