@@ -31,7 +31,6 @@ requires = [
     'unicodecsv',
     'waitress',
     'zope.sqlalchemy',
-    'sphinx',  # for generating the documentation
 ]
 # for the translations machinery using transifex you also need to
 # "pip install transifex-client"
@@ -44,6 +43,11 @@ test_requirements = [
     'selenium',
     'slate',  # pdf to text helper
     'webtest',
+]
+
+docs_require = [
+    'sphinx',  # for generating the documentation
+    'sphinxcontrib.plantuml',
 ]
 
 if sys.version_info[:3] < (2, 5, 0):
@@ -67,7 +71,7 @@ setup(name='c3smembership',
       include_package_data=True,
       zip_safe=False,
       test_suite='c3smembership',
-      install_requires=requires + test_requirements,
+      install_requires=requires + test_requirements + docs_require,
       entry_points="""\
       [paste.app_factory]
       main = c3smembership:main
