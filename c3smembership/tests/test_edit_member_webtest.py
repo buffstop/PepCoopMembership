@@ -46,7 +46,7 @@ class EditMemberTests(unittest.TestCase):
         DBSession.configure(bind=engine)
         Base.metadata.create_all(engine)
 
-        #self._insert_members()
+        # self._insert_members()
 
         with transaction.manager:
                 # a group for accountants/staff
@@ -167,18 +167,18 @@ class EditMemberTests(unittest.TestCase):
         self.__validate_abortive_edit(
             member.id,
             {
-                'firstname': 'EinVorname',
-                'lastname': 'EinNachname',
-                'email': 'info@c3s.cc',
-                'address1': 'adressteil 1',
-                'address2': 'adressteil 2',
-                'postcode': '12346',
-                'city': 'die city',
-                'country': 'FI',
-                'membership_type': 'investing',
-                'entity_type': 'legalentity',
-                'other_colsoc': 'no',
-                'name_of_colsoc': '',
+                'firstname': u'EinVorname',
+                'lastname': u'EinNachname',
+                'email': u'info@c3s.cc',
+                'address1': u'adressteil 1',
+                'address2': u'adressteil 2',
+                'postcode': u'12346',
+                'city': u'die city',
+                'country': u'FI',
+                'membership_type': u'investing',
+                'entity_type': u'legalentity',
+                'other_colsoc': u'no',
+                'name_of_colsoc': u'',
                 'num_shares': 42,
                 'date_of_birth': date.today(),
             },
@@ -188,18 +188,18 @@ class EditMemberTests(unittest.TestCase):
         self.__validate_successful_edit(
             member.id,
             {
-                'firstname': 'EinVorname',
-                'lastname': 'EinNachname',
-                'email': 'info@c3s.cc',
-                'address1': 'adressteil 1',
-                'address2': 'adressteil 2',
-                'postcode': '12346',
-                'city': 'die city',
-                'country': 'FI',
-                'membership_type': 'investing',
-                'entity_type': 'legalentity',
-                'other_colsoc': 'no',
-                'name_of_colsoc': '',
+                'firstname': u'EinVorname',
+                'lastname': u'EinNachname',
+                'email': u'info@c3s.cc',
+                'address1': u'adressteil 1',
+                'address2': u'adressteil 2',
+                'postcode': u'12346',
+                'city': u'die city',
+                'country': u'FI',
+                'membership_type': u'investing',
+                'entity_type': u'legalentity',
+                'other_colsoc': u'no',
+                'name_of_colsoc': u'',
                 'num_shares': 42,
                 'date_of_birth': '1999-12-30',
                 'membership_date': '2013-09-24',
@@ -207,15 +207,15 @@ class EditMemberTests(unittest.TestCase):
                 'payment_received_date': '2013-09-24',
             },
             [
-                'EinNachname',
-                'info@c3s.cc',
-                'adressteil 1',
-                'adressteil 2',
-                '12346',
-                'die city',
-                'FI',
-                'investing',
-                '42',
+                u'EinNachname',
+                u'info@c3s.cc',
+                u'adressteil 1',
+                u'adressteil 2',
+                u'12346',
+                u'die city',
+                u'FI',
+                u'investing',
+                u'42',
             ])
 
         # edit again ... changing membership acceptance status
