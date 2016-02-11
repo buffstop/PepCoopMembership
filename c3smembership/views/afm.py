@@ -97,7 +97,7 @@ if LOGGING:
              route_name='join')
 def join_c3s(request):
     """
-    This is the main form view: Join C3S as member
+    This is the main membership application form view: Join C3S as member
     """
     # if another language was chosen by clicking on a flag
     # the add_locale_to_cookie subscriber has planted an attr on the request

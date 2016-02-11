@@ -2,8 +2,20 @@
 """
 This module holds the database models for c3sMembership.
 
-Tests for the code is in tests/test_models.py
-and throughout the other bits of code.
+Unit and functional tests for the code are in tests/test_models.py.
+Other functional and integration tests can be found throughout the
+other bits of tests and code relying on or using these models.
+
+The classes below represent the database tables.
+It is actually a SQLAlchemy model.
+
+Classes / Data Objects:
+
+* Groups (Roles for Users)
+* C3sStaff (backend login people, administration)
+* Shares (packages -- members can hold packages of shares)
+* C3sMember (members .. or applications to become members)
+* Dues15Invoice
 """
 
 from datetime import (
@@ -185,9 +197,16 @@ class C3sStaff(Base):
 
 class Shares(Base):
     '''
-    the database of shares
+    The database of shares.
 
-    once AFM submissions are complete, the part about the shares is moved here
+    Each entry is a number of shares varying from 1 to 60.
+    Each member may have several packages of shares,
+    e.g. from different events or processes
+    (crowdfunding, founding ceremony, web form).
+
+    Once AFM submissions are complete,
+    the relevant information about the shares is moved here.
+    Each member then has a list of these objects.
     '''
     __tablename__ = 'shares'
     id = Column(Integer, primary_key=True)
@@ -257,16 +276,20 @@ members_shares = Table(
 
 class C3sMember(Base):
     '''
-    this table holds submissions to the C3S AFM form
-    (AFM = application for membership)
+    This table holds datasets from submissions to the C3S AFM form
+    (AFM = application for membership),
+    as well as members who have completed the process
+    of becoming a member.
 
-    ..and has seen changes over time. additions:
+    Apart from datasets from the original form,
+    other datasets have found their way into the database
+    through imports: crowdfunders and founding members, for example.
 
-    * crowdfunders,
-    * founders from the initial assembly (RL!)
-    * legal entities
+    * The crowdfunders were gathered through a CF platform.
+    * The founders from the initial assembly (RL! Hamburg!)
+    * legal entities (we had a form on dead wood)
 
-    ..being turned into accepted members
+    Some attributes have been added over time to cater for different needs.
     '''
     __tablename__ = 'members'
     id = Column(Integer, primary_key=True)
@@ -334,7 +357,7 @@ class C3sMember(Base):
         DateTime(), default=datetime(1970, 1, 1))
     membership_number = Column(Integer())
 
-    ## loss of membership
+    # ## loss of membership
     # the date on which the membership terminates, i.e. the date of
     # membership and the day after which the membership does no longer exist
     membership_loss_date = Column(DateTime())
@@ -918,7 +941,8 @@ class C3sMember(Base):
         else:
             dues15_amount = self.dues15_amount
 
-        self.dues15_balance = self.dues15_balance - dues15_amount + Decimal(dues_amount)  # what they actually have to pay
+        self.dues15_balance = self.dues15_balance - dues15_amount + Decimal(
+            dues_amount)  # what they actually have to pay
         self.dues15_amount = dues_amount  # what they have to pay (calc'ed)
 
     def set_dues15_reduced_amount(self, reduced_amount):
@@ -933,19 +957,20 @@ class C3sMember(Base):
         return re.sub(  # # replace characters
             '[^0-9a-zA-Z]',  # other than these
             '-',  # with a -
-            self.lastname if self.is_legalentity else (self.lastname + self.firstname))
-
+            self.lastname if self.is_legalentity else (
+                self.lastname + self.firstname))
 
 
 class Dues15Invoice(Base):
     """
-    this table stores the invoices for the 2015 version of dues.
-    we need this for bookkeeping,
+    This table stores the invoices for the 2015 version of dues.
+
+    We need this for bookkeeping,
     because whenever a member is granted a reduction of her dues,
     the old invoice is canceled by a reversal invoice
     and a new invoice must be issued.
 
-    edge case: if reduced to 0, no new invoice needed.
+    Edge case: if reduced to 0, no new invoice needed.
     """
     __tablename__ = 'dues15invoices'
     id = Column(Integer, primary_key=True)
@@ -1055,25 +1080,32 @@ class Dues15Invoice(Base):
                         Dues15Invoice.is_reversal,
                         Dues15Invoice.invoice_amount)],
                     else_=Decimal('0.0'))).label('amount_invoiced_reversal'),
-                expression.literal_column('\'0.0\'', SqliteDecimal).label('amount_paid')
+                expression.literal_column(
+                    '\'0.0\'', SqliteDecimal).label('amount_paid')
             ) \
             .group_by(invoice_date_month)
         # collect the payments per month
         member_payments_query = DBSession.query(
                 payment_date_month.label('month'),
-                expression.literal_column('\'0.0\'', SqliteDecimal).label('amount_invoiced_normal'),
-                expression.literal_column('\'0.0\'', SqliteDecimal).label('amount_invoiced_reversal'),
+                expression.literal_column(
+                    '\'0.0\'', SqliteDecimal).label('amount_invoiced_normal'),
+                expression.literal_column(
+                    '\'0.0\'', SqliteDecimal).label(
+                        'amount_invoiced_reversal'),
                 func.sum(C3sMember.dues15_amount_paid).label('amount_paid')
             ) \
             .filter(C3sMember.dues15_paid_date.isnot(None)) \
             .group_by(payment_date_month)
         # union invoice amounts and payments
-        union_all_query = expression.union_all(member_payments_query, invoice_amounts_query)
+        union_all_query = expression.union_all(
+            member_payments_query, invoice_amounts_query)
         # aggregate invoice amounts and payments by month
         result_query = DBSession.query(
                 union_all_query.c.month.label('month'),
-                func.sum(union_all_query.c.amount_invoiced_normal).label('amount_invoiced_normal'),
-                func.sum(union_all_query.c.amount_invoiced_reversal).label('amount_invoiced_reversal'),
+                func.sum(union_all_query.c.amount_invoiced_normal).label(
+                    'amount_invoiced_normal'),
+                func.sum(union_all_query.c.amount_invoiced_reversal).label(
+                    'amount_invoiced_reversal'),
                 func.sum(union_all_query.c.amount_paid).label('amount_paid')
             ) \
             .group_by(union_all_query.c.month) \
