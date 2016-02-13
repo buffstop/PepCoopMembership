@@ -72,7 +72,7 @@ to get a recent version, then repeat the step above:
 Documentation:
 ::
 
-   $ sudo apt-get install graphviz openjdk-8-jre
+   $ sudo apt-get install graphviz openjdk-7-jre-headless
    $ mkdir utils
    $ wget 'http://downloads.sourceforge.net/project/plantuml/plantuml.jar' -O utils/plantuml.jar
    $ env/bin/pip install sphinx sphinxcontrib-plantuml
