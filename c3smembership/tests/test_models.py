@@ -117,6 +117,9 @@ class C3sMembershipModelTestBase(unittest.TestCase):
 class C3sMembershipModelTests(C3sMembershipModelTestBase):
 
     def setUp(self):
+        """
+        prepare for tests: have one member in the database
+        """
         super(C3sMembershipModelTests, self).setUp()
         with transaction.manager:
             member1 = C3sMember(  # german
@@ -157,6 +160,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance.membership_type, u'normal', "No match!")
 
     def test_get_number(self):
+        """
+        test: get the number of entries in the database
+        """
         instance = self._makeOne()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
@@ -165,6 +171,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(number_from_DB, 2)
 
     def test_get_by_code(self):
+        """
+        test: get one entry by code
+        """
         instance = self._makeOne()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
@@ -179,6 +188,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance_from_DB.email, u'some@shri.de')
 
     def test_get_by_dues15_token(self):
+        """
+        test: get one entry by token
+        """
         instance = self._makeOne()
         self.session.add(instance)
         instance.dues15_token = u'THIS_ONE'
@@ -189,6 +201,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance_from_DB.email, u'some@shri.de')
 
     def test_get_by_email(self):
+        """
+        test: get one entry by email
+        """
         instance = self._makeOne()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
@@ -198,6 +213,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(list_from_DB[0].email, u'some@shri.de')
 
     def test_get_by_id(self):
+        """
+        test: get one entry by id
+        """
         instance = self._makeOne()
         self.session.add(instance)
         self.session.flush()
@@ -232,6 +250,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance_from_DB.num_shares, u'23')
 
     def test_get_all(self):
+        """
+        test: get all entries
+        """
         instance = self._makeOne()
         instance2 = self._makeAnotherOne()
         self.session.add(instance, instance2)
@@ -241,6 +262,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEquals(len(all), 2)
 
     def test_get_dues_invoicees(self):
+        """
+        test: get all members that haven't had their invoices sent
+        """
         instance = self._makeOne()
         instance2 = self._makeAnotherOne()
         self.session.add(instance, instance2)
@@ -255,6 +279,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEquals(len(invoicees), 1)
         
     def test_delete_by_id(self):
+        """
+        test: delete one entry by id
+        """
         instance = self._makeOne()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
@@ -265,6 +292,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(None, instance_from_DB)
 
     def test_check_user_or_None(self):
+        """
+        XXX TODO
+        """
         instance = self._makeOne()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
@@ -276,6 +306,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(None, result2)
 
     def test_check_for_existing_confirm_code(self):
+        """
+        XXX TODO
+        """
         instance = self._makeOne()
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
@@ -288,6 +321,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(result2, False)
 
     def test_member_listing(self):
+        """
+        XXX TODO
+        """
         instance = self._makeOne()
         self.session.add(instance)
         instance2 = self._makeAnotherOne()
@@ -300,6 +336,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.failUnless(result1[2].firstname == u"SomeFirstname")
 
     def test_member_listing_exception(self):
+        """
+        XXX TODO
+        """
         instance = self._makeOne()
         self.session.add(instance)
         instance2 = self._makeAnotherOne()
@@ -317,6 +356,9 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
 
 
 class TestMemberListing(C3sMembershipModelTestBase):
+    """
+    XXX TODO
+    """
     def setUp(self):
         super(TestMemberListing, self).setUp()
         instance = self._makeOne(lastname=u"ABC", firstname=u'xyz',
