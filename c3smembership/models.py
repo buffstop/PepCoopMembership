@@ -11,11 +11,11 @@ It is actually a SQLAlchemy model.
 
 Classes / Data Objects:
 
-* Groups (Roles for Users)
-* C3sStaff (backend login people, administration)
-* Shares (packages -- members can hold packages of shares)
-* C3sMember (members .. or applications to become members)
-* Dues15Invoice
+* **Groups** (Roles for Users)
+* **C3sStaff** (backend login people, administration)
+* **Shares** (packages -- members can hold packages of shares)
+* **C3sMember** (members .. or applications to become members)
+* **Dues15Invoice** (membership dues, 2015 edition)
 """
 
 from datetime import (
@@ -92,6 +92,15 @@ class Group(Base):
     aka roles for users.
 
     Users in group 'staff' may do things others may not.
+
+
+    ============================ ===================== ===========================
+    name                         type                  description
+    ============================ ===================== ===========================
+    id                           integer, primary key  tech. id. / no. in table
+    name                         unicode
+    ============================ ===================== ===========================
+
     """
     __tablename__ = 'groups'
     id = Column(Integer, primary_key=True, nullable=False)
@@ -126,6 +135,18 @@ staff_groups = Table(
 class C3sStaff(Base):
     """
     C3S staff may login and do things
+
+    ======================== ===================== ===========================
+    name                         type                  description
+    ======================== ===================== ===========================
+    id                       integer, primary key  tech. id. / no. in table
+    login                    unicode
+    _password                hash
+    last_password_change     datetime
+    email
+    groups (relation)        list of group objects users groups
+    ======================== ===================== ===========================
+
     """
     __tablename__ = 'staff'
     id = Column(Integer, primary_key=True)
@@ -207,6 +228,26 @@ class Shares(Base):
     Once AFM submissions are complete,
     the relevant information about the shares is moved here.
     Each member then has a list of these objects.
+
+
+    ========================== ===================== =========================
+    name                         type                  description
+    ========================== ===================== =========================
+    id                         integer, primary key  tech. id. / no. in table
+    number                     integer
+    date_of_acquisition        datetime
+    reference_code             unicode
+    signature_received         boolean
+    signature_received_date    datetime
+    signature_confirmed        boolean
+    signature_confirmed_date   datetime
+    payment_received           boolean
+    payment_received_date      datetime
+    payment_confirmed          boolean
+    payment_confirmed_date     datetime
+    accountant_comment         unicode
+    ========================== ===================== =========================
+
     '''
     __tablename__ = 'shares'
     id = Column(Integer, primary_key=True)
@@ -290,6 +331,103 @@ class C3sMember(Base):
     * legal entities (we had a form on dead wood)
 
     Some attributes have been added over time to cater for different needs.
+
+
+    ============================ ===================== ===========================
+    name                         type                  description
+    ============================ ===================== ===========================
+    id                           integer, primary key  tech. id. / no. in table
+    **personal information**
+    ------------------------------------------------------------------------------
+    firstname                    unicode
+    lastname                     unicode
+    email                        unicode
+    _password                    unicode
+    last_password_change         datetime              when form was submitted
+    address1                     unicode
+    address2                     unicode
+    postcode                     unicode
+    city                         unicode
+    country                      unicode
+    locale                       unicode
+    date_of_birth                date
+    email_is_confirmed           boolean               when
+    email_confirm_code           unicode
+    email_confirm_token          unicode
+    email_confirm_mail_date      datetime
+    **duplicate entries / people submitted at different times**
+    ------------------------------------------------------------------------------
+    is_duplicate                 boolean               historic/merge process
+    is_duplicate_of              integer               historic/merge process
+    **shares information (before acquisition/approval/merge to shares table**
+    ------------------------------------------------------------------------------
+    num_shares                   integer               no. applied for
+    date_of_submission           datetime              when form was submitted
+    signature_received           boolean
+    signature_received_date      datetime
+    signature_confirmed          boolean
+    signature_confirmed_date     datetime
+    payment_received             boolean
+    payment_received_date        datetime
+    payment_confirmed            boolean
+    payment_confirmed_date       datetime
+    shares (relation)            object list           packages of shares acquired
+    **reminder information: no prospective member left behind!**
+    ------------------------------------------------------------------------------
+    sent_signature_reminder      boolean
+    sent_signature_reminder_date datetime
+    sent_payment_reminder        boolean
+    sent_payment_reminder_date   datetime
+    accountant_comment           unicode
+    **membership information**
+    ------------------------------------------------------------------------------
+    membership_type              unicode               u'normal' or u'investing'
+    member_of_colsoc             boolean
+    name_of_colsoc               unicode
+    membership_accepted          boolean               ..upon decision of board
+    membership_date              datetime              ..antt whenne^^
+    membership_number            integer
+    membership_loss              datetime
+    **startnex repair operations**
+    ------------------------------------------------------------------------------
+    mtype_confirm_token          unicode
+    mtype_email_date             datetime
+    **invitations for barcamp and general assembly 2014 & 2015**
+    ------------------------------------------------------------------------------
+    email_invite_flag_bcgv14     boolean
+    email_invite_date_bcgv14     datetime
+    email_invite_flag_bcgv15     boolean
+    email_invite_date_bcgv15     datetime
+    email_invite_token_bcgv15    unicode
+    **legal entities have additional attributes**
+    ------------------------------------------------------------------------------
+    is_legalentity               boolean
+    court_of_law                 unicode
+    registration_number          unicode
+    **membership certificate issuance via email self service (we send links)**
+    ------------------------------------------------------------------------------
+    certificate_email            boolean
+    certificate_token            unicode(10)
+    certificate_email_date       boolean
+    **membership dues, for 2015**
+    ------------------------------------------------------------------------------
+    dues15_invoice               boolean
+    dues15_invoice_date          datetime
+    dues15_invoice_no            integer               lfd. nummer
+    dues15_token                 unicode               access token
+    dues15_start                 unicode               2015 quarter of membership
+    dues15_amount                DatabaseDecimal(12,2) calc. amount to pay
+    dues15_reduced               boolean               was reduced?
+    _dues15_amount_reduced       DatabaseDecimal(12,2) the amount reduced to
+    *balance*
+    _dues15_balance              DatabaseDecimal(12,2) the amount to be settled
+    dues15_balanced              boolean               was balanced?
+    dues15_paid                  boolean               payment flag
+    dues15_amount_paid           DatabaseDecimal(12,2) how much paid?
+    dues15_paid_date             datetime              paid when?
+    ============================ ===================== ===========================
+
+
     '''
     __tablename__ = 'members'
     id = Column(Integer, primary_key=True)
@@ -971,6 +1109,27 @@ class Dues15Invoice(Base):
     and a new invoice must be issued.
 
     Edge case: if reduced to 0, no new invoice needed.
+
+    ============================ ===================== ===========================
+    name                         type                  description
+    ============================ ===================== ===========================
+    id                           integer, primary key  tech. id. / no. in table
+    invoice_no                   integer
+    invoice_no_string            unicode
+    invoice_date                 datetime
+    invoice_amount               DatabaseDecimal(12,2)
+    is_cancelled                 boolean               superseeded by reversal i.
+    cancelled_date               datetime
+    is_reversal                  boolean               is reversal?
+    is_altered                   boolean               reduction or more?
+    member_id                    integer
+    membership_no                integer
+    email                        unicode               sent to
+    token                        unicode
+    preceding_invoice_no         integer
+    succeeding_invoice_no        integer
+    ============================ ===================== ===========================
+
     """
     __tablename__ = 'dues15invoices'
     id = Column(Integer, primary_key=True)
