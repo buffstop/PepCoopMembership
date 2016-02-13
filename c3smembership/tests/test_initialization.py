@@ -5,13 +5,16 @@ import unittest
 # from c3smembership import scripts  # just to trigger coverage
 # from c3smembership.scripts.initialize_db import init_50
 
+DEBUG = False
+
 
 class TestDBInitialization(unittest.TestCase):
     """
     tests for the database initialization scripts
     """
-    print("--------------------------------------------------------------")
-    print("-- tests for the initialize_db script (output unsuppressed)")
+    if DEBUG:  # pragma: no cover
+        print("--------------------------------------------------------------")
+        print("-- tests for the initialize_db script (output unsuppressed)")
 
     def setUp(self):
         pass
@@ -24,11 +27,13 @@ class TestDBInitialization(unittest.TestCase):
         argv = ['initialize_c3sMembership_db']
         try:  # we will hit SystemExit: 1
             result = usage(argv)
-            print("the result: %s" % result)
+            if DEBUG:  # pragma: no cover
+                print("the result: %s" % result)
         except:
             # print ("caught exception!")
             pass
-        print("--------------------------------------------------------------")
+        if DEBUG:  # pragma: no cover
+            print("----------------------------------------------------------")
 
     # def test_usage_process(self):
     #     try:
@@ -67,7 +72,8 @@ class TestDBInitialization(unittest.TestCase):
             result = main(argv)
             result  # apease flake8
         self.assertEqual(cm.exception.code, 1)
-        print("--------------------------------------------------------------")
+        if DEBUG:  # pragma: no cover
+            print("----------------------------------------------------------")
 
     def test_main_correct(self):
         """
@@ -80,4 +86,5 @@ class TestDBInitialization(unittest.TestCase):
         argv = ['initialize_c3sMembership_db', 'webdrivertest.ini']
         result = main(argv)
         result  # apease flake8
-        print("--------------------------------------------------------------")
+        if DEBUG:  # pragma: no cover
+            print("----------------------------------------------------------")
