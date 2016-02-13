@@ -5,8 +5,8 @@ This module holds GnuPG functionality for c3sMembership.
 
 GnuPG is used to encrypt email to staff
 
-- when new applications for membership arrive
-- for data export (e.g. CSV)
+* when new applications for membership arrive
+* for data export (e.g. CSV)
 """
 #
 # you need python-gnupg, so
@@ -25,34 +25,37 @@ def encrypt_with_gnupg(data):
     this function encrypts "data" with gnupg.
 
     returns strings:
-    -----BEGIN PGP MESSAGE-----\nVersion: GnuPG v1.4.11 (GNU/Linux)\n
+    -----BEGIN PGP MESSAGE-----\n
+    Version: GnuPG v1.4.11 (GNU/Linux)\n
     ...
     -----END PGP MESSAGE-----\n
     """
     # we use a folder named 'keys' to store stuff
 
-#    if os.path.exists("keys"):
-#        if DEBUG:  # pragma: no cover
-#            print("===================================== GNUPG START")
-#            print "folder 'keys' exists"
-        # shutil.rmtree("keys")     # delete to renew
-        # print "deleted keys"
+    # if os.path.exists("keys"):
+    #     if DEBUG:  # pragma: no cover
+    #         print("===================================== GNUPG START")
+    #         print "folder 'keys' exists"
+    #     shutil.rmtree("keys")     # delete to renew
+    #     print "deleted keys"
 
     # tempfile approach
     keyfolder = tempfile.mkdtemp()
-#    print(keyfolder)
-# TODO: check for a better way to do this:
-# do we really need to create a new tempdir for every run? no!
-# but hey as long as we need to run both as 'normal' user (while testing
-# on port 6544) and as www-data (apache) we do need separate folders,
-# because only the creator may access it.
-# however: as long as this is reasonably fast, we can live with it. for now...
+    # print(keyfolder)
 
-#    if DEBUG:  # pragma: no cover
-#        # a gpg object to work with
-#        gpg = gnupg.GPG(gnupghome="keys", verbose=True)
-#    else:
-        #gpg = gnupg.GPG(gnupghome="keys")
+    # TODO: check for a better way to do this:
+    # do we really need to create a new tempdir for every run? no!
+    # but hey as long as we need to run both as 'normal' user (while testing
+    # on port 6544) and as www-data (apache) we do need separate folders,
+    # because only the creator may access it.
+    # however: as long as this is reasonably fast,
+    # we can live with it. for now...
+
+    #    if DEBUG:  # pragma: no cover
+    #        # a gpg object to work with
+    #        gpg = gnupg.GPG(gnupghome="keys", verbose=True)
+    #    else:
+    # gpg = gnupg.GPG(gnupghome="keys")
     gpg = gnupg.GPG(gnupghome=keyfolder)
     gpg.encoding = 'utf-8'
 
@@ -111,21 +114,21 @@ kViZMg==
     # prepare
     to_encode = data
 
-    #if DEBUG:  # pragma: no cover
-#    print("encrypt_with_gnupg: data: %s") % data
-#    print("encrypt_with_gnupg: type(data): %s") % type(data)
+    # if DEBUG:  # pragma: no cover
+    #    print("encrypt_with_gnupg: data: %s") % data
+    #    print("encrypt_with_gnupg: type(data): %s") % type(data)
+    #    print("type of to_encode: %s") % type(to_encode)
 
-#    print("type of to_encode: %s") % type(to_encode)
     if isinstance(to_encode, unicode):
-        #print("type is unicode")
+        # print("type is unicode")
         to_encrypt = to_encode.encode(gpg.encoding)
     else:
         to_encrypt = to_encode
-    #elif isinstance(to_encode, str):
+    # elif isinstance(to_encode, str):
     #    print("type was string")
     #    to_encrypt = to_encode.encode(gpg.encoding)
     #    print("type is now %s") % type(to_encrypt)
-    #else:
+    # else:
     #    print("type is neither str nor unicode: %s") % type(to_encode)
 
     if DEBUG:  # pragma: no cover
@@ -137,7 +140,7 @@ kViZMg==
     encrypted = gpg.encrypt(
         to_encrypt,
         '89FC70ECCAD4487972D8924D71F6BA91CDD28110',  # key fingerprint
-        #'ED6CAAC657A45BCF55EAE6EFE83C7CFC7CB6F90F',  # key fingerprint
+        # 'ED6CAAC657A45BCF55EAE6EFE83C7CFC7CB6F90F',  # key fingerprint
         always_trust=True)
 
     if DEBUG:  # pragma: no cover
@@ -171,7 +174,7 @@ if __name__ == '__main__':  # pragma: no coverage
     my_string = """
     --                                      --
     --  So here is some sample text.        --
-    --  With out umlauts.                   --
+    --  Without umlauts.                   --
     --  I want this to be encrypted.        --
     --  And then maybe send it via email    --
     --                                      --
