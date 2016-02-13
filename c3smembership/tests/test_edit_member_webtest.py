@@ -167,7 +167,7 @@ class EditMemberTests(unittest.TestCase):
         self.__validate_abortive_edit(
             member.id,
             {
-                'firstname': u'EinVorname',
+                'firstname': u'EinVörname',
                 'lastname': u'EinNachname',
                 'email': u'info@c3s.cc',
                 'address1': u'adressteil 1',
@@ -182,13 +182,13 @@ class EditMemberTests(unittest.TestCase):
                 'num_shares': 42,
                 'date_of_birth': date.today(),
             },
-            ['is later than latest date 2000-01-01'])
+            [u'is later than latest date 2000-01-01'])
 
         # set the date correctly
         self.__validate_successful_edit(
             member.id,
             {
-                'firstname': u'EinVorname',
+                'firstname': u'EinVörname',
                 'lastname': u'EinNachname',
                 'email': u'info@c3s.cc',
                 'address1': u'adressteil 1',
@@ -247,7 +247,8 @@ class EditMemberTests(unittest.TestCase):
         """
         if body_content_parts is not None:
             for body_content_part in body_content_parts:
-                self.assertTrue(body_content_part in res.body.decode('utf-8'))
+                self.assertTrue(body_content_part.decode(
+                    'utf-8') in res.body.decode('utf-8'))
 
     @staticmethod
     def __validate_submit_error(res):
@@ -420,9 +421,9 @@ class EditMemberTests(unittest.TestCase):
             member.id,
             {
                 'membership_loss_date': date.today(),
-                'membership_loss_type': 'resignation',
+                'membership_loss_type': u'resignation',
             },
-            ['Please note: There were errors, please check the form below.'])
+            [u'Please note: There were errors, please check the form below.'])
 
         # 2 Editing members
         member = EditMemberTests.__create_accepted_member_full()
@@ -548,7 +549,7 @@ class EditMemberTests(unittest.TestCase):
                 'membership_loss_date': date(2016, 12, 30),
                 'membership_loss_type': 'resignation',
             },
-            ['Resignations are only allowed to the 31st of December of a '
+            [u'Resignations are only allowed to the 31st of December of a '
              'year.'])
 
         # 2.4.4 Set loss type to resignation and loss date to 31st of
@@ -571,8 +572,8 @@ class EditMemberTests(unittest.TestCase):
                 'membership_loss_date': date(2016, 3, 25),
                 'membership_loss_type': 'death',
             },
-            ['The membership loss type \'death\' is only allowed for natural '
-             'person members and not for legal entity members.'])
+            [u'The membership loss type \'death\' is only allowed for natural '
+             u'person members and not for legal entity members.'])
 
         # 2.5.2 Set loss type to death and entity type to natural person ->
         #       success
@@ -595,8 +596,8 @@ class EditMemberTests(unittest.TestCase):
                 'membership_loss_date': date(2016, 3, 25),
                 'membership_loss_type': 'winding-up',
             },
-            ['The membership loss type \'winding-up\' is only allowed for '
-             'legal entity members and not for natural person members.'])
+            [u'The membership loss type \'winding-up\' is only allowed for '
+             u'legal entity members and not for natural person members.'])
 
         # 2.6.2 Set loss type to winding-up and entity type to legal entity
         #       -> success
