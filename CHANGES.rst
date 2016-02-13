@@ -14,6 +14,8 @@ Next Release
 - Let make member function return to page of origin, either dashboard or
   details page.
 
+- Personalise emails which are sent from the application to members.
+
 
 
 1.14
