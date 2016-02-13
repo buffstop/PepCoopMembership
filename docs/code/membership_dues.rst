@@ -1,7 +1,7 @@
 .. _code_docs_membership_fees:
 
 
-Membership Fees
+Membership Dues
 ---------------
 
 .. automodule:: c3smembership.views.membership_dues

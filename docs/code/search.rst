@@ -1,8 +1,8 @@
 .. _code_docs_search:
 
 
-Search
-------
+Search (backend)
+----------------
 
 
 .. automodule:: c3smembership.search

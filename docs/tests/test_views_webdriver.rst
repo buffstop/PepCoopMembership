@@ -2,7 +2,7 @@
 
 
 Tests some Views using Webdriver
--------------------------------
+--------------------------------
 
 The main form to apply for membership is equipped with a slider widget
 to choose the number of shares to aquire.
