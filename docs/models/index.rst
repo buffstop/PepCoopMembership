@@ -2,8 +2,5 @@
 The Database Model(s)
 =====================
 
-These docs were auto-generated from the docstrings in the code:
+The documentation for the database model is here: :ref:`code_docs_models`
 
-
-.. automodule:: c3smembership.models
-    :members:
