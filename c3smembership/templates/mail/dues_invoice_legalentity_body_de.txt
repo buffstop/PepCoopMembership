@@ -1,0 +1,35 @@
+Hallo {first_name},
+
+am 16.07.2015 hat die außerordentliche Mitgliederversammlung der C3S SCE
+eine vorläufige Beitragsordnung erlassen, weil uns sonst die finanzielle
+Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
+
+  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
+
+Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
+demnach 50 Euro.
+
+Da {last_name} investierendes Mitglied ist, seid Ihr vom
+Mitgliedsbeitrag befreit. Ihr würdet der C3S aber sehr helfen, wenn Ihr 
+dennoch freiwillig einen Beitrag leisten würdet.
+
+Für juristische Personen wird empfohlen, über den Grundbetrag hinaus
+einen Förderbeitrag in folgender Höhe zu entrichten:
+
+a) bis zu einem Jahresumsatz i. H. v. 100.000 Euro pro Jahr 100 Euro
+b) bis zu einem Jahresumsatz i. H. v. 200.000 Euro pro Jahr 200 Euro
+c) bei höherem Jahresumsatz ist die Höhe entsprechend anzupassen.
+
+Wenn Ihr uns unterstützen möchtest, überweist Eure freiwillige
+Zuwendung auf folgendes Konto:
+
+  Verwendungszweck: C3S-FZ-{membership_number}
+  IBAN: DE79 8309 4495 0003 2643 78
+  BIC: GENODEF1ETK
+  Bank: Ethikbank
+
+Vielen Dank für Euren Support!
+
+Dein C3S Team
+
+{footer}

@@ -802,6 +802,17 @@ class TestDues15Views(unittest.TestCase):
         )
         req_reduce.matchdict['member_id'] = 1
         res_reduce = dues15_reduction(req_reduce)
+
+        req_reduce = testing.DummyRequest(
+            post={
+                'confirmed': 'yes',
+                'submit': True,
+                'amount': 0,
+                # lots of values missing
+            },
+        )
+        req_reduce.matchdict['member_id'] = 2
+        res_reduce = dues15_reduction(req_reduce)
         #############################################################
         # try to reduce to zero with english member (edge case coverage)
         # how to do this if you already reduced to zero? reduce to more first!

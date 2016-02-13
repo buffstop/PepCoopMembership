@@ -1,0 +1,15 @@
+Hello {first_name} {last_name},
+
+You have applied for exemption from your membership contributions.
+
+We therefore exempt you from the payment of your dues.
+
+You will find the reversal invoice of your membership dues invoice here:
+
+  {reversal_invoice_url}
+
+With best wishes
+
+Your C3S team
+
+{footer}

@@ -1,0 +1,31 @@
+Hallo {first_name} {last_name},
+
+Du hast eine Reduzierung Deines Mitgliedsbeitrages beantragt.
+
+Wir geben Deinem Antrag statt und reduzieren Deinen Beitrag daher auf
+{dues_amount} €.
+
+Bitte überweise die genannte Summe auf folgendes Konto der C3S SCE:
+
+  Verwendungszweck: {invoice_number}, Mitglied Nr. {membership_number}
+  IBAN: DE79 8309 4495 0003 2643 78
+  BIC: GENODEF1ETK
+  Bank: Ethikbank
+
+Gebe bei der Überweisung des Mitgliedsbeitrags bitte unbedingt den
+oben genannten Verwendungszweck an, damit die Zahlung zweifelsfrei Dir
+zugeordnet werden kann.
+
+Hier ist die neue Rechnung als PDF:
+
+  {invoice_url}
+
+Die Storno-Rechnung zu Deiner ersten Beitragsrechnung findest Du hier:
+
+  {reversal_invoice_url}
+
+Vielen Dank für Deinen Support!
+
+Dein C3S Team
+
+{footer}

@@ -1,0 +1,15 @@
+Hallo {first_name} {last_name},
+
+Du hast eine Befreiung von der Zahlung des Mitgliedsbeitrages beantragt.
+
+Wir geben Deinem Antrag statt und erlassen Dir die Beitragszahlung.
+
+Die Storno-Rechnung zu deiner Beitragsrechnung findest du hier:
+
+  {reversal_invoice_url}
+
+Beste Grüße
+
+Dein C3S Team
+
+{footer}

@@ -21,7 +21,6 @@ import os
 import subprocess
 import tempfile
 from pyramid.httpexceptions import HTTPFound
-from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.response import Response
 from pyramid.view import view_config
@@ -32,17 +31,13 @@ from c3smembership.models import (
     Dues15Invoice,
 )
 
+from c3smembership.mail_utils import send_message
 from .membership_dues_texts import (
-    dues_invoice_mailbody_normal_de,
-    dues_invoice_mailbody_normal_en,
-    dues_invoice_mailbody_investing_de,
-    dues_invoice_mailbody_investing_en,
-    dues_legalentities_de,
-    dues_legalentities_en,
-    dues_update_reduction_de,
-    dues_update_reduction_en,
-    dues_exemption_de,
-    dues_exemption_en,
+    make_dues_invoice_email,
+    make_dues_invoice_investing_email,
+    make_dues_invoice_legalentity_email,
+    make_dues_reduction_email,
+    make_dues_exemption_email,
 )
 
 DEBUG = False
@@ -63,19 +58,6 @@ def make_random_string():
         random.choice(
             string.ascii_uppercase
         ) for x in range(10))
-
-
-def get_transfer_purpose(invoice, member):
-    """
-    Get the money transfer purpose according to the member's locale.
-    """
-    if 'de' in member.locale:
-        purpose_template = u'{0}, Mitglied Nr. {1}'
-    else:
-        purpose_template = u'{0}, member no. {1}'
-    return purpose_template.format(
-        invoice.invoice_no_string,
-        member.membership_number)
 
 
 def calculate_partial_dues15(member):
@@ -236,15 +218,7 @@ def send_dues_invoice_email(request, m_id=None):
     # only the normal members get an invoice link and PDF produced for them.
     # only investing legalentities are asked for more support.
     if 'investing' not in member.membership_type:
-        # choose subject and body template depending on language
-        if 'de' in member.locale:
-            mail_subject = u"Mitgliedsbeiträge C3S SCE - Rechnung"
-            mail_template = dues_invoice_mailbody_normal_de
-        else:
-            mail_subject = u"Membership contributions C3S SCE - invoice"
-            mail_template = dues_invoice_mailbody_normal_en
         start_quarter = string_start_quarter(member)
-        # prepare invoice URL
         invoice_url = (
             request.route_url(
                 'make_dues_invoice_no_pdf',
@@ -253,47 +227,32 @@ def send_dues_invoice_email(request, m_id=None):
                 i=str(member.dues15_invoice_no).zfill(4)
             )
         )
-        # construct a message to send
+        email_subject, email_body = make_dues_invoice_email(
+            member,
+            invoice,
+            invoice_url,
+            start_quarter)
         message = Message(
-            subject=mail_subject,
+            subject=email_subject,
             sender='yes@office.c3s.cc',
             recipients=[member.email],
-            body=mail_template.format(
-                member.firstname,  # {0}
-                member.lastname,  # {1}
-                get_transfer_purpose(invoice, member),  # {2}
-                str(member.dues15_amount),  # {3}
-                invoice_url,  # {4}
-                start_quarter,  # {5}
-            ),
+            body=email_body,
             extra_headers={
                 'Reply-To': 'office@c3s.cc',
             }
         )
     elif 'investing' in member.membership_type:
-        # choose subject, body template and snippet depending on language
-        if 'de' in member.locale:
-            mail_subject = (u"Mitgliedsbeiträge C3S SCE – "
-                            u"Bitte um Unterstützung")
-            mail_template = dues_invoice_mailbody_investing_de
-            if member.is_legalentity:
-                mail_template = dues_legalentities_de
+        if member.is_legalentity:
+            email_subject, email_body = \
+                make_dues_invoice_legalentity_email(member)
         else:
-            mail_subject = u"Membership C3S SCE – a call for support"
-            mail_template = dues_invoice_mailbody_investing_en
-            if member.is_legalentity:
-                mail_template = dues_legalentities_en
-
-        # construct a message to send
+            email_subject, email_body = \
+                make_dues_invoice_investing_email(member)
         message = Message(
-            subject=mail_subject,
+            subject=email_subject,
             sender='yes@office.c3s.cc',
             recipients=[member.email],
-            body=mail_template.format(
-                member.firstname,  # {0} representative
-                member.lastname,  # {1}  name legal entity
-                'C3S-FZ-' + str(member.membership_number),  # {2}
-            ),
+            body=email_body,
             extra_headers={
                 'Reply-To': 'office@c3s.cc',
             }
@@ -303,8 +262,7 @@ def send_dues_invoice_email(request, m_id=None):
     if 'true' in request.registry.settings['testing.mail_to_console']:
         print(message.body.encode('utf-8'))  # pragma: no cover
     else:
-        mailer = get_mailer(request)
-        mailer.send(message)
+        send_message(request, message)
 
     # now choose where to redirect
     if 'detail' in request.referrer:
@@ -736,16 +694,6 @@ def dues15_reduction(request):
 
         DBSession.flush()  # persist newer invoices
 
-    # choose subject and body template depending on language
-    if 'de' in member.locale:
-        mail_subject = u"Mitgliedsbeiträge C3S SCE - Rechnungsupdate"
-        mail_template = dues_update_reduction_de if (
-            not is_exemption) else dues_exemption_de
-    else:
-        mail_subject = u"Membership contributions C3S SCE - invoice update"
-        mail_template = dues_update_reduction_en if (
-            not is_exemption) else dues_exemption_en
-    # prepare invoice URLs
     reversal_url = (
         request.route_url(
             'make_reversal_invoice_pdf',
@@ -754,24 +702,10 @@ def dues15_reduction(request):
             no=str(reversal_invoice.invoice_no).zfill(4)
         )
     )
-
     if is_exemption:
-        # now send member a mail!
-        update = Message(
-            subject=mail_subject,
-            sender='yes@office.c3s.cc',
-            recipients=[member.email],
-            body=mail_template.format(
-                member.firstname,  # {0}
-                member.lastname,  # {1}
-                reversal_url,  # {2}
-            ),
-            extra_headers={
-                'Reply-To': 'office@c3s.cc',
-            }
-        )
-        request.session.flash('exemption email was sent to user!',
-                              'dues15_message_to_staff')
+        email_subject, email_body = make_dues_exemption_email(
+            member,
+            reversal_url)
     else:
         invoice_url = (
             request.route_url(
@@ -781,34 +715,28 @@ def dues15_reduction(request):
                 i=str(new_invoice_no + 1).zfill(4)
             )
         )
+        email_subject, email_body = make_dues_reduction_email(
+            member,
+            new_invoice,
+            invoice_url,
+            reversal_url)
 
-        # now send member a mail!
-        update = Message(
-            subject=mail_subject,
-            sender='yes@office.c3s.cc',
-            recipients=[member.email],
-            body=mail_template.format(
-                member.firstname,  # {0}
-                member.lastname,  # {1}
-                str(member.dues15_amount_reduced),  # {3}
-                'C3S-dues2015-' + str(member.dues15_invoice_no).zfill(4),  # {2}
-                invoice_url,  # {4}
-                reversal_url,  # {5}
-            ),
-            extra_headers={
-                'Reply-To': 'office@c3s.cc',
-            }
-        )
+    message = Message(
+        subject=email_subject,
+        sender='yes@office.c3s.cc',
+        recipients=[member.email],
+        body=email_body,
+        extra_headers={
+            'Reply-To': 'office@c3s.cc',
+        }
+    )
+    if is_exemption:
+        request.session.flash('exemption email was sent to user!',
+                              'dues15_message_to_staff')
+    else:
         request.session.flash('update email was sent to user!',
                               'dues15_message_to_staff')
-
-    # print to console or send mail
-    if 'true' in request.registry.settings['testing.mail_to_console']:
-        print(update.body.encode('utf-8'))  # pragma: no cover
-    else:
-        mailer = get_mailer(request)
-        mailer.send(update)
-
+    send_message(request, message)
     return HTTPFound(
         request.route_url(
             'detail',

@@ -1,0 +1,31 @@
+Hello {first_name} {last_name},
+
+On July 16th, 2015, the extraordinary general assembly of the C3S has
+issued temporary membership contribution rules, in order to secure the
+financial basis for the continuation of our common project:
+
+  https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_en.pdf
+
+For 2015, the annual membership dues for active members will therefore
+be 50 Euro. They will be less if you joined later than in the first
+quarter 2015 (12,50 Euro per quarter of active membership).
+
+Please transfer {dues_amount} Euro to the following account of the C3S SCE:
+
+  Purpose: {invoice_number}, member no. {membership_number}
+  IBAN: DE79 8309 4495 0003 2643 78
+  BIC: GENODEF1ETK
+  Bank: Ethikbank
+
+In order to enable the proper allocation of your membership dues, please
+add the above-mentioned purpose.
+
+You will find the invoice here:
+
+  {invoice_url}
+
+Many thanks for your support!
+
+Your C3S team
+
+{footer}
