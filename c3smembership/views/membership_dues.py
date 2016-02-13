@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-This module holds code for membership dues functionality.
+This module holds code for Membership Dues (2015 edition).
 
-- Send email to a member:
-  - request transferral of membership dues.
-  - also send link to invoice PDF.
-- Produce an invoice PDF when member clicks her invoice link.
-- Batch-send email to n members.
-- When dues transfer arrives, book it to member.
-- When member asks for reduction of dues fee, let staff handle it:
-  - set a new reduced amount
-  - send email with update: reversal invoice and new invoice
+* Send email to a member:
+
+   - request transferral of membership dues.
+   - also send link to invoice PDF.
+
+* Produce an invoice PDF when member clicks her invoice link.
+* Batch-send email to n members.
+* When dues transfer arrives, book it to member.
+* When member asks for reduction of dues fee, let staff handle it:
+
+   - set a new reduced amount
+   - send email with update: reversal invoice and new invoice
 """
 from datetime import (
     datetime,
@@ -62,9 +65,11 @@ def make_random_string():
 
 def calculate_partial_dues15(member):
     """
-    helper function: calculate
+    helper function: calculate..
+
     * codified start quarter (q1, q2, q3, q4) and
     * dues
+
     depending on members entry date
     """
     if member.membership_date < datetime(2015, 4, 1):
@@ -334,6 +339,11 @@ def make_dues_invoice_no_pdf(request):
     and returns
     - an error message OR
     - a PDF as receipt
+
+    === ===========================================================
+    URL http://app:port/dues_invoice_no/EMAIL/CAQJGCGUFW/C3S-dues15-0001.pdf
+    === ===========================================================
+
     """
     email_address = request.matchdict['email']
     token = request.matchdict['code']
@@ -536,7 +546,7 @@ def dues15_reduction(request):
 
     this will only work for *normal* members.
     """
-   # member: sanity checks
+    # member: sanity checks
     try:
         member_id = request.matchdict['member_id']
         member = C3sMember.get_by_id(member_id)  # is in database
@@ -548,8 +558,8 @@ def dues15_reduction(request):
             'dues15_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id)
-            + '#dues15')
+
+            request.route_url('detail', memberid=member.id) + '#dues15')
 
     # sanity check: the given amount is a positive decimal
     try:
@@ -565,8 +575,7 @@ def dues15_reduction(request):
             'dues15_message_to_staff'  # message queue for user
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id)
-            + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues15')
 
     if DEBUG:
         print("DEBUG: member.dues15_amount: {}".format(
@@ -589,8 +598,7 @@ def dues15_reduction(request):
             'dues15_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id)
-            + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues15')
 
     # check the reduction amount: same as default calculated amount?
     if ((member.dues15_reduced is False) and (
@@ -600,8 +608,7 @@ def dues15_reduction(request):
             'dues15_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id)
-            + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues15')
 
     if reduced_amount == member.dues15_amount_reduced:
         request.session.flash(
@@ -609,8 +616,7 @@ def dues15_reduction(request):
             'dues15_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id)
-            + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues15')
 
     if member.dues15_reduced \
             and reduced_amount > member.dues15_amount_reduced \
@@ -913,8 +919,7 @@ def dues15_notice(request):
             'dues15notice_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id)
-            + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues15')
 
     # sanity check: the given amount is a positive decimal
     try:
@@ -930,8 +935,7 @@ def dues15_notice(request):
             'dues15notice_message_to_staff'  # message queue for user
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id)
-            + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues15')
 
     # sanity check: the given date is a valid date
     try:
@@ -948,9 +952,8 @@ def dues15_notice(request):
             'dues15notice_message_to_staff'  # message queue for user
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id)
-            + '#dues15')
-
+            request.route_url('detail', memberid=member.id) + '#dues15')
+           
     # persist info about payment
     member.set_dues15_payment(paid_amount, paid_date)
 
