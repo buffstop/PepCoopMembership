@@ -1,4 +1,4 @@
-Liebes Neumitglied,
+Hallo {salutation},
 
 Deine Überweisung für {num_shares} Anteil(e) im Wert von {sum_shares} Euro
 ist auf unserem Konto eingegangen.

@@ -1,4 +1,4 @@
-Liebes Neumitglied,
+Hallo {salutation},
 
 Dein Beitrittsformular zur Zeichnung von {num_shares} Anteilen im Wert von
 {sum_shares} Euro ist sicher bei uns gelandet.

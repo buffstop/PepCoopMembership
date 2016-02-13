@@ -5,6 +5,7 @@ Email creation for invoices notifications.
 from c3smembership.mail_utils import (
     get_template_text,
     get_email_footer,
+    get_salutation,
 )
 
 
@@ -16,8 +17,7 @@ def make_dues_invoice_email(member, invoice, invoice_url, invoice_quarter):
     return (
         get_template_text('dues_invoice_subject', member.locale),
         get_template_text('dues_invoice_body', member.locale).format(
-            first_name=member.firstname,
-            last_name=member.lastname,
+            salutation=get_salutation(member),
             dues_amount=str(member.dues15_amount),
             invoice_url=invoice_url,
             invoice_quarter=invoice_quarter,
@@ -37,8 +37,7 @@ def make_dues_invoice_investing_email(member):
             'dues_invoice_investing_body',
             member.locale
         ).format(
-            first_name=member.firstname,
-            last_name=member.lastname,
+            salutation=get_salutation(member),
             membership_number=member.membership_number,
             footer=get_email_footer(member.locale)))
 
@@ -54,8 +53,8 @@ def make_dues_invoice_legalentity_email(member):
             'dues_invoice_legalentity_body',
             member.locale
         ).format(
-            first_name=member.firstname,
-            last_name=member.lastname,
+            salutation=get_salutation(member),
+            legal_entity_name=member.lastname,
             membership_number=member.membership_number,
             footer=get_email_footer(member.locale)))
 
@@ -67,8 +66,7 @@ def make_dues_reduction_email(member, invoice, invoice_url, reversal_url):
     return (
         get_template_text('dues_reduction_subject', member.locale),
         get_template_text('dues_reduction_body', member.locale).format(
-            first_name=member.firstname,
-            last_name=member.lastname,
+            salutation=get_salutation(member),
             dues_amount=str(member.dues15_amount_reduced),
             invoice_number=invoice.invoice_no_string,
             membership_number=member.membership_number,
@@ -84,7 +82,6 @@ def make_dues_exemption_email(member, reversal_url):
     return (
         get_template_text('dues_exemption_subject', member.locale),
         get_template_text('dues_exemption_body', member.locale).format(
-            first_name=member.firstname,
-            last_name=member.lastname,
+            salutation=get_salutation(member),
             reversal_invoice_url=reversal_url,
             footer=get_email_footer(member.locale)))

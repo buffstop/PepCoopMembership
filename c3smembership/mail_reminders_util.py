@@ -3,6 +3,7 @@ from c3smembership.mail_utils import (
     get_template_text,
     format_date,
     get_email_footer,
+    get_salutation,
 )
 
 
@@ -14,8 +15,7 @@ def make_signature_reminder_email(member):
     return (
         get_template_text('signature_reminder_subject', member.locale),
         get_template_text('signature_reminder_body', member.locale).format(
-            first_name=member.firstname,
-            last_name=member.lastname,
+            salutation=get_salutation(member),
             submission_date=format_date(
                 member.date_of_submission,
                 member.locale),
@@ -30,8 +30,7 @@ def make_payment_reminder_email(member):
     return (
         get_template_text('payment_reminder_subject', member.locale),
         get_template_text('payment_reminder_body', member.locale).format(
-            first_name=member.firstname,
-            last_name=member.lastname,
+            salutation=get_salutation(member),
             submission_date=format_date(
                 member.date_of_submission,
                 member.locale),

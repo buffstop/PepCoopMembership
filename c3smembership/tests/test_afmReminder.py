@@ -111,7 +111,7 @@ class TestReminderViews(unittest.TestCase):
             u"C3S: don't forget to send your membership application form"
         )
         self.assertTrue(
-            u"Dear SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)
+            u"Hello SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)
 
     def test_reminder_payment(self):
         """
@@ -140,4 +140,4 @@ class TestReminderViews(unittest.TestCase):
         )
 
         self.assertTrue(
-            u"Dear SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)
+            u"Hello SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)

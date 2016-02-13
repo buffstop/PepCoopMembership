@@ -1,4 +1,4 @@
-Dear new member,
+Hello {salutation},
 
 Your membership application form to sign {num_shares} with value of
 {sum_shares} Euro safely arrived at our homebase.

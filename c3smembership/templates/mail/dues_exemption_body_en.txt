@@ -1,4 +1,4 @@
-Hello {first_name} {last_name},
+Hello {salutation},
 
 You have applied for exemption from your membership contributions.
 

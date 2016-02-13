@@ -1,4 +1,4 @@
-Hallo {first_name} {last_name},
+Hallo {salutation},
 
 am 16.07.2015 hat die außerordentliche Mitgliederversammlung der C3S SCE
 eine vorläufige Beitragsordnung erlassen, weil uns sonst die finanzielle

@@ -53,7 +53,7 @@ class TestMailMailConfirmationViews(unittest.TestCase):
         email_subject, email_body = make_payment_reminder_email(self.__member)
 
         # make sure the English part is English
-        self.assertTrue('Dear' in email_body)
+        self.assertTrue('Hello' in email_body)
         self.assertTrue('All the best' in email_body)
         self.assertTrue(payment_reference_code in email_body)
 
@@ -62,6 +62,6 @@ class TestMailMailConfirmationViews(unittest.TestCase):
         email_subject, email_body = make_payment_reminder_email(self.__member)
 
         # make sure the German part is German
-        self.assertTrue('Liebe_r' in email_body)
+        self.assertTrue('Hallo' in email_body)
         self.assertTrue('Das Team der C3S' in email_body)
         self.assertTrue(payment_reference_code in email_body)

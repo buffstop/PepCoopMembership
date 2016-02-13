@@ -1,4 +1,4 @@
-Liebe_r {first_name} {last_name},
+Hallo {salutation},
 
 vielen Dank, dass Du Mitglied der C3S werden und uns unterstützen
 möchtest!

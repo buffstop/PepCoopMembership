@@ -1,4 +1,4 @@
-Dear new member,
+Hello {salutation},
 
 Your transfer of {sum_shares}  Euro for {num_shares} share(s) just showed
 in our bank account.

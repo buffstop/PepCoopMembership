@@ -1,4 +1,4 @@
-Hallo {first_name} {last_name},
+Hallo {salutation},
 
 Du hast eine Befreiung von der Zahlung des Mitgliedsbeitrages beantragt.
 

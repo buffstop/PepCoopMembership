@@ -1,4 +1,4 @@
-Hallo {first_name},
+Hallo {salutation},
 
 am 16.07.2015 hat die außerordentliche Mitgliederversammlung der C3S SCE
 eine vorläufige Beitragsordnung erlassen, weil uns sonst die finanzielle
@@ -9,7 +9,7 @@ Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
 Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt
 demnach 50 Euro.
 
-Da {last_name} investierendes Mitglied ist, seid Ihr vom
+Da {legal_entity_name} investierendes Mitglied ist, seid Ihr vom
 Mitgliedsbeitrag befreit. Ihr würdet der C3S aber sehr helfen, wenn Ihr 
 dennoch freiwillig einen Beitrag leisten würdet.
 

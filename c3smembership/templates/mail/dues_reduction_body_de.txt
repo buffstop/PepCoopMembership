@@ -1,4 +1,4 @@
-Hallo {first_name} {last_name},
+Hallo {salutation},
 
 Du hast eine Reduzierung Deines Mitgliedsbeitrages beantragt.
 

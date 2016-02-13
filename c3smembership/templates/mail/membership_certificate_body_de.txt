@@ -1,4 +1,4 @@
-Hallo {first_name} {last_name},
+Hallo {salutation},
 
 wir freuen uns, Dir Deine persönliche Mitgliederbescheinigung aushändigen
 zu können!

@@ -1,4 +1,4 @@
-Dear {first_name} {last_name},
+Hello {salutation},
 
 we appreciate that you want to join C3S as a member and thereby support
 us.

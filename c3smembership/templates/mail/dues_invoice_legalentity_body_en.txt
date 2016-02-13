@@ -1,4 +1,4 @@
-Hello {first_name},
+Hello {salutation},
 
 On July 16th, 2015, the extraordinary general assembly of the C3S has
 issued temporary membership contribution rules, in order to secure the
@@ -9,7 +9,7 @@ financial basis for the continuation of our common project:
 For 2015, the membership dues for active members will therefore be 50
 Euro.
 
-Since {last_name} is an investing member, you are exempt from this
+Since {legal_entity_name} is an investing member, you are exempt from this
 payment.
 However, your voluntary contribution would be highly appreciated as a
 tremendous help for the C3S.

@@ -1,4 +1,4 @@
-Hello {first_name} {last_name},
+Hello {salutation},
 
 On July 16th, 2015, the extraordinary general assembly of the C3S has
 issued temporary membership contribution rules, in order to secure the
