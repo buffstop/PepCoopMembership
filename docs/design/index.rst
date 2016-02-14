@@ -22,7 +22,6 @@ The package diagram of the data model:
 .. uml::
    :caption: The UML package diagram of the data model.
 
-   @startuml
    package Data {
        ' package Utilities
        package Users
@@ -40,8 +39,6 @@ The package diagram of the data model:
        Accounting <.. Dues
        Membership <.. Dues
    }
-   @enduml
-
 
 
 .. ---------
@@ -67,7 +64,6 @@ The package diagram of the data model:
 ..
 .. .. uml::
 ..
-..    @startuml
 ..    package Utilities {
 ..        class AccessToken {
 ..            id
@@ -76,7 +72,6 @@ The package diagram of the data model:
 ..            expiration
 ..        }
 ..    }
-..    @enduml
 
 
 
@@ -117,7 +112,6 @@ last_password_change Timestamp The timestamp of the last password change.
 .. uml::
    :caption: UML class diagram of the Users package.
 
-   @startuml
    package Users {
 
        class UserGroup {
@@ -142,7 +136,6 @@ last_password_change Timestamp The timestamp of the last password change.
        ' AccessToken <|-- EmailAddressConfirmationAccessToken
        ' Member "1" <-- "*" EmailAddressConfirmationAccessToken
       }
-   @enduml
 
 
 
@@ -229,7 +222,6 @@ The following figure shows the UML class diagram of the Membership package:
 .. uml::
    :caption: UML class diagram of the Membership package.
 
-   @startuml
    package Users {
        class User
    }
@@ -272,7 +264,6 @@ The following figure shows the UML class diagram of the Membership package:
 
        Member <|-- LegalBodyMember
    }
-   @enduml
 
 
 
@@ -342,7 +333,6 @@ quantity             Decimal   The quantity of shares which are transferred.
 .. uml::
    :caption: UML class diagram of the Shares package.
    
-   @startuml
    package Membership {
        class Member
    }
@@ -366,7 +356,6 @@ quantity             Decimal   The quantity of shares which are transferred.
        ShareTransaction "1" <-- "2" ShareTransactionSplit
        Member "1" <-- "*" ShareTransactionSplit
    }
-   @enduml
 
 Example:
 
@@ -420,7 +409,6 @@ be recorded for the membership list.
 .. uml::
    :caption: UML class diagram of the Membership Processes package.
 
-   @startuml
    package Membership {
        class Member
    }
@@ -478,7 +466,6 @@ be recorded for the membership list.
 
        ' TODO: death, liquidation
    }
-   @enduml
 
 
 
@@ -490,7 +477,6 @@ be recorded for the membership list.
 .. .. uml::
 ..    :caption: UML class diagram of the Membership Certificates package.
 ..
-..    @startuml
 ..     package Utilities {
 ..        class AccessToken
 ..    }
@@ -504,7 +490,6 @@ be recorded for the membership list.
 ..        AccessToken <|-- MemberCertificateAccessToken
 ..        Member "1" <-- "*" MemberCertificateAccessToken
 ..    }
-..    @enduml
 
 
 
@@ -516,7 +501,6 @@ Accounting
 .. uml::
    :caption: UML class diagram of the Accounting package.
 
-   @startuml
    package Accounting {
        class Account {
            id
@@ -537,7 +521,6 @@ Accounting
        Account "1" <-- "*" AccountTransactionSplit
        AccountTransaction "1" <-- "*" AccountTransactionSplit
    }
-   @enduml
 
 
 
@@ -605,7 +588,6 @@ cancellation_invoice_id Integer   (Foreign key, Invoice.id) Identifies the
 .. uml::
    :caption: UML class diagram of the Invoicing package.
 
-   @startuml
    ' package Utilities {
    '     class AccessToken
    ' }
@@ -656,7 +638,6 @@ cancellation_invoice_id Integer   (Foreign key, Invoice.id) Identifies the
        ' Invoice "1" <-- "*" InvoiceAccessToken
        ' AccessToken <|-- InvoiceAccessToken
    }
-   @enduml
 
 
 
@@ -705,7 +686,6 @@ with account transaction splits on dues accounts.
 .. uml::
    :caption: UML class diagram of the Dues package.
 
-   @startuml
    package Invoicing {
        class Invoice
        class InvoicePosition
@@ -746,7 +726,6 @@ with account transaction splits on dues accounts.
        Dues "1" <-- "*" DuesAccount
        Member "1" <-- "*" DuesAccount
    }
-   @enduml
 
 
 
@@ -758,11 +737,9 @@ Environment Architecture
 .. uml::
    :caption: UML component diagram of the environment architecture.
    
-   @startuml
    [Apache] --> [c3sMembership]
    [c3sMembership] --> [SQLite]
    [c3sMembership] --> [Python]
-   @enduml
 
 
 ========================
@@ -773,7 +750,6 @@ Application Architecture
 .. uml::
    :caption: UML package diagram of the application architecture.
 
-   @startuml
    package Data {
        package SQLAlchemy
        package SQLAlchemyContinuum
@@ -807,12 +783,10 @@ Application Architecture
        ChameleonTemplates ..> jQueryUI
    }
    Presentation ..> Logic
-   @enduml
 
 .. uml::
    :caption: UML package diagram of the documentation.
 
-   @startuml
    package Documentation {
       package Sphinx
       package Graphviz
@@ -821,7 +795,6 @@ Application Architecture
       PlantUML ..> Graphviz
       Sphinx ..> PlantUML
    }
-   @enduml
 
 
 - External services
