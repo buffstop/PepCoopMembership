@@ -31,6 +31,10 @@ That other webapp can be configured to fetch information
 about the relevant C3S member from this app via API call,
 see the relevant module.
 """
+from c3smembership.presentation.views.dashboard import get_dashboard_redirect
+from c3smembership.models import (
+    C3sMember,
+)
 from datetime import datetime
 from pyramid.httpexceptions import HTTPFound
 from pyramid_mailer import get_mailer
@@ -69,10 +73,7 @@ def invite_member_BCGV(request):
         request.session.flash(
             'id not found. no mail sent.',
             'messages')
-        return HTTPFound(request.route_url('membership_listing_backend',
-                                           number=request.cookies['on_page'],
-                                           order=request.cookies['order'],
-                                           orderby=request.cookies['orderby']))
+        return get_dashboard_redirect(request)
 
     # prepare a random token iff none is set
     if _m.email_invite_token_bcgv16 is None:
@@ -109,11 +110,7 @@ def invite_member_BCGV(request):
     # _m._token = _looong_token
     _m.email_invite_flag_bcgv16 = True
     _m.email_invite_date_bcgv16 = datetime.now()
-    return HTTPFound(request.route_url('membership_listing_backend',
-                                       number=request.cookies['on_page'],
-                                       order=request.cookies['order'],
-                                       orderby=request.cookies['orderby']) +
-                     '#member_' + str(_m.id))
+    return get_dashboard_redirect(request, _m.id)
 
 
 @view_config(

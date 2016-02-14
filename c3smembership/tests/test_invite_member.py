@@ -120,6 +120,7 @@ class TestInvitation(unittest.TestCase):
         self.config.include('pyramid_mailer.testing')
         self.config.add_route('membership_listing_backend', '/')
         self.config.add_route('toolbox', '/toolbox')
+        self.config.add_route('dashboard', '/dashboard')
         self.config.registry.settings['c3smembership.url'] = 'http://foo.com'
         self.config.registry.settings['ticketing.url'] = 'http://bar.com'
         self.config.registry.settings['testing.mail_to_console'] = 'false'
@@ -186,7 +187,7 @@ class TestInvitation(unittest.TestCase):
         self.assertEqual(m2.email_invite_flag_bcgv16, True)
         self.assertTrue(m2.email_invite_token_bcgv16 is not None)
         self.assertEqual(len(mailer.outbox), 3)
-        self.assertTrue(u'[C3S] Invitation to Barcamp and Assembly'
+        self.assertTrue(u'[C3S] Invitation to Barcamp and General Assembly'
                         in mailer.outbox[2].subject)
         self.assertTrue(m2.firstname
                         in mailer.outbox[2].body)

@@ -127,3 +127,4 @@ def send_message(request, message):
     else:
         mailer = get_mailer(request)
         mailer.send(message)
+

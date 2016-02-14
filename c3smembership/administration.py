@@ -10,6 +10,7 @@ from c3smembership.models import (
     Group,
 )
 from c3smembership.gnupg_encrypt import encrypt_with_gnupg
+from c3smembership.presentation.views.dashboard import get_dashboard_redirect
 import colander
 from datetime import (
     datetime,
@@ -262,11 +263,7 @@ def mail_mail_conf(request):
         request.session.flash(
             'id not found. no mail sent.',
             'messages')
-        return HTTPFound(request.route_url(
-            'dashboard',
-            number=request.cookies['on_page'],
-            order=request.cookies['order'],
-            orderby=request.cookies['orderby']))
+        return get_dashboard_redirect(request)
 
     import random
     import string
@@ -341,11 +338,7 @@ Best wishes :: The C3S Team
     mailer.send(message)
     afm.email_confirm_token = _looong_token
     afm.email_confirm_mail_date = datetime.now()
-    return HTTPFound(request.route_url('dashboard',
-                                       number=request.cookies['on_page'],
-                                       order=request.cookies['order'],
-                                       orderby=request.cookies['orderby']) +
-                     '#member_' + str(afm.id))
+    return get_dashboard_redirect(request, afm.id)
 
 
 @view_config(renderer='templates/verify-mail.pt',
@@ -429,11 +422,7 @@ def mail_mtype_fixer_link(request):
         request.session.flash(
             'id not found. no mail sent.',
             'messages')
-        return HTTPFound(request.route_url(
-            'dashboard',
-            number=request.cookies['on_page'],
-            order=request.cookies['order'],
-            orderby=request.cookies['orderby']))
+        return get_dashboard_redirect(request)
 
     import random
     import string
@@ -467,12 +456,7 @@ def mail_mtype_fixer_link(request):
     afm.mtype_confirm_token = _looong_token
     afm.mtype_email_date = datetime.now()
     afm.membership_type = u'pending'
-    return HTTPFound(request.route_url(
-        'dashboard',
-        number=request.cookies['on_page'],
-        order=request.cookies['order'],
-        orderby=request.cookies['orderby']) +
-        '#member_' + str(afm.id))
+    return get_dashboard_redirect(request, afm.id)
 
 
 @view_config(renderer='templates/mtype-form.pt',

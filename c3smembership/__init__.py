@@ -5,6 +5,9 @@ This module holds the main method: config and route declarations
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
+from c3smembership.presentation.parameter_validation import (
+    ParameterValidationException
+)
 from c3smembership.models import Base
 from c3smembership.security.request import RequestWithUserAttribute
 from c3smembership.security import (
@@ -14,6 +17,9 @@ from c3smembership.security import (
 from pyramid_beaker import session_factory_from_settings
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
+from c3smembership.presentation.views.dashboard import dashboard_content_size_provider
+from c3smembership.presentation.views.membership_listing import membership_content_size_provider
+
 
 from pkg_resources import get_distribution
 __version__ = get_distribution('c3sMembership').version
@@ -43,6 +49,7 @@ def main(global_config, **settings):
     config.include('pyramid_mailer')
     config.include('pyramid_chameleon')  # for pyramid 1.5a... for later
     config.include('cornice')
+    config.include('c3smembership.presentation.pagination')
     config.add_translation_dirs(
         'colander:locale/',
         'deform:locale/',  # copy deform.po and .mo to locale/de/LC_MESSAGES/
@@ -85,10 +92,18 @@ def main(global_config, **settings):
     # config.add_route(
     #    'verify_member_email',
     #    '/vfe/{refcode}/{token}/{email}')  # verify founders mail?
+
     # routes & views for staff
     # applications for membership
-    config.add_route('dashboard_only', '/dashboard')
-    config.add_route('dashboard', '/dashboard/{number}/{orderby}/{order}')
+    # config.add_route('dashboard_only', '/dashboard')
+    config.add_route('dashboard_only', '/dashboard_only')  # TODO: remove
+    config.add_route('dashboard', '/dashboard')
+    config.make_pagination_route(
+        'dashboard',
+        dashboard_content_size_provider,
+        sort_property_default='id',
+        page_size_default=int(settings.get('c3smembership.dashboard_number', 30)))
+
     config.add_route('dash', '/dash/{number}/{orderby}/{order}')
     config.add_route('toolbox', '/toolbox')
     config.add_route('stats', '/stats')
@@ -132,10 +147,15 @@ def main(global_config, **settings):
                      '/make_crowdfounders_members')
     config.add_route('make_yesser_members',
                      '/make_yesser_members')
-    config.add_route('membership_listing_backend_only',
-                     '/memberships')
+
     config.add_route('membership_listing_backend',
-                     '/memberships/{number}/{orderby}/{order}')
+                     '/memberships')
+    config.make_pagination_route(
+        'membership_listing_backend',
+        membership_content_size_provider,
+        sort_property_default='id',
+        page_size_default=int(settings.get('c3smembership.membership_number', 30)))
+
     config.add_route('membership_listing_alphabetical',
                      '/aml')
     config.add_route('membership_listing_date_pdf',

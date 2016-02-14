@@ -14,6 +14,7 @@ from c3smembership.models import (
     # Shares,
     # Membership,
 )
+from c3smembership.presentation.views.dashboard import get_dashboard_redirect
 import datetime
 
 from pyramid.view import view_config
@@ -137,9 +138,7 @@ def import_founders(request):  # pragma: no cover
             print "stop iteration reached"
             print si
             return {'message': "file found, StopIteration reached."}
-    return HTTPFound(
-        request.route_url(
-            'dashboard', number=0, orderby='id', order='asc'))
+    return get_dashboard_redirect(request)
 
 
 @view_config(permission='manage',

@@ -392,24 +392,23 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         # try order_by with faulty expression -- must raise
         with self.assertRaises(Exception):
             result1 = myMembershipSigneeClass.nonmember_listing(
-                "schmoo", 100)
+                0, 100, 'schmoo')
         # try order with faulty expression -- must raise
         with self.assertRaises(Exception):
             result1 = myMembershipSigneeClass.nonmember_listing(
-                "id", 100, order='schmoo')
-
+                0, 100, 'id', 'schmoo')
         result1 = myMembershipSigneeClass.nonmember_listing(
-            "id", 100)
-        self.failUnless(result1[0].firstname == u"SomeFirstnäme")
-        self.failUnless(result1[1].firstname == u"SomeFirstnäme")
-        self.failUnless(result1[2].firstname == u"SomeFirstname")
+            0, 100, 'id')
+        self.failUnless(result1[0].firstname == u'SomeFirstnäme')
+        self.failUnless(result1[1].firstname == u'SomeFirstnäme')
+        self.failUnless(result1[2].firstname == u'SomeFirstname')
         for r in result1:
             self.assertTrue(not r.membership_accepted)
         result2 = myMembershipSigneeClass.nonmember_listing(
-            "id", 100, order="desc")
-        self.failUnless(result2[0].firstname == u"SomeFirstname")
-        self.failUnless(result2[1].firstname == u"SomeFirstnäme")
-        self.failUnless(result2[2].firstname == u"SomeFirstnäme")
+            0, 100, 'id', 'desc')
+        self.failUnless(result2[0].firstname == u'SomeFirstname')
+        self.failUnless(result2[1].firstname == u'SomeFirstnäme')
+        self.failUnless(result2[2].firstname == u'SomeFirstnäme')
         for r in result2:
             self.assertTrue(not r.membership_accepted)
 
@@ -430,18 +429,17 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         # try order with faulty expression -- must raise
         with self.assertRaises(Exception):
             result1 = myMembershipSigneeClass.nonmember_listing(
-                "id", 100, order='schmoo')
-
+                0, 100, 'id', 'schmoo')
         result1 = myMembershipSigneeClass.nonmember_listing(
-            "id", 100)
-        self.failUnless(result1[0].firstname == u"SomeFirstnäme")
-        self.failUnless(result1[1].firstname == u"SomeFirstnäme")
-        self.failUnless(result1[2].firstname == u"SomeFirstname")
+            0, 100, 'id')
+        self.failUnless(result1[0].firstname == u'SomeFirstnäme')
+        self.failUnless(result1[1].firstname == u'SomeFirstnäme')
+        self.failUnless(result1[2].firstname == u'SomeFirstname')
         result2 = myMembershipSigneeClass.nonmember_listing(
-            "id", 100, order="desc")
-        self.failUnless(result2[0].firstname == u"SomeFirstname")
-        self.failUnless(result2[1].firstname == u"SomeFirstnäme")
-        self.failUnless(result2[2].firstname == u"SomeFirstnäme")
+            0, 100, 'id', 'desc')
+        self.failUnless(result2[0].firstname == u'SomeFirstname')
+        self.failUnless(result2[1].firstname == u'SomeFirstnäme')
+        self.failUnless(result2[2].firstname == u'SomeFirstnäme')
 
     def test_get_num_members_accepted(self):
         """

@@ -163,6 +163,13 @@ class AccountantsFunctionalTests(unittest.TestCase):
             DBSession.add(member3)
             DBSession.flush()
 
+    def get_dashboard_page(self, page_number, sort_property, sort_direction,
+                           status):
+        return self.testapp.get(
+            '/dashboard?page-number={0}&sort-property={1}&sort-direction={2}'.format(
+                page_number, sort_property, sort_direction), status=status,
+        )
+
     def test_login_and_dashboard(self):
         """
         load the login form, dashboard, member detail
@@ -201,42 +208,44 @@ class AccountantsFunctionalTests(unittest.TestCase):
         res5 = self.testapp.get('/login', status=302)
         # so yes: that was a redirect
         res6 = res5.follow()
-        res6 = res6.follow()
         # print(res4.body)
         self.failUnless(
             'Dashboard' in res6.body)
         # choose number of applications shown
         res6a = self.testapp.get(
             '/dashboard',
-            status=302,
+            status=200,
             extra_environ={
                 'num_display': '30',
             }
         )
-        res6a = res6a.follow()
 
         self.failUnless('<h1>Dashboard' in res6a.body)
-        res6a = self.testapp.get(
-            '/dashboard/1/id/asc', status=200,
-        )
+        res6a = self.get_dashboard_page(1, 'id', 'asc', 200)
 
         self.failUnless('<h1>Dashboard' in res6a.body)
-        # try an invalid page number
-        res6b = self.testapp.get(
-            '/dashboard/foo/bar/baz',
-            status=200,
-        )
+        # invalid sorting property
+        # expect redirect to valid sorting property
+        res6b = self.get_dashboard_page(1, 'invalid', 'asc', 400)
+
+        # invalid sorting direction
+        # expect displaying of the default sort direction
+        res6b = self.get_dashboard_page(1, 'id', 'invalid', 200)
+
+        # invalid page number: string
+        # expect displaying of the first page
+        res6b = self.get_dashboard_page('invalid', 'id', 'asc', 200)
 
         self.failUnless(
             '<p>Number of data sets:' in res6b.body)
 
         # change the number of items to show
         form = res6b.forms[0]
-        form['num_to_show'] = "42"  # post a number: OK
+        form['page_size'] = "42"  # post a number: OK
         resX = form.submit('submit', status=200)
 
         form = resX.forms[0]
-        form['num_to_show'] = "mooo"  # post a string: no good
+        form['page_size'] = "mooo"  # post a string: no good
         res7 = form.submit('submit', status=200)
 
         # member details
@@ -336,7 +345,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
 
     def test_dashboard_orderByIdAsc_dashboardOrdered(self):
         res2 = self._login()
-        res2 = self.testapp.get('/dashboard/0/id/asc')
+        res2 = self.get_dashboard_page(1, 'id', 'asc', 200)
         pq = self._get_pyquery(res2.body)
         # column-order: id code firstname lastname
         first_member_row = pq('tr:nth-child(2)')
@@ -345,7 +354,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
 
     def test_dashboard_orderByIdDesc_dashboardOrdered(self):
         res2 = self._login()
-        res2 = self.testapp.get('/dashboard/0/id/desc')
+        res2 = self.get_dashboard_page(1, 'id', 'desc', 200)
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
         id_ = first_member_row('td:nth-child(1)')
@@ -353,7 +362,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
 
     def test_dashboard_orderByFirstnameAsc_dashboardOrdered(self):
         res2 = self._login()
-        res2 = self.testapp.get('/dashboard/0/firstname/asc')
+        res2 = self.get_dashboard_page(1, 'firstname', 'asc', 200)
         # print res2.body
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
@@ -364,7 +373,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
 
     def test_dashboard_orderByFirstnameDesc_dashboardOrdered(self):
         res2 = self._login()
-        res2 = self.testapp.get('/dashboard/0/firstname/desc')
+        res2 = self.get_dashboard_page(1, 'firstname', 'desc', 200)
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
         first_name = first_member_row('td:nth-child(3)')
@@ -372,7 +381,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
 
     def test_dashboard_orderByLastnameAsc_dashboardOrdered(self):
         res2 = self._login()
-        res2 = self.testapp.get('/dashboard/0/lastname/asc')
+        res2 = self.get_dashboard_page(1, 'lastname', 'asc', 200)
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
         last_name = first_member_row('td:nth-child(4)')
@@ -380,7 +389,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
 
     def test_dashboard_orderByLastnameDesc_dashboardOrdered(self):
         self._login()
-        res2 = self.testapp.get('/dashboard/0/lastname/desc')
+        res2 = self.get_dashboard_page(1, 'lastname', 'desc', 200)
         pq = self._get_pyquery(res2.body)
         first_member_row = pq('tr:nth-child(2)')
         last_name = first_member_row('td:nth-child(4)')
@@ -388,8 +397,7 @@ class AccountantsFunctionalTests(unittest.TestCase):
 
     def test_dashboard_afterDelete_sameOrderAsBefore(self):
         self._login()
-        self.testapp.get(
-            '/dashboard/0/lastname/asc')  # To set cookie with order & orderby
+        self.get_dashboard_page(1, 'lastname', 'asc', 200)  # To set cookie with order & orderby
         # Delete member with lastname AAASomeLastnäme
         resdel = self.testapp.get('/delete/3?deletion_confirmed=1')
         resdel = resdel.follow()
@@ -411,38 +419,38 @@ class AccountantsFunctionalTests(unittest.TestCase):
     def test_dashboard_onFirstPage_noPreviousLinkShown(self):
         self._login()
         self._change_num_to_show("1")
-        res = self.testapp.get('/dashboard/0/id/desc')
+        res = self.get_dashboard_page(1, 'id', 'desc', 200)
         pq = self._get_pyquery(res.body)
-        self.assertTrue(len(pq("#navigate_previous")) == 0)
+        self.assertEqual(len(pq("#navigate_previous")), 0)
 
     def test_dashboard_onFirstPage_nextLinkShown(self):
         self._login()
         self._change_num_to_show("1")
-        res = self.testapp.get('/dashboard/0/id/desc')
+        res = self.get_dashboard_page(1, 'id', 'desc', 200)
         pq = self._get_pyquery(res.body)
-        self.assertTrue(len(pq("#navigate_next")) == 1)
+        self.assertEqual(len(pq("#navigate_next")), 1)
 
     def test_dashboard_onSomePage_nextPreviousLinkShown(self):
         self._login()
         self._change_num_to_show("1")
-        res = self.testapp.get('/dashboard/1/id/desc')
+        res = self.get_dashboard_page(2, 'id', 'desc', 200)
         pq = self._get_pyquery(res.body)
-        self.assertTrue(len(pq("#navigate_next")) == 1)
-        self.assertTrue(len(pq("#navigate_previous")) == 1)
+        self.assertEqual(len(pq("#navigate_next")), 1)
+        self.assertEqual(len(pq("#navigate_previous")), 1)
 
     def test_dashboard_onLastPage_previousLinkShown(self):
         self._login()
         self._change_num_to_show("1")
-        res = self.testapp.get('/dashboard/3/id/desc')
+        res = self.get_dashboard_page(3, 'id', 'desc', 200)
         pq = self._get_pyquery(res.body)
-        self.assertTrue(len(pq("#navigate_previous")) == 1)
+        self.assertEqual(len(pq("#navigate_previous")), 1)
 
     def test_dashboard_onLastPage_noNextLinkShown(self):
         self._login()
         self._change_num_to_show("1")
-        res = self.testapp.get('/dashboard/3/id/desc')
+        res = self.get_dashboard_page(3, 'id', 'desc', 200)
         pq = self._get_pyquery(res.body)
-        self.assertTrue(len(pq("#navigate_next")) == 0)
+        self.assertEqual(len(pq("#navigate_next")), 0)
 
     def _get_pyquery(self, html):
         from pyquery import PyQuery as pq
@@ -467,9 +475,9 @@ class AccountantsFunctionalTests(unittest.TestCase):
         return res3
 
     def _change_num_to_show(self, num_to_show="1"):
-        res = self.testapp.get('/dashboard/0/id/desc')
+        res = self.get_dashboard_page(1, 'id', 'desc', 200)
         form = res.forms[0]
-        form['num_to_show'] = num_to_show
+        form['page_size'] = num_to_show
         resX = form.submit('submit', status=200)
         return resX
 

@@ -148,7 +148,7 @@ class EditMemberTests(unittest.TestCase):
 
         # no member in DB, so redirecting to dashboard
         res = self.testapp.get('/edit/1', status=302)
-        self.__validate_dashboard_redirect(res)
+        self.__validate_dashboard_only_redirect(res)
 
         member = EditMemberTests.__create_membership_applicant()
         DBSession.add(member)
@@ -157,7 +157,7 @@ class EditMemberTests(unittest.TestCase):
 
         # let's try invalid input
         res = self.testapp.get('/edit/foo', status=302)
-        self.__validate_dashboard_redirect(res)
+        self.__validate_dashboard_only_redirect(res)
 
         # now try valid id
         res = self.__get_edit_member(member.id)
@@ -319,14 +319,17 @@ class EditMemberTests(unittest.TestCase):
         form['login'] = 'rut'
         form['password'] = 'berries'
         res = form.submit('submit', status=302)
-        # being logged in ...
+        res = res.follow()  # being redirected to dashboard_only
+        self.__validate_dashboard_redirect(res)
+
+    def __validate_dashboard_only_redirect(self, res):
+        res = res.follow()  # redirect to dashboard_only
         self.__validate_dashboard_redirect(res)
 
     def __validate_dashboard_redirect(self, res):
         """
         Validate that res is redirecting to the dashboard
         """
-        res = res.follow()  # being redirected to dashboard_only
         res = res.follow()  # being redirected to dashboard with parameters
         self.__validate_dashboard(res)
 

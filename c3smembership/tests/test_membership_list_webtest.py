@@ -426,39 +426,12 @@ class MembershipListTests(MemberTestsBase):
         res = self.testapp.get('/aml', status=200)
         self.assertTrue('1 Mitglieder' in res.body)
 
-    def test_membership_listing_backend_only_view(self):  # code lines 328-411
-        '''
-        tests for the member listing view for the backend (html with links)
-        '''
-        res = self.testapp.reset()  # delete cookies
-        res = self.testapp.get(
-            '/memberships',
-            status=403)
-        self.failUnless('Access was denied to this resource' in res.body)
-
-        self._MemberTestsBase__login()
-
-        res = self.testapp.get(
-            '/memberships',
-            status=200)
-
-        self.assertTrue('Page 1 of 1' in res.body)
-        self.assertTrue(u'SomeFirstnäme' in res.body.decode('utf-8'))
-        self.assertTrue('ABCDEFGFOO' in res.body)
-        # missing coverage of code lines 340-341, 349-355, 357, 360, 377, 393,
-
     def test_membership_listing_backend_view(self):  # code lines 328-411
         '''
         tests for the member listing view for the backend (html with links)
         '''
         res = self.testapp.reset()  # delete cookies
-        _number = '0'
-        _orderby = 'id'
-        _order = 'asc'
-        res = self.testapp.get(
-            '/memberships/{}/{}/{}'.format(
-                _number, _orderby, _order
-            ), status=403)
+        res = self.testapp.get('/memberships', status=403)
         #
         #  must find out how the machdict could be set right,
         #  so it is not None --> keyerror
@@ -468,10 +441,7 @@ class MembershipListTests(MemberTestsBase):
 
         self._MemberTestsBase__login()
 
-        res = self.testapp.get(
-            '/memberships/{}/{}/{}'.format(
-                _number, _orderby, _order
-            ), status=200)
+        res = self.testapp.get('/memberships', status=200)
 
         self.assertTrue('Page 1 of 1' in res.body)
         self.assertTrue(u'SomeFirstnäme' in res.body.decode('utf-8'))

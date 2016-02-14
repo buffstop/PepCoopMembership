@@ -91,6 +91,14 @@ class SqliteDecimal(types.TypeDecorator):
 DatabaseDecimal = SqliteDecimal
 
 
+class InvalidPropertyException(Exception):
+    pass
+
+
+class InvalidSortDirection(Exception):
+    pass
+
+
 class Group(Base):
     """
     The table of Groups.
@@ -949,7 +957,7 @@ class C3sMember(Base):
         return DBSession.query(cls).filter(or_(
             cls.membership_accepted != 1,
             cls.membership_accepted == 0,
-            cls.membership_accepted is None,
+            cls.membership_accepted == None,
         )).count()
 
     @classmethod
@@ -1111,35 +1119,41 @@ class C3sMember(Base):
         return q
 
     @classmethod
-    def nonmember_listing(cls, order_by, how_many, offset=0, order="asc"):
+    def nonmember_listing(cls, offset, page_size, sort_property,
+                          sort_direction='asc'):
         """
-        Compute a list of C3sMember items which are **not** accepted members.
+        Retrieve a list of members which are **not** accepted.
         Note:
-            these are not necessarily accepted members!
+            These are membership applicants which have not been accepted, yet.
 
         Used in:
             accountants_views
 
         Args:
-            order_by: which column to sort on, e.g. "id"
-            how_many: number of entries (Integer)
-            offset: how many to omit (leave out first n; default is 0)
-            order: either "asc" (ascending, **default**) or "desc" (descending)
+            offset: How many to omit (leave out first n; default is 0)
+            page_size: Number of entries per page (Integer)
+            sort_property: Which column to sort on, e.g. "id"
+            sort_direction: Either "asc" (ascending, **default**) or "desc"
+                (descending)
 
         Raises:
-            Exception: invalid value for "order_by" or "order".
+            InvalidPropertyException: The sort property does not exist.
+            InvalidSortDirection: The sort direction is invalid.
 
         Returns:
-            list of C3sMembership objects
+            List of C3sMember objects.
         """
         try:
-            attr = getattr(cls, order_by)
-            order_function = getattr(attr, order)
-        except:
-            raise Exception("Invalid order_by ({0}) or order value "
-                            "({1})".format(order_by, order))
-        _how_many = int(offset) + int(how_many)
-        _offset = int(offset)
+            sort_attribute = getattr(cls, sort_property)
+        except AttributeError:
+            raise InvalidPropertyException(
+                'C3sMember does not have a property named "{0}".'.format(
+                    sort_property))
+        try:
+            order_function = getattr(sort_attribute, sort_direction)
+        except AttributeError:
+            raise InvalidSortDirection(
+                'Invalid sort direction: {0}'.format(sort_direction))
         q = DBSession.query(cls).filter(
             or_(
                 cls.membership_accepted == 0,
@@ -1148,7 +1162,7 @@ class C3sMember(Base):
             )
         ).order_by(
             order_function()
-        ).slice(_offset, _how_many)
+        ).slice(offset, offset + page_size)
         return q.all()
 
     @classmethod

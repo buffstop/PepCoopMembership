@@ -33,6 +33,9 @@ from c3smembership.mail_utils import (
 
 from c3smembership.models import C3sMember
 from c3smembership.tex_tools import TexTools
+from c3smembership.presentation.views.membership_listing import (
+    get_memberhip_listing_redirect
+)
 
 DEBUG = False
 
@@ -94,23 +97,7 @@ def send_certificate_email(request):
             '#certificate'
         )
     else:
-        try:  # iff usefull cookie exists
-            return HTTPFound(
-                location=request.route_url(
-                    'membership_listing_backend',
-                    number=request.cookies['m_on_page'],
-                    order=request.cookies['m_order'],
-                    orderby=request.cookies['m_orderby']) +
-                '#member_' + str(member.id))
-        except KeyError:  # pragma: no cover
-            # iff no good cookie found
-            return HTTPFound(
-                location=request.route_url(
-                    'membership_listing_backend',
-                    number=0,
-                    order='asc',
-                    orderby='id') +
-                '#member_' + str(member.id))
+        return get_memberhip_listing_redirect(request, member.id)
 
 
 @view_config(permission='view',

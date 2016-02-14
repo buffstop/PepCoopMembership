@@ -72,7 +72,16 @@ class TestReminderViews(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
         self.config.include('pyramid_mailer.testing')
+        self.config.include('c3smembership.presentation.pagination')
         self.config.registry.settings['testing.mail_to_console'] = 'false'
+        self.config.add_route('dashboard', '/')
+        def dashboard_content_size_provider(filtering):
+            return 0
+        self.config.make_pagination_route(
+            'dashboard',
+            'id',
+            dashboard_content_size_provider)
+
         DBSession.remove()
         self.session = _initTestingDB()
 
@@ -85,14 +94,11 @@ class TestReminderViews(unittest.TestCase):
         test the mail_signature_reminder view
         """
         from c3smembership.accountants_views import mail_signature_reminder
+        self.config.include('c3smembership.presentation.pagination')
         self.config.add_route('join', '/')
-        self.config.add_route('dashboard', '/')
         from pyramid_mailer import get_mailer
         request = testing.DummyRequest()
         request.matchdict = {'memberid': '1'}
-        request.cookies['on_page'] = 1
-        request.cookies['order'] = 'asc'
-        request.cookies['orderby'] = 'id'
         request.referrer = ''
 
         mailer = get_mailer(request)
@@ -114,13 +120,9 @@ class TestReminderViews(unittest.TestCase):
         """
         from c3smembership.accountants_views import mail_payment_reminder
         self.config.add_route('join', '/')
-        self.config.add_route('dashboard', '/')
         from pyramid_mailer import get_mailer
         request = testing.DummyRequest()
         request.matchdict = {'memberid': '1'}
-        request.cookies['on_page'] = 1
-        request.cookies['order'] = 'asc'
-        request.cookies['orderby'] = 'id'
         request.referrer = ''
 
         mailer = get_mailer(request)
