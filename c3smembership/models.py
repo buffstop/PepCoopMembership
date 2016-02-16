@@ -92,20 +92,12 @@ class Group(Base):
     aka roles for users.
 
     Users in group 'staff' may do things others may not.
-
-
-    ============================ ===================== ===========================
-    name                         type                  description
-    ============================ ===================== ===========================
-    id                           integer, primary key  tech. id. / no. in table
-    name                         unicode
-    ============================ ===================== ===========================
-
     """
     __tablename__ = 'groups'
     id = Column(Integer, primary_key=True, nullable=False)
+    """technical id. / number in table (Integer, Primary Key)"""
     name = Column(Unicode(30), unique=True, nullable=False)
-
+    """name of the group (Unicode)"""
     def __str__(self):
         return 'group:%s' % self.name
 
@@ -130,39 +122,38 @@ staff_groups = Table(
         'group_id', Integer, ForeignKey('groups.id'),
         primary_key=True, nullable=False)
 )
+"""
+Table for relation of staff to groups
+"""
 
 
 class C3sStaff(Base):
     """
-    C3S staff may login and do things
-
-    ======================== ===================== ===========================
-    name                         type                  description
-    ======================== ===================== ===========================
-    id                       integer, primary key  tech. id. / no. in table
-    login                    unicode
-    _password                hash
-    last_password_change     datetime
-    email
-    groups (relation)        list of group objects users groups
-    ======================== ===================== ===========================
+    C3S staff may login and do things.
 
     """
     __tablename__ = 'staff'
     id = Column(Integer, primary_key=True)
+    """technical id. / number in table (integer, primary key)"""
     login = Column(Unicode(255), unique=True)
-    '''- every user has a login name.'''
+    """every user has a login name. (unicode)"""
     _password = Column('password', Unicode(60))
+    """a hash"""
     last_password_change = Column(
         DateTime,
         default=func.current_timestamp())
+    """timestamp of last password change/form submission (Datetime)"""
     email = Column(Unicode(255))
+    """email address (Unicode)"""
     groups = relationship(
         Group,
         secondary=staff_groups,
         backref="staff")
-
+    """list of group objects (users groups) (relation)"""
     def _init_(self, login, password, email):  # pragma: no cover
+        """
+        make new group
+        """
         self.login = login
         self.password = password
         self.last_password_change = datetime.now()
@@ -217,7 +208,7 @@ class C3sStaff(Base):
 
 
 class Shares(Base):
-    '''
+    """
     The database of shares.
 
     Each entry is a number of shares varying from 1 to 60.
@@ -229,44 +220,38 @@ class Shares(Base):
     the relevant information about the shares is moved here.
     Each member then has a list of these objects.
 
-
-    ========================== ===================== =========================
-    name                         type                  description
-    ========================== ===================== =========================
-    id                         integer, primary key  tech. id. / no. in table
-    number                     integer
-    date_of_acquisition        datetime
-    reference_code             unicode
-    signature_received         boolean
-    signature_received_date    datetime
-    signature_confirmed        boolean
-    signature_confirmed_date   datetime
-    payment_received           boolean
-    payment_received_date      datetime
-    payment_confirmed          boolean
-    payment_confirmed_date     datetime
-    accountant_comment         unicode
-    ========================== ===================== =========================
-
-    '''
+    """
     __tablename__ = 'shares'
     id = Column(Integer, primary_key=True)
-    number = Column(Integer())  # how many
-    date_of_acquisition = Column(DateTime(), nullable=False)  # when
-    reference_code = Column(Unicode(255), unique=True)  # ex email_confirm_code
+    """technical id. / number in table (integer, primary key)"""
+    number = Column(Integer())
+    """number of shares in this package(integer)"""
+    date_of_acquisition = Column(DateTime(), nullable=False)
+    """acquired when (datetime)"""
+    reference_code = Column(Unicode(255), unique=True)
+    """ex email_confirm_code (Unicode)"""
     signature_received = Column(Boolean, default=False)
+    """boolean"""
     signature_received_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """datetime"""
     signature_confirmed = Column(Boolean, default=False)
+    """boolean"""
     signature_confirmed_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """datetime"""
     payment_received = Column(Boolean, default=False)
+    """boolean"""
     payment_received_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """datetime"""
     payment_confirmed = Column(Boolean, default=False)
+    """boolean"""
     payment_confirmed_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """datetime"""
     accountant_comment = Column(Unicode(255))
+    """unicode"""
 
     @classmethod
     def get_number(cls):
@@ -316,7 +301,7 @@ members_shares = Table(
 
 
 class C3sMember(Base):
-    '''
+    """
     This table holds datasets from submissions to the C3S AFM form
     (AFM = application for membership),
     as well as members who have completed the process
@@ -331,170 +316,208 @@ class C3sMember(Base):
     * legal entities (we had a form on dead wood)
 
     Some attributes have been added over time to cater for different needs.
-
-
-    ============================ ===================== ===========================
-    name                         type                  description
-    ============================ ===================== ===========================
-    id                           integer, primary key  tech. id. / no. in table
-    **personal information**
-    ------------------------------------------------------------------------------
-    firstname                    unicode
-    lastname                     unicode
-    email                        unicode
-    _password                    unicode
-    last_password_change         datetime              when form was submitted
-    address1                     unicode
-    address2                     unicode
-    postcode                     unicode
-    city                         unicode
-    country                      unicode
-    locale                       unicode
-    date_of_birth                date
-    email_is_confirmed           boolean               when
-    email_confirm_code           unicode
-    email_confirm_token          unicode
-    email_confirm_mail_date      datetime
-    **duplicate entries / people submitted at different times**
-    ------------------------------------------------------------------------------
-    is_duplicate                 boolean               historic/merge process
-    is_duplicate_of              integer               historic/merge process
-    **shares information (before acquisition/approval/merge to shares table**
-    ------------------------------------------------------------------------------
-    num_shares                   integer               no. applied for
-    date_of_submission           datetime              when form was submitted
-    signature_received           boolean
-    signature_received_date      datetime
-    signature_confirmed          boolean
-    signature_confirmed_date     datetime
-    payment_received             boolean
-    payment_received_date        datetime
-    payment_confirmed            boolean
-    payment_confirmed_date       datetime
-    shares (relation)            object list           packages of shares acquired
-    **reminder information: no prospective member left behind!**
-    ------------------------------------------------------------------------------
-    sent_signature_reminder      boolean
-    sent_signature_reminder_date datetime
-    sent_payment_reminder        boolean
-    sent_payment_reminder_date   datetime
-    accountant_comment           unicode
-    **membership information**
-    ------------------------------------------------------------------------------
-    membership_type              unicode               u'normal' or u'investing'
-    member_of_colsoc             boolean
-    name_of_colsoc               unicode
-    membership_accepted          boolean               ..upon decision of board
-    membership_date              datetime              ..antt whenne^^
-    membership_number            integer
-    membership_loss              datetime
-    **startnex repair operations**
-    ------------------------------------------------------------------------------
-    mtype_confirm_token          unicode
-    mtype_email_date             datetime
-    **invitations for barcamp and general assembly 2014 & 2015**
-    ------------------------------------------------------------------------------
-    email_invite_flag_bcgv14     boolean
-    email_invite_date_bcgv14     datetime
-    email_invite_flag_bcgv15     boolean
-    email_invite_date_bcgv15     datetime
-    email_invite_token_bcgv15    unicode
-    **legal entities have additional attributes**
-    ------------------------------------------------------------------------------
-    is_legalentity               boolean
-    court_of_law                 unicode
-    registration_number          unicode
-    **membership certificate issuance via email self service (we send links)**
-    ------------------------------------------------------------------------------
-    certificate_email            boolean
-    certificate_token            unicode(10)
-    certificate_email_date       boolean
-    **membership dues, for 2015**
-    ------------------------------------------------------------------------------
-    dues15_invoice               boolean
-    dues15_invoice_date          datetime
-    dues15_invoice_no            integer               lfd. nummer
-    dues15_token                 unicode               access token
-    dues15_start                 unicode               2015 quarter of membership
-    dues15_amount                DatabaseDecimal(12,2) calc. amount to pay
-    dues15_reduced               boolean               was reduced?
-    _dues15_amount_reduced       DatabaseDecimal(12,2) the amount reduced to
-    *balance*
-    _dues15_balance              DatabaseDecimal(12,2) the amount to be settled
-    dues15_balanced              boolean               was balanced?
-    dues15_paid                  boolean               payment flag
-    dues15_amount_paid           DatabaseDecimal(12,2) how much paid?
-    dues15_paid_date             datetime              paid when?
-    ============================ ===================== ===========================
-
-
-    '''
+    """
     __tablename__ = 'members'
     id = Column(Integer, primary_key=True)
+    """technical id. / number in table (integer, primary key)"""
+
     # personal information
+    """
+    **personal information**
+    """
     firstname = Column(Unicode(255))
+    """given name(s) of person"""
     lastname = Column(Unicode(255))
+    """last name of person"""
     email = Column(Unicode(255))
+    """email address of person
+    """
     _password = Column('password', Unicode(60))
+    """password hash of person
+    """
     last_password_change = Column(
         DateTime,
         default=func.current_timestamp())
+    """timestamp of password persistence (time of submission)
+    """
     # pass_reset_token = Column(Unicode(255))
     address1 = Column(Unicode(255))
+    """Street & Number"""
     address2 = Column(Unicode(255))
+    """Address continued"""
     postcode = Column(Unicode(255))
+    """Postal Code"""
     city = Column(Unicode(255))
+    """City or Place"""
     country = Column(Unicode(255))
+    """Country"""
     locale = Column(Unicode(255))
+    """The Language chosen by a member when filling out the form.
+
+    We remember this so we know which language to address her with.
+    """
     date_of_birth = Column(Date(), nullable=False)
     email_is_confirmed = Column(Boolean, default=False)
     email_confirm_code = Column(Unicode(255), unique=True)  # reference code
+    """The Code used as reference when registering for membership:
+
+    * contained in URL of link applicants have to use to get their PDF.
+    * used for bank transfer reference
+
+    """
     email_confirm_token = Column(Unicode(255), unique=True)  # token
+    '''Unicode'''
     email_confirm_mail_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
     # duplicate entries // people submitting at different times
     is_duplicate = Column(Boolean, default=False)
+    """boolean
+
+    * flag for entries that are known duplicates of other applications
+      if person has already applied before.
+    """
     is_duplicate_of = Column(Integer, nullable=True)
+    """Integer
+    
+    * id of entry considered as original or relevant for membership
+    """
     # shares
     num_shares = Column(Integer())  # XXX TODO: check for number <= max_shares
+    """Integer
+
+    * The number of shares from the time of afm submission
+    * Then application is approved, this number of shares is turned into
+      an entry in the shares list below, referencing a shares package
+      which is persisted in the Shares table.
+
+    .. note:: For accepted members, this is not necessarily the total
+       number of shares, as members can hold several packages,
+       from different times of acquisition.
+
+    """
     date_of_submission = Column(DateTime(), nullable=False)
+    """datetime
+
+    * the date and time this application was submitted
+    """
     signature_received = Column(Boolean, default=False)
+    """Boolean
+
+    * Has the signature been received?
+    """
     signature_received_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """datetime
+
+    * the date and time this application was submitted
+    """
     signature_confirmed = Column(Boolean, default=False)
+    """Boolean
+
+    * Has reception of signed form been confirmed?
+    """
     signature_confirmed_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """datetime
+
+    * the date and time arrival of signed form was confirmed per email
+    """
     payment_received = Column(Boolean, default=False)
+    """Boolean
+
+    * Has the payment been received?
+    """
     payment_received_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """datetime
+
+    * the date and time payment for this application was received
+    """
     payment_confirmed = Column(Boolean, default=False)
+    """Boolean
+
+    * Has the payment been confirmed?
+    """
     payment_confirmed_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """datetime
+
+    * the date and time this application was confirmed per email
+    """
     # shares in other table
     shares = relationship(
         Shares,
         secondary=members_shares,
         backref="members"
     )
+    """relation
+    
+    * list of shares packages a member has acquired.
+    * has entries as soon as an application for membership has been approved
+      by the board of directors -- and the relevant date of approval
+      has been entered into the system by staff.
+    """
     # reminders
     sent_signature_reminder = Column(Integer, default=0)
+    """Integer
+    
+    * stores how many signature reminders have been sent out
+    """
     sent_signature_reminder_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """DateTime
+
+    * stores *when* the last signature reminder was sent out
+    """
     sent_payment_reminder = Column(Integer, default=0)
+    """Integer
+    
+    * stores how many payment reminders have been sent out
+    """
     sent_payment_reminder_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
+    """DateTime
+
+    * stores *when* the last payment reminder was sent out
+    """
     # comment
     accountant_comment = Column(Unicode(255))
     # membership information
     membership_type = Column(Unicode(255))
+    """Unicode
+
+    * Type of membership. either one of
+
+       * normal (persons, artists)
+       * investing (non-artist persons or legal entities)
+    """
     member_of_colsoc = Column(Boolean, default=False)
+    """Boolean
+
+    * is member of other collecting society
+    """
     name_of_colsoc = Column(Unicode(255))
+    """Unicode
+
+    * name(s) of other collecting societies
+    """
     # acquisition of membership
     membership_accepted = Column(Boolean, default=False)
+    """Boolean
+
+    * has the membersip been accepted by the board of directors?
+    """
     membership_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
-    membership_number = Column(Integer())
+    """DateTime
 
+    Date of membership approval by the board.
+    """
+    membership_number = Column(Integer())
+    """Integer
+
+    * Membership Number given upon approval.
+    """
     # ## loss of membership
     # the date on which the membership terminates, i.e. the date of
     # membership and the day after which the membership does no longer exist
@@ -695,13 +718,13 @@ class C3sMember(Base):
     # listings
     @classmethod
     def get_duplicates(cls):
-        '''return the list of duplicates.'''
+        """return the list of duplicates."""
         return DBSession.query(cls).filter(
             cls.is_duplicate == 1).all()
 
     @classmethod
     def get_members(cls, order_by, how_many=10, offset=0, order="asc"):
-        '''return the list accepted as members.'''
+        """return the list accepted as members."""
         try:
             attr = getattr(cls, order_by)
             order_function = getattr(attr, order)
@@ -745,17 +768,17 @@ class C3sMember(Base):
 
     @classmethod
     def get_num_members_accepted(cls):
-        '''
+        """
         count the members that have actually been accepted as members
-        '''
+        """
         return DBSession.query(
             cls).filter(cls.membership_accepted == 1).count()
 
     @classmethod
     def get_num_non_accepted(cls):
-        '''
+        """
         count the members that have actually been accepted as members
-        '''
+        """
         return DBSession.query(cls).filter(or_(
             cls.membership_accepted != 1,
             cls.membership_accepted == 0,
@@ -764,9 +787,9 @@ class C3sMember(Base):
 
     @classmethod
     def get_num_mem_nat_acc(cls):
-        '''
+        """
         count the *persons* that have actually been accepted as members
-        '''
+        """
         return DBSession.query(cls).filter(
             cls.is_legalentity == 0,
             cls.membership_accepted == 1,
@@ -774,9 +797,9 @@ class C3sMember(Base):
 
     @classmethod
     def get_num_mem_jur_acc(cls):
-        '''
+        """
         count the *legal entities* that have actually been accepted as members
-        '''
+        """
         return DBSession.query(
             cls).filter(
                 cls.is_legalentity == 1,
@@ -785,9 +808,9 @@ class C3sMember(Base):
 
     @classmethod
     def get_num_mem_norm(cls):
-        '''
+        """
         count the memberships that are normal members
-        '''
+        """
         return DBSession.query(
             cls).filter(
                 cls.membership_accepted == 1,
@@ -796,9 +819,9 @@ class C3sMember(Base):
 
     @classmethod
     def get_num_mem_invest(cls):
-        '''
+        """
         count the memberships that are investing members
-        '''
+        """
         return DBSession.query(
             cls).filter(
                 cls.membership_accepted == 1,
@@ -807,9 +830,9 @@ class C3sMember(Base):
 
     @classmethod
     def get_num_mem_other_features(cls):
-        '''
+        """
         count the memberships that are neither normal nor investing members
-        '''
+        """
         _foo = DBSession.query(
             cls).filter(
                 cls.membership_accepted == 1,
@@ -923,9 +946,9 @@ class C3sMember(Base):
     # autocomplete
     @classmethod
     def get_matching_codes(cls, prefix):
-        '''
+        """
         return only codes matchint the prefix
-        '''
+        """
         all = DBSession.query(cls).all()
         codes = []
         for item in all:
@@ -989,23 +1012,23 @@ class C3sMember(Base):
     # membership numbers etc.
     @classmethod
     def get_num_membership_numbers(cls):
-        '''
+        """
         count the number of membership numbers
-        '''
+        """
         return DBSession.query(cls).filter(cls.membership_number).count()
 
     @classmethod
     def get_next_free_membership_number(cls):
-        '''
+        """
         returns the next free membership number
-        '''
+        """
         return C3sMember.get_highest_membership_number()+1
 
     @classmethod
     def get_highest_membership_number(cls):
-        '''
+        """
         get the highest membership number
-        '''
+        """
         nrs = DBSession.query(cls.membership_number).filter(
             cls.membership_number != None).all()
         _list = []
@@ -1026,7 +1049,7 @@ class C3sMember(Base):
     # countries
     @classmethod
     def get_num_countries(cls):
-        '''return number of countries in DB'''
+        """return number of countries in DB"""
         _list = []
         _all = DBSession.query(cls)
         for item in _all:
@@ -1036,7 +1059,7 @@ class C3sMember(Base):
 
     @classmethod
     def get_countries_list(cls):
-        '''return dict of countries and number of occurrences'''
+        """return dict of countries and number of occurrences"""
         _c_dict = {}
         _all = DBSession.query(cls)
         for item in _all:
@@ -1049,9 +1072,9 @@ class C3sMember(Base):
     # autocomplete
     @classmethod
     def get_matching_people(cls, prefix):
-        '''
+        """
         return only entries matchint the prefix
-        '''
+        """
         all = DBSession.query(cls).all()
         names = {}
         for item in all:
