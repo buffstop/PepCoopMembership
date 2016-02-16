@@ -174,7 +174,7 @@ def accountants_login(request):
              route_name='dashboard')
 def accountants_desk(request):
     """
-    The Dashboard.
+    The accountants desk aka **The Dashboard**.
 
     This view lets accountants view
     the **list of applications for membership**.
@@ -186,7 +186,7 @@ def accountants_desk(request):
     - how about the payment?
     - have reminders been sent? receptions confirmed?
 
-    There are also links to *edit* or *delete* one of the datasets.
+    There are also links to **edit** or **delete** one of the datasets.
 
     Once all requirements are fulfilled,
     an application can be turned into a membership from here:
@@ -336,7 +336,7 @@ def switch_sig(request):
              route_name='delete_entry')
 def delete_entry(request):
     """
-    This view lets accountants delete datasets (e.g. doublettes).
+    This view lets accountants delete datasets (e.g. doublettes, test entries).
     """
 
     deletion_confirmed = (request.params.get('deletion_confirmed', '0') == '1')
@@ -504,7 +504,7 @@ def logout_view(request):
              route_name='regenerate_pdf')
 def regenerate_pdf(request):
     """
-    Staffers can regenerate an appkicants PDF and send it to her.
+    Staffers can regenerate an applicants PDF and send it to her.
     """
     _code = request.matchdict['code']
     _member = C3sMember.get_by_code(_code)
@@ -603,7 +603,15 @@ def mail_payment_confirmation(request):
 def mail_signature_reminder(request):
     """
     Send a mail to a membership applicant
-    reminding her about lack of signature.
+    reminding her about lack of *signature*.
+    Headquarters is still waiting for the *signed form*.
+
+    This view can only be used by staff.
+
+    To be approved for membership applicants have to
+
+    * Transfer money for the shares to acquire (at least one share).
+    * **Send the signed form** back to headquarters.
     """
     member_id = request.matchdict['memberid']
     member = C3sMember.get_by_id(member_id)
@@ -651,7 +659,15 @@ def mail_signature_reminder(request):
 def mail_payment_reminder(request):
     """
     Send a mail to a membership applicant
-    reminding her about lack of signature.
+    reminding her about lack of **payment**.
+    Headquarters is still waiting for the **bank transfer**.
+
+    This view can only be used by staff.
+
+    To be approved for membership applicants have to
+
+    * **Transfer money** for the shares to acquire (at least one share).
+    * Send the signed form back to headquarters.
     """
     member = C3sMember.get_by_id(request.matchdict['memberid'])
 
