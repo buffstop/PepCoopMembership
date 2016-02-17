@@ -159,6 +159,14 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance.email_is_confirmed, False, "expected False")
         self.assertEqual(instance.membership_type, u'normal', "No match!")
 
+    def test_get_password(self):
+        """
+        Test the _get_password function.
+        """
+        instance = self._makeOne()
+        res = instance._get_password()
+        self.assertEqual(res, instance._password)
+
     def test_get_number(self):
         """
         test: get the number of entries in the database
@@ -170,6 +178,7 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         # print number_from_DB
         self.assertEqual(number_from_DB, 2)
 
+    # GET BY .. tests # # # # # # # # # # # # # # # # # # # # # # # # # # #
     def test_get_by_code(self):
         """
         test: get one entry by code
@@ -186,6 +195,21 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
             #        print "test_get_by_username: type(foo): " + str(type(foo))
         self.assertEqual(instance.firstname, u'SomeFirstnäme')
         self.assertEqual(instance_from_DB.email, u'some@shri.de')
+
+    def test_get_by_bcgvtoken(self):
+        """
+        test: get one entry by bcgv16 token
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        instance.email_invite_token_bcgv16 = u'SHINY_TOKEN'
+        myMembershipSigneeClass = self._getTargetClass()
+        instance_from_DB = myMembershipSigneeClass.get_by_bcgvtoken(
+            u'SHINY_TOKEN')
+        self.assertEqual(instance_from_DB.firstname, u'SomeFirstnäme')
+        self.assertEqual(instance_from_DB.email, u'some@shri.de')
+        self.assertEqual(
+            instance_from_DB.email_invite_token_bcgv16, u'SHINY_TOKEN')
 
     def test_get_by_dues15_token(self):
         """
@@ -322,7 +346,7 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
 
     def test_member_listing(self):
         """
-        XXX TODO
+        Test the member_listing classmethod in models.py
         """
         instance = self._makeOne()
         self.session.add(instance)
@@ -334,6 +358,7 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.failUnless(result1[0].firstname == u"SomeFirstnäme")
         self.failUnless(result1[1].firstname == u"SomeFirstnäme")
         self.failUnless(result1[2].firstname == u"SomeFirstname")
+        self.assertEqual(len(result1.all()), 3)
 
     def test_member_listing_exception(self):
         """
@@ -353,6 +378,174 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         # self.failUnless(result1[0].firstname == u"SomeFirstnäme")
         # self.failUnless(result1[1].firstname == u"SomeFirstnäme")
         # self.failUnless(result1[2].firstname == u"SomeFirstname")
+
+    def test_nonmember_listing(self):
+        """
+        Test the nonmember_listing classmethod in models.py
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        instance2 = self._makeAnotherOne()
+        self.session.add(instance2)
+        myMembershipSigneeClass = self._getTargetClass()
+
+        # try order_by with faulty expression -- must raise
+        with self.assertRaises(Exception):
+            result1 = myMembershipSigneeClass.nonmember_listing(
+                "schmoo", 100)
+        # try order with faulty expression -- must raise
+        with self.assertRaises(Exception):
+            result1 = myMembershipSigneeClass.nonmember_listing(
+                "id", 100, order='schmoo')
+            
+        result1 = myMembershipSigneeClass.nonmember_listing(
+            "id", 100)
+        self.failUnless(result1[0].firstname == u"SomeFirstnäme")
+        self.failUnless(result1[1].firstname == u"SomeFirstnäme")
+        self.failUnless(result1[2].firstname == u"SomeFirstname")
+        for r in result1:
+            self.assertTrue(not r.membership_accepted)
+        result2 = myMembershipSigneeClass.nonmember_listing(
+            "id", 100, order="desc")
+        self.failUnless(result2[0].firstname == u"SomeFirstname")
+        self.failUnless(result2[1].firstname == u"SomeFirstnäme")
+        self.failUnless(result2[2].firstname == u"SomeFirstnäme")
+        for r in result2:
+            self.assertTrue(not r.membership_accepted)
+
+    def test_nonmember_listing_count(self):
+        """
+        Test the nonmember_listing_count classmethod in models.py
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        instance2 = self._makeAnotherOne()
+        self.session.add(instance2)
+        myMembershipSigneeClass = self._getTargetClass()
+
+        # try order_by with faulty expression -- must raise
+        with self.assertRaises(Exception):
+            result1 = myMembershipSigneeClass.nonmember_listing(
+                "schmoo", 100)
+        # try order with faulty expression -- must raise
+        with self.assertRaises(Exception):
+            result1 = myMembershipSigneeClass.nonmember_listing(
+                "id", 100, order='schmoo')
+            
+        result1 = myMembershipSigneeClass.nonmember_listing(
+            "id", 100)
+        self.failUnless(result1[0].firstname == u"SomeFirstnäme")
+        self.failUnless(result1[1].firstname == u"SomeFirstnäme")
+        self.failUnless(result1[2].firstname == u"SomeFirstname")
+        result2 = myMembershipSigneeClass.nonmember_listing(
+            "id", 100, order="desc")
+        self.failUnless(result2[0].firstname == u"SomeFirstname")
+        self.failUnless(result2[1].firstname == u"SomeFirstnäme")
+        self.failUnless(result2[2].firstname == u"SomeFirstnäme")
+
+    def test_get_num_members_accepted(self):
+        """
+        test: get the number of accepted member entries in the database
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        myMembershipSigneeClass = self._getTargetClass()
+        number_from_DB = myMembershipSigneeClass.get_num_members_accepted()
+        self.assertEqual(number_from_DB, 0)
+        # go again
+        instance.membership_accepted = True
+        number_from_DB = myMembershipSigneeClass.get_num_members_accepted()
+        self.assertEqual(number_from_DB, 1)
+
+    def test_get_num_non_accepted(self):
+        """
+        test: get the number of non-accepted member entries in the database
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        myMembershipSigneeClass = self._getTargetClass()
+        number_from_DB = myMembershipSigneeClass.get_num_non_accepted()
+        self.assertEqual(number_from_DB, 2)
+        # go again
+        instance.membership_accepted = True
+        number_from_DB = myMembershipSigneeClass.get_num_non_accepted()
+        self.assertEqual(number_from_DB, 1)
+
+    def test_get_num_mem_nat_acc(self):
+        """
+        test: get the number of accepted member entries being natural persons
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        myMembershipSigneeClass = self._getTargetClass()
+        number_from_DB = myMembershipSigneeClass.get_num_mem_nat_acc()
+        self.assertEqual(number_from_DB, 0)
+        # go again
+        instance.membership_accepted = True
+        number_from_DB = myMembershipSigneeClass.get_num_mem_nat_acc()
+        self.assertEqual(number_from_DB, 1)
+
+    def test_get_num_mem_jur_acc(self):
+        """
+        test: get the number of accepted member entries being legal entities
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        myMembershipSigneeClass = self._getTargetClass()
+        number_from_DB = myMembershipSigneeClass.get_num_mem_jur_acc()
+        self.assertEqual(number_from_DB, 0)
+        # go again
+        instance.membership_accepted = True
+        instance.is_legalentity = True
+        number_from_DB = myMembershipSigneeClass.get_num_mem_jur_acc()
+        self.assertEqual(number_from_DB, 1)
+
+    def test_get_num_mem_norm(self):
+        """
+        test: get the number of accepted member entries being normal members.
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        myMembershipSigneeClass = self._getTargetClass()
+        number_from_DB = myMembershipSigneeClass.get_num_mem_norm()
+        self.assertEqual(number_from_DB, 0)
+        # go again
+        instance.membership_accepted = True
+        self.assertEqual(instance.membership_type, u'normal')
+        number_from_DB = myMembershipSigneeClass.get_num_mem_norm()
+        self.assertEqual(number_from_DB, 1)
+
+    def test_get_num_mem_invest(self):
+        """
+        test: get the number of accepted member entries being investing members
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        myMembershipSigneeClass = self._getTargetClass()
+        number_from_DB = myMembershipSigneeClass.get_num_mem_invest()
+        self.assertEqual(number_from_DB, 0)
+        # go again
+        instance.membership_accepted = True
+        instance.membership_type = u'investing'
+        self.assertEqual(instance.membership_type, u'investing')
+        number_from_DB = myMembershipSigneeClass.get_num_mem_invest()
+        self.assertEqual(number_from_DB, 1)
+
+    def test_get_num_mem_other_features(self):
+        """
+        test: get number of accepted member entries with silly membership type
+        """
+        instance = self._makeOne()
+        self.session.add(instance)
+        myMembershipSigneeClass = self._getTargetClass()
+        number_from_DB = myMembershipSigneeClass.get_num_mem_other_features()
+        self.assertEqual(number_from_DB, 0)
+        # go again
+        instance.membership_accepted = True
+        instance.membership_type = u'pondering'
+        self.assertEqual(instance.membership_type, u'pondering')
+        number_from_DB = myMembershipSigneeClass.get_num_mem_other_features()
+        self.assertEqual(number_from_DB, 1)
 
 
 class TestMemberListing(C3sMembershipModelTestBase):
