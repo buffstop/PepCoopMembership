@@ -1138,8 +1138,7 @@ class C3sMember(Base):
             or_(
                 cls.membership_accepted == 0,
                 cls.membership_accepted == '',
-                # "!= None" instead of "is not None" for SQLAlchemy
-                cls.membership_accepted != None,
+                cls.membership_accepted == None,  # noqa
             )
         ).order_by(
             order_function()
@@ -1152,8 +1151,7 @@ class C3sMember(Base):
             or_(
                 cls.membership_accepted == 0,
                 cls.membership_accepted == '',
-                # "!= None" instead of "is not None" for SQLAlchemy
-                cls.membership_accepted != None,
+                cls.membership_accepted == None,  # noqa
             )
         ).count()
         return q
@@ -1297,8 +1295,7 @@ class C3sMember(Base):
         get the highest membership number
         """
         nrs = DBSession.query(cls.membership_number).filter(
-            # "!= None" instead of "is not None" for SQLAlchemy
-            cls.membership_number != None).all()
+            cls.membership_number != None).all()  # noqa
         _list = []
         for i in nrs:
             _list.append(int(i[0]))
