@@ -65,6 +65,12 @@ def hash_password(password):
 # TODO: Use standard SQLAlchemy Decimal when a database is used which supports
 # it.
 class SqliteDecimal(types.TypeDecorator):
+    """
+    Type decorator for persisting Decimal (currency values)
+
+    TODO: Use standard SQLAlchemy Decimal
+    when a database is used which supports it.
+    """
     impl = types.String
 
     def load_dialect_impl(self, dialect):
@@ -106,6 +112,12 @@ class Group(Base):
 
     @classmethod
     def get_staffers_group(cls, groupname=u'staff'):
+        """
+        Get the "staff" group.
+
+        Returns:
+            object: staff group.
+        """
         dbsession = DBSession()
         staff_group = dbsession.query(
             cls).filter(cls.name == groupname).first()
@@ -122,9 +134,9 @@ staff_groups = Table(
         'group_id', Integer, ForeignKey('groups.id'),
         primary_key=True, nullable=False)
 )
-"""
-Table for relation of staff to groups
-"""
+# """
+# Table for relation of staff to groups
+# """
 
 
 class C3sStaff(Base):
@@ -170,14 +182,45 @@ class C3sStaff(Base):
 
     @classmethod
     def get_by_id(cls, id):
+        """
+        Get C3sStaff object by id.
+
+        Args:
+            id: the id of the C3sStaff object to be returned.
+
+        Returns:
+            * **object**: C3sStaff object with relevant id, if exists.
+            * **None**: if id can't be found.
+        """
         return DBSession.query(cls).filter(cls.id == id).first()
 
     @classmethod
     def get_by_login(cls, login):
+        """
+        Get C3sStaff object by login.
+
+        Args:
+            login: the login of the C3sStaff object to be returned.
+
+        Returns:
+            * **object**: C3sStaff object with relevant login, if exists.
+            * **None**: if login can't be found.
+        """
         return DBSession.query(cls).filter(cls.login == login).first()
 
     @classmethod
     def check_password(cls, login, password):
+        """
+        Check staff password.
+
+        Args:
+            login: staff login.
+            password: staff password as supplied.
+
+        Returns:
+            the answer of bcrypt.crypt, comparing the password supplied
+                and the hash from the database
+        """
         staffer = cls.get_by_login(login)
         return crypt.check(staffer.password, password)
 
@@ -185,15 +228,23 @@ class C3sStaff(Base):
     @classmethod
     def check_user_or_None(cls, login):
         """
-        check whether a user by that username exists in the database.
-        if yes, return that object, else None.
-        returns None if username doesn't exist
+        Check whether a user by that login exists in the database.
+
+        Args:
+            login: the name to log in with
+
+        Returns:
+            * **C3sStaff object**, if login exists.
+            * **None**, if login does not exist.
         """
         login = cls.get_by_login(login)  # is None if user not exists
         return login
 
     @classmethod
     def delete_by_id(cls, id):
+        """
+        Delete one C3sStaff object by id.
+        """
         _del = DBSession.query(cls).filter(cls.id == id).first()
         _del.groups = []
         DBSession.query(cls).filter(cls.id == id).delete()
@@ -202,7 +253,10 @@ class C3sStaff(Base):
     @classmethod
     def get_all(cls):
         """
-        get all staff objects from the database
+        Get all C3sStaff objects from the database.
+
+        Returns:
+            list: list of C3sStaff objects.
         """
         return DBSession.query(cls).all()
 
@@ -231,27 +285,27 @@ class Shares(Base):
     reference_code = Column(Unicode(255), unique=True)
     """ex email_confirm_code (Unicode)"""
     signature_received = Column(Boolean, default=False)
-    """boolean"""
+    """flag of acknowledgement for signature to arrive at headquarters."""
     signature_received_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
-    """datetime"""
+    """timestamp of acknowledgement for signature to arrive at headquarters."""
     signature_confirmed = Column(Boolean, default=False)
-    """boolean"""
+    """flag to remember sending signature receipt email to oncoming member"""
     signature_confirmed_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
-    """datetime"""
+    """timestamp of sending signature receipt email to oncoming member."""
     payment_received = Column(Boolean, default=False)
-    """boolean"""
+    """flag of acknowledgement for payment to arrive at headquarters."""
     payment_received_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
-    """datetime"""
+    """timestamp of acknowledgement for payment to arrive at headquarters."""
     payment_confirmed = Column(Boolean, default=False)
-    """boolean"""
+    """flag to remember sending payment receipt email to oncoming member."""
     payment_confirmed_date = Column(
         DateTime(), default=datetime(1970, 1, 1))
-    """datetime"""
+    """timestamp of sending signature receipt email to oncoming member"""
     accountant_comment = Column(Unicode(255))
-    """unicode"""
+    """freestyle comment. unicode"""
 
     @classmethod
     def get_number(cls):
@@ -615,19 +669,35 @@ class C3sMember(Base):
 
     @hybrid_property
     def dues15_balance(self):
+        """
+        XXX TODO write this docstring
+        XXX TODO write testcase in test_models.py
+        """
         return self._dues15_balance
 
     @dues15_balance.setter
     def dues15_balance(self, dues15_balance):
+        """
+        XXX TODO write this docstring
+        XXX TODO write testcase in test_models.py
+        """
         self._dues15_balance = dues15_balance
         self.dues15_balanced = self._dues15_balance == Decimal('0')
 
     @hybrid_property
     def dues15_amount_reduced(self):
+        """
+        XXX TODO write this docstring
+        XXX TODO write testcase in test_models.py
+        """
         return self._dues15_amount_reduced
 
     @dues15_amount_reduced.setter
     def dues15_amount_reduced(self, dues15_amount_reduced):
+        """
+        XXX TODO write this docstring
+        XXX TODO write testcase in test_models.py
+        """
         self._dues15_amount_reduced = dues15_amount_reduced
         self.dues15_reduced = \
             not math.isnan(self.dues15_amount_reduced) \
@@ -637,11 +707,14 @@ class C3sMember(Base):
     @classmethod
     def get_by_code(cls, email_confirm_code):
         """
-        find a member by confirmation code
+        Find a member by confirmation code
 
-        this is needed when a user returns from reading her email
+        This is needed when a user returns from reading her email
         and clicking on a link containing the confirmation code.
-        as the code is unique, one record is returned.
+        As the code is unique, one record is returned.
+
+        Returns:
+           object: C3sMember object
         """
         return DBSession.query(cls).filter(
             cls.email_confirm_code == email_confirm_code).first()
@@ -654,7 +727,7 @@ class C3sMember(Base):
 
         This is needed when a user returns from reading her email
         and clicking on a link containing the token.
-        
+
         Returns:
             object: C3sMember object
         """
@@ -675,7 +748,13 @@ class C3sMember(Base):
 
     @classmethod
     def get_by_id(cls, _id):
-        """return one member by id"""
+        """
+        Get one C3sMember object by id.
+
+        Returns:
+            * **C3sMember object**, if id exists.
+            * **None**, if id does not exist.
+        """
         return DBSession.query(cls).filter(cls.id == _id).first()
 
     @classmethod
@@ -696,7 +775,8 @@ class C3sMember(Base):
     # needed for invitation to barcam & general assembly
     @classmethod
     def get_invitees(cls, num):
-        """Get a given number *n* of members to invite.
+        """
+        Get a given number *n* of members to invite for barcamp and GV.
 
         Queries the database for members, where
 
@@ -717,7 +797,20 @@ class C3sMember(Base):
 
     @classmethod
     def get_dues_invoicees(cls, num):
-        """return a given number of members to send dues invoices to"""
+        """
+        Get a given number *n* of members to send dues invoices to.
+
+        Queries the database for members, where
+
+        * members are accepted
+        * members have not received their dues invoice email yet
+
+        Args:
+          num is the number *n* of C3sMembers to return
+
+        Returns:
+          a list of *n* member objects
+        """
         return DBSession.query(cls).filter(
             and_(
                 cls.membership_accepted == 1,
@@ -726,21 +819,50 @@ class C3sMember(Base):
 
     @classmethod
     def delete_by_id(cls, _id):
-        """delete one member by id
-        this will return 1 on success, 0 else
+        """
+        Delete one C3sMember entry by id.
+
+        Args:
+            _id: the id to delete
+
+        Returns:
+            * **1** on success
+            * **0** else
         """
         return DBSession.query(cls).filter(cls.id == _id).delete()
 
     # listings
     @classmethod
     def get_duplicates(cls):
-        """return the list of duplicates."""
+        """
+        Get all duplicates: C3sMember entries tagged as duplicates.
+
+        Used in:
+            membership_list, statistics_view
+
+        Returns:
+            list: list of C3sMember entries flagged as duplicates.
+        """
         return DBSession.query(cls).filter(
             cls.is_duplicate == 1).all()
 
     @classmethod
     def get_members(cls, order_by, how_many=10, offset=0, order="asc"):
-        """return the list accepted as members."""
+        """
+        Compute a list of C3sMember items with membership accepted (Query!).
+
+        Args:
+            order_by: which column to sort on, e.g. "id"
+            how_many: number of entries (Integer)
+            offset: how many to omit (leave out first n; default is 0)
+            order: either "asc" (ascending, **default**) or "desc" (descending)
+
+        Raises:
+            Exception: invalid value for "order_by" or "order".
+
+        Returns:
+            query: C3sMember database query
+        """
         try:
             attr = getattr(cls, order_by)
             order_function = getattr(attr, order)
@@ -757,7 +879,11 @@ class C3sMember(Base):
     # statistical stuff
     @classmethod
     def get_postal_codes_de(cls):
-        """return bag (list containing duplicates) of postal codes in DE"""
+        """
+        Get postal codes of C3sMember entries from germany
+
+        Returns:
+            bag (list containing duplicates): postal codes in DE"""
         all = DBSession.query(cls).filter(
             cls.country == 'DE'
         ).all()
@@ -778,13 +904,28 @@ class C3sMember(Base):
 
     @classmethod
     def get_number(cls):
-        """return number of submissions (by counting rows in table)"""
+        """
+        Count number of entries in C3sMember table (by counting rows)
+
+        Used in:
+            statistics_view, membership_list, fix_database, import_export,
+            some tests...
+
+        Returns:
+            Integer: number
+        """
         return DBSession.query(cls).count()
 
     @classmethod
     def get_num_members_accepted(cls):
         """
-        count the members that have actually been accepted as members
+        Count the entries that have actually been accepted as members.
+
+        Used in:
+            statistics_view, membership_list
+
+        Returns:
+            Integer: number
         """
         return DBSession.query(
             cls).filter(cls.membership_accepted == 1).count()
@@ -792,7 +933,12 @@ class C3sMember(Base):
     @classmethod
     def get_num_non_accepted(cls):
         """
-        count the members that have actually been accepted as members
+        Count the applications that have **not** been accepted as members.
+
+        XXX TODO: how about duplicates!?
+
+        Returns:
+            Integer: number of C3sMember entries.
         """
         return DBSession.query(cls).filter(or_(
             cls.membership_accepted != 1,
@@ -803,7 +949,13 @@ class C3sMember(Base):
     @classmethod
     def get_num_mem_nat_acc(cls):
         """
-        count the *persons* that have actually been accepted as members
+        Count the *persons* that have actually been accepted as members.
+
+        Used in:
+            statistics_view
+
+        Returns:
+            Integer: number
         """
         return DBSession.query(cls).filter(
             cls.is_legalentity == 0,
@@ -813,7 +965,13 @@ class C3sMember(Base):
     @classmethod
     def get_num_mem_jur_acc(cls):
         """
-        count the *legal entities* that have actually been accepted as members
+        Count the *legal entities* that have actually been accepted as members.
+
+        Used in:
+            statistics_view
+
+        Returns:
+            Integer: number
         """
         return DBSession.query(cls).filter(
             cls.is_legalentity == 1,
@@ -823,7 +981,13 @@ class C3sMember(Base):
     @classmethod
     def get_num_mem_norm(cls):
         """
-        count the memberships that are normal members
+        Count the memberships that are normal members.
+
+        Used in:
+            statistics_view
+
+        Returns:
+            Integer: number
         """
         return DBSession.query(cls).filter(
             cls.membership_accepted == 1,
@@ -833,7 +997,13 @@ class C3sMember(Base):
     @classmethod
     def get_num_mem_invest(cls):
         """
-        count the memberships that are investing members
+        Count the memberships that are investing members.
+
+        Used in:
+            statistics_view
+
+        Returns:
+            Integer: number
         """
         return DBSession.query(cls).filter(
             cls.membership_accepted == 1,
@@ -843,7 +1013,13 @@ class C3sMember(Base):
     @classmethod
     def get_num_mem_other_features(cls):
         """
-        count the memberships that are neither normal nor investing members
+        Count the memberships that are neither normal nor investing members.
+
+        Used in:
+            statistics_view
+
+        Returns:
+            Integer: number
         """
         _foo = DBSession.query(cls).filter(
             cls.membership_accepted == 1,
@@ -861,6 +1037,27 @@ class C3sMember(Base):
     # listings
     @classmethod
     def member_listing(cls, order_by, how_many=10, offset=0, order="asc"):
+        """
+        Compute a list of C3sMember items (Query!).
+
+        Note:
+            these are not necessarily accepted members!
+
+        Used in:
+            membership_list, import_export
+
+        Args:
+            order_by: which column to sort on, e.g. "id"
+            how_many: number of entries (Integer)
+            offset: how many to omit (leave out first n; default is 0)
+            order: either "asc" (ascending, **default**) or "desc" (descending)
+
+        Raises:
+            Exception: invalid value for "order_by" or "order".
+
+        Returns:
+            query: C3sMember database query
+        """
         try:
             attr = getattr(cls, order_by)
             order_function = getattr(attr, order)
@@ -875,6 +1072,24 @@ class C3sMember(Base):
 
     @classmethod
     def get_range_ids(cls, order_by, first_id, last_id, order="asc"):
+        """
+        Get a list of C3sMember items by range of ids.
+
+        Used in:
+            membership_list
+
+        Args:
+            order_by: which column to sort on, e.g. "id"
+            first_id: id of first entry (Integer)
+            last_id: id of last entry (Integer)
+            order: either "asc" (ascending, **default**) or "desc" (descending)
+
+        Raises:
+            Exception: invalid value for "order_by" or "order".
+
+        Returns:
+            list: C3sMembership objects
+        """
         try:
             attr = getattr(cls, order_by)
             order_function = getattr(attr, order)
@@ -891,6 +1106,26 @@ class C3sMember(Base):
 
     @classmethod
     def nonmember_listing(cls, order_by, how_many, offset=0, order="asc"):
+        """
+        Compute a list of C3sMember items which are **not** accepted members.
+        Note:
+            these are not necessarily accepted members!
+
+        Used in:
+            accountants_views
+
+        Args:
+            order_by: which column to sort on, e.g. "id"
+            how_many: number of entries (Integer)
+            offset: how many to omit (leave out first n; default is 0)
+            order: either "asc" (ascending, **default**) or "desc" (descending)
+
+        Raises:
+            Exception: invalid value for "order_by" or "order".
+
+        Returns:
+            list of C3sMembership objects
+        """
         try:
             attr = getattr(cls, order_by)
             order_function = getattr(attr, order)
@@ -956,7 +1191,12 @@ class C3sMember(Base):
     @classmethod
     def get_matching_codes(cls, prefix):
         """
-        return only codes matchint the prefix
+        Return only codes matching the prefix.
+
+        This is used in the autocomplete form to search for C3sMember entries.
+
+        Returns:
+            list of strings
         """
         all = DBSession.query(cls).all()
         codes = []
@@ -967,6 +1207,17 @@ class C3sMember(Base):
 
     @classmethod
     def check_password(cls, _id, password):
+        """
+        Check a password against the database.
+
+        Args:
+            _id: C3sMember entry id.
+            password: a password supplied
+
+        Returns:
+            the answer of bcrypt.crypt, comparing the password supplied
+                and the hash from the database
+        """
         member = cls.get_by_id(_id)
         return crypt.check(member.password, password)
 
@@ -974,9 +1225,16 @@ class C3sMember(Base):
     @classmethod
     def check_user_or_None(cls, _id):
         """
-        check whether a user by that username exists in the database.
-        if yes, return that object, else None.
-        returns None if username doesn't exist
+        Check whether a user by that username exists in the database.
+
+        Used in:
+            security.request.RequestWithUserAttribute
+
+        Args:
+            _id: id of C3sMember entry.
+        Returns:
+            object, if id exists, else None.
+            None: if id
         """
         login = cls.get_by_id(_id)  # is None if user not exists
         return login
@@ -1147,49 +1405,44 @@ class Dues15Invoice(Base):
 
     Edge case: if reduced to 0, no new invoice needed.
 
-    ===================== ===================== ===========================
-    name                  type                  description
-    ===================== ===================== ===========================
-    id                    integer, primary key  tech. id. / no. in table
-    invoice_no            integer
-    invoice_no_string     unicode
-    invoice_date          datetime
-    invoice_amount        DatabaseDecimal(12,2)
-    is_cancelled          boolean               superseeded by reversal i.
-    cancelled_date        datetime
-    is_reversal           boolean               is reversal?
-    is_altered            boolean               reduction or more?
-    member_id             integer
-    membership_no         integer
-    email                 unicode               sent to
-    token                 unicode
-    preceding_invoice_no  integer
-    succeeding_invoice_no integer
-    ===================== ===================== ===========================
-
     """
     __tablename__ = 'dues15invoices'
     id = Column(Integer, primary_key=True)
+    """tech. id. / no. in table (integer, primary key)"""
     # this invoice
     invoice_no = Column(Integer(), unique=True)
+    """invoice number (Integer, unique)"""
     invoice_no_string = Column(Unicode(255), unique=True)
+    """invoice number string (unique)"""
     invoice_date = Column(DateTime())
+    """timestamp of invoice creation (DateTime)"""
     invoice_amount = Column(DatabaseDecimal(12, 2), default=Decimal('NaN'))
+    """amount (DatabaseDecimal(12,2))"""
     # has it been superseeded by reversal?
     is_cancelled = Column(Boolean, default=False)
+    """flag: invoice has been superseeded by reversal or cancellation"""
     cancelled_date = Column(DateTime())
+    """timestamp of cancellation/reversal"""
     # is it a reversal?
     is_reversal = Column(Boolean, default=False)
+    """flag: is this a reversal invoice?"""
     # is it a reduction (or even more than default)?
     is_altered = Column(Boolean, default=False)
+    """flag: has the amount been reduced or increased?"""
     # person reference
     member_id = Column(Integer())
+    """reference to C3sMember id"""
     membership_no = Column(Integer())
+    """reference to C3sMember membership_number"""
     email = Column(Unicode(255))
+    """C3sMembers email we sent this invoice to"""
     token = Column(Unicode(255))
+    """used to limit access to this invoice"""
     # referrals
     preceding_invoice_no = Column(Integer(), default=None)
+    """the invoice number preceeding this one, if applicable"""
     succeeding_invoice_no = Column(Integer(), default=None)
+    """the invoice number succeeding this one, if applicable"""
 
     def __init__(self,
                  invoice_no,
@@ -1199,7 +1452,21 @@ class Dues15Invoice(Base):
                  member_id,
                  membership_no,
                  email,
-                 token):
+                 token,
+                 ):
+        """
+        Make a new invoice object
+
+        Args:
+            invoice_no: invoice number
+            invoice_no_string: invoice number string
+            invoice_date: timestamp of creation
+            invoice_amount: amount of money
+            member_id: references C3sMember
+            membership_no: references C3sMember
+            email: email to send it to
+            token: a token to limit access
+        """
         self.invoice_no = invoice_no
         self.invoice_no_string = invoice_no_string
         self.invoice_date = invoice_date
@@ -1211,7 +1478,9 @@ class Dues15Invoice(Base):
 
     @classmethod
     def get_all(cls):
-        """return all dues15 invoices"""
+        """
+        Return all dues15 invoices
+        """
         return DBSession.query(cls).all()
 
     @classmethod
@@ -1226,7 +1495,11 @@ class Dues15Invoice(Base):
 
     @classmethod
     def get_max_invoice_no(cls):
-        """ return maximum of given invoice numbers or 0"""
+        """
+        Get the maximum invoice number.
+
+        Returns:
+            * Integer: maximum of given invoice numbers or 0"""
         res, = DBSession.query(func.max(cls.id)).first()
 
         if res is None:
@@ -1236,7 +1509,14 @@ class Dues15Invoice(Base):
     @classmethod
     def check_for_existing_dues15_token(cls, dues_token):
         """
-        check if a dues token is already present
+        Check if a dues token is already present.
+
+        Args:
+            dues_token: a given string
+
+        Returns:
+            * **True**, if token already in table
+            * **False** else
         """
         check = DBSession.query(cls).filter(
             cls.token == dues_token).first()
