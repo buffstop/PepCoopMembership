@@ -277,10 +277,10 @@ class Shares(Base):
     @classmethod
     def get_total_shares(cls):
         """return number of shares of accepted members"""
-        all = DBSession.query(cls).all()
+        all_shares = DBSession.query(cls).all()
         total = 0
-        for s in all:
-            total += s.number
+        for share in all_shares:
+            total += share.number
         return total
 
     @classmethod
@@ -378,7 +378,7 @@ class C3sMember(Base):
     """
     is_duplicate_of = Column(Integer, nullable=True)
     """Integer
-    
+
     * id of entry considered as original or relevant for membership
     """
     # shares
@@ -451,7 +451,7 @@ class C3sMember(Base):
         backref="members"
     )
     """relation
-    
+
     * list of shares packages a member has acquired.
     * has entries as soon as an application for membership has been approved
       by the board of directors -- and the relevant date of approval
@@ -460,7 +460,7 @@ class C3sMember(Base):
     # reminders
     sent_signature_reminder = Column(Integer, default=0)
     """Integer
-    
+
     * stores how many signature reminders have been sent out
     """
     sent_signature_reminder_date = Column(
@@ -471,7 +471,7 @@ class C3sMember(Base):
     """
     sent_payment_reminder = Column(Integer, default=0)
     """Integer
-    
+
     * stores how many payment reminders have been sent out
     """
     sent_payment_reminder_date = Column(
@@ -578,8 +578,7 @@ class C3sMember(Base):
                  date_of_birth, email_is_confirmed, email_confirm_code,
                  num_shares,
                  date_of_submission,
-                 membership_type, member_of_colsoc, name_of_colsoc,
-                 ):
+                 membership_type, member_of_colsoc, name_of_colsoc):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
@@ -595,7 +594,7 @@ class C3sMember(Base):
         self.email_is_confirmed = email_is_confirmed
         self.email_confirm_code = email_confirm_code
         self.num_shares = num_shares
-        self.date_of_submission = datetime.now()
+        self.date_of_submission = date_of_submission
         self.signature_received = False
         self.payment_received = False
         self.membership_type = membership_type
@@ -771,8 +770,7 @@ class C3sMember(Base):
             except:
                 print("exception at id {}: {}".format(
                     i.id,
-                    i.postcode)
-                )
+                    i.postcode))
                 # pass
         return postal_codes_de
 
@@ -817,45 +815,41 @@ class C3sMember(Base):
         """
         count the *legal entities* that have actually been accepted as members
         """
-        return DBSession.query(
-            cls).filter(
-                cls.is_legalentity == 1,
-                cls.membership_accepted == 1
-            ).count()
+        return DBSession.query(cls).filter(
+            cls.is_legalentity == 1,
+            cls.membership_accepted == 1
+        ).count()
 
     @classmethod
     def get_num_mem_norm(cls):
         """
         count the memberships that are normal members
         """
-        return DBSession.query(
-            cls).filter(
-                cls.membership_accepted == 1,
-                cls.membership_type == u'normal'
-            ).count()
+        return DBSession.query(cls).filter(
+            cls.membership_accepted == 1,
+            cls.membership_type == u'normal'
+        ).count()
 
     @classmethod
     def get_num_mem_invest(cls):
         """
         count the memberships that are investing members
         """
-        return DBSession.query(
-            cls).filter(
-                cls.membership_accepted == 1,
-                cls.membership_type == u'investing'
-            ).count()
+        return DBSession.query(cls).filter(
+            cls.membership_accepted == 1,
+            cls.membership_type == u'investing'
+        ).count()
 
     @classmethod
     def get_num_mem_other_features(cls):
         """
         count the memberships that are neither normal nor investing members
         """
-        _foo = DBSession.query(
-            cls).filter(
-                cls.membership_accepted == 1,
-                cls.membership_type != u'normal',
-                cls.membership_type != u'investing',
-            ).all()
+        _foo = DBSession.query(cls).filter(
+            cls.membership_accepted == 1,
+            cls.membership_type != u'normal',
+            cls.membership_type != u'investing'
+        ).all()
         _other = {}
         for i in _foo:
             if i.membership_type in _other.keys():
@@ -909,7 +903,8 @@ class C3sMember(Base):
             or_(
                 cls.membership_accepted == 0,
                 cls.membership_accepted == '',
-                cls.membership_accepted == None,
+                # "!= None" instead of "is not None" for SQLAlchemy
+                cls.membership_accepted != None,
             )
         ).order_by(
             order_function()
@@ -917,19 +912,16 @@ class C3sMember(Base):
         return q.all()
 
     @classmethod
-    def nonmember_listing_count(cls, order_by=u'id'):
+    def nonmember_listing_count(cls):
         q = DBSession.query(cls).filter(
             or_(
                 cls.membership_accepted == 0,
                 cls.membership_accepted == '',
-                cls.membership_accepted == None,
+                # "!= None" instead of "is not None" for SQLAlchemy
+                cls.membership_accepted != None,
             )
         ).count()
         return q
-
-    @classmethod
-    def get_num_nonmember_listing(cls):
-        return cls.nonmember_listing_count()
 
     # count for statistics
     @classmethod
@@ -1047,6 +1039,7 @@ class C3sMember(Base):
         get the highest membership number
         """
         nrs = DBSession.query(cls.membership_number).filter(
+            # "!= None" instead of "is not None" for SQLAlchemy
             cls.membership_number != None).all()
         _list = []
         for i in nrs:
@@ -1125,8 +1118,12 @@ class C3sMember(Base):
 
     def set_dues15_reduced_amount(self, reduced_amount):
         if reduced_amount != self.dues15_amount:
-            previous_amount_in_balance = self.dues15_amount_reduced if self.dues15_reduced else self.dues15_amount
-            self.dues15_balance = self.dues15_balance - previous_amount_in_balance + reduced_amount
+            previous_amount_in_balance = (
+                self.dues15_amount_reduced
+                if self.dues15_reduced
+                else self.dues15_amount)
+            self.dues15_balance = self.dues15_balance - \
+                previous_amount_in_balance + reduced_amount
             self.dues15_amount_reduced = reduced_amount
         else:
             self.dues15_amount_reduced = Decimal('NaN')
@@ -1150,25 +1147,25 @@ class Dues15Invoice(Base):
 
     Edge case: if reduced to 0, no new invoice needed.
 
-    ============================ ===================== ===========================
-    name                         type                  description
-    ============================ ===================== ===========================
-    id                           integer, primary key  tech. id. / no. in table
-    invoice_no                   integer
-    invoice_no_string            unicode
-    invoice_date                 datetime
-    invoice_amount               DatabaseDecimal(12,2)
-    is_cancelled                 boolean               superseeded by reversal i.
-    cancelled_date               datetime
-    is_reversal                  boolean               is reversal?
-    is_altered                   boolean               reduction or more?
-    member_id                    integer
-    membership_no                integer
-    email                        unicode               sent to
-    token                        unicode
-    preceding_invoice_no         integer
-    succeeding_invoice_no        integer
-    ============================ ===================== ===========================
+    ===================== ===================== ===========================
+    name                  type                  description
+    ===================== ===================== ===========================
+    id                    integer, primary key  tech. id. / no. in table
+    invoice_no            integer
+    invoice_no_string     unicode
+    invoice_date          datetime
+    invoice_amount        DatabaseDecimal(12,2)
+    is_cancelled          boolean               superseeded by reversal i.
+    cancelled_date        datetime
+    is_reversal           boolean               is reversal?
+    is_altered            boolean               reduction or more?
+    member_id             integer
+    membership_no         integer
+    email                 unicode               sent to
+    token                 unicode
+    preceding_invoice_no  integer
+    succeeding_invoice_no integer
+    ===================== ===================== ===========================
 
     """
     __tablename__ = 'dues15invoices'
@@ -1202,8 +1199,7 @@ class Dues15Invoice(Base):
                  member_id,
                  membership_no,
                  email,
-                 token,
-                 ):
+                 token):
         self.invoice_no = invoice_no
         self.invoice_no_string = invoice_no_string
         self.invoice_date = invoice_date
@@ -1268,45 +1264,43 @@ class Dues15Invoice(Base):
 
         # collect the invoice amounts per month
         invoice_amounts_query = DBSession.query(
-                invoice_date_month.label('month'),
-                func.sum(expression.case(
-                    [(
-                        expression.not_(Dues15Invoice.is_reversal),
-                        Dues15Invoice.invoice_amount)],
-                    else_=Decimal('0.0'))).label('amount_invoiced_normal'),
-                func.sum(expression.case(
-                    [(
-                        Dues15Invoice.is_reversal,
-                        Dues15Invoice.invoice_amount)],
-                    else_=Decimal('0.0'))).label('amount_invoiced_reversal'),
-                expression.literal_column(
-                    '\'0.0\'', SqliteDecimal).label('amount_paid')
-            ) \
-            .group_by(invoice_date_month)
+            invoice_date_month.label('month'),
+            func.sum(expression.case(
+                [(
+                    expression.not_(Dues15Invoice.is_reversal),
+                    Dues15Invoice.invoice_amount)],
+                else_=Decimal('0.0'))).label('amount_invoiced_normal'),
+            func.sum(expression.case(
+                [(
+                    Dues15Invoice.is_reversal,
+                    Dues15Invoice.invoice_amount)],
+                else_=Decimal('0.0'))).label('amount_invoiced_reversal'),
+            expression.literal_column(
+                '\'0.0\'', SqliteDecimal).label('amount_paid')
+        ).group_by(invoice_date_month)
         # collect the payments per month
         member_payments_query = DBSession.query(
-                payment_date_month.label('month'),
-                expression.literal_column(
-                    '\'0.0\'', SqliteDecimal).label('amount_invoiced_normal'),
-                expression.literal_column(
-                    '\'0.0\'', SqliteDecimal).label(
-                        'amount_invoiced_reversal'),
-                func.sum(C3sMember.dues15_amount_paid).label('amount_paid')
-            ) \
-            .filter(C3sMember.dues15_paid_date.isnot(None)) \
+            payment_date_month.label('month'),
+            expression.literal_column(
+                '\'0.0\'', SqliteDecimal).label('amount_invoiced_normal'),
+            expression.literal_column(
+                '\'0.0\'', SqliteDecimal
+            ).label('amount_invoiced_reversal'),
+            func.sum(C3sMember.dues15_amount_paid).label('amount_paid')
+        ).filter(C3sMember.dues15_paid_date.isnot(None)) \
             .group_by(payment_date_month)
         # union invoice amounts and payments
         union_all_query = expression.union_all(
             member_payments_query, invoice_amounts_query)
         # aggregate invoice amounts and payments by month
         result_query = DBSession.query(
-                union_all_query.c.month.label('month'),
-                func.sum(union_all_query.c.amount_invoiced_normal).label(
-                    'amount_invoiced_normal'),
-                func.sum(union_all_query.c.amount_invoiced_reversal).label(
-                    'amount_invoiced_reversal'),
-                func.sum(union_all_query.c.amount_paid).label('amount_paid')
-            ) \
+            union_all_query.c.month.label('month'),
+            func.sum(union_all_query.c.amount_invoiced_normal).label(
+                'amount_invoiced_normal'),
+            func.sum(union_all_query.c.amount_invoiced_reversal).label(
+                'amount_invoiced_reversal'),
+            func.sum(union_all_query.c.amount_paid).label('amount_paid')
+        ) \
             .group_by(union_all_query.c.month) \
             .order_by(union_all_query.c.month)
         for month_stat in result_query.all():

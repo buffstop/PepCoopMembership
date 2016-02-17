@@ -35,8 +35,7 @@ def stats_view(request):
         # memberships
         'num_members_accepted': C3sMember.get_num_members_accepted(),
         'num_non_accepted': C3sMember.get_num_non_accepted(),
-        'num_nonmember_listing': C3sMember.get_num_nonmember_listing(),
-        'nonmember_listing_count': C3sMember.nonmember_listing_count(),
+        'num_nonmember_listing': C3sMember.nonmember_listing_count(),
         'num_duplicates': len(C3sMember.get_duplicates()),
         #'num_empty_slots': C3sMember.get_num_empty_slots(),
         # normal persons vs. legal entities

@@ -31,7 +31,6 @@
       <br />
       Anzahl Duplikate: ${num_duplicates}<br />
       <!-- Anzahl nonmember_listing: ${num_nonmember_listing}<br />
-      Anzahl nonmember_listing_count: ${nonmember_listing_count}<br />
       Anzahl Leerer DB IDs: $ off {num_empty_slots}<br />-->
       Testsumme: ${num_members_accepted} + ${num_non_accepted}
       = ${num_members_accepted + num_non_accepted}
