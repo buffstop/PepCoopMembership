@@ -1,0 +1,39 @@
+
+Hello {salutation},
+
+on the 11th of May 2015 you received an email inviting you to the BarCamp
+and general assembly of C3S SCE mbh on the 12th and 13th June of 2015
+in Potsdam.
+
+If possible, please let us know via this form, whether you
+will attend or not:
+
+This is your personal registration link:
+
+  {invitation_url}
+
+Please let us know in time whether you will participate. We must know as
+soon as possible whether the location will be large enough. If possible,
+please respond by June 5th, 2015, at the latest.
+
+On the linked page you can confirm your participation in the general
+assembly and the BarCamp separately. You can also book a meal for the
+day of the BarCamp.
+
+If you are looking for a ride to Potsdam, you can register for free on
+http://www.matchrider.de . The ride board code is "C3SGV". You can also
+use the list called "Mitfahrgelegenheiten" in our C3S-Wiki.
+
+  https://wiki.c3s.cc
+  username: schwarm
+  keyword: letmein
+
+That's all! Let us know your proposals for topics, plan your trip -- and
+we shall meet in Potsdam!
+
+We are looking forward to seeing you and learning to know your ideas!
+
+
+Your C3S Team
+
+{footer}

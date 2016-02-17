@@ -1,0 +1,40 @@
+
+Hallo {salutation},
+
+am 11.05.2015 haben wir Dich zu BarCamp und Generalversammlung der C3S SCE
+eingeladen, welche am 12. und 13.06.2015 in Potsdam stattfinden.
+
+Wir benötigen im Vorfeld eine Rückmeldung, ob Du an BarCamp und/oder
+Generalversammlung teilnehmen möchtest, oder ob Du Dich vertreten lassen
+möchtest.
+
+Dies ist Dein individueller Link zur Anmeldung:
+
+  {invitation_url}
+
+Bitte teile uns dort rechtzeitig mit, ob Du teilnimmst. Wir müssen
+umgehend wissen, ob die Location ausreichend groß ist. Wenn irgend
+möglich, antworte uns daher bitte bis zum 05.06.2015.
+
+Auf der verlinkten Seite kannst Du separat die Teilnahme für die
+Generalversammlung und das Barcamp bestätigen und ggfs. Essen vorbestellen.
+
+Solltet ihr eine Mitfahrgelegenheit nach Potsdam suchen, könnt ihr euch bei
+http://www.matchrider.de kostenlos registrieren. Der Ride Board-Code lautet
+"C3SGV". Alternativ könnt ihr auch unsere Mitfahrgelegenheiten-Liste im
+C3S-Wiki nutzen:
+
+  https://wiki.c3s.cc
+  Name: schwarm
+  Kennwort: letmein
+
+Das wars! Versorge uns mit Themenvorschlägen, plane Deine Fahrt - dann
+sehen wir uns in Potsdam! Bei Fragen kannst Du Dich wie immer an info@c3s.cc
+wenden.
+
+Wir freuen uns auf Dich & Deine Ideen!
+
+
+Das Team der C3S
+
+{footer}
