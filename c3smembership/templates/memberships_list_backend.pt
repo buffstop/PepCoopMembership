@@ -110,6 +110,10 @@
                 <a href="${request.route_url('membership_listing_backend', number=current, orderby='id', order='desc')}" title="sort by id: descending" class="glyphicon glyphicon-chevron-down"></a>
             </th>
             <th>
+                bc &amp; ga<br />
+                invitation
+            </th>
+            <th>
                 dues<br />
                 invoice
             </th>
@@ -148,6 +152,16 @@
                         dup:${member.is_duplicate_of}
                     </a>
                 </div>
+            </td>
+            <td>
+                <a tal:condition="member.email_invite_flag_bcgv16 is False"
+                    href="${request.route_url('invite_member', m_id=member.id)}"
+                    title="invitation not sent yet. Click to send!"
+                    class="btn btn-danger"></a>
+                <a tal:condition="member.email_invite_flag_bcgv16 is True"
+                    href="${request.route_url('invite_member', m_id=member.id)}"
+                    title="gesendet ${member.email_invite_date_bcgv16.strftime('am %d.%m.%Y um %H:%M')}"
+                    class="btn btn-success"></a>
             </td>
             <td>
                 <a tal:condition="member.dues15_invoice is False"

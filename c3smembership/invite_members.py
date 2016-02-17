@@ -31,48 +31,17 @@ That other webapp can be configured to fetch information
 about the relevant C3S member from this app via API call,
 see the relevant module.
 """
-from c3smembership.models import (
-    C3sMember,
-)
 from datetime import datetime
-import deform
-from pkg_resources import resource_filename
-from pyramid.i18n import (
-    get_localizer,
-)
+from pyramid.httpexceptions import HTTPFound
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.view import view_config
-from pyramid.threadlocal import get_current_request
-from pyramid.httpexceptions import HTTPFound
-from translationstring import TranslationStringFactory
 from types import NoneType
 
 from c3smembership.membership_certificate import make_random_token
+from c3smembership.models import C3sMember
+from c3smembership.invite_members_texts import make_bcga16_invitation_email
 
-deform_templates = resource_filename('deform', 'templates')
-c3smembership_templates = resource_filename(
-    'c3smembership', 'templates')
-
-my_search_path = (deform_templates, c3smembership_templates)
-
-_ = TranslationStringFactory('c3smembership')
-
-
-def translator(term):
-    return get_localizer(get_current_request()).translate(term)
-
-my_template_dir = resource_filename('c3smembership', 'templates/')
-deform_template_dir = resource_filename('deform', 'templates/')
-
-zpt_renderer = deform.ZPTRendererFactory(
-    [
-        my_template_dir,
-        deform_template_dir,
-    ],
-    translator=translator,
-)
-# the zpt_renderer above is referred to within the demo.ini file by dotted name
 
 DEBUG = False
 LOGGING = True
@@ -81,87 +50,7 @@ if LOGGING:  # pragma: no cover
     import logging
     log = logging.getLogger(__name__)
 
-invite_mail_template = u'''[english version below]
-
-Hallo {1} {2},
-
-am 11.05.2015 haben wir Dich zu BarCamp und Generalversammlung der C3S SCE
-eingeladen, welche am 12. und 13.06.2015 in Potsdam stattfinden.
-
-Wir benötigen im Vorfeld eine Rückmeldung, ob Du an BarCamp und/oder
-Generalversammlung teilnehmen möchtest, oder ob Du Dich vertreten lassen
-möchtest.
-
-Dies ist Dein individueller Link zur Anmeldung:
-
-  {0}
-
-Bitte teile uns dort rechtzeitig mit, ob Du teilnimmst. Wir müssen
-umgehend wissen, ob die Location ausreichend groß ist. Wenn irgend
-möglich, antworte uns daher bitte bis zum 05.06.2015.
-
-Auf der verlinkten Seite kannst Du separat die Teilnahme für die
-Generalversammlung und das Barcamp bestätigen und ggfs. Essen vorbestellen.
-
-Solltet ihr eine Mitfahrgelegenheit nach Potsdam suchen, könnt ihr euch bei
-http://www.matchrider.de kostenlos registrieren. Der Ride Board-Code lautet
-"C3SGV". Alternativ könnt ihr auch unsere Mitfahrgelegenheiten-Liste im
-C3S-Wiki nutzen:
-
-  https://wiki.c3s.cc
-  Name: schwarm
-  Kennwort: letmein
-
-Das wars! Versorge uns mit Themenvorschlägen, plane Deine Fahrt - dann
-sehen wir uns in Potsdam! Bei Fragen kannst Du Dich wie immer an info@c3s.cc
-wenden.
-
-Wir freuen uns auf Dich & Deine Ideen!
-
-
-Das Team der C3S
-
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-Hello {1} {2},
-
-on the 11th of May 2015 you received an email inviting you to the BarCamp
-and general assembly of C3S SCE mbh on the 12th and 13th June of 2015
-in Potsdam.
-
-If possible, please let us know via this form, whether you
-will attend or not:
-
-This is your personal registration link:
-
-  {0}
-
-Please let us know in time whether you will participate. We must know as
-soon as possible whether the location will be large enough. If possible,
-please respond by June 5th, 2015, at the latest.
-
-On the linked page you can confirm your participation in the general
-assembly and the BarCamp separately. You can also book a meal for the
-day of the BarCamp.
-
-If you are looking for a ride to Potsdam, you can register for free on
-http://www.matchrider.de . The ride board code is "C3SGV". You can also
-use the list called "Mitfahrgelegenheiten" in our C3S-Wiki.
-
-  https://wiki.c3s.cc
-  username: schwarm
-  keyword: letmein
-
-That's all! Let us know your proposals for topics, plan your trip -- and
-we shall meet in Potsdam!
-
-We are looking forward to seeing you and learning to know your ideas!
-
-
-Your C3S Team
-
-'''
+invite_mail_template = u''' '''
 
 
 @view_config(permission='manage',
@@ -169,6 +58,10 @@ Your C3S Team
 def invite_member_BCGV(request):
     '''
     Send email to member with link to ticketing.
+
+    === =====================================
+    URL http://app:port/invite_member/{m_id}
+    === =====================================
     '''
     mid = request.matchdict['m_id']
     _m = C3sMember.get_by_id(mid)
@@ -182,37 +75,31 @@ def invite_member_BCGV(request):
                                            orderby=request.cookies['orderby']))
 
     # prepare a random token iff none is set
-    if _m.email_invite_token_bcgv15 is None:
-        _m.email_invite_token_bcgv15 = make_random_token()
+    if _m.email_invite_token_bcgv16 is None:
+        _m.email_invite_token_bcgv16 = make_random_token()
     _url = (
-        request.registry.settings['ticketing.url']
-        + '/lu/' + _m.email_invite_token_bcgv15
-        + '/' + _m.email)
+        request.registry.settings['ticketing.url'] +
+        '/lu/' + _m.email_invite_token_bcgv16 +
+        '/' + _m.email)
 
-    _body = invite_mail_template.format(
-        _url,  # {0}
-        _m.firstname,  # {1}
-        _m.lastname,  # {2}
-    )
+    email_subject, email_body = make_bcga16_invitation_email(_m, _url)
 
     log.info("mailing event invitation to to member id %s" % _m.id)
 
     message = Message(
-        subject=(u'[C3S] Invitation to Barcamp and Assembly '
-                 u'/ Einladung zu Barcamp und Generalversammlung'),
+        subject=email_subject,
         sender='yes@office.c3s.cc',
         recipients=[_m.email],
-        body=_body,
+        body=email_body,
         extra_headers={
-            'Reply-To': 'yes@c3s.cc',
+            'Reply-To': 'office@c3s.cc',
             }
     )
 
-    if 'true' in request.registry.settings['testing.mail_to_console']:
-        # ^^ yes, a little ugly, but works; it's a string
-        # print "printing mail"
-        # print(message.subject)
-        # print(message.body)
+    print_mail = True if 'true' in request.registry.settings[
+        'testing.mail_to_console'] else False
+
+    if print_mail:  # pragma: no cover
         print(message.body.encode('utf-8'))
     else:
         # print "sending mail"
@@ -220,8 +107,8 @@ def invite_member_BCGV(request):
         mailer.send(message)
 
     # _m._token = _looong_token
-    _m.email_invite_flag_bcgv15 = True
-    _m.email_invite_date_bcgv15 = datetime.now()
+    _m.email_invite_flag_bcgv16 = True
+    _m.email_invite_date_bcgv16 = datetime.now()
     return HTTPFound(request.route_url('membership_listing_backend',
                                        number=request.cookies['on_page'],
                                        order=request.cookies['order'],
@@ -237,6 +124,12 @@ def batch_invite(request):
     Batch invite n members at the same time.
 
     The number (n) is configurable, defaults to 5.
+    The number can either be supplied in the URL
+    or by posting a form with 'number' and 'submit to this view.
+
+    === =====================================
+    URL http://app:port/invite_batch/{number}
+    === =====================================
     """
     try:  # how many to process?
         n = int(request.matchdict['number'])
@@ -262,34 +155,29 @@ def batch_invite(request):
 
     for _m in _invitees:
         # prepare a random token iff none is set
-        if _m.email_invite_token_bcgv15 is None:
-            _m.email_invite_token_bcgv15 = make_random_token()
+        if _m.email_invite_token_bcgv16 is None:
+            _m.email_invite_token_bcgv16 = make_random_token()
         _url = (
-            request.registry.settings['ticketing.url']
-            + '/lu/' + _m.email_invite_token_bcgv15
-            + '/' + _m.email)
-
-        _body = invite_mail_template.format(
-            _url,  # {0}
-            _m.firstname,  # {1}
-            _m.lastname,  # {2}
-        )
+            request.registry.settings['ticketing.url'] +
+            '/lu/' + _m.email_invite_token_bcgv16 +
+            '/' + _m.email)
 
         log.info("mailing event invitation to to member id %s" % _m.id)
 
+        email_subject, email_body = make_bcga16_invitation_email(_m, _url)
+
         message = Message(
-            subject=(u'[C3S] Invitation to Barcamp and Assembly '
-                     u'/ Einladung zu Barcamp und Generalversammlung'),
+            subject=email_subject,
             sender='yes@office.c3s.cc',
             recipients=[_m.email],
-            body=_body,
+            body=email_body,
             extra_headers={
-                'Reply-To': 'yes@c3s.cc',
+                'Reply-To': 'office@c3s.cc',
             }
         )
 
         if 'true' in request.registry.settings[
-                'testing.mail_to_console']:
+                'testing.mail_to_console']:  # pragma: no cover
             # ^^ yes, a little ugly, but works; it's a string
             # print "printing mail"
             # print(message.body.encode('utf-8'))
@@ -300,11 +188,11 @@ def batch_invite(request):
             mailer.send(message)
 
         # _m._token = _looong_token
-        _m.email_invite_flag_bcgv15 = True
-        _m.email_invite_date_bcgv15 = datetime.now()
-        if _m.membership_accepted and _m.email_invite_flag_bcgv15:
-            print("YES!!! updated")
-
+        _m.email_invite_flag_bcgv16 = True
+        _m.email_invite_date_bcgv16 = datetime.now()
+        if _m.membership_accepted and _m.email_invite_flag_bcgv16:
+            # print("YES!!! updated")
+            pass
         _num_sent += 1
         _ids_sent.append(_m.id)
 
