@@ -388,9 +388,14 @@ Certificate Issuance
 
 
 The membership certificate must be created and sent to the member.
-Certificates might be issued to a member more than once. The certificate must
-contain the member's current information.
+Certificates might be issued to a member more than once.
+The certificate must contain the member's current information.
 
+We supply the member with a URL which is valid for two weeks.
+This link is sent per automated mail by request of the member to headquarters office.
+
+The relevant documentation (generated from the code)
+can be found here: :ref:`code_docs_membership_certificate`.
 
 
 C3S Information Changes
@@ -431,9 +436,9 @@ Use Cases
 =========
 
 
-This section describes the uses cases for this application. These use cases
-are derived from the business processes as the application is used to support
-them.
+This section describes the uses cases for this application.
+These use cases are derived from the business processes
+as the application is used to support them.
 
 
 
