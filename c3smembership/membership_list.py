@@ -35,13 +35,15 @@ from c3smembership.models import (
 )
 from c3smembership.tex_tools import TexTools
 
+DEBUG = False
+
 
 @view_config(renderer='templates/aufstockers_list.pt',
              permission='manage',
              route_name='membership_listing_aufstockers')
 def member_list_aufstockers_view(request):
     """
-    this view shows all accepted members with
+    This view shows all accepted members with
     more than one package of (accepted) shares
     """
     _order_by = 'lastname'
@@ -55,12 +57,15 @@ def member_list_aufstockers_view(request):
             # check membership number
             try:
                 assert(item.membership_number is not None)
+                # add this item to the list
+                _members.append(item)
+                _count += 1
             except AssertionError:
-                print "failed at id {} lastname {}".format(
-                    item.id, item.lastname)
-            # add this item to the list
-            _members.append(item)
-            _count += 1
+                pass
+                if DEBUG:  # pragma: no cover
+                    print(u"-- member_list_aufstockers: "
+                          u"failed at id {} lastname {}".format(
+                              item.id, item.lastname))
     # sort members alphabetically
     import locale
     locale.setlocale(locale.LC_ALL, "de_DE.UTF-8")
@@ -77,31 +82,34 @@ def member_list_aufstockers_view(request):
     }
 
 
-@view_config(renderer='templates/member_list.pt',
-             permission='manage',
+@view_config(permission='manage',
              route_name='membership_listing_date_pdf')
 def member_list_date_pdf_view(request):
     """
-    returns the membership list *for a given date* for printout as PDF.
-    the date is supplied in and parsed from the URL, e.g.
+    The membership list *for a given date* for printout as PDF.
+    The date is supplied in and parsed from the URL, e.g.
     http://0.0.0.0:6543/aml-2014-12-31.pdf
 
     The PDF is generated using pdflatex.
+
+    If the date is not parseable, an error message is shown.
     """
+    DEBUG = False
     try:
         _date_m = request.matchdict['date']
         _date = datetime.strptime(_date_m, '%Y-%m-%d')
     except (KeyError, ValueError):
         request.session.flash(
-            'Invalid date! ',
-            'membership_list_errors'
+            "Invalid date! '{}' does not compute! "
+            "try again, please! (YYYY-MM-DD)".format(
+                _date_m),
+            'message_to_user'
         )
-        return {
-            'form': 'nope, invalid date!',
-            'count': 'zero',
-            '_today': 'n/a',
-            'members': [],
-        }
+        return HTTPFound(request.route_url('error_page'))
+
+    """
+    All member entries are loaded.
+    """
     # query the database
     _order_by = 'lastname'
     _num = C3sMember.get_number()
@@ -114,12 +122,23 @@ def member_list_date_pdf_view(request):
     _count_shares = 0  # count their shares
     _count_shares_printed = 0  # cross-check...
 
+    """
+    ...and filtered for
+
+    * active members (membership_accepted)
+    * with membership numbers (cross-check)
+    * who have become members before the given date.
+
+    They are added to a list and counted.
+    Their shares (those acquired before the date) are counted as well.
+
+    """
     # filter and count memberships and shares
     for item in _all_members:
         if (
-                (item.membership_number is not None)
-                and (item.membership_accepted)
-                and (datetime(  # use only Date, not Hours etc.
+                (item.membership_number is not None) and
+                (item.membership_accepted) and
+                (datetime(  # use only Date, not Hours etc.
                     item.membership_date.year,
                     item.membership_date.month,
                     item.membership_date.day,
@@ -136,6 +155,16 @@ def member_list_date_pdf_view(request):
                 ) <= _date):
                     _count_shares += share.number
 
+    """
+    The list of members is then sorted by
+
+    * their given name
+    * their last name,
+
+    using locale.strcoll with german locale.
+    This achieves a sort order like in phone books.
+    """
+
     # sort members alphabetically
     import locale
     locale.setlocale(locale.LC_ALL, "de_DE.UTF-8")
@@ -144,6 +173,9 @@ def member_list_date_pdf_view(request):
     # ...and then by their last name
     _members.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
 
+    """
+    Then a LaTeX file is constructed...
+    """
     here = os.path.dirname(__file__)
     latex_header_tex = os.path.abspath(
         os.path.join(here, '../membership_list_pdflatex/header'))
@@ -163,8 +195,7 @@ def member_list_date_pdf_view(request):
         dir=_tempdir,
         delete=False,  # directory will be deleted anyways
     )
-    pdf_file.name = latex_file.name.rstrip('.tex')
-    pdf_file.name += '.pdf'
+    pdf_file.name = latex_file.name.replace('.tex', '.pdf')
 
     # construct latex data: header + variables
     latex_data = '''
@@ -229,8 +260,10 @@ def member_list_date_pdf_view(request):
             ''' {0} & {1} & {2} & {3} & {4} & {5} & {6} & {7} \\\\\\hline %
             '''.format(
                 TexTools.escape(member.lastname).encode('utf-8'),  # 0
-                ' \\footnotesize ' + TexTools.escape(member.firstname).encode('utf-8'),  # 1
-                ' \\footnotesize ' + TexTools.escape(str(member.membership_number)),  # 2
+                ' \\footnotesize ' + TexTools.escape(
+                    member.firstname).encode('utf-8'),  # 1
+                ' \\footnotesize ' + TexTools.escape(
+                    str(member.membership_number)),  # 2
                 _address,  # 3
                 ' \\footnotesize ' + member.date_of_birth.strftime(
                     '%d.%m.%Y'),  # 4
@@ -258,7 +291,8 @@ def member_list_date_pdf_view(request):
         ],
         stdout=fnull, stderr=subprocess.STDOUT  # hide output
     )
-    print("the output of pdflatex run: %s" % pdflatex_output)
+    if DEBUG:  # pragma: no cover
+        print("the output of pdflatex run: %s" % pdflatex_output)
 
     # if run was a success, run X times more...
     if pdflatex_output == 0:
@@ -271,7 +305,8 @@ def member_list_date_pdf_view(request):
                 ],
                 stdout=fnull, stderr=subprocess.STDOUT  # hide output
             )
-            print("run #{} finished.".format(i+1))
+            if DEBUG:  # pragma: no cover
+                print("run #{} finished.".format(i+1))
 
     # sanity check: did we print exactly as many shares as calculated?
     assert(_count_shares == _count_shares_printed)
@@ -288,9 +323,9 @@ def member_list_date_pdf_view(request):
              route_name='membership_listing_alphabetical')
 def member_list_print_view(request):
     """
-    this view produces printable HTML output, i.e. HTML without links
+    This view produces printable HTML output, i.e. HTML without links
 
-    it was used before the PDF-generating view above existed
+    It was used before the PDF-generating view above existed
     """
     _order_by = 'lastname'
     _num = C3sMember.get_number()
@@ -304,8 +339,10 @@ def member_list_print_view(request):
             try:
                 assert(item.membership_number is not None)
             except AssertionError:
-                print "failed at id {} lastname {}".format(
-                    item.id, item.lastname)
+                pass
+                if DEBUG:  # pragma: no cover
+                    print u"failed at id {} lastname {}".format(
+                        item.id, item.lastname)
             # add this item to the list
             _members.append(item)
             _count += 1
@@ -342,7 +379,7 @@ def membership_listing_backend(request):
         _page_to_show = int(request.matchdict['number'])
         _order_by = request.matchdict['orderby']
         _order = request.matchdict['order']
-    except ValueError:
+    except KeyError, ValueError:
         _page_to_show = 0
         _order_by = 'id'
         _order = 'asc'
@@ -416,10 +453,24 @@ def membership_listing_backend(request):
 def merge_member_view(request):
     """
     Merges member duplicates into one member record.
+
+    Some people have more than one entry in our C3SMember table,
+    e.g. because they used the application form more than once
+    to acquire more shares.
+
+    They shall not, however, become members twice and get more than one
+    membership number. So we try and merge them:
+
+    If a person is already a member and acquires a second package of shares,
+    this package of shares is added to the former membership entry.
+    The second entry in the C3sMember table is given the 'is_duplicate' flag
+    and also the 'duplicate_of' is given the *id* of the original entry.
     """
+    DEBUG = False
     _id = request.matchdict['afm_id']
     _mid = request.matchdict['mid']
-    print "shall merge {} to {}".format(_id, _mid)
+    if DEBUG:  # pragma: no cover
+        print "shall merge {} to {}".format(_id, _mid)
 
     orig = C3sMember.get_by_id(_mid)
     merg = C3sMember.get_by_id(_id)
@@ -441,11 +492,11 @@ def merge_member_view(request):
     _date_for_shares = merg.signature_received_date if (
         merg.signature_received_date > merg.payment_received_date
     ) else merg.payment_received_date
-    print "the date for the shares: {} (s: {}; p: {})".format(
-        _date_for_shares,
-        merg.signature_received_date,
-        merg.payment_received_date
-    )
+    # print "the date for the shares: {} (s: {}; p: {})".format(
+    #    _date_for_shares,
+    #    merg.signature_received_date,
+    #    merg.payment_received_date
+    # )
     shares = Shares(
         number=merg.num_shares,
         date_of_acquisition=_date_for_shares,
@@ -468,7 +519,28 @@ def merge_member_view(request):
              route_name='make_member')
 def make_member_view(request):
     """
-    Makes a membership applicant into an accepted member.
+    Turns a membership applicant into an accepted member.
+
+    When both the signature and the payment for the shares have arrived at
+    headquarters, an application for membership can be turned into an
+    **accepted membership**, if the board of directors decides so.
+
+    This view lets staff enter a date of approval through a form.
+
+    It also provides staff with listings of
+
+    * members with same first name
+    * members with same last name
+    * members with same email address
+    * members with same date of birth
+
+    so staff can decide if this may become a proper membership
+    or whether this application is a duplicate of some accepted membership
+    and should be merged with some other entry.
+
+    In case of duplicate/merge, also check if the number of shares
+    when combining both entries would exceed 60,
+    the maximum number of shares a member can hold.
     """
     _id = request.matchdict['afm_id']
     try:  # does that id make sense? member exists?
@@ -494,7 +566,8 @@ def make_member_view(request):
                 request.POST['membership_date'], '%Y-%m-%d')
         except ValueError, value_error:
             request.session.flash(value_error.message, 'merge_message')
-            return HTTPFound(request.route_url('make_member', afm_id=member.id))
+            return HTTPFound(
+                request.route_url('make_member', afm_id=member.id))
 
         member.membership_accepted = True
         if member.is_legalentity:
@@ -518,7 +591,8 @@ def make_member_view(request):
             if request.POST['referrer'] == 'dashboard':
                 return HTTPFound(request.route_url('dashboard_only'))
             if request.POST['referrer'] == 'detail':
-                return HTTPFound(request.route_url('detail', memberid=member.id))
+                return HTTPFound(
+                    request.route_url('detail', memberid=member.id))
         return HTTPFound(request.route_url('detail', memberid=member.id))
 
     referrer = ''
@@ -542,20 +616,21 @@ def make_member_view(request):
 
 @view_config(permission='manage',
              route_name='flag_duplicates')
-def flag_duplicates(request):
+def flag_duplicates(request):  # pragma: no cover
     '''
     known duplicate entries by members that found their way into the DB
     need to be flagged so their packages of shares can be attributed
     to *one* account, and they may only get *one* membership number.
 
     mapping id ranges to membership applications:
-    1st: founders:        #1017 - 1066 (50pc.)
-    2nd: startnext items: #496 - #1016 (520pc. )order_by email_confirm_code
-    3rd: yes submissions: #1 - #495 (410pc.) order_by date_of_submission
-                          #1067 - #1092 (25pc.)
-                          #1109 - end...
-    4th: legal entities   #1093 - #1108
+    ::
 
+       1st: founders:        #1017 - 1066 (50pc.)
+       2nd: startnext items: #496 - #1016 (520pc. )order_by email_confirm_code
+       3rd: yes submissions: #1 - #495 (410pc.) order_by date_of_submission
+       .                     #1067 - #1092 (25pc.)
+       .                     #1109 - end...
+       4th: legal entities   #1093 - #1108
     '''
     duplicates = [
         # (original, duplicate),
@@ -609,7 +684,7 @@ def flag_duplicates(request):
 
 @view_config(permission='manage',
              route_name='make_founders_members')
-def make_founders_members(request):
+def make_founders_members(request):  # pragma: no cover
     '''
     give membership status, date and number to the founders
     '''
@@ -671,7 +746,7 @@ def make_founders_members(request):
 
 @view_config(permission='manage',
              route_name='make_crowdfounders_members')
-def make_crowdfounders_members(request):
+def make_crowdfounders_members(request):  # pragma: no cover
     '''
     give membership status, date and number to the crowdfounders
     '''
@@ -686,7 +761,8 @@ def make_crowdfounders_members(request):
         print "checking crowdfounder data"
         for crowdfounder in _crowdfounders:
             assert(crowdfounder.email_confirm_code.startswith('TR001'))
-            assert(crowdfounder.signature_received_date == datetime(1970, 1, 1))
+            assert(
+                crowdfounder.signature_received_date == datetime(1970, 1, 1))
             assert(crowdfounder.payment_received_date == datetime(1970, 1, 1))
     except AssertionError:
         print "failed sanity check!"
@@ -744,7 +820,7 @@ def make_crowdfounders_members(request):
 
 @view_config(permission='manage',
              route_name='make_yesser_members')
-def make_yesser_members(request):
+def make_yesser_members(request):  # pragma: no cover
     '''
     give membership status, date and number
     to the people who used the main form.
@@ -858,7 +934,7 @@ def make_yesser_members(request):
 
 @view_config(permission='manage',
              route_name='merge_duplicates')
-def merge_duplicates(request):
+def merge_duplicates(request):  # pragma: no cover
     '''
     the known duplicates must be attributed to their originals
     '''
