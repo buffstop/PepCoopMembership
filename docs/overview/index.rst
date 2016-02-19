@@ -13,13 +13,38 @@ Users coming to the app see the form to become a member
           for both persons and legal entities,
           as well as to a login form.
 
-They supply information, confirm it, have an email sent to them.
+They supply information, confirm it (or re-edit if necessary)
+and  have an email sent to them.
+
 A link in that email helps to verify their email address,
 then they may download a PDF to sign and send back to headquarters.
 
+On the second page of the printout (like in that EMail)
+they find information on where to transfer the money
+for the shares.
+
+.. image:: ../images/c3sMembership_afm.svg
+   :alt: Application for Membership (afm) in BPMN.
+   :align: right
+
+..   :height: 100px
+..   :width: 200 px
+..   :scale: 50 %
+
+Upon arrival at C3S headquarters, signature and payment are
+acknowledged. EMail receipts are sent out in both cases.
+
+Once both have arrived, the board of directors can
+approve the new member.
+
+After approval, the application is turned into a membership
+(or the additionally acquired shares are attributed
+to the original membership), and a membership certificate
+(or update thereof) can be sent to the member.
+
 
 The relevant documentation (generated from the code)
-can be found here: :ref:`code_docs_afm`. 
+can be found here: :ref:`code_docs_afm`.
 
 
 Staff Login and Dashboard

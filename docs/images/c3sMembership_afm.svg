@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="707" version="1.1" viewBox="0 0 1081 707" width="1081">
+  <defs>
+    <linearGradient id="g1" x1="0%" x2="0%" y1="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF"/>
+      <stop offset="100%" style="stop-color:#cfcfcf"/>
+    </linearGradient>
+    <svg height="16.0" id="i1" width="16.0">
+      <image height="16.0" width="16.0" xlink:href="data:image/png;base64,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"/>
+    </svg>
+    <svg height="16.0" id="i2" width="16.0">
+      <image height="16.0" width="16.0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAhZJREFUeNqEUk1oE0EU/naz2f4YQ0kWUmKs2LSXtmAPYsGDSkDQIoggKJ4UoaBXqdqDiODfSVDEQz14r0JF9KgsWMUfLFG0ii1NbAmEmhaa7q66u7PjmyQbIt2aB4+Z9zHfm2++NxJzVuGHfjXeR8sVyqP4T3ihzdxu7ckzpeOQAvAaWdtCy8vuzKVYaugM5JAaSF6amcTH5+MSQ2Q7lTfqDSgudu44Hts6dBp2eQrc+7OOrEZ3YvHNXTg8CkgVKKOA1xscSA6egGt+AXdXg7VzD1ZpDsOjOcmHSIHn77va4ykw4y0ddALYMuEumG3aDRyBiqICqLKomEEX/QpIs9Ig3B5X9WudXT5PFrIqCSw41hIkibowKzipgda7X5w95vPkqokVH56VZnUomwYItwLTMaaxbfeImNA5/XpKFbxGBeOF6Qlyl3AxgQAFzPiMcFsLEgNHEr6Kugf7xnJZa3n+UfHTY7RohzdU4a69Q6JvWFw48q8HVRWX868fMO4Jo+1gFWtZRLSkODsoOIp+M80bh+X+LmPqzsF1Q2yLpdGf6acnhuFWv3+Ekwf0D2DsGZ2JSKEwOHM2/P+vbu8iVWmo9LzlhQ8CyqHWoFj+8bQHTaI1qqHwXUZ3sgOL7x8KaLJmIp7MvrjXjI/ezFmUi98wr9+H+XPOIOiWr2DMLOVXshPnT9K+qRLPC4nl1N4LXwuiwV8BBgBa7ylg5mm97AAAAABJRU5ErkJggg=="/>
+    </svg>
+    <svg height="16.0" id="i3" width="16.0">
+      <image height="16.0" width="16.0" xlink:href="data:image/png;base64,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"/>
+    </svg>
+    <svg height="16.0" id="i4" width="16.0">
+      <image height="16.0" width="16.0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA1ZJREFUeNrsV8tKI1EQPd0m8QEjguAzvojGhQtBQVwYEAIu3Cnq0hchn5FP8ANEXERdqKgouhBFIZsQDbpyJf5AQPGJiiZOn5rcJol5jNGJi7GgsPveSp1TdetWtdrb2xu+U3R8s/wQ+HYCFp/PN2P89ei6jlgsVhBQTdMQL/45iwHqGRoa+uV0OlFWVlYQAs/Pzzg7O8Pm5qZHZ9QVFRU4Pj7Gw8ODMOPav1D6fnp6QigUQnl5uawxA6iqqsLr6yuCwSB6e3tRXFyMr+4PTPvLy4tg1NXViQqBaDQqDzU1NUIiEAjA5XLBZrN9WU2wvpRvu92OhoYG8U1si3qg1NbWiuHBwQH6+/thsVjMvXylqKhIwOhTgSufSRlQUl9fLyT29vbgdruFBN/zumLxAPb39wW4ubk5CUsyQOepUZIp13d3dzEwMCBR8Pw+IlarVcDog/5aWlre4RBD52I6JeOmpibs7OzIO0lksk1V2lK2t7elthwOR0ZbPZsjEmDatra2/pxXPKXZlDYsOuOOS021trZmtdfVEWRSEiCR9fV1M7WZbLlHAmtraxJ5W1tbVt9yBLkIUHl+1dXV8Pv9AsIrmmrDtdLSUszPz6OyshLsrLn8Zq2BRL28vMT5+Tm6urqwtLQkUbJZqX0+l5SUYHFxEe3t7bi4uMDt7e1f1UvODFxdXeHw8BDj4+NobGyUIyEJRkxQKmfIwsKCpL2jowNjY2NyjXORIHbaa6jk5uYGJycn8Hq9UoRMLbskQWdnZ5Nsu7u7pY2z5VKmp6elEDs7O8U+nQgBxSZVyP7o6Egif3x8lIiV856eHtFMPV81t8HBQWxsbAi5dCTk1qQjQHBOx4mJCZleqpdnmw1qdOkGATX9KMaox+rqqpBgkb4jkHoEd3d3Aj45OSnjmQXHyZjYCfmuspFKAPE9kqYddXh4OC0J8wgUW0bOM2fkfE4E+eh4Vr+lb3bG0dFRrKysyE1SJJKm4f39PcLhMKampnB9fW06yXcQJRKhD2ZwZGQEy8vLZk2Y05BpPz09lbTzzivWiZHn84FC8MRMEItXlJkgCckA7Rg5wSORiHkcn4080xcR/apMGEFpWl9f34yx6eE148diIYTtnEQMAnPaz/+G/z2B3wIMAEYkpOK1o6E/AAAAAElFTkSuQmCC"/>
+    </svg>
+  </defs>
+  <rect fill="url(#g1)" height="200" stroke="#000000" stroke-width="1.0" width="25" x="1" y="5"/>
+  <rect fill="none" height="200" stroke="#000000" stroke-width="1.0" width="1053" x="26" y="5"/>
+  <g id="_2"/>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="14" font-weight="bold" text-anchor="middle" transform="rotate(270 18.0 104.0)" x="18" y="108">Applicant for Membership</text>
+  <g id="_5">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="52" y="111"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="57.0" xlink:href="#i1" y="114.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="94" y="136">Fill Form</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="94" y="147">(or Edit Data)</text>
+  <g id="_6">
+    <path d="M 70.84313725490193 110.5 L 65.84313725490193 100.5 L 70.84313725490193 103.0 L 75.84313725490193 100.5 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 70.84313725490193 74.49923104649721 L 70.84313725490193 83.39667434677803 Q 70.84313725490193 92.29411764705884 70.84313725490193 101.64705882352942 L 70.84313725490193 111.0" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_7">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="200" y="111"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="205.0" xlink:href="#i1" y="114.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="243" y="141">Check Data</text>
+  <g id="_8">
+    <path d="M 200.5 141.75 L 190.5 146.75 L 193.0 141.75 L 190.5 136.75 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 138.5 141.75 L 161.66666666666663 141.75 Q 171.66666666666663 141.75 171.66666666666663 141.75 L 171.66666666666663 141.75 L 201.0 141.75" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="169" y="142">Submit</text>
+  <g id="_10">
+    <path d="M 324.94736842105266 138.55263157894734 L 314.94736842105266 143.55263157894734 L 317.44736842105266 138.55263157894734 L 314.94736842105266 133.55263157894734 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 286.5 138.58823529411768 L 295.85810113519096 138.58823529411768 Q 305.21620227038187 138.58823529411768 305.21620227038187 138.5704334365325 L 305.21620227038187 138.5615325077399 Q 305.21620227038187 138.55263157894734 315.21620227038187 138.55263157894734 L 325.44736842105266 138.55263157894734" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_11">
+    <path d="M 95.22549019607843 110.5 L 90.22549019607843 100.5 L 95.22549019607843 103.0 L 100.22549019607843 100.5 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 345.8245614035088 117.67543859649118 L 345.8245614035088 79.25 Q 345.8245614035088 69.25 335.8245614035088 69.25 L 105.22549019607843 69.25 Q 95.22549019607843 69.25 95.22549019607843 79.25 L 95.22549019607843 111.0" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="224" y="69">Not OK: Re-Edit Data</text>
+  <g id="_12">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="105" x="409" y="26"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="414.0" xlink:href="#i2" y="29.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="461" y="45">Sava Data &amp; </text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="461" y="56">Send Email for </text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="461" y="67">Verification</text>
+  <g id="_13">
+    <path d="M 408.5 53.58823529411768 L 398.5 58.58823529411768 L 401.0 53.58823529411768 L 398.5 48.58823529411768 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 367.05263157894734 138.55263157894734 L 377.9956140350877 138.55263157894734 Q 387.9956140350877 138.55263157894734 387.9956140350877 128.55263157894734 L 387.9956140350877 63.58823529411768 Q 387.9956140350877 53.58823529411768 397.9956140350877 53.58823529411768 L 409.0 53.58823529411768" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="387" y="96">OK!</text>
+  <g id="_14">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="570" y="25"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="575.0" xlink:href="#i1" y="28.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="613" y="50">Receive EMail</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="613" y="61">&amp; Use Link</text>
+  <g id="_15">
+    <path d="M 570.5 39.5 L 560.5 44.5 L 563.0 39.5 L 560.5 34.5 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 514.5 39.5 L 515.8333333333333 39.5 Q 517.1666666666666 39.5 517.1666666666666 39.5 L 517.1666666666666 39.5 L 571.0 39.5" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_16">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="699" y="25"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="704.0" xlink:href="#i1" y="28.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="741" y="44">Enter </text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="741" y="55">Password &amp;</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="741" y="66">Download PDF</text>
+  <g id="_18">
+    <path d="M 698.5 52.99999999999997 L 688.5 57.99999999999997 L 691.0 52.99999999999997 L 688.5 47.99999999999997 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 656.5 52.99999999999997 L 667.5350877192982 52.99999999999997 Q 677.5350877192982 52.99999999999997 677.5350877192982 52.99999999999997 L 677.5350877192982 52.99999999999997 L 699.0 52.99999999999997" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_19">
+    <path d="M 743.4166666666666 116.91666666666663 L 738.4166666666666 106.91666666666663 L 743.4166666666666 109.41666666666663 L 748.4166666666666 106.91666666666663 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 743.4166666666666 80.5 L 743.4166666666666 88.625 Q 743.4166666666666 96.75 743.4166666666666 106.75 L 743.4166666666666 117.41666666666663" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_20">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="801" y="116"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="806.0" xlink:href="#i3" y="119.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="844" y="135">Send</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="844" y="146">signed</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="844" y="157">Printout</text>
+  <g id="_21">
+    <path d="M 801.5 138.0 L 791.5 143.0 L 794.0 138.0 L 791.5 133.0 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 764.5 138.0 L 773.5833333333333 138.0 Q 782.6666666666666 138.0 782.6666666666666 138.0 L 782.6666666666666 138.0 L 802.0 138.0" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_22">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="594" y="116"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="599.0" xlink:href="#i3" y="119.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="636" y="135">Transfer</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="636" y="146">Money</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="636" y="157">for Shares</text>
+  <g id="_23">
+    <path d="M 680.5 138.3421052631579 L 690.5 133.3421052631579 L 688.0 138.3421052631579 L 690.5 143.3421052631579 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 721.8421052631579 138.3421052631579 L 680.0 138.3421052631579" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_54">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="951" y="115"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="956.0" xlink:href="#i4" y="118.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="993" y="135">Receive</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="993" y="146">Membership</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="993" y="157">Certificate</text>
+  <g id="_56">
+    <path d="M 990.0877192982457 73.49975953959043 L 995.0877192982457 83.49975953959043 L 990.0877192982457 80.99975953959043 L 985.0877192982457 83.49975953959043 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 990.0877192982457 115.5 L 990.0877192982457 104.26315789473682 Q 990.0877192982457 94.26315789473682 990.0877192982457 84.26315789473682 L 990.0877192982457 72.99975953959043" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_55">
+    <ellipse cx="990" cy="56" fill="url(#g1)" rx="16" ry="16" stroke="#000000" stroke-width="4.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="990" y="91">End Event</text>
+  <g id="_17">
+    <path d="M 743 117 L 764 138 L 743 159 L 722 138 Z" fill="url(#g1)" stroke="#000000" stroke-width="1.0"/>
+    <path d=" M 735 138 L 751 138 M 743 130 L 743 146" fill="none" stroke="#000000" stroke-width="5.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="742" y="171">Parallel Gateway</text>
+  <g id="_58">
+    <path d=" M 466 145.0 C 466 137.0 501 137.0 501 145.0 L 501 163.0 C 501 171.0 466 171.0 466 163.0 Z" fill="url(#g1)" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 466 145.0 C 466 151.0 501 151.0 501 145.0 M 466 148.0 C 466 154.0 501 154.0 501 148.0 M 466 151.0 C 466 157.0 501 157.0 501 151.0" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="483" y="181">Data Store</text>
+  <g id="_60">
+    <path d="M 477.66666666666663 127.5 L 483.66666666666663 137.5 L 489.66666666666663 127.5 M 483.66666666666663 139.5" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 483.66666666666663 81.0 L 483.66666666666663 100.29411764705884 Q 483.66666666666663 110.29411764705884 483.66666666666663 120.29411764705884 L 483.66666666666663 140.0" fill="none" stroke="#000000" stroke-dasharray="3, 3" stroke-width="1.0"/>
+  </g>
+  <g id="_61">
+    <path d="M 513.5 148.5 L 503.5 154.5 L 513.5 160.5 M 501.5 154.5" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 571.0 52.99999999999997 L 545.9166666666666 52.99999999999997 Q 535.9166666666666 52.99999999999997 535.9166666666666 62.99999999999997 L 535.9166666666666 144.5 Q 535.9166666666666 154.5 525.9166666666666 154.5 L 501.0 154.5" fill="none" stroke="#000000" stroke-dasharray="3, 3" stroke-width="1.0"/>
+  </g>
+  <g id="_4">
+    <ellipse cx="70" cy="57" fill="url(#g1)" rx="16" ry="16" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="72" y="32">Start Event</text>
+  <g id="_9">
+    <path d="M 345 117 L 366 138 L 345 159 L 324 138 Z" fill="url(#g1)" stroke="#000000" stroke-width="1.0"/>
+    <path d=" M 351 128 L 339 149 M 339 128 L 351 149" fill="none" stroke="#000000" stroke-width="3.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="345" y="171">OK?</text>
+  <rect fill="url(#g1)" height="200" stroke="#000000" stroke-width="1.0" width="25" x="1" y="255"/>
+  <rect fill="none" height="200" stroke="#000000" stroke-width="1.0" width="1053" x="26" y="255"/>
+  <g id="_3"/>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="14" font-weight="bold" text-anchor="middle" transform="rotate(270 18.0 354.0)" x="18" y="357">Staff</text>
+  <g id="_24">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="131" y="281"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="136.0" xlink:href="#i4" y="284.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="173" y="306">Receive</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="173" y="317">Signature</text>
+  <g id="_25">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="58" y="366"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="63.0" xlink:href="#i4" y="369.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="100" y="391">Receive</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="100" y="402">Payment</text>
+  <g id="_28">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="269" y="281"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="274.0" xlink:href="#i1" y="284.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="311" y="300">Acknowledge</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="311" y="311">Signature</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="311" y="322">(Bookkeeping)</text>
+  <g id="_29">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="219" y="365"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="224.0" xlink:href="#i1" y="368.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="262" y="384">Acknowledge</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="262" y="395">Payment</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="262" y="406">(Bookkeeping)</text>
+  <g id="_30">
+    <path d="M 268.5 308.5263157894737 L 258.5 313.5263157894737 L 261.0 308.5263157894737 L 258.5 303.5263157894737 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 217.5 308.5882352941177 L 232.85087719298247 308.5882352941177 Q 242.85087719298247 308.5882352941177 242.85087719298247 308.55727554179566 L 242.85087719298247 308.5417956656347 Q 242.85087719298247 308.5263157894737 252.85087719298247 308.5263157894737 L 269.0 308.5263157894737" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_31">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="413" y="281"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="418.0" xlink:href="#i1" y="284.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="455" y="300">Confirm</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="455" y="311">Signature</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="455" y="322">(autom. EMail)</text>
+  <g id="_32">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="386" y="365"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="391.0" xlink:href="#i1" y="368.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="428" y="384">Confirm</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="428" y="395">Payment</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="428" y="406">(autom. EMail)</text>
+  <g id="_33">
+    <path d="M 412.5 308.6842105263158 L 402.5 313.6842105263158 L 405.0 308.6842105263158 L 402.5 303.6842105263158 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 354.5 308.5263157894737 L 373.7982456140351 308.5263157894737 Q 383.7982456140351 308.5263157894737 383.7982456140351 308.60526315789474 L 383.7982456140351 308.64473684210526 Q 383.7982456140351 308.6842105263158 393.7982456140351 308.6842105263158 L 413.0 308.6842105263158" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_34">
+    <path d="M 219.5 393.75 L 209.5 398.75 L 212.0 393.75 L 209.5 388.75 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 143.5 393.75 L 170.91666666666663 393.75 Q 180.91666666666663 393.75 180.91666666666663 393.75 L 180.91666666666663 393.75 L 220.0 393.75" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_35">
+    <path d="M 386.5 392.63157894736844 L 376.5 397.63157894736844 L 379.0 392.63157894736844 L 376.5 387.63157894736844 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 305.5 392.6842105263158 L 335.82456140350877 392.6842105263158 Q 345.82456140350877 392.6842105263158 345.82456140350877 392.6578947368421 L 345.82456140350877 392.64473684210526 Q 345.82456140350877 392.63157894736844 355.82456140350877 392.63157894736844 L 387.0 392.63157894736844" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_37">
+    <path d="M 563.3333333333334 322.16666666666663 L 558.3333333333334 312.16666666666663 L 563.3333333333334 314.66666666666663 L 568.3333333333334 312.16666666666663 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 498.5 303.3333333333333 L 553.3333333333334 303.3333333333333 Q 563.3333333333334 303.3333333333333 563.3333333333334 313.0 L 563.3333333333334 322.66666666666663" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_38">
+    <path d="M 564.0 364.5 L 569.0 374.5 L 564.0 372.0 L 559.0 374.5 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 472.5 386.6666666666667 L 554.0 386.6666666666667 Q 564.0 386.6666666666667 564.0 376.6666666666667 L 564.0 364.0" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_40">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="641" y="280"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="646.0" xlink:href="#i1" y="283.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="683" y="306">Check</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="683" y="317">Application</text>
+  <g id="_41">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="641" y="365"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="646.0" xlink:href="#i3" y="368.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="683" y="384">Ask Board</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="683" y="395">for</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="683" y="406"> Approval</text>
+  <g id="_44">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="951" y="365"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="956.0" xlink:href="#i1" y="368.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="993" y="384">Make</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="993" y="395">or Merge</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="993" y="406">Member</text>
+  <g id="_45">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="952" y="282"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="957.0" xlink:href="#i1" y="285.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="994" y="296">Send</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="994" y="307">Membership</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="994" y="318">Certificate</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="994" y="329">(autom. EMail)</text>
+  <g id="_46">
+    <path d="M 641.5 308.42105263157896 L 631.5 313.42105263157896 L 634.0 308.42105263157896 L 631.5 303.42105263157896 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 585.2105263157895 343.2894736842105 L 603.561403508772 343.2894736842105 Q 613.561403508772 343.2894736842105 613.561403508772 333.2894736842105 L 613.561403508772 318.42105263157896 Q 613.561403508772 308.42105263157896 623.561403508772 308.42105263157896 L 642.0 308.42105263157896" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_47">
+    <path d="M 684.0087719298245 365.5 L 679.0087719298245 355.5 L 684.0087719298245 358.0 L 689.0087719298245 355.5 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 684.0087719298245 336.5 L 684.0087719298245 343.6973684210526 Q 684.0087719298245 350.89473684210526 684.0087719298245 358.4473684210526 L 684.0087719298245 366.0" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_53">
+    <path d="M 992.6666666666665 338.5 L 997.6666666666665 348.5 L 992.6666666666665 346.0 L 987.6666666666665 348.5 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 992.6666666666665 364.5 L 992.6666666666665 360.5 Q 992.6666666666665 356.5 992.6666666666665 347.25 L 992.6666666666665 338.0" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_36">
+    <path d="M 564 322 L 585 343 L 564 364 L 543 343 Z" fill="url(#g1)" stroke="#000000" stroke-width="1.0"/>
+    <path d=" M 556 343 L 572 343 M 564 335 L 564 351" fill="none" stroke="#000000" stroke-width="5.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="563" y="376">Parallel Gateway</text>
+  <g id="_26">
+    <path d="M 848.5245614035088 175.7 a 4.2 4.2 0  1,1 0.0 -1.05 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 174.00877192982455 280.5 L 169.00877192982455 270.5 L 179.00877192982455 270.5 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 844.3245614035087 179.4 L 844.3245614035087 227.65789473684208 Q 844.3245614035087 237.65789473684208 834.3245614035087 237.65789473684208 L 184.00877192982455 237.65789473684208 Q 174.00877192982455 237.65789473684208 174.00877192982455 247.65789473684208 L 174.00877192982455 271.0" fill="none" stroke="#000000" stroke-dasharray="3, 3" stroke-width="1.0"/>
+  </g>
+  <g id="_27">
+    <path d="M 641.2087719298246 175.7 a 4.2 4.2 0  1,1 0.0 -1.05 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 100.53508771929822 365.5 L 95.53508771929822 355.5 L 105.53508771929822 355.5 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 637.0087719298245 179.4 L 637.0087719298245 210.81578947368422 Q 637.0087719298245 220.81578947368422 627.0087719298245 220.81578947368422 L 110.53508771929822 220.81578947368422 Q 100.53508771929822 220.81578947368422 100.53508771929822 230.81578947368422 L 100.53508771929822 356.0" fill="none" stroke="#000000" stroke-dasharray="3, 3" stroke-width="1.0"/>
+  </g>
+  <rect fill="url(#g1)" height="200" stroke="#000000" stroke-width="1.0" width="25" x="1" y="505"/>
+  <rect fill="none" height="200" stroke="#000000" stroke-width="1.0" width="1053" x="26" y="505"/>
+  <g id="_39"/>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="14" font-weight="bold" text-anchor="middle" transform="rotate(270 18.0 604.0)" x="18" y="607">Board of Directors</text>
+  <g id="_42">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="655" y="560"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="660.0" xlink:href="#i4" y="563.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="698" y="591">Receive Task</text>
+  <g id="_43">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="802" y="560"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="807.0" xlink:href="#i1" y="563.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="845" y="585">Approve</text>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="845" y="596">Applications</text>
+  <g id="_49">
+    <path d="M 802.5 588.2631578947368 L 792.5 593.2631578947368 L 795.0 588.2631578947368 L 792.5 583.2631578947368 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 741.5 588.4736842105262 L 761.719298245614 588.4736842105262 Q 771.719298245614 588.4736842105262 771.719298245614 588.3684210526314 L 771.719298245614 588.3157894736842 Q 771.719298245614 588.2631578947368 781.719298245614 588.2631578947368 L 803.0 588.2631578947368" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_50">
+    <rect fill="url(#g1)" height="55" rx="8.25" ry="8.25" stroke="#000000" stroke-width="1.0" width="85" x="949" y="560"/>
+    <use height="16.0" preserveAspectRatio="none" width="16.0" x="954.0" xlink:href="#i3" y="563.0"/>
+  </g>
+  <text fill="#000000" font-decoration="none" font-family="Arial,Helvetica" font-size="11" font-weight="normal" text-anchor="middle" x="992" y="590">Send Task</text>
+  <g id="_51">
+    <path d="M 949.5 588.0 L 939.5 593.0 L 942.0 588.0 L 939.5 583.0 z" fill="#000000" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 888.5 588.2631578947368 L 908.8245614035088 588.2631578947368 Q 918.8245614035088 588.2631578947368 918.8245614035088 588.1315789473683 L 918.8245614035088 588.0657894736842 Q 918.8245614035088 588.0 928.8245614035088 588.0 L 950.0 588.0" fill="none" stroke="#000000" stroke-width="1.0"/>
+  </g>
+  <g id="_48">
+    <path d="M 682.2000000000002 425.7 a 4.2 4.2 0  1,1 0.0 -1.05 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 678.0000000000001 560.5 L 673.0000000000001 550.5 L 683.0000000000001 550.5 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 678.0000000000001 429.4 L 678.0000000000001 469.83333333333337 Q 678.0000000000001 479.83333333333337 678.0000000000001 479.83333333333337 L 678.0000000000001 479.83333333333337 L 678.0000000000001 551.0" fill="none" stroke="#000000" stroke-dasharray="3, 3" stroke-width="1.0"/>
+  </g>
+  <g id="_52">
+    <path d="M 987.8 556.3 a 4.2 4.2 0  1,1 0.0 1.05 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 992.0 420.5 L 997.0 430.5 L 987.0 430.5 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 992.0 552.6 L 992.0 502.0 Q 992.0 492.0 992.0 492.0 L 992.0 492.0 L 992.0 430.0" fill="none" stroke="#000000" stroke-dasharray="3, 3" stroke-width="1.0"/>
+  </g>
+  <g id="_57">
+    <path d="M 987.133333333333 278.3 a 4.2 4.2 0  1,1 0.0 1.05 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 991.333333333333 171.5 L 996.333333333333 181.5 L 986.333333333333 181.5 z" fill="none" stroke="#000000" stroke-width="1.0"/>
+    <path d="M 991.333333333333 274.6 L 991.333333333333 232.66666666666669 Q 991.333333333333 222.66666666666669 991.333333333333 222.66666666666669 L 991.333333333333 222.66666666666669 L 991.333333333333 181.0" fill="none" stroke="#000000" stroke-dasharray="3, 3" stroke-width="1.0"/>
+  </g>
+</svg>
