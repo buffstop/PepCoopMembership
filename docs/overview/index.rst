@@ -1,6 +1,10 @@
+.. _sec_overview:
+
 ========
 Overview
 ========
+
+.. _overview_afm:
 
 From Application to Membership
 ------------------------------
@@ -23,10 +27,14 @@ On the second page of the printout (like in that EMail)
 they find information on where to transfer the money
 for the shares.
 
-.. image:: ../images/c3sMembership_afm.svg
-   :alt: Application for Membership (afm) in BPMN.
-   :align: right
+.. figure:: ../images/c3sMembership_afm.svg
+   :target: ../_images/c3sMembership_afm.svg
+   :alt: From application (afm) to accepted membership in BPMN.
+   
+   From application (afm) to accepted membership in BPMN.
+   Click on image for a larger view.
 
+..   :align: right
 ..   :height: 100px
 ..   :width: 200 px
 ..   :scale: 50 %
@@ -66,12 +74,25 @@ There is an alternative listing for complete (/approved) members.
 
 See the code docs here: :ref:`code_docs_accountants`.
 
-Autodocumenting Code
---------------------
+
+Alphabetical Membership List
+----------------------------
+
+This webapp not only facilitates the process of gaining new members,
+but also helps to maintain the alphabetical membership list.
+
+.. image:: ../images/alphabetical_membership_list_pdf.png
+   :alt: Alphabetical Membership List (PDF)
+
+See :ref:`code_docs_membership_list`
+
+
+Autodocumenting Code and Tests
+------------------------------
 
 The modules and view functions carry docstrings
 (descriptions of what the code does).
-Check out the listing in the next section: :ref:`sec_code`.
+Check out the listing in the sections :ref:`sec_code` and  :ref:`sec_testing`.
 
 
 More Overview
