@@ -1,6 +1,7 @@
-#!/bin/env/python
 # -*- coding: utf-8 -*-
-
+"""
+This module holds tests for the awaiting_approval module.
+"""
 import unittest
 from pyramid import testing
 

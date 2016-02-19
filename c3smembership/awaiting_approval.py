@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+When a membership applicant has both sent the signed form and transferred the
+shares, the application is ready to be approved by the board of directors.
+
+The information about members to be approved will be copied somewhere,
+so the board can decide during one of its virtual meetings.
+"""
 from pyramid.view import view_config
 
 from c3smembership.models import (
@@ -13,7 +20,14 @@ from c3smembership.models import (
 )
 def afms_awaiting_approval(request):
     """
-    list the applications for membership to be approved by the board
+    List the applications for membership to be approved by the board.
+
+    === ======================================
+    URL http://app:port/afms_awaiting_approval
+    === ======================================
+
+    Returns:
+        Multiline string for copy and paste (using Pyramids string_renderer).
     """
 
     afms = C3sMember.afms_ready_for_approval()
