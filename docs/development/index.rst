@@ -193,10 +193,13 @@ The UAT Branch
 ==============
 
 
-A release at C3S goes through user acceptance tests (UAT) in which the users
-check the application for issues. It seems convenient to have a corresponding
-branch named "uat" which the states of the UAT system. Therefore, when UAT
-starts, the release branch is merged into the uat branch.
+A release at C3S goes through user acceptance tests (UAT)
+in which the users check the application for issues,
+rigorously checking functionality of the newly developed features.
+
+It seems convenient to have a corresponding branch named "uat"
+with the states of the UAT system. Therefore, when UAT
+starts, the release branch is merged into the *uat* branch.
 
 .. code-block:: console
 
@@ -204,16 +207,16 @@ starts, the release branch is merged into the uat branch.
    $ git merge release/1.2.3
    $ git push origin uat
 
-On the UAT system only needs to pull to get the designated code version.
+On the UAT system one only needs to *pull* to get the designated code version.
 
 .. code-block:: console
 
    user@uat:~/c3sMembership$ git pull
 
-Fixes during UAT are performed on the release branch and merged into the uat
+Fixes during UAT are performed on the release branch and merged into the *uat*
 branch when the next version is ready for testing.
 
-No commits are made to the uat branch except for merges with release branches.
+No commits are made to the *uat* branch except for merges with release branches.
 
 
 
@@ -224,9 +227,11 @@ The Release
 
 
 Once the release passes UAT, it is made final. At this point the version
-number in CHANGE.md (see :ref:`tracking_changes`) as well as the file 
+number in ``CHANGES.rst`` (see :ref:`tracking_changes`) as well as in the file 
 `version.py <https://github.com/C3S/c3sMembership/blob/master/
 c3smembership/version.py>`_ which defines the python package version.
+.. XXX TODO there is a verb missing near the end of the preceeding sentence!
+.. XXX TODO maybe "are synced"?
 
 The repository then gets assigned the final version number as a git tag and
 is listed as a release in the `c3sMembership Github repository <https://
@@ -292,8 +297,7 @@ The new application version can now be installed on the production server:
    me@prod:~$ # Stash production configuration
    me@prod:~$ cd c3sMembership
    me@prod:~/c3sMembership$ git stash
-   me@prod:~/c3sMembership$ # Pull new release from production
-   me@prod:~/c3sMembership$ # branch
+   me@prod:~/c3sMembership$ # Pull new release from production branch
    me@prod:~/c3sMembership$ git pull
    me@prod:~/c3sMembership$ # Pull from private certificate repository
    me@prod:~/c3sMembership$ cd certificate
@@ -301,11 +305,11 @@ The new application version can now be installed on the production server:
    me@prod:~/c3sMembership/certificate$ cd ..
    me@prod:~/c3sMembership$ # Re-apply stashed configuration
    me@prod:~/c3sMembership$ git stash pop
-   me@prod:~/c3sMembership$ # Install new application version
+   me@prod:~/c3sMembership$ # Install new application version and dependencies
    me@prod:~/c3sMembership$ env/bin/python setup.py develop
    me@prod:~/c3sMembership$ # Create database backup
    me@prod:~/c3sMembership$ cp c3sMembership.db c3sMembership.db.$(date "+%Y-%m-%d_%H-%M-%S")
-   me@prod:~/c3sMembership$ # Migrate database
+   me@prod:~/c3sMembership$ # Migrate database if necessary (changed models.py?)
    me@prod:~/c3sMembership$ env/bin/alembic upgrade head
    me@prod:~/c3sMembership$ # Build documentation
    me@prod:~/c3sMembership$ cd docs
@@ -404,15 +408,15 @@ the database's structure. The migration of data in particular is not part of
 the auto-generated migration scripts. If the change to the database model
 assumes that data previously stored in one column of a table now resides in
 another column of another table, the commands to perform this transformation
-of the data during the migration needs to be added manually.
+of the data during the migration need to be added manually.
 
 .. code-block:: shell
 
-   $ alembic revision --autogenerate -m "Some message"
+   $ alembic revision --autogenerate -m "Some change description"
 
 Alembic then generates a script inside the configured path. The filename
 starts with the hash value identifying the version and ends with the filename
-compatible string of "Some message". The generated script contains the 
+compatible string of "Some change description". The generated script contains the 
 revision's hash, the hash of the previous version as well as two functions
 *upgrade()* and *downgrade()*. These functions need to be checked and probably
 adjusted as the auto-generation functionality is very basic.
@@ -443,7 +447,7 @@ Downgrading the Database
 ========================
 
 
-Similar to upgrading the database, Alembic can also downgrade it. The commandis:
+Similar to upgrading the database, Alembic can also downgrade it. The command is:
 
 .. code-block:: shell
 
@@ -459,16 +463,18 @@ Internationalization
 Refreshing the internationalization or short i18n (for the 18 characters left
 out) uses three stages:
 
-1. The .pot Portable Object Template file: This file contains the full list
+1. The **.pot Portable Object Template** file: This file contains the full list
    of all translation string names without any of their values. It is the
    template for actual translation files for specific languages.
 
-2. The .po Portable Object file: This is a copy of the .pot which exists for
+2. The **.po Portable Object** file: This is a copy of the .pot which exists for
    each single language. Here the string names are assigned language
    specific values which are used for the translation.
 
-3. The .mo Machine Object file: This is a compiled binary version of the
+3. The **.mo Machine Object** file: This is a compiled binary version of the
    language specific .po file which makes it faster to process.
+
+All three components should go into the versioning system.
 
 After changing a template or python file which uses i18n it is necessary to
 update the translation files. This again consists of three steps:
@@ -488,6 +494,9 @@ update the translation files. This again consists of three steps:
    Now you can modify the language specific files and enter the values
    for the newly created messages.
 
+   Try POEdit, if you have never seen that before.
+   It will even compile the .mo file when saving the .po file
+
 3. Finally, you need to recreate the binary file.
 
    .. code-block:: shell
@@ -497,6 +506,19 @@ update the translation files. This again consists of three steps:
 The application needs to be restarted in order for the catalog changes to take
 effect.
 
+i18n commits
+------------
+
+As mentioned earlier, all three files (.pot/.po/.mo) should be added
+and comitted to the versioning system (git).
+
+It is a good idea to then do a *single* commit comprising only those three files
+(briefly give it the commit message **i18n**),
+because the resulting changeset usually is quite large,
+especially if the referenced line numbers in the POT or PO files changed due to code changes.
+
+This makes scrolling through common changesets more agreeable,
+because changeset bloat is circumvented, confined to i18n commits.
 
 References:
 
@@ -507,4 +529,3 @@ References:
 - http://danilodellaquila.com/blog/pyramid-internationalization-howto
 
 - http://www.plone-entwicklerhandbuch.de/plone-entwicklerhandbuch/internationalisierung/internationalisieren-des-user-interfaces
-
