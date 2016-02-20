@@ -1,0 +1,75 @@
+
+--------------------
+Internationalization
+--------------------
+
+
+Refreshing the internationalization or short i18n (for the 18 characters left
+out) uses three stages:
+
+1. The **.pot Portable Object Template** file: This file contains the full list
+   of all translation string names without any of their values. It is the
+   template for actual translation files for specific languages.
+
+2. The **.po Portable Object** file: This is a copy of the .pot which exists for
+   each single language. Here the string names are assigned language
+   specific values which are used for the translation.
+
+3. The **.mo Machine Object** file: This is a compiled binary version of the
+   language specific .po file which makes it faster to process.
+
+All three components should go into the versioning system.
+
+After changing a template or python file which uses i18n it is necessary to
+update the translation files. This again consists of three steps:
+
+1. Refresh the translation template .pot
+
+   .. code-block:: shell
+
+      $ python setup.py extract_messages
+
+2. Refresh the language specific .po files
+
+   .. code-block:: shell
+
+      $ python setup.py update_catalog
+
+   Now you can modify the language specific files and enter the values
+   for the newly created messages.
+
+   Try POEdit, if you have never seen that before.
+   It will even compile the .mo file when saving the .po file
+
+3. Finally, you need to recreate the binary file.
+
+   .. code-block:: shell
+
+      $ python setup.py compile_catalog
+
+The application needs to be restarted in order for the catalog changes to take
+effect.
+
+i18n commits
+------------
+
+As mentioned earlier, all three files (.pot/.po/.mo) should be added
+and comitted to the versioning system (git).
+
+It is a good idea to then do a *single* commit comprising only those three files
+(briefly give it the commit message **i18n**),
+because the resulting changeset usually is quite large,
+especially if the referenced line numbers in the POT or PO files changed due to code changes.
+
+This makes scrolling through common changesets more agreeable,
+because changeset bloat is circumvented, confined to i18n commits.
+
+References:
+
+- http://docs.pylonsproject.org/projects/pyramid/en/1.3-branch/narr/i18n.html#translation-domains
+
+- http://pyramid-cookbook.readthedocs.org/en/latest/templates/chameleon_i18n.html
+
+- http://danilodellaquila.com/blog/pyramid-internationalization-howto
+
+- http://www.plone-entwicklerhandbuch.de/plone-entwicklerhandbuch/internationalisierung/internationalisieren-des-user-interfaces
