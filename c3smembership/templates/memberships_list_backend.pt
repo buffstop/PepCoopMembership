@@ -5,7 +5,7 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       metal:use-macro="backend">
   <!--! styles -->
-  <tal:block metal:fill-slot="css">
+  <tal:block metal:fill-slot="head">
     <link rel="stylesheet" href="${request.static_url('deform:static/css/form.css')}"
           type="text/css" media="screen" charset="utf-8" />
     <link rel="stylesheet" href="${request.static_url('deform:static/css/typeahead.css')}"

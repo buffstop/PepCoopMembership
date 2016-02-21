@@ -5,7 +5,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       metal:use-macro="base_bootstrap"
       i18n:domain="c3smembership">
-  <tal:block metal:fill-slot="css">
+  <tal:block metal:fill-slot="head">
     <link rel="stylesheet" href="${request.static_url('c3smembership:static/deform/form.css')}" type="text/css" media="screen" charset="utf-8" />
     <link href="${request.static_url('c3smembership:static/bootstrap/css/bootstrap.min.css')}"
           rel="stylesheet" type="text/css" media="screen" charset="utf-8" />

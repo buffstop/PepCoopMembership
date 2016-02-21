@@ -14,7 +14,7 @@
     <link rel="stylesheet"
           href="${request.static_url('c3smembership:static/c3s_b.css')}"
           type="text/css" media="screen" charset="utf-8" />
-    <tal:block metal:define-slot="css"></tal:block>
+    <tal:block metal:define-slot="head"></tal:block>
   </head>
   <body>
     <div id="container">
