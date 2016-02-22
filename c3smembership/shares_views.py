@@ -9,7 +9,7 @@ from pyramid.view import view_config
 from types import NoneType
 from c3smembership.models import Shares
 
-from c3smembership.views import _
+from c3smembership.presentation.i18n import _
 
 LOGGING = True
 

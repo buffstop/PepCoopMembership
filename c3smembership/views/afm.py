@@ -32,13 +32,10 @@ from c3smembership.deform_text_input_slider_widget import (
     TextInputSliderWidget
 )
 
-from pkg_resources import resource_filename
 from pyramid.i18n import (
-    get_localizer,
     get_locale_name,
 )
 from pyramid.view import view_config
-from pyramid.threadlocal import get_current_request
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.httpexceptions import HTTPFound
@@ -56,33 +53,9 @@ from c3smembership.utils import (
     generate_pdf,
     accountant_mail,
 )
-from c3smembership.views import (
+from c3smembership.presentation.i18n import (
     _,
-)
-
-deform_templates = resource_filename(
-    'deform', 'c3smembership:templates')
-c3smembership_templates = resource_filename(
-    'c3smembership', 'c3smembership:templates')
-
-my_search_path = (deform_templates, c3smembership_templates)
-
-MY_TEMPLATE_DIR = resource_filename('c3smembership', 'templates')
-DEFORM_TEMPLATE_DIR = resource_filename('deform', 'templates')
-
-
-def translator(term):
-    """
-    Template translator.
-    """
-    return get_localizer(get_current_request()).translate(term)
-
-ZPT_RENDERER = deform.ZPTRendererFactory(
-    [
-        MY_TEMPLATE_DIR,
-        DEFORM_TEMPLATE_DIR,
-    ],
-    translator=translator,
+    ZPT_RENDERER,
 )
 
 DEBUG = False

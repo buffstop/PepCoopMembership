@@ -7,7 +7,6 @@ from c3smembership.models import (
     C3sMember,
 )
 from c3smembership.utils import (
-    _,
     country_codes,
     locale_codes
 )
@@ -29,28 +28,9 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.security import authenticated_userid
 from pyramid.view import view_config
 from types import NoneType
-from pyramid.i18n import (
-    get_localizer,
-)
-from pyramid.threadlocal import get_current_request
-from pkg_resources import resource_filename
-
-
-def translator(term):
-    """
-    Template translator.
-    """
-    return get_localizer(get_current_request()).translate(term)
-
-MY_TEMPLATE_DIR = resource_filename('c3smembership', 'templates')
-DEFORM_TEMPLATE_DIR = resource_filename('deform', 'templates')
-
-ZPT_RENDERER = deform.ZPTRendererFactory(
-    [
-        MY_TEMPLATE_DIR,
-        DEFORM_TEMPLATE_DIR,
-    ],
-    translator=translator,
+from c3smembership.presentation.i18n import (
+    _,
+    ZPT_RENDERER,
 )
 
 COUNTRY_DEFAULT = u'DE'

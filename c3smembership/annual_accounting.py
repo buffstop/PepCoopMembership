@@ -28,7 +28,7 @@ from c3smembership.models import (
     C3sMember,
     Shares,
 )
-from c3smembership.views import _
+from c3smembership.presentation.i18n import _
 
 
 @view_config(

@@ -1,19 +1,18 @@
 # -*- coding: utf-8  -*-
-import time
-import tempfile
-import subprocess
-from fdfgen import forge_fdf
 from c3smembership.gnupg_encrypt import encrypt_with_gnupg
+from c3smembership.presentation.i18n import _
+from fdfgen import forge_fdf
 from pyramid_mailer.message import (
     Message,
     Attachment,
 )
-from translationstring import TranslationStringFactory
+import subprocess
+import tempfile
+import time
 
 DEBUG = False
 # DEBUG = True
 
-_ = TranslationStringFactory('c3smembership')
 
 country_codes = [
     ('AT', _(u'Austria')),

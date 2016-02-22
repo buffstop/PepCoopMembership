@@ -17,44 +17,19 @@ from datetime import (
 )
 import deform
 from deform import ValidationFailure
-from pkg_resources import resource_filename
-from pyramid.i18n import (
-    get_localizer,
-)
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.view import view_config
-from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import (
     authenticated_userid,
 )
-from translationstring import TranslationStringFactory
 from types import NoneType
-
-deform_templates = resource_filename('deform', 'templates')
-c3smembership_templates = resource_filename(
-    'c3smembership', 'templates')
-
-my_search_path = (deform_templates, c3smembership_templates)
-
-_ = TranslationStringFactory('c3smembership')
-
-
-def translator(term):
-    return get_localizer(get_current_request()).translate(term)
-
-my_template_dir = resource_filename('c3smembership', 'templates/')
-deform_template_dir = resource_filename('deform', 'templates/')
-
-# the zpt_renderer is referred to within the demo.ini file by dotted name
-zpt_renderer = deform.ZPTRendererFactory(
-    [
-        my_template_dir,
-        deform_template_dir,
-    ],
-    translator=translator,
+from c3smembership.presentation.i18n import (
+    _,
+    ZPT_RENDERER,
 )
+
 
 DEBUG = False
 LOGGING = True
@@ -616,7 +591,7 @@ def membership_status_fixer(request):
             deform.Button('submit', _(u'Submit')),
             deform.Button('reset', _(u'Reset'))
         ],
-        renderer=zpt_renderer
+        renderer=ZPT_RENDERER
     )
     # if the form has NOT been used and submitted, remove error messages if any
     if 'submit' not in request.POST:

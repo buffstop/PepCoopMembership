@@ -7,8 +7,8 @@ from c3smembership.models import (
     C3sMember,
     DBSession,
 )
+from c3smembership.presentation.i18n import _
 from c3smembership.utils import (
-    _,
     country_codes,
 )
 

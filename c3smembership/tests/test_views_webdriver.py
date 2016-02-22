@@ -500,6 +500,7 @@ class EmailVerificationTests(SeleniumTestBase):
 
         self.assertTrue(
             'Bitte das Passwort eingeben.' in self.driver.page_source)
+
         self.assertTrue('Hier geht es zum PDF...' in self.driver.page_source)
         self.driver.find_element_by_name(
             'password').send_keys('schmoo')  # wrong password

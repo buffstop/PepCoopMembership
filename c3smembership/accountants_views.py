@@ -16,7 +16,14 @@ from c3smembership.models import (
     C3sStaff,
     Dues15Invoice,
 )
-from c3smembership.utils import generate_pdf
+
+from c3smembership.presentation.i18n import _
+
+from c3smembership.presentation.paging_sorting import (
+    RequestSorting,
+    RequestPagingRequest,
+    RequestPagingResponse,
+)
 from c3smembership.presentation.parameter_validation import (
     ParameterValidationException,
 )
@@ -33,19 +40,13 @@ from c3smembership.mail_reminders_util import (
     make_signature_reminder_email,
     make_payment_reminder_email,
 )
-from pkg_resources import resource_filename
-from types import NoneType
-import colander
+from c3smembership.utils import generate_pdf
 import deform
 from deform import ValidationFailure
 
 from c3smembership.git_tools import GitTools
 
-from pyramid.i18n import (
-    get_localizer,
-)
 from pyramid.view import view_config
-from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import (
     remember,
@@ -54,39 +55,9 @@ from pyramid.security import (
 )
 from pyramid_mailer.message import Message
 from pyramid.url import route_url
-from translationstring import TranslationStringFactory
 from datetime import (
     datetime,
     date,
-)
-import math
-import os
-
-
-DEFORM_TEMPLATES = resource_filename('deform', 'templates')
-C3SMEMBERSHIP_TEMPLATES = resource_filename('c3smembership', 'templates')
-
-MY_SEARCH_PATH = (DEFORM_TEMPLATES, C3SMEMBERSHIP_TEMPLATES)
-
-_ = TranslationStringFactory('c3smembership')
-
-
-def translator(term):
-    """
-    Translater factory.
-    """
-    return get_localizer(get_current_request()).translate(term)
-
-MY_TEMPLATE_DIR = resource_filename('c3smembership', 'templates/')
-DEFORM_TEMPLATE_DIR = resource_filename('deform', 'templates/')
-
-# the ZPT_RENDERER is referred to within the demo.ini file by dotted name
-ZPT_RENDERER = deform.ZPTRendererFactory(
-    [
-        MY_TEMPLATE_DIR,
-        DEFORM_TEMPLATE_DIR,
-    ],
-    translator=translator,
 )
 
 DEBUG = False
