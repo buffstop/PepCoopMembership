@@ -17,6 +17,13 @@ from c3smembership.models import (
     Dues15Invoice,
 )
 from c3smembership.utils import generate_pdf
+from c3smembership.presentation.parameter_validation import (
+    ParameterValidationException,
+)
+
+from c3smembership.presentation.schemas.accountant_login import (
+    AccountantLogin
+)
 from c3smembership.mail_utils import (
     make_signature_confirmation_email,
     make_payment_confirmation_email,
@@ -105,25 +112,8 @@ def accountants_login(request):
     if logged_in is not None:
         return HTTPFound(request.route_url('dashboard_only'))
 
-    class AccountantLogin(colander.MappingSchema):
-        """
-        colander schema for login form
-        """
-        login = colander.SchemaNode(
-            colander.String(),
-            title=_(u"login"),
-            oid="login")
-        password = colander.SchemaNode(
-            colander.String(),
-            validator=colander.Length(min=5, max=100),
-            widget=deform.widget.PasswordWidget(size=20),
-            title=_(u"password"),
-            oid="password")
-
-    schema = AccountantLogin()
-
     form = deform.Form(
-        schema,
+        AccountantLogin(),
         buttons=[
             deform.Button('submit', _(u'Submit')),
             deform.Button('reset', _(u'Reset'))
