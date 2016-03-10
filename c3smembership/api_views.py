@@ -87,4 +87,5 @@ def api_userinfo(request):
         'lastname': _m.lastname,
         'email': _m.email,
         'mtype': _m.membership_type,
+        'is_legalentity': _m.is_legalentity,
     }
