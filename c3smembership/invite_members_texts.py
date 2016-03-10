@@ -32,7 +32,8 @@ def make_bcga16_invitation_email(member, url):
                 invitation_url=url,
                 footer=get_email_footer(member.locale))))
     return (
-        get_template_text('bcga2016_invite_subject', member.locale),
+        get_template_text('bcga2016_invite_subject', member.locale).rstrip(
+            '\n'),  # remove newline (\n) from mail subject
         get_template_text('bcga2016_invite_body', member.locale).format(
             salutation=get_salutation(member),
             invitation_url=url,
