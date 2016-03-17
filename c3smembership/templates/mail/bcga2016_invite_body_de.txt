@@ -12,14 +12,41 @@ Dies ist Dein individueller Link zur Anmeldung:
 
   {invitation_url}
 
-Bitte teile uns dort rechtzeitig mit, ob Du teilnimmst. Wir müssen
-umgehend wissen, ob die Location ausreichend groß ist. Wenn irgend
-möglich, antworte uns daher bitte bis zum 04.04.2016.
+Bitte teile uns dort mit, ob Du teilnimmst. Wir müssen rechtzeitig wissen, 
+ob die Location ausreichend groß ist.
+Bitte antworte uns daher bis zum 04.04.2016.
 
 Auf der verlinkten Seite kannst Du separat die Teilnahme für die
-Generalversammlung und das Barcamp bestätigen und ggfs. Essen vorbestellen.
+Generalversammlung und das Barcamp bestätigen und ggfs. Essen vorbestellen
+oder einen Vertreter benennen.
 
-Das wars! Versorge uns mit Themenvorschlägen, plane Deine Fahrt - dann
+Stellvertretende Bevollmächtigte
+--------------------------------
+Solltest Du nicht teilnehmen können und stimmberechtigt sein,
+also ordentliches Mitglied, kannst Du eine Stimmrechtsvollmacht erteilen:
+
+http://url.c3s.cc/vmprivatO
+
+Bitte bedenke, dass jede(r) Bevollmächtigte nur zwei Mitglieder per
+Vollmacht vertreten darf. Frage also vorher nach, ob der/die Bevollmächtigte 
+bereits andere Personen vertritt. Vollmachten müssen aus rechtlichen Gründen
+schriftlich und im Original vorgelegt werden; Fax oder Scan reichen nicht aus!
+
+Bevollmächtigte für Abstimmungen dürfen nach § 13 (6), Satz 3 der Satzung 
+nur Mitglieder der Genossenschaft, Ehegatten, Eltern, Kinder oder Geschwister 
+eines Mitglieds sein. Eingetragene Lebenspartner werden wie Ehegatten 
+behandelt. Du kannst online bei Absage Deiner Teilnahme unter dem oben 
+genannten Link eine(n) Vertreter(in) benennen. 
+
+Bitte denke daran, dass der/die Bevollmächtigte die von Dir unterzeichnete
+schriftliche Vollmacht vorlegen muss. 
+
+Auch nicht-stimmberechtigte, investierende Mitglieder können sich vertreten
+lassen. Einen Vordruck für die Vollmacht findest Du hier:
+Privatpersonen, investierendes Mitglied: http://url.c3s.cc/vmprivatI
+Unternehmen & Vereinigungen: http://url.c3s.cc/vmkoerperschaft
+
+Das wars! Versorge uns mit Themenvorschlägen [1], plane Deine Fahrt - dann
 sehen wir uns in Düsseldorf! Bei Fragen kannst Du Dich wie immer an 
 info@c3s.cc wenden.
 
@@ -27,5 +54,8 @@ Wir freuen uns auf Dich & Deine Ideen!
 
 
 Das Team der C3S
+
+[1] https://wiki.c3s.cc/index.php/Themenvorschläge_BarCamp2016 
+(Zugangsdaten: Name: schwarm, Passwort: letmein) 
 
 {footer}

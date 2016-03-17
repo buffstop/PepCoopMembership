@@ -2,30 +2,61 @@
 Hello {salutation},
 
 on the 15th of March 2016 you received an email inviting you to the BarCamp
-and general assembly of C3S SCE mbh on the 16th and 17th April of 2016
+and General Assembly of C3S SCE mbh on the 16th and 17th April of 2016
 in Düsseldorf.
 
-If possible, please let us know via this form, whether you
-will attend or not:
+If possible, please let us know via this form whether you will attend 
+or not or wether you want to designate a representative:
 
 This is your personal registration link:
 
   {invitation_url}
 
-Please let us know in time whether you will participate. We must know as
-soon as possible whether the location will be large enough. If possible,
-please respond by April 4th, 2016, at the latest.
+Please let us know whether you will participate. We must know in advance
+whether the location will be large enough. Therefore please respond by 
+April 4th, 2016, at the latest.
 
-On the linked page you can confirm your participation in the general
-assembly and the BarCamp separately. You can also book a meal for the
-day of the BarCamp.
+On the linked page you can confirm your participation in the General
+Assembly and the BarCamp separately. You can also book a meal for the
+day of the BarCamp or name a representative for the General Assembly.
 
-That's all! Let us know your proposals for topics, plan your trip -- and
-we shall meet in Düsseldorf!
+Authorized representatives
+---------------------------
+If you are a regular member and therefore entitled to vote, but unable 
+to participate, you may grant a power of attorney:
 
-We are looking forward to seeing you and learning to know your ideas!
+http://url.c3s.cc/auprivateR
+
+Please bear in mind that every authorized representative is able to represent 
+two members only via power of attorney. Therefore make sure to ask whether the 
+person you want to authorize already represents other members. For legal 
+reasons power of attorney must be granted in writing and in the original; 
+FAX or scanned documents are not sufficient!
+
+According to § 13 (6), sentence 3 of the articles of association, only members 
+of the cooperative society, or spouses, parents, children or siblings of a 
+member, are entitled to be representatives with voting rights. Registered 
+civil partners are treated as spouses. When you cancel your participation 
+using the above given link you may name your representative online.
+
+Please remember that your representative must bring the written power of 
+attorney, signed by you. 
+
+Investor members who are not entitled to vote may also be represented by 
+others. Here you can find a form:
+Individuals (investor members): http://url.c3s.cc/auprivateI
+Companies and organizations: http://url.c3s.cc/aucorporate
+
+That's all! Let us know your proposals for topics [1], plan your trip -- 
+and we shall meet in Düsseldorf! If you have questions, you can get
+in touch, as always, via info@c3s.cc.
+
+We are looking forward to seeing you and learning your ideas!
 
 
 Your C3S Team
+
+[1] https://wiki.c3s.cc/index.php/Themenvorschläge_BarCamp2016 
+(login details: name: schwarm, password: letmein) 
 
 {footer}
