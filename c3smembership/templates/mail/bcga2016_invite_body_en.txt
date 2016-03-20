@@ -25,7 +25,7 @@ Authorized representatives
 If you are a regular member and therefore entitled to vote, but unable 
 to participate, you may grant a power of attorney:
 
-http://url.c3s.cc/auprivateR
+http://url.c3s.cc/auprivater
 
 Please bear in mind that every authorized representative is able to represent 
 two members only via power of attorney. Therefore make sure to ask whether the 
@@ -44,7 +44,7 @@ attorney, signed by you.
 
 Investor members who are not entitled to vote may also be represented by 
 others. Here you can find a form:
-Individuals (investor members): http://url.c3s.cc/auprivateI
+Individuals (investor members): http://url.c3s.cc/auprivatei
 Companies and organizations: http://url.c3s.cc/aucorporate
 
 That's all! Let us know your proposals for topics [1], plan your trip -- 
