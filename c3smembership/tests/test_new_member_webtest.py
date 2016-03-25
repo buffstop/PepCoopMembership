@@ -94,12 +94,8 @@ class NewMemberTests(unittest.TestCase):
         res2 = form.submit('submit', status=302)
         # # being logged in ...
         res3 = res2.follow()  # being redirected to dashboard_only
-        # print('>'*20)
-        # print(res3.body)
-        # print('<'*20)
-        res4 = res3.follow()  # being redirected to dashboard with parameters
         self.failUnless(
-            'Dashboard' in res4.body)
+            'Dashboard' in res3.body)
         # # now that we are logged in,
         # # the login view should redirect us to the dashboard
         # res5 = self.testapp.get('/login', status=302)

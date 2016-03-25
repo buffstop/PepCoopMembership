@@ -109,7 +109,7 @@ def accountants_login(request):
             LOG.info("logging in %s", login)
             return HTTPFound(
                 request.route_url(
-                    'dashboard_only'),
+                    'dashboard'),
                 headers=headers)
         else:
             LOG.info("password check: failed for %s.", login)
@@ -164,7 +164,7 @@ def delete_entry(request):
     """
 
     deletion_confirmed = (request.params.get('deletion_confirmed', '0') == '1')
-    redirection_view = request.params.get('redirect', 'dashboard_only')
+    redirection_view = request.params.get('redirect', 'dashboard')
     LOG.info('redirect to: ' + str(redirection_view))
 
     if deletion_confirmed:
@@ -493,13 +493,3 @@ def mail_payment_reminder(request):
     else:
         return get_dashboard_redirect(request, member.id)
 
-
-@view_config(permission='manage', route_name='dashboard_only')
-def dashboard_only(request):
-    """
-    This is a mere redirect, so the url with /dashboard works w/o long tail.
-
-    Convenience. Can also be used in code or templates:
-    request.route_url('dashboard_only')
-    """
-    return get_dashboard_redirect(request)

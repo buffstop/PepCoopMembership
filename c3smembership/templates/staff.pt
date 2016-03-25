@@ -64,7 +64,7 @@
     
   </tal:block>
   <tal:block metal:fill-slot="bottom">
-    <p><a href="${request.route_url('dashboard_only')}" class="btn btn-success">Dashboard</a></p>
+    <p><a href="${request.route_url('dashboard')}" class="btn btn-success">Dashboard</a></p>
     <p><a href="${request.route_url('logout')}" class="btn btn-danger">${request.authenticated_userid} Abmelden</a></p>
   </tal:block>
 </html>

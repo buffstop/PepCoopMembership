@@ -244,7 +244,7 @@ def import_db(request):
 
     # print("done with all import steps, successful or not!")
     return HTTPFound(
-        request.route_url('dashboard_only'))
+        request.route_url('dashboard'))
     # _codes.append(row[13])
     # print("the codes: %s" % str(_codes))
 
@@ -442,7 +442,7 @@ def import_db_with_ids(request):  # pragma: no cover
 
     # print("done with all import steps, successful or not!")
     return HTTPFound(
-        request.route_url('dashboard_only'))
+        request.route_url('dashboard'))
 
 
 @view_config(renderer='csv',

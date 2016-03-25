@@ -194,7 +194,7 @@
     </p>
     <h3>Done?</h3>
     <p>    
-      <a href="${request.route_url('dashboard_only')}"
+      <a href="${request.route_url('dashboard')}"
          class="btn btn-primary">Back to Dashboard</a>
     </p>
   </tal:block>

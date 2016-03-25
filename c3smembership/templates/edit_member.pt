@@ -25,7 +25,7 @@
       </strong>
     </div> &nbsp;
     <div id="form" tal:content="structure form"/>
-    <a href="${request.route_url('dashboard_only')}" class="btn btn-primary">Dashboard</a>
+    <a href="${request.route_url('dashboard')}" class="btn btn-primary">Dashboard</a>
     <!--! a href="${request.route_url('detail', memberid=_m.id)}" class="btn btn-primary">Detail</a -->
   </tal:block>
   <tal:block metal:fill-slot="deform-load">

@@ -63,9 +63,9 @@ def edit_member(request):
         assert(isinstance(int(_id), int))
         member = C3sMember.get_by_id(_id)
         if isinstance(member, NoneType):
-            return HTTPFound(request.route_url('dashboard_only'))
+            return HTTPFound(request.route_url('dashboard'))
     except:
-        return HTTPFound(request.route_url('dashboard_only'))
+        return HTTPFound(request.route_url('dashboard'))
 
     # if we have a valid id, we can load a members data from the db
     # and put the data in an appstruct to fill the form

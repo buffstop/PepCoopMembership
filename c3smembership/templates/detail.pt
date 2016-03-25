@@ -25,7 +25,7 @@
         Please <a href="${request.route_url('logout')}">log out</a>
         when you are done.
         Or go
-        <a href="${request.route_url('dashboard_only')}"
+        <a href="${request.route_url('dashboard')}"
            class="btn btn-success"
            >back to dashboard</a>
         or the

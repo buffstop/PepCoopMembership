@@ -95,8 +95,6 @@ def main(global_config, **settings):
 
     # routes & views for staff
     # applications for membership
-    # config.add_route('dashboard_only', '/dashboard')
-    config.add_route('dashboard_only', '/dashboard_only')  # TODO: remove
     config.add_route('dashboard', '/dashboard')
     config.make_pagination_route(
         'dashboard',

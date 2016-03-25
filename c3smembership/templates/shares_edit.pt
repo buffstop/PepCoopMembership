@@ -7,7 +7,7 @@
     <p>
       Please <a href="${request.route_url('logout')}">log out</a>
       when you are done.
-      Or go <a href="${request.route_url('dashboard_only')}">back to dashboard</a>.
+      Or go <a href="${request.route_url('dashboard')}">back to dashboard</a>.
     </p>
     <h1>Edit Details for Shares #${s.id}</h1>
 

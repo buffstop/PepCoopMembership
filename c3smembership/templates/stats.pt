@@ -146,7 +146,7 @@
   <tal:block metal:fill-slot="bottom">
     <div class="hidden-print">
       <p>
-        <a href="${request.route_url('dashboard_only')}"
+        <a href="${request.route_url('dashboard')}"
             class="btn btn-primary">Dashboard</a>
         <a href="${request.route_url('membership_listing_backend')}"
            class="btn btn-success">Memberships</a>

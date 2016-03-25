@@ -208,13 +208,12 @@ class SharesTests(unittest.TestCase):
         form['password'] = 'berries'
         res2 = form.submit('submit', status=302)
         # # being logged in ...
-        res3 = res2.follow()  # being redirected to dashboard_only
         # print('>'*20)
         # print(res3.body)
         # print('<'*20)
-        res4 = res3.follow()  # being redirected to dashboard with parameters
+        res3 = res2.follow()  # being redirected to dashboard with parameters
         self.failUnless(
-            'Dashboard' in res4.body)
+            'Dashboard' in res3.body)
         # now look at a shares package
         res = self.testapp.get('/shares_detail/1', status=302)
         res2 = res.follow()
@@ -248,10 +247,8 @@ class SharesTests(unittest.TestCase):
         form['password'] = u'berries'
         res2 = form.submit('submit', status=302)
         # # being logged in ...
-        res3 = res2.follow()  # being redirected to dashboard_only
-        res4 = res3.follow()  # being redirected to dashboard with parameters
-        self.failUnless(
-            'Dashboard' in res4.body)
+        res3 = res2.follow()  # being redirected to dashboard with parameters
+        self.failUnless('Dashboard' in res3.body)
 
         # no member in DB, so redirecting to dashboard
         res = self.testapp.get('/shares_edit/1', status=302)
@@ -309,13 +306,12 @@ class SharesTests(unittest.TestCase):
         form['password'] = 'berries'
         res2 = form.submit('submit', status=302)
         # # being logged in ...
-        res3 = res2.follow()  # being redirected to dashboard_only
         # print('>'*20)
         # print(res3.body)
         # print('<'*20)
-        res4 = res3.follow()  # being redirected to dashboard with parameters
+        res3 = res2.follow()  # being redirected to dashboard with parameters
         self.failUnless(
-            'Dashboard' in res4.body)
+            'Dashboard' in res3.body)
 
         self.make_member_with_shares()
 
@@ -338,7 +334,6 @@ class SharesTests(unittest.TestCase):
             'This shares package 1 still has a member owning it.' in res2.body)
         res = self.testapp.get('/delete/1', status=302)
         res2 = res.follow()
-        res3 = res2.follow()
 
         res = self.testapp.get('/shares_detail/1', status=200)
         self.assertTrue('<h1>Details for Shares #1</h1>' in res.body)

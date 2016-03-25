@@ -47,7 +47,7 @@ def import_founders(request):  # pragma: no cover
     except IOError, ioe:
         print ioe
         request.session.flash("file not found.", 'messages')
-        return HTTPFound(request.route_url('dashboard_only'))
+        return HTTPFound(request.route_url('dashboard'))
 
     # reader for CSV files
     r = unicodecsv.reader(content.file, delimiter=',',
@@ -162,7 +162,7 @@ def import_crowdfunders(request):  # pragma: no cover
         print ioe
         request.session.flash("file not found.", 'messages')
         request.session.flash(ioe, 'messages')
-        return HTTPFound(request.route_url('dashboard_only'))
+        return HTTPFound(request.route_url('dashboard'))
 
     # reader for CSV files
     # rdr = unicodecsv.reader(content.file, delimiter='\t',
@@ -343,7 +343,7 @@ def import_crowdfunders(request):  # pragma: no cover
 
     # print("done with all import steps, successful or not!")
     return HTTPFound(
-        request.route_url('dashboard_only'))
+        request.route_url('dashboard'))
 
 
 @view_config(permission='manage',
@@ -370,7 +370,7 @@ def fix_import_crowdfunders(request):   # pragma: no cover
         print ioe
         request.session.flash("file not found.", 'messages')
         request.session.flash(ioe, 'messages')
-        return HTTPFound(request.route_url('dashboard_only'))
+        return HTTPFound(request.route_url('dashboard'))
 
     # reader for CSV files
     # rdr = unicodecsv.reader(content.file, delimiter='\t',

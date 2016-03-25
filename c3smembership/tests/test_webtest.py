@@ -199,7 +199,6 @@ class AccountantsFunctionalTests(unittest.TestCase):
         #
         # being logged in ...
         res4 = res3.follow()
-        res4 = res4.follow()
         # print(res4.body)
         self.failUnless(
             'Dashboard' in res4.body)
@@ -253,7 +252,6 @@ class AccountantsFunctionalTests(unittest.TestCase):
         # now look at some members details with nonexistant id
         res7 = self.testapp.get('/detail/5000', status=302)
         res7a = res7.follow()
-        # res7a = res7a.follow()
         self.failUnless('Dashboard' in res7a.body)
 
         # now look at some members details
@@ -283,7 +281,6 @@ class AccountantsFunctionalTests(unittest.TestCase):
         res2 = form.submit('submit', status=302)
         # being logged in ...
         res3 = res2.follow()
-        res3.follow()
 
         # have a set of headers with and without 'dashboard' in http referrer
         headers_dash = [
@@ -335,7 +332,6 @@ class AccountantsFunctionalTests(unittest.TestCase):
         _num2 = C3sMember.get_number()
         self.assertTrue(int(_num2) + 1 == int(_num))
         resDel3 = resDel2.follow()
-        resDel3 = resDel3.follow()
         self.failUnless('was deleted' in resDel3.body)
 
         # finally log out ##################################################
@@ -401,7 +397,6 @@ class AccountantsFunctionalTests(unittest.TestCase):
         # Delete member with lastname AAASomeLastnäme
         resdel = self.testapp.get('/delete/3?deletion_confirmed=1')
         resdel = resdel.follow()
-        resdel = resdel.follow()
         pq = self._get_pyquery(resdel.body)
         first_member_row = pq('tr:nth-child(2)')
         last_name = first_member_row('td:nth-child(4)')
@@ -410,7 +405,6 @@ class AccountantsFunctionalTests(unittest.TestCase):
     def test_dashboard_afterDelete_messageShown(self):
         self._login()
         resdel = self.testapp.get('/delete/1?deletion_confirmed=1')
-        resdel = resdel.follow()
         resdel = resdel.follow()
         pq = self._get_pyquery(resdel.body)
         message = pq('#message').text()
@@ -470,7 +464,6 @@ class AccountantsFunctionalTests(unittest.TestCase):
         #
         # being logged in ...
         res3 = res2.follow()
-        res3 = res3.follow()
         self.failUnless('Dashboard' in res3.body)
         return res3
 
@@ -561,7 +554,6 @@ class AccountantsFunctionalTests(unittest.TestCase):
         #
         # being logged in ...
         res3 = res2.follow()
-        res3 = res3.follow()
         self.failUnless('Dashboard' in res3.body)
 
         """

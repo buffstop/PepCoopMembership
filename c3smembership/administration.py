@@ -242,7 +242,7 @@ def delete_afms(request):
                 C3sMember.delete_by_id(i)
             except:
                 print 'id %s didnt exist'
-        return HTTPFound(request.route_url('dashboard_only'))
+        return HTTPFound(request.route_url('dashboard'))
     return {
         'delete_form': delete_range_form.render()
     }

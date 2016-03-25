@@ -464,14 +464,14 @@ def make_member_view(request):
         # not has number
     except AssertionError:
         return HTTPFound(
-            location=request.route_url('dashboard_only'))
+            location=request.route_url('dashboard'))
     if member.membership_accepted:
         # request.session.flash('id {} is already accepted member!')
         return HTTPFound(request.route_url('detail', memberid=member.id))
 
     if not (member.signature_received and member.payment_received):
         request.session.flash('signature or payment missing!', 'messages')
-        return HTTPFound(request.route_url('dashboard_only'))
+        return HTTPFound(request.route_url('dashboard'))
 
     if 'make_member' in request.POST:
         # print "yes! contents: {}".format(request.POST['make_member'])
@@ -503,7 +503,7 @@ def make_member_view(request):
         # return the user to the page she came from
         if 'referrer' in request.POST:
             if request.POST['referrer'] == 'dashboard':
-                return HTTPFound(request.route_url('dashboard_only'))
+                return HTTPFound(request.route_url('dashboard'))
             if request.POST['referrer'] == 'detail':
                 return HTTPFound(
                     request.route_url('detail', memberid=member.id))

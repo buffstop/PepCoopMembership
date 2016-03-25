@@ -190,7 +190,6 @@ class MemberTestsBase(unittest.TestCase):
         """
         Validate that res is redirecting to the dashboard
         """
-        res = res.follow()  # being redirected to dashboard_only
         res = res.follow()  # being redirected to dashboard with parameters
         self.__validate_dashboard(res)
 

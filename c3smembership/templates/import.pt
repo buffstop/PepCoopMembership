@@ -14,7 +14,7 @@
   <tal:block metal:fill-slot="bottom">
     <h3><span class="deform">${message}</span></h3>
     <p>
-      <a href="${request.route_url('dashboard_only')}">go back to dashboard</a>
+      <a href="${request.route_url('dashboard')}">go back to dashboard</a>
     </p>
     <p>
       &nbsp;

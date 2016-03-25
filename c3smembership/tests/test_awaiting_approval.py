@@ -117,10 +117,9 @@ class AwaitingApprovalTests(unittest.TestCase):
         form['password'] = 'berries'
         res2 = form.submit('submit', status=302)
         # # being logged in ...
-        res3 = res2.follow()  # being redirected to dashboard_only
-        res4 = res3.follow()  # being redirected to dashboard with parameters
+        res3 = res2.follow()  # being redirected to dashboard with parameters
         self.failUnless(
-            'Dashboard' in res4.body)
+            'Dashboard' in res3.body)
         # now look at the view to test
         res = self.testapp.get('/afms_awaiting_approval', status=200)
         self.assertTrue('Neue Genossenschaftsmitglieder' not in res.body)
