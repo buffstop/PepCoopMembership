@@ -126,31 +126,34 @@ def switch_sig(request):
     """
     This view lets accountants switch an applications signature status
     once their signature has arrived.
-    """
-    memberid = request.matchdict['memberid']
 
-    member = C3sMember.get_by_id(memberid)
-    if member.signature_received is True:
-        member.signature_received = False
-        member.signature_received_date = datetime(1970, 1, 1)
-    elif member.signature_received is False:
-        member.signature_received = True
-        member.signature_received_date = datetime.now()
+    Note:
+        Expects the object request.registry.membership_application to implement
+        c3smembership.business.membership_application.IMembershipApplication.
+    """
+    member_id = request.matchdict['memberid']
+
+    membership_application = request.registry.membership_application
+    signature_received = membership_application.get_signature_status(member_id)
+    new_signature_received = not signature_received
+    membership_application.set_signature_status(
+        member_id,
+        new_signature_received)
 
     LOG.info(
         "signature status of member.id %s changed by %s to %s",
-        member.id,
+        member_id,
         request.user.login,
-        member.signature_received
+        new_signature_received
     )
 
     if 'dashboard' in request.referrer:
-        return get_dashboard_redirect(request, member.id)
+        return get_dashboard_redirect(request, member_id)
     else:
         return HTTPFound(
             request.route_url(
                 'detail',
-                memberid=member.id,
+                memberid=member_id,
                 _anchor='membership_info'
             )
         )
@@ -211,29 +214,28 @@ def switch_pay(request):
     This view lets accountants switch a member applications payment status
     once their payment has arrived.
     """
-    memberid = request.matchdict['memberid']
-    member = C3sMember.get_by_id(memberid)
+    member_id = request.matchdict['memberid']
 
-    if member.payment_received is True:  # change to NOT SET
-        member.payment_received = False
-        member.payment_received_date = datetime(1970, 1, 1)
-    elif member.payment_received is False:  # set to NOW
-        member.payment_received = True
-        member.payment_received_date = datetime.now()
+    membership_application = request.registry.membership_application
+    payment_received = membership_application.get_payment_status(member_id)
+    new_payment_received = not payment_received
+    membership_application.set_payment_status(
+        member_id,
+        new_payment_received)
 
     LOG.info(
         "payment info of member.id %s changed by %s to %s",
-        member.id,
+        member_id,
         request.user.login,
-        member.payment_received
+        new_payment_received
     )
     if 'dashboard' in request.referrer:
-        return get_dashboard_redirect(request, member.id)
+        return get_dashboard_redirect(request, member_id)
     else:
         return HTTPFound(
             request.route_url(
                 'detail',
-                memberid=member.id,
+                memberid=member_id,
                 _anchor='membership_info')
         )
 
@@ -358,25 +360,17 @@ def mail_signature_confirmation(request):
     Send a mail to a membership applicant
     informing her about reception of signature.
     """
-    member = C3sMember.get_by_id(request.matchdict['memberid'])
+    member_id = request.matchdict['memberid']
 
-    email_subject, email_body = make_signature_confirmation_email(member)
-    message = Message(
-        subject=email_subject,
-        sender='yes@c3s.cc',
-        recipients=[member.email],
-        body=email_body
-    )
-    send_message(request, message)
+    membership_application = request.registry.membership_application
+    membership_application.mail_signature_confirmation(member_id, request)
 
-    member.signature_confirmed = True
-    member.signature_confirmed_date = datetime.now()
     if 'detail' in request.referrer:
         return HTTPFound(request.route_url(
             'detail',
-            memberid=request.matchdict['memberid']))
+            memberid=member_id))
     else:
-        return get_dashboard_redirect(request, member.id)
+        return get_dashboard_redirect(request, member_id)
 
 
 @view_config(permission='manage',

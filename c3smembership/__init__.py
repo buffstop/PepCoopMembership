@@ -109,10 +109,21 @@ def main(global_config, **settings):
     config.add_route('new_member', '/new_member')
     config.add_route('detail', '/detail/{memberid}')
     config.add_route('edit', '/edit/{_id}')
+
+
+
+
+    from models import C3sMember
+    from c3smembership.business.membership_application import MembershipApplication
+    membership_application = MembershipApplication(C3sMember)
+
+    config.registry.membership_application = membership_application
     config.add_route('switch_sig', '/switch_sig/{memberid}')
+    config.add_route('switch_pay', '/switch_pay/{memberid}')
+
+
     config.add_route('mail_sig_confirmation', '/mail_sig_conf/{memberid}')
     config.add_route('regenerate_pdf', '/re_C3S_SCE_AFM_{code}.pdf')
-    config.add_route('switch_pay', '/switch_pay/{memberid}')
     config.add_route('mail_pay_confirmation', '/mail_pay_conf/{memberid}')
     config.add_route('mail_mail_confirmation', '/mail_mail_conf/{memberid}')
     config.add_route('mail_sig_reminder', '/mail_sig_reminder/{memberid}')
