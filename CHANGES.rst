@@ -1,5 +1,5 @@
-Next Release
-============
+1.15
+====
 
 
 - Update more executive directors. (This must be moved to configuration!)
@@ -15,6 +15,8 @@ Next Release
   details page.
 
 - Personalise emails which are sent from the application to members.
+
+- Adjustments for barcamp and general assembly 2016.
 
 
 
