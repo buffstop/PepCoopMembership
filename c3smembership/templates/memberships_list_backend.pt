@@ -154,7 +154,7 @@
                 </div>
             </td>
             <td>
-                <a tal:condition="member.email_invite_flag_bcgv16 is False"
+                <a tal:condition="member.email_invite_flag_bcgv16 is not True"
                     href="${request.route_url('invite_member', m_id=member.id)}"
                     title="invitation not sent yet. Click to send!"
                     class="btn btn-danger"></a>
