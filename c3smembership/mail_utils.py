@@ -56,16 +56,33 @@ def make_membership_certificate_email(request, member):
     Gets an email subject and body to delivery a link to the membership
     certificate PDF.
     """
-    return (
-        get_template_text('membership_certificate_subject', member.locale),
-        get_template_text('membership_certificate_body', member.locale).format(
+    subject = get_template_text('membership_certificate_subject', member.locale)
+    if member.is_legalentity:
+        body = get_template_text(
+            'membership_certificate_legalentity_body',
+            member.locale
+        ).format(
+            salutation=get_salutation(member),
+            legal_entity_name=member.lastname,
+            url=request.route_url(
+                'certificate_pdf',
+                id=member.id,
+                name=member.get_url_safe_name(),
+                token=member.certificate_token),
+            footer=get_email_footer(member.locale))
+    else:
+        body = get_template_text(
+            'membership_certificate_naturalperson_body',
+            member.locale
+        ).format(
             salutation=get_salutation(member),
             url=request.route_url(
                 'certificate_pdf',
                 id=member.id,
                 name=member.get_url_safe_name(),
                 token=member.certificate_token),
-            footer=get_email_footer(member.locale)))
+            footer=get_email_footer(member.locale))
+    return (subject, body)
 
 
 def make_payment_confirmation_email(member):

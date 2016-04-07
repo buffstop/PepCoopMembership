@@ -1,0 +1,24 @@
+Hello {salutation},
+
+we are happy to deliver the membership certificate for {legal_entity_name}!
+
+  {url}
+
+Please review your data and simply reply to this mail if anything turns
+out to be wrong.
+
+Please take note that this membership certificate will only be available
+for two weeks for via the link above. After this time, you may of course
+request a certificate by e-mail.
+
+A note on the number of aquired shares: Since a membership is only
+possible with at least one share, in accordance with German cooperative
+law, the number of shares will only be listed in the certificate if it is
+higher than the first mandatory share. That is, if you hold 10 shares,
+you should find the note in your certificate that 9 additional shares
+were aquired.
+
+Best wishes,
+Your C3S team
+
+{footer}

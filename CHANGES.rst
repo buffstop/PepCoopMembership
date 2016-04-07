@@ -1,3 +1,11 @@
+Next Release
+============
+
+
+- Add separate template for membership certificate emails to legal entities.
+
+
+
 1.15.1
 ======
 

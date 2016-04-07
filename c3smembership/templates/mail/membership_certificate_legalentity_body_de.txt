@@ -1,0 +1,26 @@
+Hallo {salutation},
+
+wir freuen uns, Dir die Mitgliedsbescheinigung für {legal_entity_name}
+aushändigen zu können!
+
+  {url}
+
+Bitte prüfe die darin enthaltenen Daten und antworte einfach auf diese
+Mail, sollte etwas nicht stimmen.
+
+Bitte beachte, dass diese Mitgliederbescheinigung nur 2 Wochen unter dem
+o.g. Link zum Download zur Verfügung steht. Nach Ablauf dieser Zeit kannst
+Du bei Bedarf selbstverständlich individuell per E-Mail um eine aktuelle
+Bescheinigung bitten.
+
+Ein Hinweis zur Zahl der gezeichneten Anteile: Da die Mitgliedschaft einen
+Pflichtanteil beinhaltet, ist die Zahl der Anteile in Einklang mit dem
+deutschen Genossenschaftsrecht nur dann ausgewiesen, wenn sie über den
+ersten Anteil hinaus geht. Wer z.B. 10 Anteile an der Genossenschaft hält,
+sollte also auf der Urkunde den Hinweis finden, dass 9 weitere Anteile
+gezeichnet wurden.
+
+Viele Grüße
+Dein C3S-Team
+
+{footer}
