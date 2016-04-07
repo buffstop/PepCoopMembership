@@ -49,6 +49,7 @@
       <a href="${request.route_url('dues15_listing')}"
          class="btn btn-success">List of Dues Invoices for 2015</a>
     </p>
+    <!--
     <h3>Mail Invoices for Membership Dues 2015</h3>
     <p>
       <a href="${request.route_url('send_dues_invoice_batch', number=5)}"
@@ -61,7 +62,7 @@
         <input type='submit' name='submit'></input>
       </form>
     </p>
-
+    -->
 
     <h2>Search</h2>
     <p>

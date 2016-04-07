@@ -143,7 +143,7 @@ def batch_invite(request):
             n = 5
 
     _invitees = C3sMember.get_invitees(n)
-    # print("got {} invitees".format(len(_invitees)))
+    print("got {} invitees".format(len(_invitees)))
 
     if len(_invitees) == 0:
         request.session.flash('no invitees left. all done!',
@@ -163,6 +163,7 @@ def batch_invite(request):
             '/' + _m.email)
 
         log.info("mailing event invitation to to member id %s" % _m.id)
+        print("mailing event invitation to member id %s" % _m.id)
 
         email_subject, email_body = make_bcga16_invitation_email(_m, _url)
 

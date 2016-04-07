@@ -791,9 +791,15 @@ class C3sMember(Base):
         """
         return DBSession.query(cls).filter(
             and_(
-                cls.membership_accepted == 1,
-                cls.email_invite_flag_bcgv16 == 0
-            )).slice(0, num).all()
+                (cls.membership_accepted == 1),
+                # cls.email_invite_flag_bcgv16 != 1,
+                or_(
+                    (cls.email_invite_flag_bcgv16 == 0),
+                    (cls.email_invite_flag_bcgv16 == ''),
+                    (cls.email_invite_flag_bcgv16 == None),
+                )
+            )
+        ).slice(0, num).all()
 
     @classmethod
     def get_dues_invoicees(cls, num):

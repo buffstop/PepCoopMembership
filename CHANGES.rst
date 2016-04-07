@@ -1,3 +1,13 @@
+1.15.1
+======
+
+
+- Fix handling of None/NULL for email_invite_flag_bcgv16.
+
+- Membership dues: Disable batch invoicing in toolbox.
+
+
+
 1.15
 ====
 
