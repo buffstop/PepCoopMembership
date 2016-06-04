@@ -953,7 +953,7 @@ def dues15_notice(request):
         )
         return HTTPFound(
             request.route_url('detail', memberid=member.id) + '#dues15')
-           
+
     # persist info about payment
     member.set_dues15_payment(paid_amount, paid_date)
 

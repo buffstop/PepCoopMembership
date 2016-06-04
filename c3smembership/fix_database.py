@@ -33,8 +33,8 @@ def fix_date_of_acquisition(request):  # pragma: no cover
         s = Shares.get_by_id(i)
         if not isinstance(s, NoneType):
             if (
-                    (s.date_of_acquisition > datetime(2013, 9, 25))
-                    and (s.date_of_acquisition < datetime(2014, 3, 29))
+                    (s.date_of_acquisition > datetime(2013, 9, 25)) and
+                    (s.date_of_acquisition < datetime(2014, 3, 29))
             ):
                 # print("fixed: {}: {}".format(
                 #    s.id,

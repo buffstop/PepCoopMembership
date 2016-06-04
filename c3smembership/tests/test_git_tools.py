@@ -15,9 +15,8 @@ class TestGitTools(unittest.TestCase):
     mock package to mock subprocess.
     """
 
-
-    def __run_test(self, git_tools_method, std_pipe_values, \
-            expected_commands, expected_result):
+    def __run_test(self, git_tools_method, std_pipe_values,
+                   expected_commands, expected_result):
         """Provides an easy way to test GitTools methods encapsulating the
         mocking.
 
@@ -39,8 +38,8 @@ class TestGitTools(unittest.TestCase):
             self.assertEqual(len(expected_commands), spmock.Popen.call_count)
             self.assertEqual(method_result, expected_result)
 
-
-    def __run_test_cases(self, git_tools_method, test_cases, expected_commands):
+    def __run_test_cases(self, git_tools_method, test_cases,
+                         expected_commands):
         """Runs a set of defined test cases for testing git_tools methods.
 
         The git_tools_method is tested with each of the test_cases defining
@@ -53,7 +52,6 @@ class TestGitTools(unittest.TestCase):
                 expected_commands=expected_commands,
                 std_pipe_values=test_case['std_pipe_values'],
                 expected_result=test_case['expected_result'])
-
 
     def test_get_commit_hash(self):
         """Test method GitTools.get_commit_hash().
@@ -80,7 +78,6 @@ class TestGitTools(unittest.TestCase):
             test_cases,
             expected_commands=['git rev-parse HEAD'])
 
-
     def test_get_tag(self):
         """Test method GitTools.get_tag().
 
@@ -103,7 +100,6 @@ class TestGitTools(unittest.TestCase):
             GitTools.get_tag,
             test_cases,
             expected_commands=['git describe HEAD'])
-
 
     def test_get_github_base_url(self):
         """Test method GitTools.get_github_base_url().
@@ -138,7 +134,6 @@ class TestGitTools(unittest.TestCase):
             test_cases,
             expected_commands=['git config --get remote.origin.url'])
 
-
     def test_git_branch(self):
         """Test method GitTools.git_branch().
 
@@ -162,7 +157,6 @@ class TestGitTools(unittest.TestCase):
             test_cases,
             expected_commands=['git rev-parse --abbrev-ref HEAD'])
 
-
     def test_get_github_commit_url(self):
         """Test method GitTools.get_github_commit_url().
 
@@ -178,9 +172,10 @@ class TestGitTools(unittest.TestCase):
                     # git base url result
                     ('https://github.com/user/test123456789\n', '')
                 ],
-                'expected_result': 'https://github.com/user/' + \
-                    'test123456789/commit/0123456789abcdefgh' + \
-                    'ijklmnopqrstuvwxyz'
+                'expected_result': (
+                    'https://github.com/user/'
+                    'test123456789/commit/0123456789abcdefgh'
+                    'ijklmnopqrstuvwxyz')
             },
             # test failure: no commit
             {
@@ -206,7 +201,6 @@ class TestGitTools(unittest.TestCase):
                 'git rev-parse HEAD',
                 'git config --get remote.origin.url'])
 
-
     def test_get_github_branch_url(self):
         """Test method GitTools.get_github_branch_url().
 
@@ -222,8 +216,9 @@ class TestGitTools(unittest.TestCase):
                     # git base url result
                     ('https://github.com/user/test123456789\n', '')
                 ],
-                'expected_result': 'https://github.com/user/' + \
-                    'test123456789/tree/testbranch'
+                'expected_result': (
+                    'https://github.com/user/'
+                    'test123456789/tree/testbranch')
             },
             # test failure: no commit
             {
@@ -264,15 +259,15 @@ class TestGitTools(unittest.TestCase):
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'http://github.com/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('http://github.com/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'http',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'https://github.com/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('https://github.com/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'https',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
@@ -284,23 +279,23 @@ class TestGitTools(unittest.TestCase):
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'ftps://github.com/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('ftps://github.com/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'ftps',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'rsync://github.com/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('rsync://github.com/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'rsync',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             # test ssh user
             {
-                'value': 'ssh://user@github.com/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('ssh://user@github.com/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'ssh',
                 'ssh_user': 'user',
                 'github_user': 'myGithubUser123',
@@ -308,16 +303,16 @@ class TestGitTools(unittest.TestCase):
             },
             # test subdomains
             {
-                'value': 'ssh://subdomain.github.com/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('ssh://subdomain.github.com/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'ssh',
                 'subdomain': 'subdomain',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'ssh://some.sub.domain.github.com/' + \
-                    'myGithubUser123/test456Repository',
+                'value': ('ssh://some.sub.domain.github.com/'
+                          'myGithubUser123/test456Repository'),
                 'protocol': 'ssh',
                 'subdomain': 'some.sub.domain',
                 'github_user': 'myGithubUser123',
@@ -325,40 +320,40 @@ class TestGitTools(unittest.TestCase):
             },
             # test ports
             {
-                'value': 'ssh://github.com:1/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('ssh://github.com:1/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'ssh',
                 'port': '1',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'ssh://github.com:12/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('ssh://github.com:12/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'ssh',
                 'port': '12',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'ssh://github.com:123/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('ssh://github.com:123/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'ssh',
                 'port': '123',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'ssh://github.com:1234/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('ssh://github.com:1234/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'ssh',
                 'port': '1234',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'ssh://github.com:65535/myGithubUser123/' + \
-                    'test456Repository',
+                'value': ('ssh://github.com:65535/myGithubUser123/'
+                          'test456Repository'),
                 'protocol': 'ssh',
                 'port': '65535',
                 'github_user': 'myGithubUser123',
@@ -366,22 +361,22 @@ class TestGitTools(unittest.TestCase):
             },
             # test repository syntax
             {
-                'value': 'ssh://github.com/myGithubUser123/' + \
-                    'test456Repository/',
+                'value': ('ssh://github.com/myGithubUser123/'
+                          'test456Repository/'),
                 'protocol': 'ssh',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'ssh://github.com/myGithubUser123/' + \
-                    'test456Repository.git',
+                'value': ('ssh://github.com/myGithubUser123/'
+                          'test456Repository.git'),
                 'protocol': 'ssh',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
             },
             {
-                'value': 'ssh://github.com/myGithubUser123/' + \
-                    'test456Repository.git/',
+                'value': ('ssh://github.com/myGithubUser123/'
+                          'test456Repository.git/'),
                 'protocol': 'ssh',
                 'github_user': 'myGithubUser123',
                 'github_repository': 'test456Repository'
@@ -399,4 +394,3 @@ class TestGitTools(unittest.TestCase):
                 if group != 'value':
                     self.assertTrue(group in groupdict)
                     self.assertEqual(groupdict[group], test_case[group])
-

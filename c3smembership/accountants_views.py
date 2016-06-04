@@ -320,15 +320,15 @@ def switch_sig(request):
         return HTTPFound(
             request.route_url(
                 'dashboard',
-                number=dashboard_page, order=order, orderby=order_by)
-            + '#member_' + str(_member.id)
+                number=dashboard_page, order=order, orderby=order_by) +
+            '#member_' + str(_member.id)
         )
     else:
         return HTTPFound(
             request.route_url(
                 'detail',
-                memberid=_member.id)
-            + '#membership_info'
+                memberid=_member.id) +
+            '#membership_info'
         )
 
 
@@ -409,15 +409,15 @@ def switch_pay(request):
         return HTTPFound(
             request.route_url(
                 'dashboard',
-                number=dashboard_page, order=order, orderby=order_by)
-            + '#member_' + str(_member.id)
+                number=dashboard_page, order=order, orderby=order_by) +
+            '#member_' + str(_member.id)
         )
     else:
         return HTTPFound(
             request.route_url(
                 'detail',
-                memberid=_member.id)
-            + '#membership_info'
+                memberid=_member.id) +
+            '#membership_info'
         )
 
 

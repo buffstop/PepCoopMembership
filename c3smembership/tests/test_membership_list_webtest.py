@@ -253,7 +253,7 @@ class MakeMergeMemberTests(MemberTestsBase):
                 afm_id=afm_id),
             headers=_headers,
             status=200)  # 200 -- OK
-        
+
         # some assertions
         self.assertTrue('You are about to make this person '
                         'a proper member of C3S SCE:' in res.body)
@@ -392,7 +392,7 @@ class MembershipListTests(MemberTestsBase):
         self.assertTrue("Invalid date!" in res2.body)
         self.assertTrue("'2016-02-111111' does not compute!" in res2.body)
         self.assertTrue('try again, please! (YYYY-MM-DD)' in res2.body)
-        
+
         # try with valid date in URL
         res = self.testapp.get('/aml-' + _date + '.pdf', status=200)
         # print(res)

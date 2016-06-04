@@ -433,8 +433,8 @@ def join_c3s(request):
         try:
             dbsession.add(member)
             appstruct['email_confirm_code'] = randomstring
-        except InvalidRequestError as invalid_request_error:  # pragma: no cover
-            print("InvalidRequestError! %s") % invalid_request_error
+        except InvalidRequestError as ire:  # pragma: no cover
+            print("InvalidRequestError! %s") % ire
         except IntegrityError as integrity_error:  # pragma: no cover
             print("IntegrityError! %s") % integrity_error
 

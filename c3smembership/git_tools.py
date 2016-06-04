@@ -4,6 +4,7 @@
 import subprocess
 import re
 
+
 class GitTools(object):
     """Provides methods to access git information."""
 
@@ -35,13 +36,11 @@ class GitTools(object):
             return None
         return stdout_value.strip()
 
-
     @classmethod
     def get_commit_hash(cls):
         """Returns the current git commit hash."""
         return cls.__execute_shell_command(
             'git rev-parse HEAD')
-
 
     @classmethod
     def get_branch(cls):
@@ -49,12 +48,10 @@ class GitTools(object):
         return cls.__execute_shell_command(
             'git rev-parse --abbrev-ref HEAD')
 
-
     @classmethod
     def get_tag(cls):
         """Returns the current tag name."""
         return cls.__execute_shell_command('git describe HEAD')
-
 
     @classmethod
     def get_github_base_url(cls):
@@ -76,7 +73,6 @@ class GitTools(object):
         else:
             return None
 
-
     @classmethod
     def get_github_commit_url(cls):
         """Return the Github URL to the current commit if any.
@@ -92,7 +88,6 @@ class GitTools(object):
                 git_commit)
         else:
             return None
-
 
     @classmethod
     def get_github_branch_url(cls):

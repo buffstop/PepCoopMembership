@@ -25,7 +25,6 @@ from pyramid_mailer.message import Message
 import shutil
 import subprocess
 import tempfile
-import time
 from types import NoneType
 from c3smembership.mail_utils import (
     make_membership_certificate_email,

@@ -348,9 +348,9 @@ Should you want to change your email address please reply to this mail, too.
 
 Best wishes :: The C3S Team
     '''.format(
-        _url, # {0}
-        afm.firstname, # {1}
-        afm.lastname, # {2}
+        _url,  # {0}
+        afm.firstname,  # {1}
+        afm.lastname,  # {2}
     )
 
     log.info("mailing mail confirmation to AFM # {0}".format(afm.id))
@@ -400,8 +400,8 @@ def verify_mailaddress_conf(request):
             'confirmed': False,
             'firstname': afm.firstname,
             'lastname': afm.lastname,
-            'result_msg': 'your token is invalid. please contact ' + \
-                'office@c3s.cc!',
+            'result_msg': ('your token is invalid. '
+                           'please contact office@c3s.cc!'),
         }
 
     try:
@@ -534,8 +534,8 @@ def membership_status_fixer(request):
         return {
             'form': '',
             'confirmed': False,
-            'result_msg': 'your token is invalid. please contact ' + \
-                'office@c3s.cc!',
+            'result_msg': ('your token is invalid. please contact '
+                           'office@c3s.cc!'),
         }
 
     try:

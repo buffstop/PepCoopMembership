@@ -269,4 +269,3 @@ class TestInvitation(unittest.TestCase):
             self.assertTrue(
                 all[m.id - 1].email_invite_token_bcgv16 in mailer.outbox[
                     m.id - 1].body)
-

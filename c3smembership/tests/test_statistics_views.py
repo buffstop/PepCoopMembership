@@ -2,9 +2,7 @@
 
 from datetime import date
 import unittest
-#from pyramid.config import Configurator
 from pyramid import testing
-#import sqlalchemy
 from sqlalchemy import create_engine
 import transaction
 
@@ -96,7 +94,7 @@ class TestViews(unittest.TestCase):
             try:
                 DBSession.add(accountants_group)
                 DBSession.flush()
-                #print("adding group staff")
+                # print("adding group staff")
             except:
                 print("could not add group staff.")
                 # pass
@@ -127,15 +125,15 @@ class TestViews(unittest.TestCase):
         self.config.add_route('join', '/')
         request = testing.DummyRequest()
         result = stats_view(request)
-        #print result
+        # print result
         self.assertTrue(result['num_staff'] == 1)
         self.assertTrue(result['_number_of_datasets'] == 3)
         self.assertTrue(result['num_members_accepted'] == 0)
         self.assertTrue(result['num_memnums'] == 0)
         self.assertTrue(result['next_memnum'] == 1)
         self.assertTrue(result['num_countries'] == 1)
-        #self.assertTrue(result['num_staff'] == 1)
-        #self.assertTrue(result['firstname'] is 'foo')
+        # self.assertTrue(result['num_staff'] == 1)
+        # self.assertTrue(result['firstname'] is 'foo')
         #
         # this test would nicer results if some of the
-        #datasets were accepted members...
+        # datasets were accepted members...

@@ -5,21 +5,15 @@ from pyramid import testing
 from sqlalchemy import engine_from_config
 import transaction
 import unittest
-from sqlalchemy.ext.declarative import declarative_base
 
 from c3smembership.models import (
     C3sMember,
     DBSession,
     Base,
 )
-#Base = declarative_base()
 
 
 def _initTestingDB():
-    #from sqlalchemy import create_engine
-    #from c3smembership.models import initialize_sql
-    #session = initialize_sql(create_engine('sqlite:///memory'))
-    #session = DBSession
     my_settings = {
         'sqlalchemy.url': 'sqlite:///:memory:', }
     engine = engine_from_config(my_settings)
@@ -95,7 +89,6 @@ class TestMailMailConfirmationViews(unittest.TestCase):
         from c3smembership.administration import mail_mail_conf
         self.config.add_route('join', '/')
         self.config.add_route('dashboard', '/dashboard/0/id/asc')
-        from pyramid_mailer import get_mailer
         request = testing.DummyRequest()
         request.matchdict = {'memberid': '10000'}  # invalid!
         request.cookies['on_page'] = 1
@@ -133,7 +126,7 @@ class TestMailMailConfirmationViews(unittest.TestCase):
             u"[C3S] Please confirm your email address! "
             u"/ Bitte E-Mail-Adresse bestätigen!"
         )
-        #print mailer.outbox[0].body
+        # print mailer.outbox[0].body
         self.assertTrue(
             u"Hello" in mailer.outbox[0].body)
         self.assertTrue(
@@ -150,7 +143,6 @@ class TestMailMailConfirmationViews(unittest.TestCase):
         test the verify_mailaddress_conf view
         """
         from c3smembership.administration import verify_mailaddress_conf
-        from pyramid_mailer import get_mailer
         request = testing.DummyRequest()
         request.matchdict = {
             'email': u'test@shri.de',
@@ -161,7 +153,6 @@ class TestMailMailConfirmationViews(unittest.TestCase):
         request.cookies['order'] = 'asc'
         request.cookies['orderby'] = 'id'
 
-        mailer = get_mailer(request)
         result = verify_mailaddress_conf(request)
 
         self.assertTrue(

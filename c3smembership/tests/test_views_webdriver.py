@@ -7,7 +7,8 @@ These tests test
 
 using selenium/webdriver (make a browser do things), see:
 
-* http://docs.seleniumhq.org/docs/03_webdriver.jsp#introducing-the-selenium-webdriver-api-by-example
+* http://docs.seleniumhq.org/docs/
+  03_webdriver.jsp#introducing-the-selenium-webdriver-api-by-example
 * http://selenium-python.readthedocs.org/en/latest/api.html
 * http://selenium.googlecode.com/svn/trunk/docs/api/py/index.html
 
@@ -253,7 +254,8 @@ class JoinFormTests(SeleniumTestBase):
         self.driver.find_element_by_name('got_statute').click()
         self.driver.find_element_by_name('got_dues_regulations').click()
         self.driver.find_element_by_id('other_colsoc-1').click()  # No colsoc
-        self.driver.find_element_by_id('colsoc_name').send_keys(Keys.CONTROL, "a")
+        self.driver.find_element_by_id(
+            'colsoc_name').send_keys(Keys.CONTROL, "a")
         self.driver.find_element_by_id('colsoc_name').send_keys(Keys.DELETE)
         # enter password
         self.driver.find_element_by_name('password').send_keys('foobar')
@@ -542,7 +544,7 @@ class EmailVerificationTests(SeleniumTestBase):
 
         self.assertTrue(
             'Please enter your password.' in self.driver.page_source)
-        
+
         self.driver.find_element_by_name(
             'password').send_keys('schmoo')  # wrong password
         self.driver.find_element_by_name('submit').click()  # submit

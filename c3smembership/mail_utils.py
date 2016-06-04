@@ -56,7 +56,8 @@ def make_membership_certificate_email(request, member):
     Gets an email subject and body to delivery a link to the membership
     certificate PDF.
     """
-    subject = get_template_text('membership_certificate_subject', member.locale)
+    subject = get_template_text(
+        'membership_certificate_subject', member.locale)
     if member.is_legalentity:
         body = get_template_text(
             'membership_certificate_legalentity_body',

@@ -276,7 +276,6 @@ class TestViews(unittest.TestCase):
 #                 # go ahead with the tests:
 #                 # feed the test data to the form/view function
 #                 result = declare_intent(request)
-                
 #                 # at this point -if the test fails- we cannot be sure whether
 #                 # we actually got the PDF or the form we tried to submit
 #                 # failed validation, e.g. because the requirements weren't

@@ -301,7 +301,7 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         instance2.membership_accepted = True
         invoicees = myMembershipSigneeClass.get_dues_invoicees(27)
         self.assertEquals(len(invoicees), 1)
-        
+
     def test_delete_by_id(self):
         """
         test: delete one entry by id
@@ -397,7 +397,7 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         with self.assertRaises(Exception):
             result1 = myMembershipSigneeClass.nonmember_listing(
                 "id", 100, order='schmoo')
-            
+
         result1 = myMembershipSigneeClass.nonmember_listing(
             "id", 100)
         self.failUnless(result1[0].firstname == u"SomeFirstnäme")
@@ -431,7 +431,7 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         with self.assertRaises(Exception):
             result1 = myMembershipSigneeClass.nonmember_listing(
                 "id", 100, order='schmoo')
-            
+
         result1 = myMembershipSigneeClass.nonmember_listing(
             "id", 100)
         self.failUnless(result1[0].firstname == u"SomeFirstnäme")
@@ -1032,14 +1032,14 @@ class Dues15InvoiceModelTests(unittest.TestCase):
         self.assertEqual(len(stats), 2)
         self.assertEqual(stats[0]['month'], datetime(2015, 10, 1))
         self.assertAlmostEqual(stats[0]['amount_invoiced_normal'], D('-37.50'))
-        self.assertAlmostEqual(stats[0]['amount_invoiced_reversal'], D('17.25'))
+        self.assertAlmostEqual(
+            stats[0]['amount_invoiced_reversal'], D('17.25'))
         self.assertAlmostEqual(stats[0]['amount_paid'], D('12.34'))
         self.assertEqual(stats[1]['month'], datetime(2015, 11, 1))
         self.assertAlmostEqual(stats[1]['amount_invoiced_normal'], D('87.47'))
-        self.assertAlmostEqual(stats[1]['amount_invoiced_reversal'], D('101.64'))
+        self.assertAlmostEqual(
+            stats[1]['amount_invoiced_reversal'], D('101.64'))
         self.assertAlmostEqual(stats[1]['amount_paid'], D('10.53'))
-
-
 
     def test_decimality(self):
         """

@@ -69,9 +69,9 @@ def generate_pdf(appstruct):
     fdf_file = tempfile.NamedTemporaryFile()
     pdf_file = tempfile.NamedTemporaryFile()
 
-    #import logging
-    #log = logging.getLogger(__name__)
-    #log.info("test ...! ")
+    # import logging
+    # log = logging.getLogger(__name__)
+    # log.info("test ...! ")
 
     import os
     here = os.path.dirname(__file__)
@@ -81,7 +81,7 @@ def generate_pdf(appstruct):
         here, "../pdftk/C3S-SCE-AFM-v09-20151110-en.pdf")
 
     # check for _LOCALE_, decide which language to use
-    #print(appstruct['_LOCALE_'])
+    # print(appstruct['_LOCALE_'])
     if appstruct['_LOCALE_'] == "de":
         pdf_to_be_used = declaration_pdf_de
     elif appstruct['_LOCALE_'] == "en":
@@ -91,30 +91,31 @@ def generate_pdf(appstruct):
         pdf_to_be_used = declaration_pdf_en
 
     # convert the date in date_of_birth
-    #print(
+    # print(
     #    "generate_pdf: appstruct: date of birth: %s") % (
     #        appstruct['date_of_birth'])
-    #print(
+    # print(
     #    "generate_pdf: type of appstruct: date of birth: %s") % type(
     #        appstruct['date_of_birth'])
-    #print(
+    # print(
     #    "generate_pdf: str of appstruct: date of birth: %s") % str(
     #        appstruct['date_of_birth'])
-    #print("appstruct: date of birth: %s") % appstruct['date_of_birth']
-    #print("appstruct: date of submission: %s") % appstruct['date_of_submission']
+    # print("appstruct: date of birth: %s") % appstruct['date_of_birth']
+    # print("appstruct: date of submission: %s") % appstruct[
+    #    'date_of_submission']
     dob_ = time.strptime(str(appstruct['date_of_birth']), '%Y-%m-%d')
-    #print("generate_pdf: date of birth: %s") % dob_
+    # print("generate_pdf: date of birth: %s") % dob_
     dob = time.strftime("%d.%m.%Y", dob_)
-    #print("generate_pdf: date of birth: %s") % dob
-    #dos_ = time.strptime(
+    # print("generate_pdf: date of birth: %s") % dob
+    # dos_ = time.strptime(
     #    str(appstruct['date_of_submission']),
     #    '%Y-%m-%d %H:%M:%S'
-    #)
-    #print("generate_pdf: date of submission: %s") % dos_
+    # )
+    # print("generate_pdf: date of submission: %s") % dos_
     dos = str(appstruct['date_of_submission'])
-    #print("generate_pdf: date of submission: %s") % dos
-    #print("generate_pdf: type of date of birth: %s") % type(dob)
-    #print("generate_pdf: date of birth: %s") % dob
+    # print("generate_pdf: date of submission: %s") % dos
+    # print("generate_pdf: type of date of birth: %s") % type(dob)
+    # print("generate_pdf: date of birth: %s") % dob
 
     # membership_type
     # FieldType: Button
@@ -125,10 +126,10 @@ def generate_pdf(appstruct):
     # FieldStateOption: 1
     # FieldStateOption: 2
     # FieldStateOption: Off
-    #print("the membership type: %s" % appstruct['membership_type'])
+    # print("the membership type: %s" % appstruct['membership_type'])
 
     # calculate the amount to be transferred
-    #print("the amount: %s" % (appstruct['num_shares'] * 50))
+    # print("the amount: %s" % (appstruct['num_shares'] * 50))
     amount = str(appstruct['num_shares'] * 50)
 
 # here we gather all information from the supplied data to prepare pdf-filling
@@ -144,27 +145,9 @@ def generate_pdf(appstruct):
         ('town', appstruct['city']),
         ('email', appstruct['email']),
         ('country', appstruct['country']),
-        ('MembershipType', '1' if appstruct['membership_type'] == u'normal' else '2'),
+        ('MembershipType', '1' if appstruct[
+            'membership_type'] == u'normal' else '2'),
         ('numshares', str(appstruct['num_shares'])),
-#        ('composer',
-#         'Yes' if appstruct['activity'].issuperset(['composer']) else 'Off'),
-#        ('lyricist',
-#         'Yes' if appstruct['activity'].issuperset(['lyricist']) else 'Off'),
-#        ('producer', 'Yes' if appstruct['activity'].issuperset(
-#            ['music producer']) else 'Off'),
-#        ('remixer',
-#         'Yes' if appstruct['activity'].issuperset(['remixer']) else 'Off'),
-#        ('dj',
-#         'Yes' if appstruct['activity'].issuperset(['dj']) else 'Off'),
-        #('YesDataProtection',
-        #'Yes' if appstruct[
-        #        #'noticed_dataProtection'] == u"(u'yes',)" else 'Off'),
-#        ('inColSoc', '1' if appstruct['member_of_colsoc'] == u'yes' else '2'),
-#        ('inColSocName',
-#        appstruct['name_of_colsoc'] if appstruct['member_of_colsoc'] == u'yes' else ''),
-#        ('URL', appstruct['opt_URL']),
-#        ('bandPseudonym', appstruct['opt_band']),
-#        ('investMmbr', '1' if appstruct['invest_member'] == u'yes' else '2'),
         ('dateofbirth', dob),
         ('submitted', dos),
         ('generated', str(datetime.now())),
@@ -198,7 +181,7 @@ def generate_pdf(appstruct):
             'fill_form', fdf_file.name,  # fill in values
             'output', pdf_file.name,  # output file
             'flatten',  # make form read-only
-            #'verbose'  # be verbose?
+            # 'verbose'  # be verbose?
         ]
     )
 
@@ -234,7 +217,6 @@ def generate_csv(appstruct):
 
     csv = tempfile.TemporaryFile()
     csvw = unicodecsv.writer(csv, encoding='utf-8')
-    #import pdb; pdb.set_trace()
     fields = (
         date.today().strftime("%Y-%m-%d"),  # e.g. 2012-09-02 date of subm.
         'pending...',  # #                  # has signature ?
@@ -249,30 +231,22 @@ def generate_csv(appstruct):
         appstruct['country'],  # # # country
         u'investing' if appstruct[
             'membership_type'] == u'investing' else u'normal',
-        #appstruct['opt_URL'],
-        #appstruct['opt_band'],
         appstruct['date_of_birth'],
-        #'j' if 'composer' in appstruct['activity'] else 'n',
-        #'j' if 'lyricist' in appstruct['activity'] else 'n',
-        #'j' if 'producer' in appstruct['activity'] else 'n',
-        #'j' if 'remixer' in appstruct['activity'] else 'n',
-        #'j' if 'dj' in appstruct['activity'] else 'n',
         'j' if appstruct['member_of_colsoc'] == 'yes' else 'n',
         appstruct['name_of_colsoc'].replace(',', '|'),
         appstruct['num_shares'],
-        #'j' if appstruct['noticed_dataProtection'] == 'yes' else 'n',
     )
 
     csvw.writerow(fields)
 
-    #DEBUG = True
+    DEBUG = False
     if DEBUG:  # pragma: no cover
-        #csvr = unicodecsv.reader(csv, encoding='utf-8')
+        # csvr = unicodecsv.reader(csv, encoding='utf-8')
         # print for debugging? seek to beginning!
         csv.seek(0)
-        #print("read one line from file: %s") % csv.readline()
-        #row = csvr.next()
-        #print("DEBUG: the row as list: %s") % row
+        # print("read one line from file: %s") % csv.readline()
+        # row = csvr.next()
+        # print("DEBUG: the row as list: %s") % row
     csv.seek(0)
     return csv.readline()
 
@@ -281,10 +255,6 @@ def make_mail_body(appstruct):
     """
     construct a multiline string to be used as the emails body
     """
-    #the_activities = ''
-    #for x in appstruct['activity']:
-    #    the_activities += x + ', '
-    #appstruct['noticed_dataProtection'] = "yes"
     # # test the types
     # for thing in [
     #     appstruct['firstname'],
@@ -352,11 +322,11 @@ def accountant_mail(appstruct):
     it consists of a mail body and an attachment attached to it
     """
     unencrypted = make_mail_body(appstruct)
-    #print("accountant_mail: mail body: \n%s") % unencrypted
-    #print("accountant_mail: type of mail body: %s") % type(unencrypted)
+    # print("accountant_mail: mail body: \n%s") % unencrypted
+    # print("accountant_mail: type of mail body: %s") % type(unencrypted)
     encrypted = encrypt_with_gnupg(unencrypted)
-    #print("accountant_mail: mail body (enc'd): \n%s") % encrypted
-    #print("accountant_mail: type of mail body (enc'd): %s") % type(encrypted)
+    # print("accountant_mail: mail body (enc'd): \n%s") % encrypted
+    # print("accountant_mail: type of mail body (enc'd): %s") % type(encrypted)
 
     message_recipient = appstruct['message_recipient']
 
@@ -366,15 +336,15 @@ def accountant_mail(appstruct):
         recipients=[message_recipient],
         body=encrypted
     )
-    #print("accountant_mail: csv_payload: \n%s") % generate_csv(appstruct)
-    #print(
+    # print("accountant_mail: csv_payload: \n%s") % generate_csv(appstruct)
+    # print(
     #    "accountant_mail: type of csv_payload: \n%s"
-    #) % type(generate_csv(appstruct))
+    # ) % type(generate_csv(appstruct))
     csv_payload_encd = encrypt_with_gnupg(generate_csv(appstruct))
-    #print("accountant_mail: csv_payload_encd: \n%s") % csv_payload_encd
-    #print(
+    # print("accountant_mail: csv_payload_encd: \n%s") % csv_payload_encd
+    # print(
     #    "accountant_mail: type of csv_payload_encd: \n%s"
-    #) % type(csv_payload_encd)
+    # ) % type(csv_payload_encd)
 
     attachment = Attachment(
         "C3S-SCE-AFM.csv.gpg", "application/gpg-encryption",

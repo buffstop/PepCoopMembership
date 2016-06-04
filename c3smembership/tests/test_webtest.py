@@ -293,9 +293,10 @@ class AccountantsFunctionalTests(unittest.TestCase):
         # print resD2b.body
         self.assertTrue(
             "Eingang bestätigen" not in resD2b.body)
-        resD2a = self.testapp.get('/switch_sig/1', status=302,
-                                  headers=headers_nodash
-                              )  # # # # # ON
+        resD2a = self.testapp.get(
+            '/switch_sig/1', status=302,
+            headers=headers_nodash
+        )  # # # # # ON
         resD2b = resD2a.follow()  # we are taken to the dashboard
         resD2b = self.testapp.get('/detail/1', status=200)
         self.assertTrue(

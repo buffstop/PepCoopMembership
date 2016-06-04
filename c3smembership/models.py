@@ -796,7 +796,7 @@ class C3sMember(Base):
                 or_(
                     (cls.email_invite_flag_bcgv16 == 0),
                     (cls.email_invite_flag_bcgv16 == ''),
-                    (cls.email_invite_flag_bcgv16 == None),
+                    (cls.email_invite_flag_bcgv16 == None),  # noqa
                 )
             )
         ).slice(0, num).all()

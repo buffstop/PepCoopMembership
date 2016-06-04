@@ -11,14 +11,9 @@ from c3smembership.models import (
     DBSession,
     Base,
 )
-#Base = declarative_base()
 
 
 def _initTestingDB():
-    #from sqlalchemy import create_engine
-    #from c3smembership.models import initialize_sql
-    #session = initialize_sql(create_engine('sqlite:///memory'))
-    #session = DBSession
     my_settings = {'sqlalchemy.url': 'sqlite:///:memory:', }
     engine = engine_from_config(my_settings)
     DBSession.configure(bind=engine)

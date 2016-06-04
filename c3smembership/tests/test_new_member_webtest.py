@@ -30,11 +30,11 @@ class NewMemberTests(unittest.TestCase):
         try:
             DBSession.close()
             DBSession.remove()
-            #print "closed and removed DBSession"
+            # print "closed and removed DBSession"
         except:
             pass
-            #print "no session to close"
-       # self.session = DBSession()
+            # print "no session to close"
+        # self.session = DBSession()
         my_settings = {
             'sqlalchemy.url': 'sqlite:///:memory:',
             'available_languages': 'da de en es fr',
@@ -63,7 +63,7 @@ class NewMemberTests(unittest.TestCase):
                 DBSession.add(staffer1)
                 DBSession.flush()
             except:
-                #print("it borked! (rut)")
+                # print("it borked! (rut)")
                 pass
 
         from c3smembership import main
@@ -94,9 +94,9 @@ class NewMemberTests(unittest.TestCase):
         res2 = form.submit('submit', status=302)
         # # being logged in ...
         res3 = res2.follow()  # being redirected to dashboard_only
-        #print('>'*20)
-        #print(res3.body)
-        #print('<'*20)
+        # print('>'*20)
+        # print(res3.body)
+        # print('<'*20)
         res4 = res3.follow()  # being redirected to dashboard with parameters
         self.failUnless(
             'Dashboard' in res4.body)
@@ -106,7 +106,7 @@ class NewMemberTests(unittest.TestCase):
         # # so yes: that was a redirect
         # res6 = res5.follow()
         # res6 = res6.follow()
-        # #print(res4.body)
+        # # print(res4.body)
         # self.failUnless(
         #     'Dashboard' in res6.body)
         # # choose number of applications shown
@@ -123,7 +123,7 @@ class NewMemberTests(unittest.TestCase):
         res = self.testapp.get('/new_member?id=1', status=200)
 
         form = res.form
-        #print form.fields
+        # print form.fields
         form['firstname'] = u'SomeFirstname'
         form['lastname'] = u'SomeLastname'
         form['email'] = u'some@shri.de'
@@ -134,14 +134,14 @@ class NewMemberTests(unittest.TestCase):
         form['country'].value__set(u"DE")
         form['_LOCALE_'] = u"DE"
         form['date_of_birth'] = '1014-01-01'  # date.today(),
-        #form['email_is_confirmed=False,
-        #email_confirm_code=u'ABCDEFGFOO',
-        #password=u'arandompassword',
-        #date_of_submission=date.today(),
-        #form['membership_type'] = u'normal',
+        # form['email_is_confirmed=False,
+        # email_confirm_code=u'ABCDEFGFOO',
+        # password=u'arandompassword',
+        # date_of_submission=date.today(),
+        # form['membership_type'] = u'normal',
         form['entity_type'].value__set(u'person')
         form['membership_type'].value__set(u'normal')
-        #form['other_colsoc'] = (u'no',),
+        # form['other_colsoc'] = (u'no',),
         form['other_colsoc'].value__set(u'no')
 
         form['name_of_colsoc'] = u"GEMA"
@@ -154,7 +154,7 @@ class NewMemberTests(unittest.TestCase):
         form2['date_of_birth'] = u'1999-09-19'
         res3 = form2.submit(u'submit', status=302)
         res4 = res3.follow()
-        #print res4
+        # print res4
         self.assertTrue('Details for Member Application #1' in res4.body)
 
         # more asserts
@@ -177,7 +177,7 @@ class NewMemberTests(unittest.TestCase):
         res = self.testapp.get('/new_member?id=1', status=200)
 
         form = res.form
-        #print form.fields
+        # print form.fields
         form['firstname'] = u'SomeFirstname'
         form['lastname'] = u'SomeLastname'
         form['email'] = u'some@shri.de'
@@ -188,14 +188,14 @@ class NewMemberTests(unittest.TestCase):
         form['country'].value__set(u"DE")
         form['_LOCALE_'] = u"DE"
         form['date_of_birth'] = date.today()
-        #form['email_is_confirmed=False,
-        #email_confirm_code=u'ABCDEFGFOO',
-        #password=u'arandompassword',
-        #date_of_submission=date.today(),
+        # form['email_is_confirmed=False,
+        # email_confirm_code=u'ABCDEFGFOO',
+        # password=u'arandompassword',
+        # date_of_submission=date.today(),
         form['entity_type'] = u'person'
         form['membership_type'] = u'normal'
-        #form['membership_type'].value__set(u'normal')
-        #form['other_colsoc'] = (u'no',),
+        # form['membership_type'].value__set(u'normal')
+        # form['other_colsoc'] = (u'no',),
         form['other_colsoc'].value__set(u'no')
 
         form['name_of_colsoc'] = u"GEMA"
@@ -207,7 +207,7 @@ class NewMemberTests(unittest.TestCase):
         form2['date_of_birth'] = u'1999-09-19'
         res3 = form2.submit(u'submit', status=302)
         res4 = res3.follow()
-        #print res4
+        # print res4
         self.assertTrue('Details for Member Application #2' in res4.body)
 
         # more asserts
@@ -226,7 +226,7 @@ class NewMemberTests(unittest.TestCase):
         res = self.testapp.get('/new_member', status=200)
 
         form = res.form
-        #print form.fields
+        # print form.fields
         form['firstname'] = u'SomeFirstname'
         form['lastname'] = u'SomeLastname'
         form['email'] = u'some@shri.de'
@@ -237,14 +237,14 @@ class NewMemberTests(unittest.TestCase):
         form['country'].value__set(u"DE")
         form['_LOCALE_'] = u"DE"
         form['date_of_birth'] = date.today()
-        #form['email_is_confirmed=False,
-        #email_confirm_code=u'ABCDEFGFOO',
-        #password=u'arandompassword',
-        #date_of_submission=date.today(),
+        # form['email_is_confirmed=False,
+        # email_confirm_code=u'ABCDEFGFOO',
+        # password=u'arandompassword',
+        # date_of_submission=date.today(),
         form['entity_type'] = u'person'
         form['membership_type'] = u'normal'
-        #form['deformField14'].value__set(u'normal')
-        #form['other_colsoc'] = (u'no',),
+        # form['deformField14'].value__set(u'normal')
+        # form['other_colsoc'] = (u'no',),
         form['other_colsoc'].value__set(u'no')
 
         form['name_of_colsoc'] = u"GEMA"
@@ -257,7 +257,7 @@ class NewMemberTests(unittest.TestCase):
 
         res3 = form2.submit(u'submit', status=302)
         res4 = res3.follow()
-        #print res4
+        # print res4
         self.assertTrue('Details for Member Application #3' in res4.body)
 
         # more asserts
@@ -274,7 +274,7 @@ class NewMemberTests(unittest.TestCase):
 
         # check the number of entries in the DB
         num = C3sMember.get_number()
-        #print num
+        # print num
         self.assertTrue(num == 3)
 
         '''
@@ -283,7 +283,7 @@ class NewMemberTests(unittest.TestCase):
         res = self.testapp.get('/new_member', status=200)
 
         form = res.form
-        #print form.fields
+        # print form.fields
         form['firstname'] = u'SomeLegalentity'
         form['lastname'] = u'SomeLegalName'
         form['email'] = u'some@shri.de'
@@ -294,14 +294,14 @@ class NewMemberTests(unittest.TestCase):
         form['country'].value__set(u"DE")
         form['_LOCALE_'] = u"DE"
         form['date_of_birth'] = date.today()
-        #form['email_is_confirmed=False,
-        #email_confirm_code=u'ABCDEFGFOO',
-        #password=u'arandompassword',
-        #date_of_submission=date.today(),
+        # form['email_is_confirmed=False,
+        # email_confirm_code=u'ABCDEFGFOO',
+        # password=u'arandompassword',
+        # date_of_submission=date.today(),
         form['entity_type'] = u'legalentity'
         form['membership_type'] = u'investing'
-        #form['deformField14'].value__set(u'normal')
-        #form['other_colsoc'] = (u'no',),
+        # form['deformField14'].value__set(u'normal')
+        # form['other_colsoc'] = (u'no',),
         form['other_colsoc'].value__set(u'no')
 
         form['name_of_colsoc'] = u""
@@ -314,7 +314,7 @@ class NewMemberTests(unittest.TestCase):
 
         res3 = form2.submit(u'submit', status=302)
         res4 = res3.follow()
-        #print res4
+        # print res4
         self.assertTrue('Details for Member Application #4' in res4.body)
 
         # more asserts
@@ -331,5 +331,5 @@ class NewMemberTests(unittest.TestCase):
 
         # check the number of entries in the DB
         num = C3sMember.get_number()
-        #print num
+        # print num
         self.assertTrue(num == 4)

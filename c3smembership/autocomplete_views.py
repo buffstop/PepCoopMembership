@@ -43,5 +43,5 @@ def autocomplete_people_search(request):
     string to find matching entries (e.g. starting with 'foo') in the database
     '''
     text = request.params.get('term', '')
-    #print u"DEBUG: autocomp. people search for: {}".format(text)
+    # print u"DEBUG: autocomp. people search for: {}".format(text)
     return C3sMember.get_matching_people(text)

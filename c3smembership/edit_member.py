@@ -438,11 +438,9 @@ def edit_member(request):
         As the membership can't be lost before it was granted the membership
         loss date must be larger than the membership acceptance date.
         """
-        if (value['membership_loss_date'] is not None
-                and (
-                    value['membership_loss_date'] < value['membership_date']
-                    or
-                    not value['membership_accepted'])):
+        if (value['membership_loss_date'] is not None and
+            (value['membership_loss_date'] < value['membership_date'] or
+             not value['membership_accepted'])):
             exc = colander.Invalid(form)
             exc['membership_loss_date'] = \
                 _(u'Date membership loss must be larger than membership '
@@ -456,11 +454,10 @@ def edit_member(request):
 
         Resignations are only allowed to the end of the year.
         """
-        if (value.get('membership_loss_type', '') == 'resignation'
-                and value['membership_loss_date'] is not None
-                and not (
-                    value['membership_loss_date'].day == 31
-                    and value['membership_loss_date'].month == 12)):
+        if (value.get('membership_loss_type', '') == 'resignation' and
+            value['membership_loss_date'] is not None and
+            not (value['membership_loss_date'].day == 31 and
+                 value['membership_loss_date'].month == 12)):
             exc = colander.Invalid(form)
             exc['membership_loss_date'] = \
                 _(u'Resignations are only allowed to the 31st of December '
@@ -496,8 +493,9 @@ def edit_member(request):
         Validates that only natural persons can have loss type 'death' and
         only legal entites 'winding-up'.
         """
-        if (value['membership_meta']['membership_loss_type'] == 'death'
-                and value['membership_info']['entity_type'] != 'person'):
+        if (
+                value['membership_meta']['membership_loss_type'] == 'death' and
+                value['membership_info']['entity_type'] != 'person'):
             exc_type = colander.Invalid(
                 form['membership_meta']['membership_loss_type'],
                 _(u'The membership loss type \'death\' is only allowed for '
@@ -515,8 +513,10 @@ def edit_member(request):
                     form,
                     form['membership_meta']))
             raise exc
-        if (value['membership_meta']['membership_loss_type'] == 'winding-up'
-                and value['membership_info']['entity_type'] != 'legalentity'):
+        if (
+                value['membership_meta'][
+                    'membership_loss_type'] == 'winding-up' and
+                value['membership_info']['entity_type'] != 'legalentity'):
             exc_type = colander.Invalid(
                 form['membership_meta']['membership_loss_type'],
                 _(u'The membership loss type \'winding-up\' is only allowed '
@@ -563,7 +563,7 @@ def edit_member(request):
 
     # if the form has NOT been used and submitted, remove error messages if
     # any
-    if not 'submit' in request.POST:
+    if 'submit' not in request.POST:
         request.session.pop_flash()
 
     # if the form has been used and SUBMITTED, check contents

@@ -172,7 +172,6 @@ class TestMTypeQueryViews(unittest.TestCase):
         test the membership_status_fixer view
         """
         from c3smembership.administration import membership_status_fixer
-        from pyramid_mailer import get_mailer
         request = testing.DummyRequest()
         request.matchdict = {
             'email': u'test@shri.de',

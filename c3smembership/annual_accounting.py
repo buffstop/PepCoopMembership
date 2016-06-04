@@ -123,9 +123,9 @@ def annual_report(request):  # pragma: no cover
     # now filter and count the afms and members
     for m in _all_members:
         if (
-                m.membership_accepted  # unneccessary!?
-                and (m.membership_date >= start_date)
-                and (m.membership_date <= end_date)
+                m.membership_accepted and  # unneccessary!?
+                (m.membership_date >= start_date) and
+                (m.membership_date <= end_date)
         ):
             # add this item to the list
             _members.append(m)
@@ -136,17 +136,17 @@ def annual_report(request):  # pragma: no cover
             #        _count_shares += _s.number
         elif (  # member is not accepted yet
                 (
-                    (not m.membership_accepted)
-                    or (m.membership_accepted is None)
-                )
+                    (not m.membership_accepted) or
+                    (m.membership_accepted is None)
+                ) and
                 # but payment has been received during timespan
-                and (m.payment_received)
-                and (datetime(
+                (m.payment_received) and
+                (datetime(
                     m.payment_received_date.year,
                     m.payment_received_date.month,
                     m.payment_received_date.day,
-                ) >= start_date)
-                and (datetime(
+                ) >= start_date) and
+                (datetime(
                     m.payment_received_date.year,
                     m.payment_received_date.month,
                     m.payment_received_date.day,
@@ -169,8 +169,8 @@ def annual_report(request):  # pragma: no cover
                         s.date_of_acquisition.year,
                         s.date_of_acquisition.month,
                         s.date_of_acquisition.day,
-                    ) >= start_date)
-                    and (datetime(
+                    ) >= start_date) and
+                    (datetime(
                         s.date_of_acquisition.year,
                         s.date_of_acquisition.month,
                         s.date_of_acquisition.day,
@@ -184,13 +184,13 @@ def annual_report(request):  # pragma: no cover
                         s.date_of_acquisition.year,
                         s.date_of_acquisition.month,
                         s.date_of_acquisition.day,
-                    ) >= end_date)
-                    and (datetime(  # payment received during ...
+                    ) >= end_date) and
+                    (datetime(  # payment received during ...
                         s.payment_received_date.year,
                         s.payment_received_date.month,
                         s.payment_received_date.day,
-                    ) >= start_date)
-                    and (datetime(  # payment received during ...
+                    ) >= start_date) and
+                    (datetime(  # payment received during ...
                         s.payment_received_date.year,
                         s.payment_received_date.month,
                         s.payment_received_date.day,

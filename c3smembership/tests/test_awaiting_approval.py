@@ -131,5 +131,3 @@ class AwaitingApprovalTests(unittest.TestCase):
         res = self.testapp.get('/afms_awaiting_approval', status=200)
         self.assertTrue('Neue Genossenschaftsmitglieder' in res.body)
         self.assertTrue('SomeFirstnäme' in res.body)
-
-

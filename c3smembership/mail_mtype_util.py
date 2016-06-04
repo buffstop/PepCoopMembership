@@ -63,7 +63,7 @@ Das Team der C3S
 +++          https://sustain.c3s.cc/?en          +++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 '''.format(
-    input.firstname,
+    input.firstname,  # noqa
     input.lastname,
     the_url,
 )
@@ -125,7 +125,7 @@ Your C3S team
 +++          https://sustain.c3s.cc/?en          +++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 '''.format(
-    input.firstname,
+    input.firstname,  # noqa
     input.lastname,
     the_url,
 )
