@@ -4,6 +4,22 @@ Next Release
 
 - Add separate template for membership certificate emails to legal entities.
 
+- Introduce business layer.
+
+- Remove dashboard_only.
+
+- Introduce reusable pagination mechanism.
+
+- Reorganise internationalisation.
+
+- Move schemas to separate package.
+
+- Rename header template block from 'css'to 'head'.
+
+- Introduce presentation layer for the user interface.
+
+- Introduce data layer.
+
 
 
 1.15.1

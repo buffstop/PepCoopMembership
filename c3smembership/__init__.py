@@ -8,7 +8,7 @@ from sqlalchemy import engine_from_config
 from c3smembership.presentation.parameter_validation import (
     ParameterValidationException
 )
-from c3smembership.models import Base
+from c3smembership.data.model.base import Base
 from c3smembership.security.request import RequestWithUserAttribute
 from c3smembership.security import (
     Root,

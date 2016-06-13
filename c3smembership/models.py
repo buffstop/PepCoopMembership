@@ -18,6 +18,7 @@ Classes / Data Objects:
 * **Dues15Invoice** (membership dues, 2015 edition)
 """
 
+from c3smembership.data.model.base import Base
 from datetime import (
     datetime,
 )
@@ -38,7 +39,6 @@ from sqlalchemy import (
     or_,
     and_,
 )
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.sql import func
 from sqlalchemy.sql import expression
@@ -54,7 +54,6 @@ from zope.sqlalchemy import ZopeTransactionExtension
 
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-Base = declarative_base()
 crypt = cryptacular.bcrypt.BCRYPTPasswordManager()
 
 

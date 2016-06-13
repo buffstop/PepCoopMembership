@@ -398,6 +398,7 @@ The relevant documentation (generated from the code)
 can be found here: :ref:`code_docs_membership_certificate`.
 
 
+
 C3S Information Changes
 =======================
 
@@ -451,7 +452,7 @@ Membership Administration
 
 
 
-Application for membership through a web interface
+Application for Membership Through a Web Interface
 ==================================================
 
 
@@ -459,7 +460,7 @@ Application for membership through a web interface
 
 
 
-Handle and approve a membership application
+Handle and Approve a Membership Application
 ===========================================
 
 
@@ -476,11 +477,21 @@ Financial Accounting
 
 
 
-Billing
-=======
+Accounting
+==========
 
 
-**TODO:** *Elaborate.*
+
+
+
+
+Invoicing
+=========
+
+
+A list of all invoice must be accessible via the backend administration
+interface. Furthermore, the invoices created for a member must be listed on the
+members's detail page.
 
 
 
@@ -488,7 +499,42 @@ Create an Invoice
 -----------------
 
 
-**TODO:** *Elaborate.*
+Invoices are created as PDF files.
+
+The amount of the invoice is booked on the invoicing account as well as the
+invoicee's account.
+
+
+
+Send an Invoice Email
+---------------------
+
+
+Sending the invoice means sending a link for a PDF download. For security
+reasons the download link must contain a random token and must only be valid for
+a certain time.
+
+An invoice which was created once must never be changed. For auditing purposes
+neither the database entry nor the PDF file must be changed. The PDF file must
+be archived.
+
+
+
+Resend an Invoice Email
+-----------------------
+
+
+The accountant must be able to resend an invoice email. The email address to
+which the new invoice email is sent must be the invoicee's current email address
+which might have changed since the invoice was created.
+
+The button for resending an invoice email must be presented next to the invoice
+when it is listed in the global invoices list as well as the member's detail
+page. A dialog must be confirmed to resend an invoice email after pushing the
+button.
+
+The invoice link of the resent invoice email must point to the same invoice PDF
+file which was sent the first time.
 
 
 
@@ -496,15 +542,9 @@ Cancel an Invoice
 -----------------
 
 
-**TODO:** *Elaborate.*
-
-
-
-Discount Invoice
-----------------
-
-
-**TODO:** *Elaborate.*
+Invoices can be cancelled. In this case a cancelation invoice is created which
+reverses the cancelled invoice. An invoice email for the cancelation email must
+be sent to the invoicee.
 
 
 
@@ -520,15 +560,38 @@ Enter a Payment
 ---------------
 
 
-**TODO:** *Elaborate.*
+It is possible to enter payments on member's accounts.
 
 
 
-Enter a Partial Payment
------------------------
+Membership Dues
+===============
 
 
-**TODO:** *Elaborate.*
+The C3S can demand a membership fee:
+
+- The dues amount can be calculated by a formula.
+- The dues calculation formula can change each year.
+- Dues amounts can be reduced.
+- Dues might only apply to full members and not to investing members.
+- Investing members can receive a request for donation instead of an invoice.
+- Membership dues can be discounted. In this case the previous dues invoice is
+  cancelled and a new invoice is created with the discounted dues amount.
+- There are accounts for membership dues.
+
+The account hierarchy for membership dues is as follows.
+
+Root/Membership Dues/[YYYY]
+
+- Invoicing
+
+  - Invoiced
+  - Cancelled
+
+- Payment
+
+  - Paid
+  - Refunded
 
 
 
@@ -646,6 +709,3 @@ Quality Requiremements
 - Usability
 - Scalability, extensibility, maintainability
 - Performance in terms of possible large data volumes in the future
-
-
-
