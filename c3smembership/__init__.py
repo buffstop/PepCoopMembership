@@ -187,6 +187,26 @@ def main(global_config, **settings):
     config.add_route('dues15_notice', '/dues15_notice/{member_id}')
     config.add_route('dues15_listing', '/dues15_listing')
 
+    from c3smembership.models import DBSession, C3sMember, Dues15Invoice
+    from c3smembership.business.dues_invoice_archiving import DuesInvoiceArchiving
+    from c3smembership.views.membership_dues import (
+        make_invoice_pdf_pdflatex,
+        make_reversal_pdf_pdflatex,
+    )
+    import os
+    invoices_archive_path = os.path.abspath(
+        os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../invoices/'))
+    config.registry.dues_invoice_archiving = DuesInvoiceArchiving(
+        DBSession,
+        C3sMember,
+        Dues15Invoice,
+        make_invoice_pdf_pdflatex,
+        make_reversal_pdf_pdflatex,
+        invoices_archive_path)
+    config.add_route('batch_archive_pdf_invoices', '/batch_archive_pdf_invoices')
+
     # utilities & wizardry
     config.add_route('plz_dist', '/plz_dist')
     config.add_route('get_member', '/members/{memberid}')

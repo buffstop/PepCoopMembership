@@ -2,23 +2,35 @@ Next Release
 ============
 
 
-- Add separate template for membership certificate emails to legal entities.
+- Introduce architectural layers and start moving the implementation
+  accordingly:
 
-- Introduce business layer.
+  - The presentation layer contains all user interface specific implementation.
+    This includes all Pyramid specific logic. Presentation uses the business
+    layer for retrieving information and processing it.
+
+  - The business layer contains als business logic which is independent from the
+    the logic on how to store the data or how to present it. Business uses the
+    data layer for retrieving data and storing it.
+
+  - The data layer's purpose is to retrieve and store data and provide an
+    abstract interface which is independent of the underlying storage system.
+
+- Move schemas to separate presentation layer package. Schemas are used to
+  validate user input. They are therefore part of the presentation layer.
+
+- Introduce a reusable pagination mechanism to present paged data.
+
+- Add invoice archiving batch process.
+
+- Add separate template for membership certificate emails to legal entities.
 
 - Remove dashboard_only.
 
-- Introduce reusable pagination mechanism.
-
-- Reorganise internationalisation.
-
-- Move schemas to separate package.
+- Reorganise internationalisation. The internationalisation should be part of
+  the presentation layer and moved there in a future release.
 
 - Rename header template block from 'css'to 'head'.
-
-- Introduce presentation layer for the user interface.
-
-- Introduce data layer.
 
 
 

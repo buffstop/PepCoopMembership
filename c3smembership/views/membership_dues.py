@@ -21,6 +21,7 @@ from datetime import (
 )
 from decimal import Decimal as D
 import os
+import shutil
 import subprocess
 import tempfile
 from pyramid.httpexceptions import HTTPFound
@@ -444,9 +445,9 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
 
     # on invoice, print start quarter or "reduced". prepare string:
     if (
-            (invoice.is_cancelled is False) and
-            (invoice.is_reversal is False) and
-            (invoice.preceding_invoice_no is not None)):
+            not invoice.is_reversal and
+            invoice.is_altered and
+            invoice.preceding_invoice_no is not None):
         is_altered_str = u'angepasst' if (
             'de' in member.locale) else u'altered'
 

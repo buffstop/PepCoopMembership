@@ -13,6 +13,7 @@ cover/
 dist/
 docs/_build/
 env/
+invoices/
 utils/
 off/
 pyramid.pid
