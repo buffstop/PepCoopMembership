@@ -32,6 +32,8 @@ Next Release
 
 - Rename header template block from 'css'to 'head'.
 
+- Add navigation buttons to the dues invoices listing.
+
 
 
 1.15.1
