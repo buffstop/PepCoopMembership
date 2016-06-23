@@ -43,6 +43,9 @@ from .membership_dues_texts import (
     make_dues_reduction_email,
     make_dues_exemption_email,
 )
+from c3smembership.presentation.views.membership_listing import (
+    get_memberhip_listing_redirect
+)
 
 DEBUG = False
 LOGGING = True
@@ -280,11 +283,7 @@ def send_dues_invoice_email(request, m_id=None):
     if 'toolbox' in request.referrer:
         return HTTPFound(request.route_url('toolbox'))
     else:
-        return HTTPFound(request.route_url(  # pragma: no cover
-            'membership_listing_backend',
-            number=request.cookies['on_page'],
-            order=request.cookies['order'],
-            orderby=request.cookies['orderby']) + '#member_' + str(member.id))
+        return get_memberhip_listing_redirect(request, member.id)
 
 
 @view_config(

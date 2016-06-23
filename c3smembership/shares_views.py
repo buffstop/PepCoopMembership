@@ -10,6 +10,9 @@ from types import NoneType
 from c3smembership.models import Shares
 
 from c3smembership.presentation.i18n import _
+from c3smembership.presentation.views.membership_listing import (
+    get_memberhip_listing_redirect
+)
 
 LOGGING = True
 
@@ -69,8 +72,7 @@ def shares_edit(request):
 
     if isinstance(_s, NoneType):
         # entry was not found in database
-        return HTTPFound(request.route_url(
-            'membership_listing_backend', number=0, orderby='id', order='asc'))
+        return get_memberhip_listing_redirect(request)
     else:
         appstruct = {}
         appstruct = {
