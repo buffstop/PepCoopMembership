@@ -31,19 +31,14 @@ def batch_archive_pdf_invoices(request):
         try:
             count = int(request.POST['count'])
         except ValueError:
-            status = 'failed'
-            message = 'Invalid number of invoices to archive.'
+            status = 'failed-count'
     if status == 'succeeded':
         generated_files = dues_invoice_archiving.generate_missing_invoice_pdfs(
             count)
         if generated_files is not None:
             status = 'succeeded'
-            message = 'Successfully generated and archived up to {count} ' \
-                'invoices.'.format(count=str(count))
         else:
-            status = 'failed'
-            message = \
-                'An error occurred during generating and archiving invoices.'
+            status = 'failed-generation'
     return {
         'count': count,
         'status': status,
