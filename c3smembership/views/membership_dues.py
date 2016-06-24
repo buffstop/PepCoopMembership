@@ -164,6 +164,15 @@ def send_dues_invoice_email(request, m_id=None):
             'message_to_staff')
         return HTTPFound(request.route_url('toolbox'))
 
+    if 'normal' not in member.membership_type and \
+            'investing' not in member.membership_type:
+        request.session.flash(
+            'The membership type of member {0} is not specified! The '
+            'membership type must either be "normal" or "investing" in order '
+            'to be able to send an invoice email.'.format(member.id),
+            'message_to_staff')
+        return get_memberhip_listing_redirect(request, member.id)
+
     # check if invoice no already exists.
     #     if yes: just send that email again!
     #     also: offer staffers to cancel this invoice
@@ -226,7 +235,7 @@ def send_dues_invoice_email(request, m_id=None):
     # only normal (not investing) members *have to* pay the dues.
     # only the normal members get an invoice link and PDF produced for them.
     # only investing legalentities are asked for more support.
-    if 'investing' not in member.membership_type:
+    if 'normal' in member.membership_type:
         start_quarter = string_start_quarter(member)
         invoice_url = (
             request.route_url(
