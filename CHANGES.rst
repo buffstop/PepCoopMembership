@@ -21,8 +21,6 @@ Next Release
 
 - Introduce a reusable pagination mechanism to present paged data.
 
-- Add invoice archiving batch process.
-
 - Add separate template for membership certificate emails to legal entities.
 
 - Remove dashboard_only.
@@ -33,6 +31,14 @@ Next Release
 - Rename header template block from 'css'to 'head'.
 
 - Add navigation buttons to the dues invoices listing.
+
+- Membership dues
+
+  - Fix issue with invoice generation for members without proper membership type.
+
+  - Fix issue that invoices for dues 2015 were created for members approved in 2016.
+
+  - Add invoice archiving batch process.
 
 
 

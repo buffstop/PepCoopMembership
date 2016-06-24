@@ -172,6 +172,12 @@ def send_dues_invoice_email(request, m_id=None):
             'to be able to send an invoice email.'.format(member.id),
             'message_to_staff')
         return get_memberhip_listing_redirect(request, member.id)
+    if member.membership_date >= datetime(2016,1,1):
+        request.session.flash(
+            'Member {0} was not a member in 2015. Therefore, you cannot send '
+            'an invoice for 2015.'.format(member.id),
+            'message_to_staff')
+        return get_memberhip_listing_redirect(request, member.id)
 
     # check if invoice no already exists.
     #     if yes: just send that email again!
