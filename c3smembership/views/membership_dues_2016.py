@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This module holds code for Membership Dues (2015 edition).
+This module holds code for Membership Dues (2016 edition).
 
 * Send email to a member:
 
@@ -32,7 +32,7 @@ from pyramid.view import view_config
 from c3smembership.models import (
     C3sMember,
     DBSession,
-    Dues15Invoice,
+    Dues16Invoice,
 )
 
 from c3smembership.mail_utils import send_message
@@ -42,9 +42,6 @@ from .membership_dues_texts import (
     make_dues_invoice_legalentity_email,
     make_dues_reduction_email,
     make_dues_exemption_email,
-)
-from c3smembership.presentation.views.membership_listing import (
-    get_memberhip_listing_redirect
 )
 
 DEBUG = False
@@ -67,7 +64,7 @@ def make_random_string():
         ) for x in range(10))
 
 
-def calculate_partial_dues15(member):
+def calculate_partial_dues16(member):
     """
     helper function: calculate..
 
@@ -76,47 +73,50 @@ def calculate_partial_dues15(member):
 
     depending on members entry date
     """
-    if member.membership_date < datetime(2015, 4, 1):
-        # first quarter of 2015 or earlier
-        start = u'q1_2015'
+    if member.membership_date >= datetime(2017, 1, 1):
+        raise ValueError('Member is not applicable for dues 2016.')
+
+    if member.membership_date < datetime(2016, 4, 1):
+        # first quarter of 2016 or earlier
+        start = u'q1_2016'
         amount = D('50')
-    elif member.membership_date < datetime(2015, 7, 1):
-        # second quarter of 2015
-        start = u'q2_2015'
+    elif member.membership_date < datetime(2016, 7, 1):
+        # second quarter of 2016
+        start = u'q2_2016'
         amount = D('37.50')
-    elif member.membership_date < datetime(2015, 10, 1):
-        # third quarter of 2015
-        start = u'q3_2015'
+    elif member.membership_date < datetime(2016, 10, 1):
+        # third quarter of 2016
+        start = u'q3_2016'
         amount = D('25')
-    elif member.membership_date >= datetime(2015, 10, 1):
-        # third quarter of 2015
-        start = u'q4_2015'
+    elif member.membership_date >= datetime(2016, 10, 1):
+        # third quarter of 2016
+        start = u'q4_2016'
         amount = D('12.50')
     return (start, amount)
 
 
-def string_start_quarter(member):
+def string_start_quarter_dues16(member):
     """
     helper function: produce translated string for quarter of entry date
     depending on members locale
     """
     loc = member.locale
     result = u''
-    if 'q1_2015' in member.dues15_start:  # first quarter of 2015 or earlier
+    if 'q1_2016' in member.dues16_start:  # first quarter of 2016 or earlier
         result = u"ab Quartal 1" if 'de' in loc else "from 1st quarter"
-    elif 'q2_2015' in member.dues15_start:  # second quarter of 2015
+    elif 'q2_2016' in member.dues16_start:  # second quarter of 2016
         result = u"ab Quartal 2" if 'de' in loc else u"from 2nd quarter"
-    elif 'q3_2015' in member.dues15_start:  # third quarter of 2015
+    elif 'q3_2016' in member.dues16_start:  # third quarter of 2016
         result = u"ab Quartal 3" if 'de' in loc else u"from 3rd quarter"
-    elif 'q4_2015' in member.dues15_start:  # third quarter of 2015
+    elif 'q4_2016' in member.dues16_start:  # third quarter of 2016
         result = u"ab Quartal 4" if 'de' in loc else u"from 4th quarter"
     return result
 
 
 @view_config(
     permission='manage',
-    route_name='send_dues15_invoice_email')
-def send_dues15_invoice_email(request, m_id=None):
+    route_name='send_dues16_invoice_email')
+def send_dues16_invoice_email(request, m_id=None):
     """
     Send email to a member to prompt her to pay the membership dues.
     - For normal members, also send link to invoice.
@@ -164,75 +164,60 @@ def send_dues15_invoice_email(request, m_id=None):
             'message_to_staff')
         return HTTPFound(request.route_url('toolbox'))
 
-    if 'normal' not in member.membership_type and \
-            'investing' not in member.membership_type:
-        request.session.flash(
-            'The membership type of member {0} is not specified! The '
-            'membership type must either be "normal" or "investing" in order '
-            'to be able to send an invoice email.'.format(member.id),
-            'message_to_staff')
-        return get_memberhip_listing_redirect(request)
-    if member.membership_date >= datetime(2016,1,1):
-        request.session.flash(
-            'Member {0} was not a member in 2015. Therefore, you cannot send '
-            'an invoice for 2015.'.format(member.id),
-            'message_to_staff')
-        return get_memberhip_listing_redirect(request)
-
     # check if invoice no already exists.
     #     if yes: just send that email again!
     #     also: offer staffers to cancel this invoice
 
-    if member.dues15_invoice is True:
-        invoice = Dues15Invoice.get_by_invoice_no(member.dues15_invoice_no)
-        member.dues15_invoice_date = datetime.now()
+    if member.dues16_invoice is True:
+        invoice = Dues16Invoice.get_by_invoice_no(member.dues16_invoice_no)
+        member.dues16_invoice_date = datetime.now()
 
     else:  # if no invoice already exists:
         # make dues token and ...
         randomstring = make_random_string()
         # check if dues token is already used
-        while (Dues15Invoice.check_for_existing_dues15_token(randomstring)):
+        while (Dues16Invoice.check_for_existing_dues16_token(randomstring)):
             # create a new one, if the new one already exists in the database
             randomstring = make_random_string()  # pragma: no cover
 
         # prepare invoice number
         try:
             # either we already have an invoice number for that client...
-            invoice_no = member.dues15_invoice_no
+            invoice_no = member.dues16_invoice_no
             assert invoice_no is not None
         except AssertionError:
             # ... or we create a new one and save it
             # get max invoice no from db
-            max_invoice_no = Dues15Invoice.get_max_invoice_no()
+            max_invoice_no = Dues16Invoice.get_max_invoice_no()
             # use the next free number, save it to db
             new_invoice_no = int(max_invoice_no) + 1
             DBSession.flush()  # save dataset to DB
 
         # calculate dues amount (maybe partial, depending on quarter)
-        dues_start, dues_amount = calculate_partial_dues15(member)
+        dues_start, dues_amount = calculate_partial_dues16(member)
 
         # now we have enough info to update the member info
         # and persist invoice info for bookkeeping
         # store some info in DB/member table
-        member.dues15_invoice = True
-        member.dues15_invoice_no = new_invoice_no  # irrelevant for investing
-        member.dues15_invoice_date = datetime.now()
-        member.dues15_token = randomstring
-        member.dues15_start = dues_start
+        member.dues16_invoice = True
+        member.dues16_invoice_no = new_invoice_no  # irrelevant for investing
+        member.dues16_invoice_date = datetime.now()
+        member.dues16_token = randomstring
+        member.dues16_start = dues_start
 
         if 'normal' in member.membership_type:  # only for normal members
-            member.set_dues15_amount(dues_amount)
+            member.set_dues16_amount(dues_amount)
             # store some more info about invoice in invoice table
-            invoice = Dues15Invoice(
-                invoice_no=member.dues15_invoice_no,
+            invoice = Dues16Invoice(
+                invoice_no=member.dues16_invoice_no,
                 invoice_no_string=(
-                    u'C3S-dues2015-' + str(member.dues15_invoice_no).zfill(4)),
-                invoice_date=member.dues15_invoice_date,
-                invoice_amount=u'' + str(member.dues15_amount),
+                    u'C3S-dues2016-' + str(member.dues16_invoice_no).zfill(4)),
+                invoice_date=member.dues16_invoice_date,
+                invoice_amount=u'' + str(member.dues16_amount),
                 member_id=member.id,
                 membership_no=member.membership_number,
                 email=member.email,
-                token=member.dues15_token,
+                token=member.dues16_token,
             )
             DBSession.add(invoice)
         DBSession.flush()
@@ -241,14 +226,14 @@ def send_dues15_invoice_email(request, m_id=None):
     # only normal (not investing) members *have to* pay the dues.
     # only the normal members get an invoice link and PDF produced for them.
     # only investing legalentities are asked for more support.
-    if 'normal' in member.membership_type:
-        start_quarter = string_start_quarter(member)
+    if 'investing' not in member.membership_type:
+        start_quarter = string_start_quarter_dues16(member)
         invoice_url = (
             request.route_url(
-                'make_dues15_invoice_no_pdf',
+                'make_dues16_invoice_no_pdf',
                 email=member.email,
-                code=member.dues15_token,
-                i=str(member.dues15_invoice_no).zfill(4)
+                code=member.dues16_token,
+                i=str(member.dues16_invoice_no).zfill(4)
             )
         )
         email_subject, email_body = make_dues_invoice_email(
@@ -294,18 +279,22 @@ def send_dues15_invoice_email(request, m_id=None):
             request.route_url(
                 'detail',
                 memberid=member.id) +
-            '#dues15')
+            '#dues16')
     if 'toolbox' in request.referrer:
         return HTTPFound(request.route_url('toolbox'))
     else:
-        return get_memberhip_listing_redirect(request, member.id)
+        return HTTPFound(request.route_url(  # pragma: no cover
+            'membership_listing_backend',
+            number=request.cookies['on_page'],
+            order=request.cookies['order'],
+            orderby=request.cookies['orderby']) + '#member_' + str(member.id))
 
 
 @view_config(
     permission='manage',
-    route_name='send_dues15_invoice_batch'
+    route_name='send_dues16_invoice_batch'
 )
-def send_dues15_invoice_batch(request):
+def send_dues16_invoice_batch(request):
     """
     Send dues invoice to n members at the same time (batch processing).
 
@@ -321,7 +310,7 @@ def send_dues15_invoice_batch(request):
         except KeyError:  # pragma: no cover
             number = 5
 
-    invoicees = C3sMember.get_dues15_invoicees(number)
+    invoicees = C3sMember.get_dues16_invoicees(number)
 
     if len(invoicees) == 0:
         request.session.flash('no invoicees left. all done!',
@@ -333,7 +322,7 @@ def send_dues15_invoice_batch(request):
     request.referrer = 'toolbox'
 
     for member in invoicees:
-        send_dues15_invoice_email(request=request, m_id=member.id)
+        send_dues16_invoice_email(request=request, m_id=member.id)
         emails_sent += 1
         ids_sent.append(member.id)
 
@@ -345,8 +334,8 @@ def send_dues15_invoice_batch(request):
     return HTTPFound(request.route_url('toolbox'))
 
 
-@view_config(route_name='make_dues15_invoice_no_pdf')
-def make_dues15_invoice_no_pdf(request):
+@view_config(route_name='make_dues16_invoice_no_pdf')
+def make_dues16_invoice_no_pdf(request):
     """
     Create invoice PDFs on-the-fly.
 
@@ -356,7 +345,7 @@ def make_dues15_invoice_no_pdf(request):
     - a PDF as receipt
 
     === ===========================================================
-    URL http://app:port/dues_invoice_no/EMAIL/CAQJGCGUFW/C3S-dues15-0001.pdf
+    URL http://app:port/dues_invoice_no/EMAIL/CAQJGCGUFW/C3S-dues16-0001.pdf
     === ===========================================================
 
     """
@@ -365,9 +354,9 @@ def make_dues15_invoice_no_pdf(request):
     invoice_number = request.matchdict['i']
 
     try:
-        member = C3sMember.get_by_dues15_token(token)
+        member = C3sMember.get_by_dues16_token(token)
         assert member is not None
-        assert member.dues15_token == token
+        assert member.dues16_token == token
         assert member.email == email_address
     except AssertionError:
         request.session.flash(
@@ -377,7 +366,7 @@ def make_dues15_invoice_no_pdf(request):
         return HTTPFound(request.route_url('error_page'))
 
     try:
-        invoice = Dues15Invoice.get_by_invoice_no(
+        invoice = Dues16Invoice.get_by_invoice_no(
             invoice_number.lstrip('0'))
         assert invoice is not None
     except AssertionError:
@@ -439,8 +428,8 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
     # latex templates
     latex_templates = {
         # 'generic': pdflatex_dir + '/' + 'membership_dues_receipt.tex',
-        'generic': pdflatex_dir + '/' + 'dues15_invoice_de_v0.2.tex',
-        'generic_en': pdflatex_dir + '/' + 'dues15_invoice_en_v0.2.tex',
+        'generic': pdflatex_dir + '/' + 'dues16_invoice_de.tex',
+        'generic_en': pdflatex_dir + '/' + 'dues16_invoice_en.tex',
     }
 
     # choose background and template
@@ -472,8 +461,8 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
     else:  # pragma: no cover
         # this branch is deprecated, because we always supply an invoice number
         # use invoice no from member record
-        invoice_no = str(member.dues15_invoice_no).zfill(4)
-        invoice_date = member.dues15_invoice_date
+        invoice_no = str(member.dues16_invoice_no).zfill(4)
+        invoice_date = member.dues16_invoice_date
 
     # set variables for tex command
     tex_vars = {
@@ -486,8 +475,9 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
         'personalMShipNo': member.membership_number,
         'invoiceNo': str(invoice_no).zfill(4),  # leading zeroes!
         'invoiceDate': invoice_date,
+        'account': -member.dues15_balance -member.dues16_balance,
         'duesStart':  is_altered_str if (
-            invoice.is_altered) else string_start_quarter(member),
+            invoice.is_altered) else string_start_quarter_dues16(member),
         'duesAmount': invoice.invoice_amount,
         'lang': 'de',
         'pdfBackground': bg_pdf,
@@ -527,31 +517,31 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
 
 
 @view_config(
-    route_name='dues15_listing',
+    route_name='dues16_listing',
     permission='manage',
-    renderer='c3smembership:templates/dues15_list.pt'
+    renderer='c3smembership:templates/dues16_list.pt'
 )
-def dues15_listing(request):
+def dues16_listing(request):
     """
-    a listing of all invoices for the 2015 dues run.
+    a listing of all invoices for the 2016 dues run.
     shall show both active/valid and cancelled/invalid invoices.
     """
     # get them all from the DB
-    dues15_invoices = Dues15Invoice.get_all()
+    dues16_invoices = Dues16Invoice.get_all()
 
     return {
-        'count': len(dues15_invoices),
+        'count': len(dues16_invoices),
         '_today': date.today(),
-        'invoices': dues15_invoices,
+        'invoices': dues16_invoices,
     }
 
 
 @view_config(
-    route_name='dues15_reduction',
+    route_name='dues16_reduction',
     permission='manage',
-    renderer='c3smembership:templates/dues15_list.pt'
+    renderer='c3smembership:templates/dues16_list.pt'
 )
-def dues15_reduction(request):
+def dues16_reduction(request):
     """
     reduce a members dues upon valid request to do so.
 
@@ -570,11 +560,11 @@ def dues15_reduction(request):
     except (KeyError, AssertionError):  # pragma: no cover
         request.session.flash(
             u"No member OR not accepted OR not normal member",
-            'dues15_message_to_staff'  # message queue for staff
+            'dues16_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
 
-            request.route_url('detail', memberid=member.id) + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues16')
 
     # sanity check: the given amount is a positive decimal
     try:
@@ -587,22 +577,22 @@ def dues15_reduction(request):
             (u"Invalid amount to reduce to: '{}' "
              u"Use the dot ('.') as decimal mark, e.g. '23.42'".format(
                  request.POST['amount'])),
-            'dues15_message_to_staff'  # message queue for user
+            'dues16_message_to_staff'  # message queue for user
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id) + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues16')
 
     if DEBUG:
-        print("DEBUG: member.dues15_amount: {}".format(
-            member.dues15_amount))
-        print("DEBUG: type(member.dues15_amount): {}".format(
-            type(member.dues15_amount)))
-        print("DEBUG: member.dues15_reduced: {}".format(
-            member.dues15_reduced))
-        print("DEBUG: member.dues15_amount_reduced: {}".format(
-            member.dues15_amount_reduced))
-        print("DEBUG: type(member.dues15_amount_reduced): {}".format(
-            type(member.dues15_amount_reduced)))
+        print("DEBUG: member.dues16_amount: {}".format(
+            member.dues16_amount))
+        print("DEBUG: type(member.dues16_amount): {}".format(
+            type(member.dues16_amount)))
+        print("DEBUG: member.dues16_reduced: {}".format(
+            member.dues16_reduced))
+        print("DEBUG: member.dues16_amount_reduced: {}".format(
+            member.dues16_amount_reduced))
+        print("DEBUG: type(member.dues16_amount_reduced): {}".format(
+            type(member.dues16_amount_reduced)))
 
     # The hidden input 'confirmed' must have the value 'yes' which is set by
     # the confirmation dialog.
@@ -610,53 +600,53 @@ def dues15_reduction(request):
     if reduction_confirmed != 'yes':
         request.session.flash(
             u'Die Reduktion wurde nicht bestätigt.',
-            'dues15_message_to_staff'  # message queue for staff
+            'dues16_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id) + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues16')
 
     # check the reduction amount: same as default calculated amount?
-    if ((member.dues15_reduced is False) and (
-            member.dues15_amount == reduced_amount)):
+    if ((member.dues16_reduced is False) and (
+            member.dues16_amount == reduced_amount)):
         request.session.flash(
             u"Dieser Beitrag ist der default-Beitrag!",
-            'dues15_message_to_staff'  # message queue for staff
+            'dues16_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id) + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues16')
 
-    if reduced_amount == member.dues15_amount_reduced:
+    if reduced_amount == member.dues16_amount_reduced:
         request.session.flash(
             u"Auf diesen Beitrag wurde schon reduziert!",
-            'dues15_message_to_staff'  # message queue for staff
+            'dues16_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id) + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues16')
 
-    if member.dues15_reduced \
-            and reduced_amount > member.dues15_amount_reduced \
-            or reduced_amount > member.dues15_amount:
+    if member.dues16_reduced \
+            and reduced_amount > member.dues16_amount_reduced \
+            or reduced_amount > member.dues16_amount:
         request.session.flash(
             u'Beitrag darf nicht über den berechneten oder bereits'
             u'reduzierten Wert gesetzt werden.',
-            'dues15_message_to_staff'  # message queue for staff
+            'dues16_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id) + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues16')
 
     # prepare: get highest invoice no from db
-    max_invoice_no = Dues15Invoice.get_max_invoice_no()
+    max_invoice_no = Dues16Invoice.get_max_invoice_no()
 
     # things to be done:
     # * change dues amount for that member
     # * cancel old invoice by issuing a reversal invoice
     # * issue a new invoice with the new amount
 
-    member.set_dues15_reduced_amount(reduced_amount)
+    member.set_dues16_reduced_amount(reduced_amount)
     request.session.flash('reduction to {}'.format(reduced_amount),
-                          'dues15_message_to_staff')
+                          'dues16_message_to_staff')
 
-    old_invoice = Dues15Invoice.get_by_invoice_no(member.dues15_invoice_no)
+    old_invoice = Dues16Invoice.get_by_invoice_no(member.dues16_invoice_no)
     old_invoice.is_cancelled = True
 
     reversal_invoice_amount = -D(old_invoice.invoice_amount)
@@ -664,16 +654,16 @@ def dues15_reduction(request):
     # prepare reversal invoice number
     new_invoice_no = max_invoice_no + 1
     # create reversal invoice
-    reversal_invoice = Dues15Invoice(
+    reversal_invoice = Dues16Invoice(
         invoice_no=new_invoice_no,
         invoice_no_string=(
-            u'C3S-dues2015-' + str(new_invoice_no).zfill(4)) + '-S',
+            u'C3S-dues2016-' + str(new_invoice_no).zfill(4)) + '-S',
         invoice_date=datetime.today(),
         invoice_amount=reversal_invoice_amount.to_eng_string(),
         member_id=member.id,
         membership_no=member.membership_number,
         email=member.email,
-        token=member.dues15_token,
+        token=member.dues16_token,
     )
     reversal_invoice.preceding_invoice_no = old_invoice.invoice_no
     reversal_invoice.is_reversal = True
@@ -694,16 +684,16 @@ def dues15_reduction(request):
 
     if not is_exemption:
         # create new invoice
-        new_invoice = Dues15Invoice(
+        new_invoice = Dues16Invoice(
             invoice_no=new_invoice_no + 1,
             invoice_no_string=(
-                u'C3S-dues2015-' + str(new_invoice_no + 1).zfill(4)),
+                u'C3S-dues2016-' + str(new_invoice_no + 1).zfill(4)),
             invoice_date=datetime.today(),
             invoice_amount=u'' + str(reduced_amount),
             member_id=member.id,
             membership_no=member.membership_number,
             email=member.email,
-            token=member.dues15_token,
+            token=member.dues16_token,
         )
         new_invoice.is_altered = True
         new_invoice.preceding_invoice_no = reversal_invoice.invoice_no
@@ -711,15 +701,15 @@ def dues15_reduction(request):
         DBSession.add(new_invoice)
 
         # in the members record, store the current invoice no
-        member.dues15_invoice_no = new_invoice_no + 1
+        member.dues16_invoice_no = new_invoice_no + 1
 
         DBSession.flush()  # persist newer invoices
 
     reversal_url = (
         request.route_url(
-            'make_dues15_reversal_invoice_pdf',
+            'make_dues16_reversal_invoice_pdf',
             email=member.email,
-            code=member.dues15_token,
+            code=member.dues16_token,
             no=str(reversal_invoice.invoice_no).zfill(4)
         )
     )
@@ -730,9 +720,9 @@ def dues15_reduction(request):
     else:
         invoice_url = (
             request.route_url(
-                'make_dues15_invoice_no_pdf',
+                'make_dues16_invoice_no_pdf',
                 email=member.email,
-                code=member.dues15_token,
+                code=member.dues16_token,
                 i=str(new_invoice_no + 1).zfill(4)
             )
         )
@@ -753,20 +743,20 @@ def dues15_reduction(request):
     )
     if is_exemption:
         request.session.flash('exemption email was sent to user!',
-                              'dues15_message_to_staff')
+                              'dues16_message_to_staff')
     else:
         request.session.flash('update email was sent to user!',
-                              'dues15_message_to_staff')
+                              'dues16_message_to_staff')
     send_message(request, message)
     return HTTPFound(
         request.route_url(
             'detail',
             memberid=member_id) +
-        '#dues15')
+        '#dues16')
 
 
-@view_config(route_name='make_dues15_reversal_invoice_pdf')
-def make_dues15_reversal_invoice_pdf(request):
+@view_config(route_name='make_dues16_reversal_invoice_pdf')
+def make_dues16_reversal_invoice_pdf(request):
     """
     This view checks supplied information (in URL) against info in database
     -- especially the invoice number --
@@ -779,9 +769,9 @@ def make_dues15_reversal_invoice_pdf(request):
     invoice_number = request.matchdict['no']
 
     try:
-        member = C3sMember.get_by_dues15_token(token)
+        member = C3sMember.get_by_dues16_token(token)
         assert member is not None
-        assert member.dues15_token == token
+        assert member.dues16_token == token
         assert member.email == email_address
 
     except AssertionError:
@@ -792,7 +782,7 @@ def make_dues15_reversal_invoice_pdf(request):
         return HTTPFound(request.route_url('error_page'))
 
     try:
-        invoice = Dues15Invoice.get_by_invoice_no(invoice_number)
+        invoice = Dues16Invoice.get_by_invoice_no(invoice_number)
         assert invoice is not None
     except AssertionError:
         request.session.flash(
@@ -847,8 +837,8 @@ def make_reversal_pdf_pdflatex(member, invoice=None):
 
     # latex templates
     latex_templates = {
-        'generic': pdflatex_dir + '/' + 'dues15_storno_de_v0.1.tex',
-        'generic_en': pdflatex_dir + '/' + 'dues15_storno_en_v0.1.tex',
+        'generic': pdflatex_dir + '/' + 'dues16_storno_de.tex',
+        'generic_en': pdflatex_dir + '/' + 'dues16_storno_en.tex',
     }
 
     # choose background and template
@@ -876,10 +866,11 @@ def make_reversal_pdf_pdflatex(member, invoice=None):
         'personalPostCode': member.postcode,
         'personalCity': member.city,
         'personalMShipNo': member.membership_number,
+        'account': member.dues15_balance + member.dues16_balance,
         'invoiceNo': invoice_no,
         'invoiceDate': invoice_date,
         'duesAmount': invoice.invoice_amount,
-        'origInvoiceRef': ('C3S-dues2015-' +
+        'origInvoiceRef': ('C3S-dues2016-' +
                            str(invoice.preceding_invoice_no).zfill(4)),
         'lang': 'de',
         'pdfBackground': bg_pdf,
@@ -916,9 +907,9 @@ def make_reversal_pdf_pdflatex(member, invoice=None):
 
 
 @view_config(
-    route_name='dues15_notice',
+    route_name='dues16_notice',
     permission='manage')
-def dues15_notice(request):
+def dues16_notice(request):
     """
     notice of arrival for transferral of dues
     """
@@ -931,10 +922,10 @@ def dues15_notice(request):
     except (KeyError, AssertionError):  # pragma: no cover
         request.session.flash(
             u"No member OR not accepted OR not normal member",
-            'dues15notice_message_to_staff'  # message queue for staff
+            'dues16notice_message_to_staff'  # message queue for staff
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id) + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues16')
 
     # sanity check: the given amount is a positive decimal
     try:
@@ -947,10 +938,10 @@ def dues15_notice(request):
             (u"Invalid amount to pay: '{}' "
              u"Use the dot ('.') as decimal mark, e.g. '23.42'".format(
                  request.POST['amount'])),
-            'dues15notice_message_to_staff'  # message queue for user
+            'dues16notice_message_to_staff'  # message queue for user
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id) + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues16')
 
     # sanity check: the given date is a valid date
     try:
@@ -962,15 +953,15 @@ def dues15_notice(request):
     except (KeyError, AssertionError):  # pragma: no cover
         request.session.flash(
             (u"Invalid date for payment: '{}' "
-             u"Use YYYY-MM-DD, e.g. '2015-09-11'".format(
+             u"Use YYYY-MM-DD, e.g. '2016-09-11'".format(
                  request.POST['payment_date'])),
-            'dues15notice_message_to_staff'  # message queue for user
+            'dues16notice_message_to_staff'  # message queue for user
         )
         return HTTPFound(
-            request.route_url('detail', memberid=member.id) + '#dues15')
+            request.route_url('detail', memberid=member.id) + '#dues16')
 
     # persist info about payment
-    member.set_dues15_payment(paid_amount, paid_date)
+    member.set_dues16_payment(paid_amount, paid_date)
 
     return HTTPFound(
-        request.route_url('detail', memberid=member.id) + '#dues15')
+        request.route_url('detail', memberid=member.id) + '#dues16')

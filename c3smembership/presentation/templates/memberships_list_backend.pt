@@ -98,7 +98,7 @@
                 invitation
             </th>
             <th>
-                dues<br />
+                dues16<br />
                 invoice
             </th>
             <th>
@@ -164,13 +164,13 @@
                     class="btn btn-success"></a>
             </td>
             <td>
-                <a tal:condition="member.dues15_invoice is False"
-                    href="${request.route_url('send_dues_invoice_email', member_id=member.id)}"
-                    title="dues invoice not sent yet. Click to send!"
+                <a tal:condition="member.dues16_invoice is False"
+                    href="${request.route_url('send_dues16_invoice_email', member_id=member.id)}"
+                    title="Dues invoice not sent yet. Click to send!"
                     class="btn btn-danger"></a>
-                <a tal:condition="member.dues15_invoice is True"
-                    href="${request.route_url('send_dues_invoice_email', member_id=member.id)}"
-                    title="gesendet ${member.dues15_invoice_date.strftime('am %d.%m.%Y um %H:%M')}"
+                <a tal:condition="member.dues16_invoice is True"
+                    href="${request.route_url('send_dues16_invoice_email', member_id=member.id)}"
+                    title="Invoice sent at ${member.dues16_invoice_date.strftime('%d.%m.%Y %H:%M')}"
                     class="btn btn-success"></a>
             </td>
             <td>

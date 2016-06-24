@@ -171,21 +171,37 @@ def main(global_config, **settings):
                      '/aml-{date}.pdf')
     config.add_route('membership_listing_aufstockers',
                      '/aml_aufstockers')
-    # membership dues
-    config.add_route('send_dues_invoice_email', '/dues_invoice/{member_id}')
-    config.add_route('send_dues_invoice_batch', '/dues_invoice_batch')
-    config.add_route('send_dues_receipt_mail',
-                     '/dues_receipt_mail/{member_id}')
+
+
+    # membership dues 2015
+    config.add_route('send_dues15_invoice_email', '/dues15_invoice/{member_id}')
+    config.add_route('send_dues15_invoice_batch', '/dues15_invoice_batch')
+    # config.add_route('send_dues_receipt_mail',
+    #                  '/dues_receipt_mail/{member_id}')
     # config.add_route('make_dues_invoice_pdf',  # retired! use route below!
     #                 '/dues_invoice/{email}/{code}/invoice.pdf')
-    config.add_route('make_dues_invoice_no_pdf',
-                     '/dues_invoice_no/{email}/{code}/C3S-dues15-{i}.pdf')
+    config.add_route('make_dues15_invoice_no_pdf',
+                     '/dues15_invoice_no/{email}/{code}/C3S-dues15-{i}.pdf')
     config.add_route('dues15_reduction',
                      '/dues15_reduction/{member_id}')
-    config.add_route('make_reversal_invoice_pdf',
-                     '/dues_reversal/{email}/{code}/C3S-dues15-{no}-S.pdf')
+    config.add_route('make_dues15_reversal_invoice_pdf',
+                     '/dues15_reversal/{email}/{code}/C3S-dues15-{no}-S.pdf')
     config.add_route('dues15_notice', '/dues15_notice/{member_id}')
     config.add_route('dues15_listing', '/dues15_listing')
+
+
+    # membership dues 2016
+    config.add_route('send_dues16_invoice_email', '/dues16_invoice/{member_id}')
+    config.add_route('send_dues16_invoice_batch', '/dues16_invoice_batch')
+    config.add_route('make_dues16_invoice_no_pdf',
+                     '/dues16_invoice_no/{email}/{code}/C3S-dues16-{i}.pdf')
+    config.add_route('dues16_reduction',
+                     '/dues16_reduction/{member_id}')
+    config.add_route('make_dues16_reversal_invoice_pdf',
+                     '/dues16_reversal/{email}/{code}/C3S-dues16-{no}-S.pdf')
+    config.add_route('dues16_notice', '/dues16_notice/{member_id}')
+    config.add_route('dues16_listing', '/dues16_listing')
+
 
     from c3smembership.models import DBSession, C3sMember, Dues15Invoice
     from c3smembership.business.dues_invoice_archiving import DuesInvoiceArchiving
