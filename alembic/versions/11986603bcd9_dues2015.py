@@ -10,15 +10,44 @@ Create Date: 2015-09-24 19:38:58.037063
 revision = '11986603bcd9'
 down_revision = '3ca29da20ee4'
 
+from decimal import Decimal
+
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy import update
 from sqlalchemy.orm import Session
+import sqlalchemy.types as types
 
-from c3smembership.models import DatabaseDecimal
 from c3smembership.models import C3sMember
 
-from decimal import Decimal
+
+
+class SqliteDecimal(types.TypeDecorator):
+    """
+    Type decorator for persisting Decimal (currency values)
+
+    TODO: Use standard SQLAlchemy Decimal
+    when a database is used which supports it.
+    """
+    impl = types.String
+
+    def load_dialect_impl(self, dialect):
+        return dialect.type_descriptor(types.VARCHAR(100))
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            return str(value)
+        else:
+            return None
+
+    def process_result_value(self, value, dialect):
+        if value is not None and value != '':
+            return Decimal(value)
+        else:
+            return None
+
+
+DatabaseDecimal = SqliteDecimal
 
 
 def upgrade():
