@@ -20,5 +20,7 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_column('members', 'membership_loss_type')
-    op.drop_column('members', 'membership_loss_date')
+    with op.batch_alter_table('members') as batch_op:
+        batch_op.drop_column('membership_loss_type')
+        batch_op.drop_column('membership_loss_date')
+

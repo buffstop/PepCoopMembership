@@ -105,17 +105,19 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_column(u'members', 'dues15_token')
-    op.drop_column(u'members', 'dues15_start')
-    op.drop_column(u'members', 'dues15_reduced')
-    op.drop_column(u'members', 'dues15_paid_date')
-    op.drop_column(u'members', 'dues15_paid')
-    op.drop_column(u'members', 'dues15_invoice_no')
-    op.drop_column(u'members', 'dues15_invoice_date')
-    op.drop_column(u'members', 'dues15_invoice')
-    op.drop_column(u'members', 'dues15_balanced')
-    op.drop_column(u'members', 'dues15_balance')
-    op.drop_column(u'members', 'dues15_amount_reduced')
-    op.drop_column(u'members', 'dues15_amount_paid')
-    op.drop_column(u'members', 'dues15_amount')
+    with op.batch_alter_table('members') as batch_op:
+        batch_op.drop_column('dues15_token')
+        batch_op.drop_column('dues15_start')
+        batch_op.drop_column('dues15_reduced')
+        batch_op.drop_column('dues15_paid_date')
+        batch_op.drop_column('dues15_paid')
+        batch_op.drop_column('dues15_invoice_no')
+        batch_op.drop_column('dues15_invoice_date')
+        batch_op.drop_column('dues15_invoice')
+        batch_op.drop_column('dues15_balanced')
+        batch_op.drop_column('dues15_balance')
+        batch_op.drop_column('dues15_amount_reduced')
+        batch_op.drop_column('dues15_amount_paid')
+        batch_op.drop_column('dues15_amount')
+
     op.drop_table('dues15invoices')
