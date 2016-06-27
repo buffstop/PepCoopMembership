@@ -1,13 +1,13 @@
 Hallo {salutation},
 
-am 16.07.2015 hat die außerordentliche Mitgliederversammlung der C3S SCE
-eine vorläufige Beitragsordnung erlassen, weil uns sonst die finanzielle
-Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
+am 17.04.2016 hat die 3. ordentliche Mitgliederversammlung der C3S SCE
+erneut eine vorläufige Beitragsordnung erlassen, weil uns sonst die 
+finanzielle Basis fehlt, um unser gemeinsames Vorhaben fortsetzen zu können:
 
   https://archive.c3s.cc/aktuell/legal/C3S_SCE_membership_dues_de.pdf
 
-Der Mitgliedsbeitrag für ordentliche Mitglieder für 2015 beträgt demnach
-50 Euro für das ganze Jahr 2015.
+Der Mitgliedsbeitrag für ordentliche Mitglieder für 2016 beträgt demnach
+50 Euro für das ganze Jahr 2016.
 
 Dein Mitgliedsbeitrag {invoice_quarter} beträgt also {dues_amount} Euro.
 
