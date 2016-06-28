@@ -10,6 +10,19 @@
       <small>Stand ${_today}</small></h1>
   </tal:block>
   <tal:block metal:fill-slot="middle">
+    <p>
+      <a href="${request.route_url('dashboard')}"
+          class="btn btn-primary">
+        Dashboard
+      </a>
+      <a href="${request.route_url('membership_listing_backend')}"
+          class="btn btn-primary">
+        Memberships
+      </a>
+      <a href="${request.route_url('toolbox')}" class="btn btn-primary">
+        Toolbox
+      </a>
+    </p>
     <!--!
     <p>
       You can archive membership dues 2016 invoices. They will be
