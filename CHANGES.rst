@@ -6,6 +6,9 @@ Next Release
   whole dues and invoicing logic needs a complete redesign to make it reusable
   for any year, any type of invoice and any type of accounting.
 
+- Disable buttons in membership list for sending general assembly and barcamp
+  invitations.
+
 
 
 1.16
