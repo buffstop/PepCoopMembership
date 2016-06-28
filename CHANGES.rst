@@ -1,5 +1,5 @@
-Next Release
-============
+1.16
+====
 
 
 - Introduce architectural layers and start moving the implementation
