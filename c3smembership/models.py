@@ -914,7 +914,9 @@ class C3sMember(Base):
         return DBSession.query(cls).filter(
             and_(
                 cls.membership_accepted == 1,
-                cls.dues16_invoice == 0
+                cls.dues16_invoice == 0,
+                cls.membership_date < datetime(2017,1,1),
+                cls.membership_type.in_(['normal', 'investing'])
             )).slice(0, num).all()
 
     @classmethod

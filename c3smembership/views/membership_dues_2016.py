@@ -43,6 +43,9 @@ from .membership_dues_texts import (
     make_dues_reduction_email,
     make_dues_exemption_email,
 )
+from c3smembership.presentation.views.membership_listing import (
+    get_memberhip_listing_redirect
+)
 
 DEBUG = False
 LOGGING = True
@@ -164,6 +167,21 @@ def send_dues16_invoice_email(request, m_id=None):
             'message_to_staff')
         return HTTPFound(request.route_url('toolbox'))
 
+    if 'normal' not in member.membership_type and \
+            'investing' not in member.membership_type:
+        request.session.flash(
+            'The membership type of member {0} is not specified! The '
+            'membership type must either be "normal" or "investing" in order '
+            'to be able to send an invoice email.'.format(member.id),
+            'message_to_staff')
+        return get_memberhip_listing_redirect(request)
+    if member.membership_date >= datetime(2017,1,1):
+        request.session.flash(
+            'Member {0} was not a member in 2016. Therefore, you cannot send '
+            'an invoice for 2016.'.format(member.id),
+            'message_to_staff')
+        return get_memberhip_listing_redirect(request)
+
     # check if invoice no already exists.
     #     if yes: just send that email again!
     #     also: offer staffers to cancel this invoice
@@ -283,11 +301,7 @@ def send_dues16_invoice_email(request, m_id=None):
     if 'toolbox' in request.referrer:
         return HTTPFound(request.route_url('toolbox'))
     else:
-        return HTTPFound(request.route_url(  # pragma: no cover
-            'membership_listing_backend',
-            number=request.cookies['on_page'],
-            order=request.cookies['order'],
-            orderby=request.cookies['orderby']) + '#member_' + str(member.id))
+        return get_memberhip_listing_redirect(request, member.id)
 
 
 @view_config(
