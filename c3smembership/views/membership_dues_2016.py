@@ -37,10 +37,10 @@ from c3smembership.models import (
 
 from c3smembership.mail_utils import send_message
 from .membership_dues_texts import (
-    make_dues_invoice_email,
+    make_dues16_invoice_email,
     make_dues_invoice_investing_email,
     make_dues_invoice_legalentity_email,
-    make_dues_reduction_email,
+    make_dues16_reduction_email,
     make_dues_exemption_email,
 )
 from c3smembership.presentation.views.membership_listing import (
@@ -254,7 +254,7 @@ def send_dues16_invoice_email(request, m_id=None):
                 i=str(member.dues16_invoice_no).zfill(4)
             )
         )
-        email_subject, email_body = make_dues_invoice_email(
+        email_subject, email_body = make_dues16_invoice_email(
             member,
             invoice,
             invoice_url,
@@ -740,7 +740,7 @@ def dues16_reduction(request):
                 i=str(new_invoice_no + 1).zfill(4)
             )
         )
-        email_subject, email_body = make_dues_reduction_email(
+        email_subject, email_body = make_dues16_reduction_email(
             member,
             new_invoice,
             invoice_url,
