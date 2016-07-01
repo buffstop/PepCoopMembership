@@ -418,6 +418,41 @@ def make_dues16_invoice_no_pdf(request):
     return response
 
 
+def get_dues16_invoice_archive_path():
+    invoice_archive_path = os.path.abspath(
+        os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../../invoices/'))
+    if not os.path.isdir(invoice_archive_path):
+        os.makedirs(invoice_archive_path)
+    return invoice_archive_path
+
+
+def get_dues16_archive_invoice_filename(invoice):
+    return os.path.join(
+        get_dues16_invoice_archive_path(),
+        '{0}.pdf'.format(invoice.invoice_no_string))
+
+
+def archive_dues16_invoice(pdf_file, invoice):
+    invoice_archive_filename = get_dues16_archive_invoice_filename(
+        invoice)
+    if not os.path.isfile(invoice_archive_filename):
+        shutil.copyfile(
+            pdf_file.name,
+            invoice_archive_filename
+        )
+
+
+def get_dues16_archive_invoice(invoice):
+    invoice_archive_filename = get_dues16_archive_invoice_filename(
+        invoice)
+    if os.path.isfile(invoice_archive_filename):
+        return open(invoice_archive_filename, 'rb')
+    else:
+        return None
+
+
 def make_invoice_pdf_pdflatex(member, invoice=None):
     """
     This function uses pdflatex to create a PDF
@@ -426,6 +461,10 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
     default output is the current invoice.
     if i_no is suplied, the relevant invoice number is produced
     """
+
+    dues16_archive_invoice = get_dues16_archive_invoice(invoice)
+    if dues16_archive_invoice is not None:
+        return dues16_archive_invoice
 
     # directory of pdf and tex files
     pdflatex_dir = os.path.abspath(
@@ -526,6 +565,8 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
     aux = os.path.join(path, filename + '.aux')
     if os.path.isfile(aux):
         os.unlink(aux)
+
+    archive_dues16_invoice(receipt_pdf, invoice)
 
     return receipt_pdf
 
@@ -778,6 +819,7 @@ def make_dues16_reversal_invoice_pdf(request):
     - an error message or
     - a PDF
     """
+
     email_address = request.matchdict['email']
     token = request.matchdict['code']
     invoice_number = request.matchdict['no']
@@ -838,6 +880,10 @@ def make_reversal_pdf_pdflatex(member, invoice=None):
     This function uses pdflatex to create a PDF
     as reversal invoice: cancel and balance out a former invoice.
     """
+
+    dues16_archive_invoice = get_dues16_archive_invoice(invoice)
+    if dues16_archive_invoice is not None:
+        return dues16_archive_invoice
 
     pdflatex_dir = os.path.abspath(
         os.path.join(
@@ -916,6 +962,8 @@ def make_reversal_pdf_pdflatex(member, invoice=None):
     aux = os.path.join(path, filename + '.aux')
     if os.path.isfile(aux):
         os.unlink(aux)
+
+    archive_dues16_invoice(receipt_pdf, invoice)
 
     return receipt_pdf
 
