@@ -11,6 +11,14 @@ Next Release
 
 
 
+1.16.1
+======
+
+
+- Use TeX escaping for dues invoice generation.
+
+
+
 1.16
 ====
 

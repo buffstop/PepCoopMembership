@@ -22,9 +22,11 @@ class TexTools(object):
         '~': r'\textasciitilde{}',
         '^': r'\^{}',
         '\\': r'\textbackslash{}',
-        '<': r'\textless',
-        '>': r'\textgreater',
+        '<': r'\textless{}',
+        '>': r'\textgreater{}',
         u'℅': r'c/o',
+        u'°': r'\degree{}',
+        u'ß': r'\ss{}',
     }
     regex = re.compile(u'|'.join(re.escape(unicode(key))
                        for key in sorted(
@@ -38,4 +40,7 @@ class TexTools(object):
         """
         # TODO: General rule to handle latex incompatible unicode characters
         # needed.
-        return cls.regex.sub(lambda match: cls.conv[match.group()], text)
+        if text is None:
+            return None
+        else:
+            return cls.regex.sub(lambda match: cls.conv[match.group()], text)
