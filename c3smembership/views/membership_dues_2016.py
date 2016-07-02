@@ -46,6 +46,7 @@ from .membership_dues_texts import (
 from c3smembership.presentation.views.membership_listing import (
     get_memberhip_listing_redirect
 )
+from c3smembership.tex_tools import TexTools
 
 DEBUG = False
 LOGGING = True
@@ -525,13 +526,13 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
         'personalAddressTwo': member.address2,
         'personalPostCode': member.postcode,
         'personalCity': member.city,
-        'personalMShipNo': member.membership_number,
+        'personalMShipNo': unicode(member.membership_number),
         'invoiceNo': str(invoice_no).zfill(4),  # leading zeroes!
         'invoiceDate': invoice_date,
-        'account': -member.dues15_balance -member.dues16_balance,
+        'account': unicode(-member.dues15_balance -member.dues16_balance),
         'duesStart':  is_altered_str if (
             invoice.is_altered) else string_start_quarter_dues16(member),
-        'duesAmount': invoice.invoice_amount,
+        'duesAmount': unicode(invoice.invoice_amount),
         'lang': 'de',
         'pdfBackground': bg_pdf,
     }
@@ -539,7 +540,7 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
     # generate tex command for pdflatex
     tex_cmd = u''
     for key, val in tex_vars.iteritems():
-        tex_cmd += '\\newcommand{\\%s}{%s}' % (key, val)
+        tex_cmd += '\\newcommand{\\%s}{%s}' % (key, TexTools.escape(val))
     tex_cmd += '\\input{%s}' % tpl_tex
     tex_cmd = u'"'+tex_cmd+'"'
 
@@ -925,11 +926,10 @@ def make_reversal_pdf_pdflatex(member, invoice=None):
         'personalAddressTwo': member.address2,
         'personalPostCode': member.postcode,
         'personalCity': member.city,
-        'personalMShipNo': member.membership_number,
-        'account': member.dues15_balance + member.dues16_balance,
+        'personalMShipNo': unicode(member.membership_number),
         'invoiceNo': invoice_no,
         'invoiceDate': invoice_date,
-        'duesAmount': invoice.invoice_amount,
+        'duesAmount': unicode(invoice.invoice_amount),
         'origInvoiceRef': ('C3S-dues2016-' +
                            str(invoice.preceding_invoice_no).zfill(4)),
         'lang': 'de',
@@ -939,7 +939,7 @@ def make_reversal_pdf_pdflatex(member, invoice=None):
     # generate tex command for pdflatex
     tex_cmd = u''
     for key, val in tex_vars.iteritems():
-        tex_cmd += '\\newcommand{\\%s}{%s}' % (key, val)
+        tex_cmd += '\\newcommand{\\%s}{%s}' % (key, TexTools.escape(val))
     tex_cmd += '\\input{%s}' % tpl_tex
     tex_cmd = u'"'+tex_cmd+'"'
 
