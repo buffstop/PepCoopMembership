@@ -1,5 +1,5 @@
-Next Release
-============
+1.17
+====
 
 
 - Copy the logic for the 2015 dues invoices for 2016 as a dirty quick fix. The
