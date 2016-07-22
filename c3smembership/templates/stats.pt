@@ -74,7 +74,7 @@
     </table>
     <h5>XXX TODO Auflistung nach PLZ... grafische übersicht</h5> 
 
-    <h3 i18n:translate="stats-dues">Dues 2015</h3>
+    <h3 i18n:translate="stats-dues-2015">Dues 2015</h3>
     <table class="table table-striped">
       <thead>
           <tr>
@@ -132,7 +132,7 @@
       </tfoot>
     </table>
 
-    <h3 i18n:translate="stats-dues">Dues 2016</h3>
+    <h3 i18n:translate="stats-dues-2016">Dues 2016</h3>
     <table class="table table-striped">
       <thead>
           <tr>
