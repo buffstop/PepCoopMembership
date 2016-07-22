@@ -6,7 +6,7 @@
       metal:use-macro="backend"
       i18n:domain="c3smembership">
   <tal:block metal:fill-slot="head">
-    <meta http-equiv="refresh" content="${refresh_time}; url=${redirect_url}">
+    <meta http-equiv="refresh" content="${refresh_time}; url=${redirect_url}" />
   </tal:block>
   <tal:block metal:fill-slot="deform-js-css">
     <link rel="stylesheet" href="${request.static_url('c3smembership:static/c3sM.css')}" type="text/css" media="screen" charset="utf-8" />

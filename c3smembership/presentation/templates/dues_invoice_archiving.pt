@@ -24,7 +24,16 @@
                 <div tal:condition="len(invoices) == count" tal:omit-tag="">
                     There might be more invoices to be archived.
                 </div>
-                <div tal:condition="len(invoices) < count" tal:omit-tag="">
+                <!--!
+                    Unfortunately, the internationalization parsing has issues
+                    with the smaller than sign "<" in the condition
+                    "len(invoices) < count" as it interprets it as a tag opening
+                    sign without any tag name. To solve this issue, the positive
+                    boolean condition is replaced by its negative.
+
+                    len(invoices) < count  <=>  not (len(invoices) >= count)
+                -->
+                <div tal:condition="not (len(invoices) >= count)" tal:omit-tag="">
                     There are no more invoices to be archived at the moment.
                 </div>
             </div>

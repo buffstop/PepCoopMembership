@@ -1,3 +1,11 @@
+Next Release
+============
+
+
+- Fix template syntax issues.
+
+
+
 1.17
 ====
 
