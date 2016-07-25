@@ -89,7 +89,7 @@ def invite_member_BCGV(request):
 
     message = Message(
         subject=email_subject,
-        sender='yes@office.c3s.cc',
+        sender='yes@c3s.cc',
         recipients=[_m.email],
         body=email_body,
         extra_headers={
@@ -166,7 +166,7 @@ def batch_invite(request):
 
         message = Message(
             subject=email_subject,
-            sender='yes@office.c3s.cc',
+            sender='yes@c3s.cc',
             recipients=[_m.email],
             body=email_body,
             extra_headers={

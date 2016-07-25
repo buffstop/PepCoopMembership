@@ -4,6 +4,10 @@ Next Release
 
 - Fix template syntax issues.
 
+- Fix statistics translation issue.
+
+- Send emails from yes@c3s.cc instead of yes@office.c3s.cc.
+
 
 
 1.17

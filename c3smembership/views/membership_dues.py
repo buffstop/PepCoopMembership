@@ -259,7 +259,7 @@ def send_dues15_invoice_email(request, m_id=None):
             start_quarter)
         message = Message(
             subject=email_subject,
-            sender='yes@office.c3s.cc',
+            sender='yes@c3s.cc',
             recipients=[member.email],
             body=email_body,
             extra_headers={
@@ -275,7 +275,7 @@ def send_dues15_invoice_email(request, m_id=None):
                 make_dues_invoice_investing_email(member)
         message = Message(
             subject=email_subject,
-            sender='yes@office.c3s.cc',
+            sender='yes@c3s.cc',
             recipients=[member.email],
             body=email_body,
             extra_headers={
@@ -742,7 +742,7 @@ def dues15_reduction(request):
 
     message = Message(
         subject=email_subject,
-        sender='yes@office.c3s.cc',
+        sender='yes@c3s.cc',
         recipients=[member.email],
         body=email_body,
         extra_headers={
