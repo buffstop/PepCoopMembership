@@ -1,6 +1,7 @@
 # -*- coding: utf-8  -*-
 from c3smembership.gnupg_encrypt import encrypt_with_gnupg
 from c3smembership.presentation.i18n import _
+from c3smembership.tex_tools import TexTools
 from fdfgen import forge_fdf
 from pyramid_mailer.message import (
     Message,
@@ -55,6 +56,99 @@ locale_codes = [
     (u'en', _(u'Englisch')),
     (u'fr', _(u'Français')),
 ]
+
+
+def generate_pdf_pdflatex(appstruct):
+    """
+    This function creates an Application for Membership form using pdflatex.
+    """
+    from datetime import datetime
+    from pyramid.i18n import get_locale_name
+    from .jinja2_template import latex_jinja_env
+    import os
+
+    # directory of pdf and tex files
+    pdflatex_dir = os.path.abspath(
+        os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            '../certificate/'
+        ))
+    # pdf backgrounds
+    # pdf_backgrounds = {
+    #    'blank': pdflatex_dir + '/' + 'Urkunde_Hintergrund_blank.pdf',
+    # }
+
+    # latex templates
+    latex_templates = {
+        'generic': 'certificate/' + 'yes_form_de.tex',
+        'generic_en': 'certificate/' + 'yes_form_de.tex',  # XXX en!!!
+    }
+    template_name = 'generic' if (
+        'de' in appstruct['_LOCALE_']) else 'generic_en'
+    # import pdb; pdb.set_trace()
+    tex_template = latex_jinja_env.get_template(latex_templates[template_name])
+
+
+    # lets prepare the users form tex in a relatively secure file ...
+    tex_file = tempfile.NamedTemporaryFile(prefix='afm_', suffix='.tex')
+    tex_file.write(tex_template.render(
+        FormFirstname=appstruct['firstname'],
+        FormLastname=appstruct['lastname'],
+        FormStreet=appstruct['address1'],
+        FormStreetadd=appstruct['address2'],
+        FormPostalcode=appstruct['postcode'],
+        FormCity=appstruct['city'],
+        FormCountry=appstruct['country'],
+        FormEmail=appstruct['email'],
+        FormBirthday=time.strftime(
+            "%d.%m.%Y",
+            time.strptime(str(appstruct['date_of_birth']), '%Y-%m-%d')),
+        FormRegularmember='X',  # means TRUE if not empty
+        FormShares=str(appstruct['num_shares']),
+        # total sum in euro will be calculated from this value ^^
+        FormToken=appstruct['email_confirm_code'],
+        FormIn=str(appstruct['date_of_submission']),
+        FormOut=str(datetime.now()),
+        FormVersion='C3S-SCE-AFM-v10-20160424-de'
+    ).encode("utf-8"))
+
+    # pick temporary file for pdf
+    # afm_pdf = tempfile.NamedTemporaryFile(prefix='afm_', suffix='.pdf')
+
+    (path, filename) = os.path.split(tex_file.name)
+    filename = os.path.splitext(filename)[0]
+
+    tex_file.seek(0)  # rewind!
+
+    subprocess.call(
+        [
+            'pdflatex',
+            '-jobname', filename,
+            '-output-directory', '/tmp',
+            '-interaction', 'nonstopmode',
+            '-halt-on-error',
+            tex_file.name,
+            # afm_pdf
+        ],
+        stdout=open(os.devnull, 'w'),  # hide output
+        stderr=subprocess.STDOUT,
+        cwd=pdflatex_dir  # needed so pdflatex finds stuff (.lco)
+    )
+
+    # cleanup
+    for _file in ['.log', '.aux']:
+        _this_ = os.path.join(path, filename + _file)
+        if os.path.isfile(_this_):
+            os.unlink(_this_)
+    # archive_dues16_invoice(receipt_pdf, invoice)
+    afm_pdf_name = tex_file.name.strip('.tex') + '.pdf'
+    # return afm_pdf
+    # return a pdf file
+    from pyramid.response import Response
+    response = Response(content_type='application/pdf')
+    response.app_iter = open(afm_pdf_name, "r")
+    # shutil.rmtree(_tempdir, ignore_errors=True)  # delete temporary directory
+    return response
 
 
 def generate_pdf(appstruct):

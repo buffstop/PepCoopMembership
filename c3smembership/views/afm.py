@@ -50,7 +50,7 @@ from c3smembership.models import (
     DBSession,
 )
 from c3smembership.utils import (
-    generate_pdf,
+    generate_pdf_pdflatex,
     accountant_mail,
 )
 from c3smembership.presentation.i18n import (
@@ -744,7 +744,7 @@ go fix it!
                 )
                 return HTTPFound(request.route_url('error_page'))
 
-        return generate_pdf(request.session['appstruct'])
+        return generate_pdf_pdflatex(request.session['appstruct'])
     # 'else': send user to the form
     # print("-- no valid session with data found")
     return HTTPFound(location=request.route_url('join'))
