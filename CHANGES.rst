@@ -4,6 +4,8 @@
 
 - Include LaTeX package gensymb into membership list template header to render
   the degree control sequence.
+- Remove birthday from pdf membership list.
+- Remove "mbH" (limited liability company) from membership list header.
 
 
 
