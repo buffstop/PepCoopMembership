@@ -1,3 +1,12 @@
+1.17.1
+======
+
+
+- Include LaTeX package gensymb into membership list template header to render
+  the degree control sequence.
+
+
+
 1.17
 ====
 
