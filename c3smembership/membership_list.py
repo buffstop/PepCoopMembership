@@ -257,7 +257,7 @@ def member_list_date_pdf_view(request):
         if member.membership_loss_type is not None:
             membership_loss += member.membership_loss_type
         latex_file.write(
-            ''' {0} & {1} & {2} & {3} & {4} & {5} & {6} & {7} \\\\\\hline %
+            ''' {0} & {1} & {2} & {3} & {4} & {5} & {6}  \\\\\\hline %
             '''.format(
                 TexTools.escape(member.lastname).encode('utf-8'),  # 0
                 ' \\footnotesize ' + TexTools.escape(
@@ -265,12 +265,10 @@ def member_list_date_pdf_view(request):
                 ' \\footnotesize ' + TexTools.escape(
                     str(member.membership_number)),  # 2
                 _address,  # 3
-                ' \\footnotesize ' + member.date_of_birth.strftime(
-                    '%d.%m.%Y'),  # 4
                 ' \\footnotesize ' + member.membership_date.strftime(
-                    '%d.%m.%Y'),  # 5
-                ' \\footnotesize ' + membership_loss + ' ',  # 6
-                ' \\footnotesize ' + str(_acquired_shares_until_date)  # 7
+                    '%d.%m.%Y'),  # 4
+                ' \\footnotesize ' + membership_loss + ' ',  # 5
+                ' \\footnotesize ' + str(_acquired_shares_until_date)  # 6
             ))
 
     latex_file.write('''
