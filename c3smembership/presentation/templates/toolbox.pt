@@ -2,7 +2,7 @@
       xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n" 
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       metal:use-macro="backend"
       i18n:domain="c3smembership">
   <tal:block metal:fill-slot="head">
@@ -119,6 +119,16 @@
          class="btn btn-success">Alphabetical Member List (PDF)
       </a>
     </p>
+    <h4>PDF for specific date</h4>
+    <p>
+      <div tal:content="structure membership_listing_date_pdf">
+      </div>
+    </p>
+    <h4>PDF for end of years</h4>
+    <p>
+      <div tal:content="structure membership_listing_year_end_pdf">
+      </div>
+    </p>
 
     <h4>Mail Invitations for GA &amp; BC 2015</h4>
     <p>
@@ -168,7 +178,7 @@
 
 
     <h3>Export &amp; Import</h3>
-    <p>    
+    <p>
       <a href="${request.route_url('export_all')}"
          class="btn btn-primary">Export All (.csv)</a>
       <a href="${request.route_url('export_members')}"
@@ -193,7 +203,7 @@
          class="btn btn-warning import-takes-time">Import (./crowdfunders.csv)</a>
     </p>
     <h3>Applications for Membership</h3>
-    <p>    
+    <p>
       <a href="${request.route_url('dashboard', page_number=0, sort_property='id', sort_direction='asc')}"
          class="btn btn-primary">AfM Dashboard</a>
       <a href="${request.route_url('delete_afms')}"
@@ -201,17 +211,17 @@
       <hr />
     </p>
     <h3>Memberships</h3>
-    <p>    
+    <p>
       <a href="${request.route_url('membership_listing_backend')}"
          class="btn btn-primary">Show Memberships</a>
     </p>
     <h3>Staff</h3>
-    <p>    
+    <p>
       <a href="${request.route_url('staff')}"
          class="btn btn-primary">Show Staff</a>
     </p>
     <h3>Done?</h3>
-    <p>    
+    <p>
       <a href="${request.route_url('dashboard')}"
          class="btn btn-primary">Back to Dashboard</a>
     </p>

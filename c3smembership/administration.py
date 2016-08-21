@@ -40,39 +40,6 @@ if LOGGING:  # pragma: no cover
     log = logging.getLogger(__name__)
 
 
-@view_config(renderer='templates/toolbox.pt',
-             permission='manage',
-             route_name='toolbox')
-def toolbox(request):
-    """
-    Toolbox: This view shows many options.
-
-    The view is rather minimal, but the template has all the links:
-
-    - Statistics and Reporting
-       - Statistics
-       - Annual Reporting
-       - Postal Codes (TODO)
-    - Search
-       - Search for Codes
-       - Search for People
-    - Applications for Membership
-       - AfM dashboard
-       - AfMs ready for approval by the board
-    - Members List (HTML)
-       - with links -- useful for interaction (like the dashboard)
-       - without links -- useful for printout
-       - Alphabetical Aufstockers List
-    - Members List (PDF)
-    - Import & Export
-    - ...
-    """
-
-    return {
-        'date': date.today().strftime('%Y-%m-%d')
-    }
-
-
 @view_config(renderer='templates/staff.pt',
              permission='manage',
              route_name='staff')

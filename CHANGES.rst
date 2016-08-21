@@ -8,6 +8,9 @@ Next Release
 
 - Send emails from yes@c3s.cc instead of yes@office.c3s.cc.
 
+- Add functionality to toolbox to get membership list PDFs for specific dates
+  and end of years.
+
 
 
 1.17.2
