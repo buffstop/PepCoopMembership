@@ -3,6 +3,9 @@ Bibliography
 ============
 
 
+.. [BGH_I_ZR_3_14] BGH (Federal Court of Justics), November 26, 2015, I ZR 3/14,
+   ECLI:DE:BGH:2015:261115UIZR3.14.0, http://juris.bundesgerichtshof.de/cgi-bin/rechtsprechung/document.py?Gericht=bgh&Art=en&nr=73488&pos=0&anz=1
+
 .. [Bootstrap] Bootstrap CSS framework, https://getbootstrap.com/
 
 .. [C3S_Statute] C3S: Articles of Association of the Cultural Commons
@@ -53,4 +56,3 @@ Bibliography
 
 .. [Wiki_Kano] Wikipedia: Kano model.
    https://en.wikipedia.org/w/index.php?title=Kano_model&oldid=678655771
-

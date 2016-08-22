@@ -504,19 +504,56 @@ Invoices are created as PDF files.
 The amount of the invoice is booked on the invoicing account as well as the
 invoicee's account.
 
+An invoice which was created once must never be changed. For auditing purposes
+neither the database entry nor the PDF file must be changed. The PDF file must
+be archived.
+
 
 
 Send an Invoice Email
 ---------------------
 
 
-Sending the invoice means sending a link for a PDF download. For security
-reasons the download link must contain a random token and must only be valid for
-a certain time.
+Sending the invoice means sending a link for a PDF download.
 
-An invoice which was created once must never be changed. For auditing purposes
-neither the database entry nor the PDF file must be changed. The PDF file must
-be archived.
+Due to legal requirements it is necessary that the invoice PDF can only be
+accessed via a user login consisting of username and password.
+
+According to the legal opinion of the C3S lawyers it is not sufficient for legal
+requirements to send invoice links which contain a random token which cannot be
+guessed. This legal opinion is based on the sentence of the Federal Court of
+Justice (Bundesgerichtshof, BGH):
+
+    Der Schutzbereich des Art. 10 Abs. 1 GG ist schon deshalb nicht berührt,
+    weil das öffentliche Angebot von Dateien zum Download und auch der Zugriff
+    darauf keine von dieser Vorschrift geschützte Individualkommunikation
+    darstellt. Dass der Zugriff auf ein öffentliches Angebot zum Download
+    jeweils mittels indi-vidueller technischer Kommunikationsverbindungen
+    erfolgt, rechtfertigt die Ein-stufung als Kommunikation im Sinne des Art. 10
+    Abs. 1 GG nicht, weil eine blo-ße technische Kommunikation nicht die
+    spezifischen Gefahren für die Privatheit der Kommunikation aufweist, die
+    diese Vorschrift schützt (vgl. Durner, ZUM 2010, 833, 840 f.). Ein solcher
+    Zugriff stellt sich vielmehr als öffentliche, der Nutzung von Massenmedien
+    vergleichbare Kommunikationsform dar, die von anderen Grundrechten -
+    insbesondere Art. 5 Abs. 1 Satz 1 GG - erfasst wird (vgl. Billmeier aaO S.
+    183).
+
+    [BGH_I_ZR_3_14]_
+
+This basically means that providing a file via a link which can be used by
+anyone who knows it is not considered individual but public communication and is
+therefore not sufficient for deliverying invoices to individuals.
+
+The username and password on the other hand are considered private information.
+Therefore, downloading a file from an internal login area which to access
+requires the knowledge of the private username and the password is considered
+private communication.
+
+The aspect that this argument does not examine the or show any differences
+between the knowledge of a link including an adequate random token and the
+knowedge of a password is not changing the fact that it represents a currently
+(as of August 2016) legally binding sentence of the Federal Court of Justice and
+must therefore be followed.
 
 
 
