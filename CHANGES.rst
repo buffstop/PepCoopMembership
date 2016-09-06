@@ -10,6 +10,14 @@ Next Release
 
 
 
+1.17.2
+======
+
+
+- Renew GnuPG key. This must really be moved to configuration!
+
+
+
 1.17.1
 ======
 
