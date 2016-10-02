@@ -20,7 +20,16 @@ def _initTestingDB():
     engine = engine_from_config(my_settings)
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
+
     with transaction.manager:
+        # There is a side effect of test_initialization.py after which there are
+        # still records in the database although it is setup from scratch.
+        # Therefore, remove all members to have an empty table.
+        members = C3sMember.get_all()
+        for member in members:
+            DBSession.delete(member)
+        DBSession.flush()
+
         member1 = C3sMember(  # german person
             firstname=u'SomeFirstnäme',
             lastname=u'SomeLastnäme',
