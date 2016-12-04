@@ -20,6 +20,7 @@ Classes / Data Objects:
 
 from c3smembership.data.model.base import Base
 from datetime import (
+    date,
     datetime,
 )
 from decimal import Decimal
@@ -1530,6 +1531,20 @@ class C3sMember(Base):
             '-',  # with a -
             self.lastname if self.is_legalentity else (
                 self.lastname + self.firstname))
+
+    @property
+    def is_member(self):
+        """
+        Indicates whether the entity is still a member.
+
+        For being a member the membership must have been accepted and the
+        membership must not have been lost.
+        """
+        membership_lost = \
+            self.membership_loss_date is not None \
+            and \
+            self.membership_loss_date < date.today()
+        return self.membership_accepted and not membership_lost
 
 
 class Dues15Invoice(Base):

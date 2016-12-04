@@ -11,6 +11,13 @@ Next Release
 - Add functionality to toolbox to get membership list PDFs for specific dates
   and end of years.
 
+- Membership certificate must not be generated once a member lost membership.
+
+  - Prevent certificate email sending
+  - Prevent PDF generation from email link and backend
+  - Do not show certificate section in membership details
+  - Do not show certificate links in backend membership list
+
 
 
 1.17.2

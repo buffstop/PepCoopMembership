@@ -3,6 +3,7 @@
 from datetime import(
     date,
     datetime,
+    timedelta,
 )
 from decimal import Decimal as D
 from decimal import InvalidOperation
@@ -575,6 +576,53 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.assertEqual(instance.membership_type, u'pondering')
         number_from_DB = myMembershipSigneeClass.get_num_mem_other_features()
         self.assertEqual(number_from_DB, 1)
+
+    def test_is_member(self):
+        member = C3sMember(  # german
+            firstname=u'SomeFirstnäme',
+            lastname=u'SomeLastnäme',
+            email=u'some@shri.de',
+            address1=u"addr one",
+            address2=u"addr two",
+            postcode=u"12345",
+            city=u"Footown Mäh",
+            country=u"Foocountry",
+            locale=u"DE",
+            date_of_birth=date.today(),
+            email_is_confirmed=False,
+            email_confirm_code=u'ABCDEFGFOO',
+            password=u'arandompassword',
+            date_of_submission=date.today(),
+            membership_type=u'normal',
+            member_of_colsoc=True,
+            name_of_colsoc=u"GEMA",
+            num_shares=u'23',
+        )
+
+        member.membership_accepted = False
+        member.membership_loss_date = None
+        self.assertEqual(member.is_member, False)
+
+        member.membership_accepted = True
+        member.membership_loss_date = None
+        self.assertEqual(member.is_member, True)
+
+        # If loss date is today then the member still has membership until the
+        # end of the day
+        member.membership_accepted = True
+        member.membership_loss_date = date.today()
+        self.assertEqual(member.is_member, True)
+
+        # If the loss date is in the future then the member still has membership
+        member.membership_accepted = True
+        member.membership_loss_date = date.today() + timedelta(days=1)
+        self.assertEqual(member.is_member, True)
+
+        # If the loss date is in the past then the member no longer has
+        # membership
+        member.membership_accepted = True
+        member.membership_loss_date = date.today() - timedelta(days=1)
+        self.assertEqual(member.is_member, False)
 
 
 class TestMemberListing(C3sMembershipModelTestBase):

@@ -147,18 +147,22 @@ class TestMembershipCertificateViews(unittest.TestCase):
             'name': 'foobar',
             'token': 'hotzenplotz123'
         }
-        member1 = C3sMember.get_by_id(1)
-        member1.membership_accepted = True
-
-        # the request needs stuff to be in the cookie (for redirects)
-        request.cookies['m_on_page'] = 23
-        request.cookies['m_order'] = 'asc'
-        request.cookies['m_orderby'] = 'id'
         request.referrer = 'dashboard'
 
+        member1 = C3sMember.get_by_id(1)
+
+        member1.membership_accepted = False
+        self.assertEqual(result.status_code, 404)
+
+        member1.membership_accepted = True
+        member1.membership_loss_date = date.today() - timedelta(days=1)
         result = send_certificate_email(request)
-        # print result
-        self.assertTrue(result.status_code == 302)  # redirect
+        self.assertEqual(result.status_code, 404)
+
+        member1.membership_accepted = True
+        member1.membership_loss_date = None
+        result = send_certificate_email(request)
+        self.assertEqual(result.status_code, 302)
 
         self.assertEqual(len(mailer.outbox), 1)
         self.assertEqual(
@@ -170,6 +174,13 @@ class TestMembershipCertificateViews(unittest.TestCase):
             u"Hallo SomeFirstnäme SomeLastnäme," in mailer.outbox[0].body)
         self.assertTrue(
             u"Deine persönliche Mitgliederbescheinig" in mailer.outbox[0].body)
+
+        member1.membership_accepted = True
+        member1.membership_loss_date = date.today() + timedelta(days=1)
+        result = send_certificate_email(request)
+        self.assertEqual(result.status_code, 302)
+
+        self.assertEqual(len(mailer.outbox), 2)
 
     def test_send_certificate_email_english(self):
         """
@@ -257,9 +268,21 @@ class TestMembershipCertificateViews(unittest.TestCase):
         member2.certificate_token = u'hotzenplotz123'
         # now the database matches the matchdict
 
-        member2.certificate_email_date = datetime.now(
-        ) - timedelta(weeks=1)
+        member2.certificate_email_date = datetime.now() - timedelta(weeks=1)
         member2.membership_accepted = True
+        member2.membership_loss_date = date.today() - timedelta(days=1)
+        result = generate_certificate(request)
+        self.assertEqual(result.status_code, 404)
+
+        member2.certificate_email_date = datetime.now() - timedelta(weeks=1)
+        member2.membership_accepted = True
+        member2.membership_loss_date = date.today() + timedelta(days=1)
+        result = generate_certificate(request)
+        self.assertEqual(result.status_code, 200)
+
+        member2.certificate_email_date = datetime.now() - timedelta(weeks=1)
+        member2.membership_accepted = True
+        member2.membership_loss_date = None
         result = generate_certificate(request)
 
         if DEBUG:  # pragma: no cover
@@ -436,19 +459,32 @@ class TestMembershipCertificateViews(unittest.TestCase):
         result = generate_certificate_staff(request)
         self.assertTrue('Not found. Please check URL.' in result.body)
 
+        m1 = C3sMember.get_by_id(1)
+
         # membership not accepted
         request.matchdict = {
             'id': '1',  # token is not necessary here
         }
         result = generate_certificate_staff(request)
         self.assertTrue('is not an accepted member' in result.body)
+        self.assertEqual(result.status_code, 404)
+
+        # was accepted but lost membership
+        m1.membership_accepted = True
+        m1.membership_loss_date = date.today() - timedelta(days=1)
+        result = generate_certificate_staff(request)
+        self.assertTrue('is not an accepted member' in result.body)
+        self.assertEqual(result.status_code, 404)
+
+        # was accepted and loses membership in the future
+        m1.membership_accepted = True
+        m1.membership_loss_date = date.today() + timedelta(days=1)
+        result = generate_certificate_staff(request)
+        self.assertEqual(result.status_code, 200)
 
         # accepted member
-        m1 = C3sMember.get_by_id(1)
         m1.membership_accepted = True
-        request.matchdict = {
-            'id': '1',  # token is not necessary here
-        }
+        m1.membership_loss_date = None
         result = generate_certificate_staff(request)
         # print("result: {}".format(result))
         if DEBUG:  # pragma: no cover

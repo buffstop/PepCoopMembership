@@ -286,7 +286,7 @@
         </tr>
       </table>
 
-      <div tal:condition="member.membership_accepted">
+      <div tal:condition="member.is_member">
         <h3 id="certificate">Membership Certificate</h3>
         <table class="table table-striped">
           <tr>
