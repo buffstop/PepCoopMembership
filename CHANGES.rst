@@ -24,6 +24,8 @@ Next Release
 
 - Move common data model classes to the data layer.
 
+- Document architectural patterns.
+
 
 
 1.17.2

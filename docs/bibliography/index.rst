@@ -34,6 +34,15 @@ Bibliography
 
 .. [jQueryUI] jQuery user interface library, https://jqueryui.com/
 
+.. [MF_PoEE_Rep] Martin Fowler, Patterns of Enterprise Architecture,
+   Repository, http://martinfowler.com/eaaCatalog/repository.html
+
+.. [MS_AAG2] Microsoft Application Architecture Guide, 2nd Edition, October
+   2009, https://msdn.microsoft.com/en-us/library/ff650706.aspx
+
+.. [MSDN_DP_Rep] Microsoft Developer Network, Design Patterns, The Repository
+   Pattern https://msdn.microsoft.com/en-us/library/ff649690.aspx
+
 .. [PDFtk] PDF Labs, PDFtk,
    https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
 

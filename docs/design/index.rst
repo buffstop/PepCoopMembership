@@ -742,9 +742,32 @@ Environment Architecture
    [c3sMembership] --> [Python]
 
 
+
 ========================
 Application Architecture
 ========================
+
+
+
+--------
+Patterns
+--------
+
+
+The application is (being) implemented as a layered application [MS_AAG2]_ spread across three main layers:
+
+- Presentation layer: Provides the user frontend
+- Business layer: Implements the business logic
+- Data layer: Provides abstracted access to the data model
+
+The data layer uses the repository pattern ([MF_PoEE_Rep]_, [MSDN_DP_Rep]_) to
+abstract the data access.
+
+
+
+----------
+Components
+----------
 
 
 .. uml::

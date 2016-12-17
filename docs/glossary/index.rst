@@ -54,4 +54,5 @@ Glossary
 
 - Statute (German "Satzung"), see [C3S_Statute]_
 
-- Winding-up (German "Auflösung"), see [EU_CR_1435_2003_SCE]_ art. 15(1)
+- Winding-up (German "Auflösung"), see [EU_CR_1435_2003_SCE]_ art. 15(1);
+  (German "Auseinandersetzung"), see [C3S_Statute]_ § 11.
