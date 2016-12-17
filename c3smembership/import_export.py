@@ -20,8 +20,8 @@ from sqlalchemy.exc import (
 import tempfile
 import unicodecsv
 
+from c3smembership.data.model.base import DBSession
 from c3smembership.models import (
-    DBSession,
     C3sMember,
 )
 

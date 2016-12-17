@@ -5,14 +5,14 @@ from pyramid import testing
 from sqlalchemy import engine_from_config
 import transaction
 import unittest
-# from sqlalchemy.ext.declarative import declarative_base
 
+from c3smembership.data.model.base import (
+    Base,
+    DBSession,
+)
 from c3smembership.models import (
     C3sMember,
-    DBSession,
-    Base,
 )
-# Base = declarative_base()
 
 
 def _initTestingDB():

@@ -18,7 +18,6 @@ Classes / Data Objects:
 * **Dues15Invoice** (membership dues, 2015 edition)
 """
 
-from c3smembership.data.model.base import Base
 from datetime import (
     date,
     datetime,
@@ -53,8 +52,11 @@ import sqlalchemy.types as types
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
+from c3smembership.data.model.base import (
+    Base,
+    DBSession,
+)
 
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 crypt = cryptacular.bcrypt.BCRYPTPasswordManager()
 
 

@@ -15,12 +15,14 @@ from pyramid.paster import (
 from alembic.config import Config
 from alembic import command
 
-from c3smembership.models import (
+from c3smembership.data.model.base import (
     DBSession,
+    Base,
+)
+from c3smembership.models import (
     Group,
     C3sStaff,
     C3sMember,
-    Base,
 )
 
 """

@@ -6,11 +6,11 @@ from sqlalchemy import engine_from_config
 import transaction
 import unittest
 
-from c3smembership.models import (
-    C3sMember,
+from c3smembership.data.model.base import (
     DBSession,
     Base,
 )
+from c3smembership.models import C3sMember
 
 
 def _initTestingDB():

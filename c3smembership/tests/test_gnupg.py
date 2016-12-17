@@ -5,7 +5,7 @@ import unittest
 # import shutil
 from pyramid import testing
 
-from c3smembership.models import DBSession
+from c3smembership.data.model.base import DBSession
 
 
 def _initTestingDB():

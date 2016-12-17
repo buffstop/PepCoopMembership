@@ -203,7 +203,8 @@ def main(global_config, **settings):
     config.add_route('dues16_listing', '/dues16_listing')
 
 
-    from c3smembership.models import DBSession, C3sMember, Dues15Invoice
+    from c3smembership.models import C3sMember, Dues15Invoice
+    from c3smembership.data.model.base import DBSession
     from c3smembership.business.dues_invoice_archiving import DuesInvoiceArchiving
     from c3smembership.views.membership_dues import (
         make_invoice_pdf_pdflatex,

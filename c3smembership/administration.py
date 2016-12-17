@@ -3,10 +3,10 @@
 This module has functionality to let staff do administrative tasks.
 """
 
+from c3smembership.data.model.base import DBSession
 from c3smembership.models import (
     C3sMember,
     C3sStaff,
-    DBSession,
     Group,
 )
 from c3smembership.gnupg_encrypt import encrypt_with_gnupg

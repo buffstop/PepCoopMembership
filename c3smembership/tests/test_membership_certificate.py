@@ -10,10 +10,12 @@ from sqlalchemy import engine_from_config
 import transaction
 import unittest
 
+from c3smembership.data.model.base import (
+    Base,
+    DBSession,
+)
 from c3smembership.models import (
     C3sMember,
-    DBSession,
-    Base,
 )
 
 # DEBUG = True

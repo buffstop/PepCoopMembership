@@ -23,6 +23,7 @@ from datetime import (
     date,
     datetime,
 )
+
 import os
 import shutil
 import subprocess
@@ -32,8 +33,8 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.response import Response
 from pyramid.view import view_config
 
+from c3smembership.data.model.base import DBSession
 from c3smembership.models import (
-    DBSession,
     C3sMember,
     Shares,
 )

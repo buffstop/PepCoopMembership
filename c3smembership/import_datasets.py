@@ -8,9 +8,9 @@ However, it might be useful to see what happened (reconstruction)
 or for similar future needs.
 """
 
+from c3smembership.data.model.base import DBSession
 from c3smembership.models import (
     C3sMember,
-    DBSession,
     # Shares,
     # Membership,
 )

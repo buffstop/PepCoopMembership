@@ -45,10 +45,8 @@ from sqlalchemy.exc import (
 )
 
 from types import NoneType
-from c3smembership.models import (
-    C3sMember,
-    DBSession,
-)
+from c3smembership.data.model.base import DBSession
+from c3smembership.models import C3sMember
 from c3smembership.utils import (
     generate_pdf,
     accountant_mail,

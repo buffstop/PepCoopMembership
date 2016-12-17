@@ -3,11 +3,9 @@ This module has some useful stuff for webdriver testing.
 """
 import os
 from sqlalchemy import engine_from_config
-from c3smembership.models import (
+from c3smembership.data.model.base import (
     DBSession,
     Base,
-    # C3sStaff,
-    # Group,
 )
 from paste.deploy.loadwsgi import appconfig
 from webtest.http import StopableWSGIServer

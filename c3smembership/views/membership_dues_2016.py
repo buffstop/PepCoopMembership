@@ -29,9 +29,9 @@ from pyramid_mailer.message import Message
 from pyramid.response import Response
 from pyramid.view import view_config
 
+from c3smembership.data.model.base import DBSession
 from c3smembership.models import (
     C3sMember,
-    DBSession,
     Dues16Invoice,
 )
 

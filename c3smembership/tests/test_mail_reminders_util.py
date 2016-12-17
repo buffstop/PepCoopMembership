@@ -5,9 +5,9 @@ from pyramid import testing
 from datetime import date
 from c3smembership.mail_reminders_util import make_payment_reminder_email
 
+from c3smembership.data.model.base import DBSession
 from c3smembership.models import (
     C3sMember,
-    DBSession,
 )
 
 

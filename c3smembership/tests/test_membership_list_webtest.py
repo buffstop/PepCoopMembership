@@ -16,9 +16,11 @@ import unittest
 from webtest import TestApp
 
 from c3smembership import main
-from c3smembership.models import (
-    DBSession,
+from c3smembership.data.model.base import (
     Base,
+    DBSession,
+)
+from c3smembership.models import (
     C3sMember,
     C3sStaff,
     Group,

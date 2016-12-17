@@ -5,11 +5,11 @@ import transaction
 from datetime import date
 from pyramid import testing
 
-from c3smembership.models import (
+from c3smembership.data.model.base import (
     DBSession,
     Base,
-    C3sMember
 )
+from c3smembership.models import C3sMember
 
 
 class TestUtilities(unittest.TestCase):

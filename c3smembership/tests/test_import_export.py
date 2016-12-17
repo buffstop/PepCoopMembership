@@ -5,9 +5,11 @@ import unittest
 import tempfile
 import unicodecsv
 from pyramid import testing
-from c3smembership.models import (
+from c3smembership.data.model.base import (
     DBSession,
     Base,
+)
+from c3smembership.models import (
     C3sMember,
     C3sStaff,
     Group,

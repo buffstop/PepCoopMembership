@@ -22,6 +22,8 @@ Next Release
 
 - Remove outdated database fixes.
 
+- Move common data model classes to the data layer.
+
 
 
 1.17.2

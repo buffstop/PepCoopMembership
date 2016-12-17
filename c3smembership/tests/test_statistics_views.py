@@ -6,8 +6,8 @@ from pyramid import testing
 from sqlalchemy import create_engine
 import transaction
 
+from c3smembership.data.model.base import DBSession
 from c3smembership.models import (
-    DBSession,
     Group,
     C3sMember,
     C3sStaff,
