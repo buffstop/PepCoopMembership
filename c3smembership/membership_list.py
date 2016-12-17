@@ -43,50 +43,6 @@ from c3smembership.tex_tools import TexTools
 DEBUG = False
 
 
-@view_config(renderer='templates/aufstockers_list.pt',
-             permission='manage',
-             route_name='membership_listing_aufstockers')
-def member_list_aufstockers_view(request):
-    """
-    This view shows all accepted members with
-    more than one package of (accepted) shares
-    """
-    _order_by = 'lastname'
-    _num = C3sMember.get_number()
-    _all = C3sMember.member_listing(
-        _order_by, how_many=_num, offset=0, order=u'asc')
-    _members = []
-    _count = 0
-    for item in _all:
-        if item.membership_accepted and (len(item.shares) > 1):
-            # check membership number
-            try:
-                assert(item.membership_number is not None)
-                # add this item to the list
-                _members.append(item)
-                _count += 1
-            except AssertionError:
-                pass
-                if DEBUG:  # pragma: no cover
-                    print(u"-- member_list_aufstockers: "
-                          u"failed at id {} lastname {}".format(
-                              item.id, item.lastname))
-    # sort members alphabetically
-    import locale
-    locale.setlocale(locale.LC_ALL, "de_DE.UTF-8")
-
-    _members.sort(key=lambda x: x.firstname, cmp=locale.strcoll)
-    _members.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
-
-    from datetime import date
-    _today = date.today()
-    return {
-        'members': _members,
-        'count': _count,
-        '_today': _today,
-    }
-
-
 @view_config(permission='manage',
              route_name='membership_listing_date_pdf')
 def member_list_date_pdf_view(request):

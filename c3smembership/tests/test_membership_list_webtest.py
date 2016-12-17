@@ -362,35 +362,6 @@ class MembershipListTests(MemberTestsBase):
     (i.e. integration tests)
     """
 
-    def test_member_list_aufstockers_view(self):  # code lines 42 - 77
-        '''
-        tests for the member_list_aufstockers_view
-        '''
-        res = self.testapp.reset()  # delete cookies
-        res = self.testapp.get('/aml_aufstockers', status=403)
-        self.failUnless('Access was denied to this resource' in res.body)
-
-        self._MemberTestsBase__login()
-
-        # try to get the list
-        # with self.assertRaises(AssertionError):
-        res = self.testapp.get('/aml_aufstockers', status=200)
-        self.assertTrue(str(date.today()) in res)
-        self.assertTrue("0 Aufstocker" in res)
-        # print(res)
-
-        # fix: member must have a membership number
-        member1 = C3sMember.get_by_id(1)
-        member1.membership_number = 42
-
-        # try again
-        res = self.testapp.get('/aml_aufstockers', status=200)
-        self.assertTrue(str(date.today()) in res)
-        self.assertTrue("1 Aufstocker" in res)
-        self.assertTrue("SomeLastnäme" in res)
-        self.assertTrue("ABCDEFGH" in res)
-        self.assertTrue("IJKLMNO" in res)
-
     def test_member_list_date_pdf_view(self):  # code lines 80-283
         '''
         Tests for the member_list_aufstockers_view

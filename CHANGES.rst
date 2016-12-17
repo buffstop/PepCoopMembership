@@ -26,6 +26,8 @@ Next Release
 
 - Document architectural patterns.
 
+- Remove additional shares purchasers list.
+
 
 
 1.17.2
