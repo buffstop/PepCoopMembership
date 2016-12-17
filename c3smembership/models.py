@@ -569,9 +569,8 @@ class C3sMember(Base):
 
     * has the membersip been accepted by the board of directors?
     """
-    membership_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    """DateTime
+    membership_date = Column(Date(), default=date(1970, 1, 1))
+    """Date
 
     Date of membership approval by the board.
     """
@@ -583,7 +582,7 @@ class C3sMember(Base):
     # ## loss of membership
     # the date on which the membership terminates, i.e. the date of
     # membership and the day after which the membership does no longer exist
-    membership_loss_date = Column(DateTime())
+    membership_loss_date = Column(Date())
     # the membership can be lost upon:
     # - resignation
     # - expulsion
@@ -916,8 +915,8 @@ class C3sMember(Base):
             and_(
                 cls.membership_accepted == 1,
                 cls.dues16_invoice == 0,
-                cls.membership_date < datetime(2017,1,1),
-                cls.membership_type.in_(['normal', 'investing'])
+                cls.membership_date < date(2017, 1, 1),
+                cls.membership_type.in_([u'normal', u'investing'])
             )).slice(0, num).all()
 
     @classmethod
@@ -1532,19 +1531,26 @@ class C3sMember(Base):
             self.lastname if self.is_legalentity else (
                 self.lastname + self.firstname))
 
-    @property
-    def is_member(self):
+    def is_member(self, effective_date=None):
         """
         Indicates whether the entity is still a member.
 
         For being a member the membership must have been accepted and the
         membership must not have been lost.
         """
-        membership_lost = \
-            self.membership_loss_date is not None \
-            and \
-            self.membership_loss_date < date.today()
-        return self.membership_accepted and not membership_lost
+        if effective_date is None:
+            effective_date = date.today()
+        membership_lost = (
+            self.membership_loss_date is not None
+            and
+            self.membership_loss_date < effective_date)
+        membership_accepted = (
+            self.membership_accepted
+            and
+            self.membership_date is not None
+            and
+            self.membership_date <= effective_date)
+        return membership_accepted and not membership_lost
 
 
 class Dues15Invoice(Base):

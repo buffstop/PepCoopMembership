@@ -218,17 +218,17 @@ class TestDues15Views(unittest.TestCase):
         # print res
         assert res == (u'q1_2015', D('50'))
 
-        member_en.membership_date = datetime(2015, 6, 1)
+        member_en.membership_date = date(2015, 6, 1)
         res = calculate_partial_dues15(member_en)
         # print res
         assert res == (u'q2_2015', D('37.50'))
 
-        member_en.membership_date = datetime(2015, 9, 1)
+        member_en.membership_date = date(2015, 9, 1)
         res = calculate_partial_dues15(member_en)
         # print res
         assert res == (u'q3_2015', D('25'))
 
-        member_en.membership_date = datetime(2015, 11, 1)
+        member_en.membership_date = date(2015, 11, 1)
         res = calculate_partial_dues15(member_en)
         # print res
         assert res == (u'q4_2015', D('12.50'))

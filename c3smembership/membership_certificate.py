@@ -63,7 +63,7 @@ def send_certificate_email(request):
 
     mid = request.matchdict['id']
     member = C3sMember.get_by_id(mid)
-    if isinstance(member, NoneType) or not member.is_member:
+    if isinstance(member, NoneType) or not member.is_member():
         return Response(
             'that id does not exist or is not an accepted member. go back',
             status='404 Not Found',)
@@ -143,7 +143,7 @@ def generate_certificate(request):
             status='404 Not Found',
         )
 
-    if isinstance(member, NoneType) or not member.is_member:
+    if isinstance(member, NoneType) or not member.is_member():
         return Response(
             'that id does not exist or is not an accepted member. go back',
             status='404 Not Found',)
@@ -165,7 +165,7 @@ def generate_certificate_staff(request):
     if member is None:
         return Response('Not found. Please check URL.')
 
-    if isinstance(member, NoneType) or not member.is_member:
+    if isinstance(member, NoneType) or not member.is_member():
         return Response(
             'Member with this id ({}) is not an accepted member!'.format(mid),
             status='404 Not Found',)

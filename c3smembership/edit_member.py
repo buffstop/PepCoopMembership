@@ -91,7 +91,7 @@ def edit_member(request):
             # this is necessary because membership_date's default is
             # 1970-01-01 which should be changed to None in the future
             u''
-            if member.membership_date == datetime(1970, 1, 1)
+            if member.membership_date == date(1970, 1, 1)
             else member.membership_date),
         'is_duplicate': member.is_duplicate,
         'is_duplicate_of': (

@@ -19,14 +19,18 @@ There are also some historic utility functions for reference:
 - Flag duplicates
 - Merge duplicates
 """
-from datetime import datetime
+from datetime import (
+    date,
+    datetime,
+)
 import os
-from pyramid.httpexceptions import HTTPFound
-from pyramid.response import Response
-from pyramid.view import view_config
 import shutil
 import subprocess
 import tempfile
+
+from pyramid.httpexceptions import HTTPFound
+from pyramid.response import Response
+from pyramid.view import view_config
 
 from c3smembership.models import (
     DBSession,
@@ -97,7 +101,7 @@ def member_list_date_pdf_view(request):
     DEBUG = False
     try:
         _date_m = request.matchdict['date']
-        _date = datetime.strptime(_date_m, '%Y-%m-%d')
+        _date = datetime.strptime(_date_m, '%Y-%m-%d').date()
     except (KeyError, ValueError):
         request.session.flash(
             "Invalid date! '{}' does not compute! "
@@ -137,18 +141,13 @@ def member_list_date_pdf_view(request):
     for item in _all_members:
         if (
                 (item.membership_number is not None) and
-                (item.membership_accepted) and
-                (datetime(  # use only Date, not Hours etc.
-                    item.membership_date.year,
-                    item.membership_date.month,
-                    item.membership_date.day,
-                ) <= _date)):
+                item.is_member(_date)):
             # add this item to the filtered list of members
             _members.append(item)
             _count_members += 1
             # also count their shares iff acquired in the timespan
             for share in item.shares:
-                if (datetime(
+                if (date(
                         share.date_of_acquisition.year,
                         share.date_of_acquisition.month,
                         share.date_of_acquisition.day,
@@ -242,7 +241,7 @@ def member_list_date_pdf_view(request):
         # check shares acquired until $date
         _acquired_shares_until_date = 0
         for share in member.shares:
-            if datetime(
+            if date(
                     share.date_of_acquisition.year,
                     share.date_of_acquisition.month,
                     share.date_of_acquisition.day) <= _date:
@@ -325,38 +324,33 @@ def member_list_print_view(request):
 
     It was used before the PDF-generating view above existed
     """
-    _order_by = 'lastname'
-    _num = C3sMember.get_number()
-    _all = C3sMember.member_listing(
-        _order_by, how_many=_num, offset=0, order=u'asc')
-    _members = []
-    _count = 0
-    for item in _all:
-        if item.membership_accepted:
+    all_members = C3sMember.member_listing(
+        'lastname', how_many=C3sMember.get_number(), offset=0, order=u'asc')
+    member_list = []
+    count = 0
+    for member in all_members:
+        if member.is_member():
             # check membership number
             try:
-                assert(item.membership_number is not None)
+                assert(member.membership_number is not None)
             except AssertionError:
                 pass
                 if DEBUG:  # pragma: no cover
                     print u"failed at id {} lastname {}".format(
-                        item.id, item.lastname)
-            # add this item to the list
-            _members.append(item)
-            _count += 1
+                        member.id, member.lastname)
+            member_list.append(member)
+            count += 1
     # sort members alphabetically
     import locale
     locale.setlocale(locale.LC_ALL, "de_DE.UTF-8")
 
-    _members.sort(key=lambda x: x.firstname, cmp=locale.strcoll)
-    _members.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
+    member_list.sort(key=lambda x: x.firstname, cmp=locale.strcoll)
+    member_list.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
 
-    from datetime import date
-    _today = date.today()
     return {
-        'members': _members,
-        'count': _count,
-        '_today': _today,
+        'members': member_list,
+        'count': count,
+        '_today': date.today(),
     }
 
 
@@ -475,7 +469,7 @@ def make_member_view(request):
         # print "yes! contents: {}".format(request.POST['make_member'])
         try:
             member.membership_date = datetime.strptime(
-                request.POST['membership_date'], '%Y-%m-%d')
+                request.POST['membership_date'], '%Y-%m-%d').date()
         except ValueError, value_error:
             request.session.flash(value_error.message, 'merge_message')
             return HTTPFound(
@@ -621,7 +615,7 @@ def make_founders_members(request):  # pragma: no cover
     for founder in _founders:
         # make member
         founder.membership_accepted = True
-        founder.membership_date = datetime(2013, 9, 25)
+        founder.membership_date = date(2013, 9, 25)
         founder.is_legalentity = False
         # prepare numbering
         _number = int(founder.email_confirm_code.split('_')[1])
@@ -794,7 +788,7 @@ def make_yesser_members(request):  # pragma: no cover
                 )
                 # do it
                 i.membership_accepted = True
-                i.membership_date = datetime(2014, 3, 29)  # XXX
+                i.membership_date = date(2014, 3, 29)
                 # we don't have this date, do we?
                 i.is_legalentity = False
                 i.membership_number = \

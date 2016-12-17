@@ -58,7 +58,7 @@
     <div>
       <a href="${request.route_url('membership_listing_backend')}"
          class="btn btn-success">Memberships</a>
-      <a href="${request.route_url('membership_listing_alphabetical', number=0, orderby='id', order='asc')}"
+      <a href="${request.route_url('membership_listing_alphabetical')}"
          class="btn btn-success">Memberships (printout)</a>
       <a href="${request.route_url('toolbox')}"
          class="btn btn-primary">Toolbox</a>

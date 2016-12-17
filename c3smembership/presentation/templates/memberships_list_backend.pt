@@ -66,7 +66,7 @@
       <!--! links to other pages -->
       <a href="${request.route_url('dashboard', page_number=1, sort_property='id', sort_direction='asc')}"
          class="btn btn-primary">Dashboard</a>
-      <a href="${request.route_url('membership_listing_alphabetical', number=0, orderby='id', order='asc')}"
+      <a href="${request.route_url('membership_listing_alphabetical')}"
          class="btn btn-success">Alphabetical Membership List (printout view)</a>
       <a href="${request.route_url('toolbox')}"
          class="btn btn-primary">Toolbox</a>
@@ -178,7 +178,7 @@
                     class="btn btn-success"></a>
             </td>
             <td>
-                <div tal:condition="member.is_member" tal:omit-tag="">
+                <div tal:condition="member.is_member()" tal:omit-tag="">
                   <a tal:condition="not member.certificate_email"
                   href="${request.route_url('certificate_mail', id=member.id)}"
                   title="certificate not sent yet"

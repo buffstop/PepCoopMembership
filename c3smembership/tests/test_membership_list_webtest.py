@@ -6,6 +6,7 @@ Tests for c3smembership.membership_list
 from datetime import (
     date,
     datetime,
+    timedelta,
 )
 from pyramid import testing
 from sqlalchemy import engine_from_config
@@ -155,12 +156,33 @@ class MemberTestsBase(unittest.TestCase):
                 name_of_colsoc=u"GEMA",
                 num_shares=u'2',
             )
+            member4_lost = C3sMember(
+                firstname=u'Resigned',
+                lastname=u'Smith',
+                email=u'resigned.smith@example.com',
+                address1=u"addr one",
+                address2=u"addr two",
+                postcode=u"12345",
+                city=u"Footown Mäh",
+                country=u"Foocountry",
+                locale=u"en",
+                date_of_birth=date(1980, 1, 2),
+                email_is_confirmed=False,
+                email_confirm_code=u'RESIGNEDSMITH',
+                password=u'arandompassword',
+                date_of_submission=date.today() - timedelta(days=370),
+                membership_type=u'normal',
+                member_of_colsoc=True,
+                name_of_colsoc=u"GEMA",
+                num_shares=u'2',
+            )
 
             DBSession.add(shares1_m1)
             DBSession.add(shares2_m1)
             DBSession.add(member1)
             DBSession.add(member2)
             DBSession.add(founding_member3)
+            DBSession.add(member4_lost)
 
         app = main({}, **my_settings)
         self.testapp = TestApp(app)
@@ -269,7 +291,7 @@ class MakeMergeMemberTests(MemberTestsBase):
         # this member must not have a membership number yet
         self.assertTrue(m1.membership_number is None)
         # this members membership date is not set to a recent date
-        self.assertEqual(m1.membership_date, datetime(1970, 01, 01))
+        self.assertEqual(m1.membership_date, date(1970, 01, 01))
         # this member holds no shares yet
         m1.shares = []
         self.assertTrue(len(m1.shares) is 0)
@@ -400,7 +422,7 @@ class MembershipListTests(MemberTestsBase):
 
         # missing coverage of code lines  # 125-134, 192-225,
         m1 = C3sMember.get_by_id(1)
-        m1.membership_date = datetime(2015, 01, 01)
+        m1.membership_date = date(2015, 01, 01)
         m1.membership_number = 42
         m1.shares[0].date_of_acquisition = datetime(2015, 01, 01)
         m1.shares[1].date_of_acquisition = datetime(2015, 01, 02)
@@ -421,6 +443,17 @@ class MembershipListTests(MemberTestsBase):
         self.failUnless('Access was denied to this resource' in res.body)
 
         self._MemberTestsBase__login()
+
+        member4_lost = C3sMember.get_by_id(4)
+        member4_lost.membership_accepted = True
+        member4_lost.membership_number = 9876
+
+        res = self.testapp.get('/aml', status=200)
+        self.assertTrue('2 Mitglieder' in res.body)
+
+        member4_lost.membership_date = date.today() - timedelta(days=365)
+        member4_lost.membership_loss_date = \
+            date.today() - timedelta(days=30)
 
         res = self.testapp.get('/aml', status=200)
         self.assertTrue('1 Mitglieder' in res.body)

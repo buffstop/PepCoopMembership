@@ -599,30 +599,42 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
             num_shares=u'23',
         )
 
+        # not member
         member.membership_accepted = False
         member.membership_loss_date = None
-        self.assertEqual(member.is_member, False)
+        self.assertEqual(member.is_member(), False)
 
+        # Accepted after check date
         member.membership_accepted = True
+        member.membership_date = date(2016, 1, 1)
         member.membership_loss_date = None
-        self.assertEqual(member.is_member, True)
+        self.assertEqual(member.is_member(date(2015, 12, 31)), False)
+
+        # Accepted in the past
+        member.membership_accepted = True
+        member.membership_date = date(2016, 1, 1)
+        member.membership_loss_date = None
+        self.assertEqual(member.is_member(), True)
 
         # If loss date is today then the member still has membership until the
         # end of the day
         member.membership_accepted = True
+        member.membership_date = date(2016, 1, 1)
         member.membership_loss_date = date.today()
-        self.assertEqual(member.is_member, True)
+        self.assertEqual(member.is_member(), True)
 
         # If the loss date is in the future then the member still has membership
         member.membership_accepted = True
+        member.membership_date = date(2016, 1, 1)
         member.membership_loss_date = date.today() + timedelta(days=1)
-        self.assertEqual(member.is_member, True)
+        self.assertEqual(member.is_member(), True)
 
         # If the loss date is in the past then the member no longer has
         # membership
         member.membership_accepted = True
+        member.membership_date = date(2016, 1, 1)
         member.membership_loss_date = date.today() - timedelta(days=1)
-        self.assertEqual(member.is_member, False)
+        self.assertEqual(member.is_member(), False)
 
 
 class TestMemberListing(C3sMembershipModelTestBase):

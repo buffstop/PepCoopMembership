@@ -77,19 +77,19 @@ def calculate_partial_dues15(member):
 
     depending on members entry date
     """
-    if member.membership_date < datetime(2015, 4, 1):
+    if member.membership_date < date(2015, 4, 1):
         # first quarter of 2015 or earlier
         start = u'q1_2015'
         amount = D('50')
-    elif member.membership_date < datetime(2015, 7, 1):
+    elif member.membership_date < date(2015, 7, 1):
         # second quarter of 2015
         start = u'q2_2015'
         amount = D('37.50')
-    elif member.membership_date < datetime(2015, 10, 1):
+    elif member.membership_date < date(2015, 10, 1):
         # third quarter of 2015
         start = u'q3_2015'
         amount = D('25')
-    elif member.membership_date >= datetime(2015, 10, 1):
+    elif member.membership_date >= date(2015, 10, 1):
         # third quarter of 2015
         start = u'q4_2015'
         amount = D('12.50')
@@ -173,7 +173,7 @@ def send_dues15_invoice_email(request, m_id=None):
             'to be able to send an invoice email.'.format(member.id),
             'message_to_staff')
         return get_memberhip_listing_redirect(request)
-    if member.membership_date >= datetime(2016,1,1):
+    if member.membership_date >= date(2016,1,1):
         request.session.flash(
             'Member {0} was not a member in 2015. Therefore, you cannot send '
             'an invoice for 2015.'.format(member.id),

@@ -18,6 +18,8 @@ Next Release
   - Do not show certificate section in membership details
   - Do not show certificate links in backend membership list
 
+- Membership lists must not show entities which lost membership.
+
 
 
 1.17.2
