@@ -20,6 +20,8 @@ Next Release
 
 - Membership lists must not show entities which lost membership.
 
+- Remove outdated database fixes.
+
 
 
 1.17.2

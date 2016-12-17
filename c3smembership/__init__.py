@@ -248,7 +248,5 @@ def main(global_config, **settings):
     config.add_route('search_codes', '/search_codes')
     config.add_route('autocomplete_input_values', '/aiv/')
     # fix the database
-    config.add_route('fix_database', '/fix_database')
-    config.add_route('fix_dob', '/fix_dob')
     config.scan()
     return config.make_wsgi_app()

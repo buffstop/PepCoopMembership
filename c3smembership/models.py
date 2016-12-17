@@ -1010,8 +1010,7 @@ class C3sMember(Base):
         Count number of entries in C3sMember table (by counting rows)
 
         Used in:
-            statistics_view, membership_list, fix_database, import_export,
-            some tests...
+            statistics_view, membership_list, import_export, some tests...
 
         Returns:
             Integer: number

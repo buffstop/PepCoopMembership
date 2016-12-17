@@ -171,11 +171,6 @@
          class="btn btn-danger">Merge duplicates</a>
       will give the shares aquired at a different point in time
       to the first entry by a given person.
-      <br />
-      <a href="${request.route_url('fix_dob')}"
-         class="btn btn-warning">Fix Shares date_of_acquisition</a>
-      because the old algorithm and merge process had it wrong.
-
 
     <h3>Export &amp; Import</h3>
     <p>
