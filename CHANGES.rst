@@ -28,6 +28,20 @@ Next Release
 
 - Remove additional shares purchasers list.
 
+- Remove old code which was only used once
+
+  - Import founders
+
+  - Import crowdfunders
+
+  - Fix crowdfunders import
+
+  - Make founders, yessers and crowdfunders members
+
+  - Flag duplicates
+
+  - Merge duplicates
+
 
 
 1.17.2

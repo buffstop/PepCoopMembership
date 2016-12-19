@@ -136,9 +136,6 @@ def main(global_config, **settings):
     config.add_route('export_yes_emails', '/export_yes_emails')
     config.add_route('import_all', '/import_all')
     config.add_route('import_with_ids', '/import_with_ids')
-    config.add_route('import_founders', '/import_founders')
-    config.add_route('import_crowdfunders', '/import_crowdfunders')
-    config.add_route('fix_import_crowdfunders', '/fix_import_crowdfunders')
     config.add_route('logout', '/logout')
     # gather missing information
     config.add_route('mail_mtype_form', '/mtype/{afmid}')  # mail link to form
@@ -147,15 +144,8 @@ def main(global_config, **settings):
     # applications for membership
     config.add_route('afms_awaiting_approval', '/afms_awaiting_approval')
     # memberships
-    config.add_route('flag_duplicates', '/flag_dup')
-    config.add_route('merge_duplicates', '/merge_dup')
     config.add_route('make_member', '/make_member/{afm_id}')
     config.add_route('merge_member', '/merge_member/{afm_id}/{mid}')
-    config.add_route('make_founders_members', '/make_founders_members')
-    config.add_route('make_crowdfounders_members',
-                     '/make_crowdfounders_members')
-    config.add_route('make_yesser_members',
-                     '/make_yesser_members')
 
     config.add_route('membership_listing_backend',
                      '/memberships')
