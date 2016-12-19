@@ -349,7 +349,7 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         instance_from_DB = myMembershipSigneeClass.get_by_id('1')
         self.assertEqual(None, instance_from_DB)
 
-    def test_check_user_or_None(self):
+    def test_check_user_or_none(self):
         """
         XXX TODO
         """
@@ -357,10 +357,10 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         self.session.add(instance)
         myMembershipSigneeClass = self._getTargetClass()
         # get first dataset (id = 1)
-        result1 = myMembershipSigneeClass.check_user_or_None('1')
+        result1 = myMembershipSigneeClass.check_user_or_none('1')
         self.assertEqual(1, result1.id)
         # get invalid dataset
-        result2 = myMembershipSigneeClass.check_user_or_None('1234567')
+        result2 = myMembershipSigneeClass.check_user_or_none('1234567')
         self.assertEqual(None, result2)
 
     def test_check_for_existing_confirm_code(self):
@@ -809,9 +809,9 @@ class C3sStaffTests(unittest.TestCase):
         res = C3sStaff.get_all()
         self.assertEqual(len(res), 1)
 
-        '''test check_user_or_None'''
-        res1 = C3sStaff.check_user_or_None(u'staffer2')
-        res2 = C3sStaff.check_user_or_None(u'staffer1')
+        '''test check_user_or_none'''
+        res1 = C3sStaff.check_user_or_none(u'staffer2')
+        res2 = C3sStaff.check_user_or_none(u'staffer1')
         # print res1
         # print res2
         self.assertTrue(res1 is not None)

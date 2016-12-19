@@ -9,28 +9,28 @@ This module has **import** and **export** functionality.
 - Export all email addresses for Mailman (CSV)
 - Export only the members (CSV)
 """
+
 from datetime import datetime
-from pyramid.httpexceptions import HTTPFound
-from pyramid.security import authenticated_userid
-from pyramid.view import view_config
+import logging
+import tempfile
+import unicodecsv
+
 from sqlalchemy.exc import (
     IntegrityError,
     ResourceClosedError,
 )
-import tempfile
-import unicodecsv
+from pyramid.httpexceptions import HTTPFound
+from pyramid.security import authenticated_userid
+from pyramid.view import view_config
 
 from c3smembership.data.model.base import DBSession
 from c3smembership.models import (
     C3sMember,
 )
 
-DEBUG = False
-LOGGING = True
 
-if LOGGING:  # pragma: no cover
-    import logging
-    log = logging.getLogger(__name__)
+DEBUG = False
+LOG = logging.getLogger(__name__)
 
 
 @view_config(renderer='templates/import.pt',
@@ -45,23 +45,22 @@ def import_db(request):
     New members are merged into the master instance of the database.
     """
     try:  # check if the file exists
-        with open('import/import.csv', 'r') as f:
+        with open('import/import.csv', 'r') as import_file:
             # store contents in tempfile
             content = tempfile.NamedTemporaryFile()
-            content.write(f.read())
+            content.write(import_file.read())
             content.seek(0)  # rewind to beginning
 
     except IOError, ioe:  # pragma: no cover
         print ioe
-        return {'message': "file not found.",
-                #        'codes': ''
-                }
+        return {'message': 'file not found.'}
     # reader for CSV files
-    r = unicodecsv.reader(content.file, delimiter=';',
-                          encoding='utf-8',
-                          quoting=unicodecsv.QUOTE_ALL
-                          )
-    header = r.next()  # first line is the header.
+    import_file = unicodecsv.reader(
+        content.file,
+        delimiter=';',
+        encoding='utf-8',
+        quoting=unicodecsv.QUOTE_ALL)
+    header = import_file.next()  # first line is the header.
     # print("the header: %s" % header)
     # check it for compatibility
     try:
@@ -80,12 +79,10 @@ def import_db(request):
             u'payment_confirmed', u'payment_confirmed_date',  # 25, 26
             u'accountant_comment'  # 27
         ]
-    except AssertionError, ae:  # pragma: no cover
-        print ae
-        print "the header of the CSV does not match what we expect"
-        return {'message': "header fields mismatch. NOT importing",
-                # 'codes': _codes,
-                }
+    except AssertionError, assertion_error:  # pragma: no cover
+        print assertion_error
+        print 'the header of the CSV does not match what we expect'
+        return {'message': 'header fields mismatch. NOT importing'}
 
     # remember the codes imported
     # _codes = []
@@ -97,7 +94,7 @@ def import_db(request):
         # import pdb
         # pdb.set_trace()
         try:
-            row = r.next()
+            row = import_file.next()
         except:
             break
         counter += 1
@@ -209,34 +206,34 @@ def import_db(request):
             dbsession = DBSession
             dbsession.add(import_member)
             dbsession.flush()
-            log.info(
-                "%s imported dataset %s" % (
-                    authenticated_userid(request),
-                    import_member.email_confirm_code))
+            LOG.info(
+                "%s imported dataset %s",
+                authenticated_userid(request),
+                import_member.email_confirm_code)
             request.session.flash(
                 "imported dataset %s" % (import_member.email_confirm_code),
                 'messages',
             )
             # print('done with %s!' % counter)
         except ResourceClosedError, rce:  # pragma: no cover
-            # XXX can't catch this exception,
+            # TODO: can't catch this exception,
             # because it happens somwhere else, later, deeper !?!
             print "transaction was aborted/resource closed"
             print rce
             return {'message': ("tried import of dataset(s) with "
                                 "existing confirm code. ABORTED!")}
-        except IntegrityError, ie:  # pragma: no cover
+        except IntegrityError, integrity_error:  # pragma: no cover
             print "integrity error"
             dbsession.rollback()
-            print ie
-            if 'column email_confirm_code is not unique' in ie.message:
+            print integrity_error
+            if 'column email_confirm_code is not unique' in integrity_error.message:
                 print("import of dataset %s failed, because the confirmation"
                       "code already existed" % counter)
                 return {'message': ("tried import of dataset(s) with "
                                     "existing confirm code. ABORTED!")}
-        except StopIteration, si:  # pragma: no cover
+        except StopIteration, stop_iteration:  # pragma: no cover
             print "stop iteration reached"
-            print si
+            print stop_iteration
             return {'message': "file found, StopIteration reached."}
         # except:
         #    print "passing"
@@ -270,24 +267,23 @@ def import_db_with_ids(request):  # pragma: no cover
     XXX TODO: implement a test-case
     """
     try:  # check if the file exists
-        with open('import/import.csv', 'r') as f:
+        with open('import/import.csv', 'r') as import_file:
             # store contents in tempfile
             content = tempfile.NamedTemporaryFile()
-            content.write(f.read())
+            content.write(import_file.read())
             content.seek(0)  # rewind to beginning
             print "found the impport file."
 
     except IOError, ioe:
         print ioe
-        return {'message': "file not found.",
-                #        'codes': ''
-                }
+        return {'message': 'file not found.'}
     # reader for CSV files
-    r = unicodecsv.reader(content.file, delimiter=';',
-                          encoding='utf-8',
-                          quoting=unicodecsv.QUOTE_ALL
-                          )
-    header = r.next()  # first line is the header.
+    import_file = unicodecsv.reader(
+        content.file,
+        delimiter=';',
+        encoding='utf-8',
+        quoting=unicodecsv.QUOTE_ALL)
+    header = import_file.next()  # first line is the header.
     # print("the header: %s" % header)
     # check it for compatibility
     try:
@@ -305,19 +301,17 @@ def import_db_with_ids(request):  # pragma: no cover
             u'payment_received', u'payment_received_date',  # 21, 22
             u'signature_confirmed', u'signature_confirmed_date',  # 23, 24
             u'payment_confirmed', u'payment_confirmed_date',  # 25, 26
-            u'accountant_comment'  # 27
+            u'accountant_comment',  # 27
         ]
         assert header == expected_header
-    except AssertionError, ae:
-        print ae
+    except AssertionError, assertion_error:
+        print assertion_error
         print "the header of the CSV does not match what we expect"
         print "expected:"
         print expected_header
         print "got:"
         print header
-        return {'message': "header fields mismatch. NOT importing",
-                # 'codes': _codes,
-                }
+        return {'message': 'header fields mismatch. NOT importing'}
 
     # remember the codes imported
     # _codes = []
@@ -329,7 +323,7 @@ def import_db_with_ids(request):  # pragma: no cover
         # import pdb
         # pdb.set_trace()
         try:
-            row = r.next()
+            row = import_file.next()
         except:
             break
         counter += 1
@@ -411,30 +405,30 @@ def import_db_with_ids(request):  # pragma: no cover
             dbsession = DBSession
             dbsession.add(import_member)
             dbsession.flush()
-            log.info(
-                "%s imported dataset %s" % (
-                    authenticated_userid(request),
-                    import_member.email_confirm_code))
+            LOG.info(
+                '%s imported dataset %s',
+                authenticated_userid(request),
+                import_member.email_confirm_code)
             # print('done with %s!' % counter)
         except ResourceClosedError, rce:
-            # XXX can't catch this exception,
+            # TODO: can't catch this exception,
             # because it happens somwhere else, later, deeper !?!
             print "transaction was aborted/resource closed"
             print rce
             return {'message': ("tried import of dataset(s) with "
                                 "existing confirm code. ABORTED!")}
-        except IntegrityError, ie:
+        except IntegrityError, integrity_error:
             print "integrity error"
             dbsession.rollback()
-            print ie
-            if 'column email_confirm_code is not unique' in ie.message:
+            print integrity_error
+            if 'column email_confirm_code is not unique' in integrity_error.message:
                 print("import of dataset %s failed, because the confirmation"
                       "code already existed" % counter)
                 return {'message': ("tried import of dataset(s) with "
                                     "existing confirm code. ABORTED!")}
-        except StopIteration, si:
+        except StopIteration, stop_iteration:
             print "stop iteration reached"
-            print si
+            print stop_iteration
             return {'message': "file found, StopIteration reached."}
         # except:
         #    print "passing"
@@ -454,37 +448,66 @@ def export_db(request):
     """
     datasets = C3sMember.member_listing(
         "id", how_many=C3sMember.get_number(), order='asc')
-    header = ['firstname', 'lastname', 'email',
-              'password', 'last_password_change',
-              'address1', 'address2', 'postcode', 'city', 'country',
-              'locale', 'date_of_birth',
-              'email_is_confirmed', 'email_confirm_code',
-              'num_shares', 'date_of_submission',
-              'membership_type',
-              'member_of_colsoc', 'name_of_colsoc',
-              'signature_received', 'signature_received_date',
-              'payment_received', 'payment_received_date',
-              'signature_confirmed', 'signature_confirmed_date',
-              'payment_confirmed', 'payment_confirmed_date',
-              'accountant_comment',
-              ]
+    header = [
+        'firstname',
+        'lastname',
+        'email',
+        'password',
+        'last_password_change',
+        'address1',
+        'address2',
+        'postcode',
+        'city',
+        'country',
+        'locale',
+        'date_of_birth',
+        'email_is_confirmed',
+        'email_confirm_code',
+        'num_shares',
+        'date_of_submission',
+        'membership_type',
+        'member_of_colsoc',
+        'name_of_colsoc',
+        'signature_received',
+        'signature_received_date',
+        'payment_received',
+        'payment_received_date',
+        'signature_confirmed',
+        'signature_confirmed_date',
+        'payment_confirmed',
+        'payment_confirmed_date',
+        'accountant_comment',]
     rows = []  # start with empty list
-    for m in datasets:
-        rows.append(
-            (m.firstname, m.lastname, m.email,
-             m.password, m.last_password_change,
-             m.address1, m.address2, m.postcode, m.city, m.country,
-             m.locale, m.date_of_birth,
-             m.email_is_confirmed, m.email_confirm_code,
-             m.num_shares, m.date_of_submission,
-             m.membership_type,
-             m.member_of_colsoc, m.name_of_colsoc,
-             m.signature_received, m.signature_received_date,
-             m.payment_received, m.payment_received_date,
-             m.signature_confirmed, m.signature_confirmed_date,
-             m.payment_confirmed, m.payment_confirmed_date,
-             m.accountant_comment)
-        )
+    for member in datasets:
+        rows.append((
+            member.firstname,
+            member.lastname,
+            member.email,
+            member.password,
+            member.last_password_change,
+            member.address1,
+            member.address2,
+            member.postcode,
+            member.city,
+            member.country,
+            member.locale,
+            member.date_of_birth,
+            member.email_is_confirmed,
+            member.email_confirm_code,
+            member.num_shares,
+            member.date_of_submission,
+            member.membership_type,
+            member.member_of_colsoc,
+            member.name_of_colsoc,
+            member.signature_received,
+            member.signature_received_date,
+            member.payment_received,
+            member.payment_received_date,
+            member.signature_confirmed,
+            member.signature_confirmed_date,
+            member.payment_confirmed,
+            member.payment_confirmed_date,
+            member.accountant_comment))
     return {
         'header': header,
         'rows': rows}
@@ -502,10 +525,12 @@ def export_yes_emails(request):  # pragma: no cover
     datasets = C3sMember.member_listing(
         "id", how_many=C3sMember.get_number(), order='asc')
     rows = []  # start with empty list
-    for m in datasets:
-        if m.signature_received and m.payment_received:
-            rows.append(
-                (m.firstname + ' ' + m.lastname + ' <' + m.email + '>',))
+    for member in datasets:
+        if member.signature_received and member.payment_received:
+            rows.append('{firstname} {lastname} <{email}>'.format(
+                firstname=member.firstname,
+                lastname=member.lastname,
+                email=member.email))
     return {
         'header': ['Vorname Nachname <devnull@c3s.cc>', ],
         'rows': rows}
@@ -523,48 +548,72 @@ def export_memberships(request):  # pragma: no cover
     _num = C3sMember.get_number()
     datasets = C3sMember.get_members(
         'id', how_many=_num, offset=0, order=u'asc')
-    header = ['firstname', 'lastname', 'email',
-              'address1', 'address2', 'postcode', 'city', 'country',
-              'locale', 'date_of_birth',
-              # 'email_is_confirmed',
-              'email_confirm_code',
-              'membership_date',
-              'num_shares',  # 'date_of_submission',
-              # 'shares list (number+date)',
-              'membership_type',
-              'member_of_colsoc', 'name_of_colsoc',
-              'signature_received', 'signature_received_date',
-              'payment_received', 'payment_received_date',
-              # 'signature_confirmed', 'signature_confirmed_date',
-              # 'payment_confirmed', 'payment_confirmed_date',
-              'accountant_comment',
-              'is_legalentity',
-              'court of law',
-              'registration number',
-              ]
+    header = [
+        'firstname',
+        'lastname',
+        'email',
+        'address1',
+        'address2',
+        'postcode',
+        'city',
+        'country',
+        'locale',
+        'date_of_birth',
+        # 'email_is_confirmed',
+        'email_confirm_code',
+        'membership_date',
+        'num_shares',
+        # 'date_of_submission',
+        # 'shares list (number+date)',
+        'membership_type',
+        'member_of_colsoc',
+        'name_of_colsoc',
+        'signature_received',
+        'signature_received_date',
+        'payment_received',
+        'payment_received_date',
+        # 'signature_confirmed',
+        'signature_confirmed_date',
+        # 'payment_confirmed',
+        'payment_confirmed_date',
+        'accountant_comment',
+        'is_legalentity',
+        'court of law',
+        'registration number',]
     rows = []  # start with empty list
-    for m in datasets:
-        rows.append(
-            (m.firstname, m.lastname, m.email,
-             m.address1, m.address2, m.postcode, m.city, m.country,
-             m.locale, m.date_of_birth,
-             # m.email_is_confirmed,
-             m.email_confirm_code,
-             m.membership_date,
-             m.num_shares,
-             # m.date_of_submission,
-             # '+'.join(str(s.id)+'('+str(s.number)+')' for s in m.shares),
-             m.membership_type,
-             m.member_of_colsoc, m.name_of_colsoc,
-             m.signature_received, m.signature_received_date,
-             m.payment_received, m.payment_received_date,
-             # m.signature_confirmed, m.signature_confirmed_date,
-             # m.payment_confirmed, m.payment_confirmed_date,
-             m.accountant_comment,
-             m.is_legalentity,
-             m.court_of_law,
-             m.registration_number,)
-        )
+    for member in datasets:
+        rows.append((
+            member.firstname,
+            member.lastname,
+            member.email,
+            member.address1,
+            member.address2,
+            member.postcode,
+            member.city,
+            member.country,
+            member.locale,
+            member.date_of_birth,
+            # member.email_is_confirmed,
+            member.email_confirm_code,
+            member.membership_date,
+            member.num_shares,
+            # member.date_of_submission,
+            # '+'.join(str(s.id)+'('+str(s.number)+')' for s in member.shares),
+            member.membership_type,
+            member.member_of_colsoc,
+            member.name_of_colsoc,
+            member.signature_received,
+            member.signature_received_date,
+            member.payment_received,
+            member.payment_received_date,
+            # member.signature_confirmed,
+            member.signature_confirmed_date,
+            # member.payment_confirmed,
+            member.payment_confirmed_date,
+            member.accountant_comment,
+            member.is_legalentity,
+            member.court_of_law,
+            member.registration_number,))
     return {
         'header': header,
         'rows': rows}

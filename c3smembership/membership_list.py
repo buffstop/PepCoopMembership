@@ -55,7 +55,6 @@ def member_list_date_pdf_view(request):
 
     If the date is not parseable, an error message is shown.
     """
-    DEBUG = False
     try:
         _date_m = request.matchdict['date']
         _date = datetime.strptime(_date_m, '%Y-%m-%d').date()
@@ -92,7 +91,6 @@ def member_list_date_pdf_view(request):
 
     They are added to a list and counted.
     Their shares (those acquired before the date) are counted as well.
-
     """
     # filter and count memberships and shares
     for item in _all_members:
@@ -209,7 +207,7 @@ def member_list_date_pdf_view(request):
         if member.membership_loss_date is not None:
             membership_loss += \
                 member.membership_loss_date.strftime('%d.%m.%Y') + \
-                '\linebreak '
+                '\\linebreak '
         if member.membership_loss_type is not None:
             membership_loss += member.membership_loss_type
         latex_file.write(
@@ -291,7 +289,6 @@ def member_list_print_view(request):
             try:
                 assert(member.membership_number is not None)
             except AssertionError:
-                pass
                 if DEBUG:  # pragma: no cover
                     print u"failed at id {} lastname {}".format(
                         member.id, member.lastname)
@@ -329,7 +326,6 @@ def merge_member_view(request):
     The second entry in the C3sMember table is given the 'is_duplicate' flag
     and also the 'duplicate_of' is given the *id* of the original entry.
     """
-    DEBUG = False
     _id = request.matchdict['afm_id']
     _mid = request.matchdict['mid']
     if DEBUG:  # pragma: no cover
@@ -338,7 +334,7 @@ def merge_member_view(request):
     orig = C3sMember.get_by_id(_mid)
     merg = C3sMember.get_by_id(_id)
 
-    if not (orig.membership_accepted):
+    if not orig.membership_accepted:
         request.session.flash(
             'you can only merge to accepted members!',
             'merge_message')
@@ -350,7 +346,7 @@ def merge_member_view(request):
             'merge_message')
         return HTTPFound(request.route_url('make_member', afm_id=_id))
 
-    # XXX TODO: this needs fixing!!!
+    # TODO: this needs fixing!!!
     # date must be set manually according to date of approval of the board
     _date_for_shares = merg.signature_received_date if (
         merg.signature_received_date > merg.payment_received_date

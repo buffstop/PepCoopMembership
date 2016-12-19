@@ -11,21 +11,28 @@ This module holds views for accountants to do accounting stuff.
 - ReGenerate a PDF for an application
 """
 
-from c3smembership.models import (
-    C3sMember,
-    C3sStaff,
-    Dues15Invoice,
-    Dues16Invoice,
-)
 
-from c3smembership.presentation.i18n import _
+import logging
 
-from c3smembership.presentation.views.dashboard import get_dashboard_redirect
-from c3smembership.presentation.schemas.accountant_login import (
-    AccountantLogin
+from datetime import (
+    datetime,
+    date,
 )
+from types import NoneType
+
+import deform
+from deform import ValidationFailure
+from pyramid_mailer.message import Message
+from pyramid.httpexceptions import HTTPFound
+from pyramid.security import (
+    remember,
+    forget,
+    authenticated_userid,
+)
+from pyramid.url import route_url
+from pyramid.view import view_config
+
 from c3smembership.mail_utils import (
-    make_signature_confirmation_email,
     make_payment_confirmation_email,
     send_message,
 )
@@ -33,31 +40,22 @@ from c3smembership.mail_reminders_util import (
     make_signature_reminder_email,
     make_payment_reminder_email,
 )
+from c3smembership.models import (
+    C3sMember,
+    C3sStaff,
+    Dues15Invoice,
+    Dues16Invoice,
+)
+from c3smembership.presentation.i18n import _
+from c3smembership.presentation.schemas.accountant_login import (
+    AccountantLogin
+)
+from c3smembership.presentation.views.dashboard import get_dashboard_redirect
 from c3smembership.utils import generate_pdf
-import deform
-from deform import ValidationFailure
-from types import NoneType
 
-from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPFound
-from pyramid.security import (
-    remember,
-    forget,
-    authenticated_userid,
-)
-from pyramid_mailer.message import Message
-from pyramid.url import route_url
-from datetime import (
-    datetime,
-    date,
-)
 
 DEBUG = False
-LOGGING = True
-
-if LOGGING:  # pragma: no cover
-    import logging
-    LOG = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 @view_config(renderer='templates/login.pt',
@@ -173,24 +171,24 @@ def delete_entry(request):
 
     if deletion_confirmed:
         memberid = request.matchdict['memberid']
-        _member = C3sMember.get_by_id(memberid)
-        member_lastname = _member.lastname
-        member_firstname = _member.firstname
+        member = C3sMember.get_by_id(memberid)
+        member_lastname = member.lastname
+        member_firstname = member.firstname
 
-        C3sMember.delete_by_id(_member.id)
+        C3sMember.delete_by_id(member.id)
         LOG.info(
             "member.id %s was deleted by %s",
-            _member.id,
+            member.id,
             request.user.login,
         )
-        _message = "member.id %s was deleted" % _member.id
-        request.session.flash(_message, 'messages')
+        message = "member.id %s was deleted" % member.id
+        request.session.flash(message, 'messages')
 
-        _msgstr = u'Member with id {0} \"{1}, {2}\" was deleted.'
+        msgstr = u'Member with id {0} \"{1}, {2}\" was deleted.'
         return HTTPFound(
             request.route_url(
                 redirection_view,
-                _query={'message': _msgstr.format(
+                _query={'message': msgstr.format(
                     memberid,
                     member_lastname,
                     member_firstname)},

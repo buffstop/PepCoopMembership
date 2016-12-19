@@ -2,7 +2,12 @@
 This module holds the main method: config and route declarations
 """
 
+import os
+
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
+from pyramid_beaker import session_factory_from_settings
 from sqlalchemy import engine_from_config
 
 from c3smembership.presentation.parameter_validation import (
@@ -14,15 +19,11 @@ from c3smembership.security import (
     Root,
     groupfinder
 )
-from pyramid_beaker import session_factory_from_settings
-from pyramid.authentication import AuthTktAuthenticationPolicy
-from pyramid.authorization import ACLAuthorizationPolicy
 from c3smembership.presentation.views.dashboard import dashboard_content_size_provider
 from c3smembership.presentation.views.membership_listing import membership_content_size_provider
 
 
-from pkg_resources import get_distribution
-__version__ = get_distribution('c3sMembership').version
+__version__ = open(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../VERSION')).read()
 
 
 def main(global_config, **settings):
@@ -43,20 +44,24 @@ def main(global_config, **settings):
                           authorization_policy=authz_policy,
                           session_factory=session_factory,
                           root_factory=Root)
+
     # using a custom request with user information
     config.set_request_factory(RequestWithUserAttribute)
 
     config.include('pyramid_mailer')
-    config.include('pyramid_chameleon')  # for pyramid 1.5a... for later
+    config.include('pyramid_chameleon')
     config.include('cornice')
     config.include('c3smembership.presentation.pagination')
+
     config.add_translation_dirs(
         'colander:locale/',
-        'deform:locale/',  # copy deform.po and .mo to locale/de/LC_MESSAGES/
+        'deform:locale/',
         'c3smembership:locale/')
+
     config.add_static_view('static_deform', 'deform:static')
-    config.add_static_view('static',
-                           'c3smembership:static', cache_max_age=3600)
+    config.add_static_view(
+        'static',
+        'c3smembership:static', cache_max_age=3600)
     config.add_static_view(
         'docs',
         '../docs/_build/html/', cache_max_age=3600)
@@ -73,7 +78,7 @@ def main(global_config, **settings):
     config.add_renderer(name='csv',
                         factory='c3smembership.renderers.CSVRenderer')
 
-    # ## Membership application process
+    ## Membership application process
     # Step 1 (join.pt): home is /, the membership application form
     config.add_route('join', '/')
     # Step 2 (success.pt): check and edit data
@@ -89,11 +94,7 @@ def main(global_config, **settings):
     config.add_route(
         'verify_afm_email',
         '/vae/{refcode}/{token}/{email}')  # verify afm email
-    # config.add_route(
-    #    'verify_member_email',
-    #    '/vfe/{refcode}/{token}/{email}')  # verify founders mail?
 
-    # routes & views for staff
     # applications for membership
     config.add_route('dashboard', '/dashboard')
     config.make_pagination_route(
@@ -110,17 +111,13 @@ def main(global_config, **settings):
     config.add_route('detail', '/detail/{memberid}')
     config.add_route('edit', '/edit/{_id}')
 
-
-
-
-    from models import C3sMember
+    # TODO: move application layer setup to separate module
+    from c3smembership.models import C3sMember
     from c3smembership.business.membership_application import MembershipApplication
     membership_application = MembershipApplication(C3sMember)
-
     config.registry.membership_application = membership_application
     config.add_route('switch_sig', '/switch_sig/{memberid}')
     config.add_route('switch_pay', '/switch_pay/{memberid}')
-
 
     config.add_route('mail_sig_confirmation', '/mail_sig_conf/{memberid}')
     config.add_route('regenerate_pdf', '/re_C3S_SCE_AFM_{code}.pdf')
@@ -137,12 +134,15 @@ def main(global_config, **settings):
     config.add_route('import_all', '/import_all')
     config.add_route('import_with_ids', '/import_with_ids')
     config.add_route('logout', '/logout')
+
     # gather missing information
     config.add_route('mail_mtype_form', '/mtype/{afmid}')  # mail link to form
     config.add_route('mtype_form', '/mtype/{refcode}/{token}/{email}')  # form
     config.add_route('mtype_thanks', '/mtype_thanks')  # thanks
+
     # applications for membership
     config.add_route('afms_awaiting_approval', '/afms_awaiting_approval')
+
     # memberships
     config.add_route('make_member', '/make_member/{afm_id}')
     config.add_route('merge_member', '/merge_member/{afm_id}/{mid}')
@@ -162,14 +162,9 @@ def main(global_config, **settings):
     config.add_route('membership_listing_aufstockers',
                      '/aml_aufstockers')
 
-
     # membership dues 2015
     config.add_route('send_dues15_invoice_email', '/dues15_invoice/{member_id}')
     config.add_route('send_dues15_invoice_batch', '/dues15_invoice_batch')
-    # config.add_route('send_dues_receipt_mail',
-    #                  '/dues_receipt_mail/{member_id}')
-    # config.add_route('make_dues_invoice_pdf',  # retired! use route below!
-    #                 '/dues_invoice/{email}/{code}/invoice.pdf')
     config.add_route('make_dues15_invoice_no_pdf',
                      '/dues15_invoice_no/{email}/{code}/C3S-dues15-{i}.pdf')
     config.add_route('dues15_reduction',
@@ -178,7 +173,6 @@ def main(global_config, **settings):
                      '/dues15_reversal/{email}/{code}/C3S-dues15-{no}-S.pdf')
     config.add_route('dues15_notice', '/dues15_notice/{member_id}')
     config.add_route('dues15_listing', '/dues15_listing')
-
 
     # membership dues 2016
     config.add_route('send_dues16_invoice_email', '/dues16_invoice/{member_id}')
@@ -192,15 +186,14 @@ def main(global_config, **settings):
     config.add_route('dues16_notice', '/dues16_notice/{member_id}')
     config.add_route('dues16_listing', '/dues16_listing')
 
-
-    from c3smembership.models import C3sMember, Dues15Invoice
+    # TODO: move application layer setup to separate module
+    from c3smembership.models import Dues15Invoice
     from c3smembership.data.model.base import DBSession
     from c3smembership.business.dues_invoice_archiving import DuesInvoiceArchiving
     from c3smembership.views.membership_dues import (
         make_invoice_pdf_pdflatex,
         make_reversal_pdf_pdflatex,
     )
-    import os
     invoices_archive_path = os.path.abspath(
         os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
@@ -223,21 +216,26 @@ def main(global_config, **settings):
     config.add_route('shares_detail', '/shares_detail/{id}')
     config.add_route('shares_edit', '/shares_edit/{id}')
     config.add_route('shares_delete', '/shares_delete/{id}')
+
     # membership_certificate
     config.add_route('certificate_mail', '/cert_mail/{id}')
     config.add_route('certificate_pdf', '/cert/{id}/C3S_{name}_{token}.pdf')
     config.add_route('certificate_pdf_staff', '/cert/{id}/C3S_{name}.pdf')
+
     # annual reports
     config.add_route('annual_reporting', '/annual_reporting')
+
     # invite people
     config.add_route('invite_member', '/invite_member/{m_id}')
     config.add_route('invite_batch', '/invite_batch/{number}')
+
     # search for people
     config.add_route('search_people', '/search_people')
     config.add_route('autocomplete_people_search', '/aps/')
+
     # search for codes
     config.add_route('search_codes', '/search_codes')
     config.add_route('autocomplete_input_values', '/aiv/')
-    # fix the database
+
     config.scan()
     return config.make_wsgi_app()

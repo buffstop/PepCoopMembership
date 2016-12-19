@@ -1,25 +1,27 @@
 """
-    The Annual Report shows a bunch of numbers and lists:
+The Annual Report shows a bunch of numbers and lists:
 
-    - the number of members and
-    - the number of shares
+- the number of members and
+- the number of shares
 
-    ... acquired during a given timeframe.
+... acquired during a given timeframe.
 
-    The default timeframe is the current year,
-    but start date and end date can be specified to 'debug' other periods, too.
+The default timeframe is the current year, but start date and end date can be
+specified to 'debug' other periods, too.
 
-    The report also shows the number of (and a list of)
-    shares paid but not 'approved' yet
+The report also shows the number of (and a list of) shares paid but not
+'approved' yet
 
-    - as part of a membership or
-    - when additional shares were acquired
-
+- as part of a membership or
+- when additional shares were acquired
 """
 
+from datetime import (
+    date,
+    datetime,
+)
+
 import colander
-from datetime import date
-from datetime import datetime
 import deform
 from deform import ValidationFailure
 from pyramid.view import view_config
@@ -52,6 +54,9 @@ def annual_report(request):  # pragma: no cover
 
     # construct a form
     class DatesForm(colander.Schema):
+        """
+        Defines the colander schema for start and end date.
+        """
         startdate = colander.SchemaNode(
             colander.Date(),
             title='start date',
@@ -70,31 +75,25 @@ def annual_report(request):  # pragma: no cover
 
     # if the form has been used and SUBMITTED, check contents
     if 'submit' in request.POST:
-        # print("SUBMITTED!")
         controls = request.POST.items()
         try:
             appstruct = form.validate(controls)
-            # print("the appstruct from the form: %s \n") % appstruct
-            # for thing in appstruct:
-            #    print("the thing: %s") % thing
-            #    print("type: %s") % type(thing)
 
-            start = appstruct['startdate']  # date
-            end = appstruct['enddate']  # date
-            # convert to datetime
+            start = appstruct['startdate']
+            end = appstruct['enddate']
             start_date = datetime(start.year, start.month, start.day)
             end_date = datetime(end.year, end.month, end.day)
 
-        except ValidationFailure, e:  # pragma: no cover
+        except ValidationFailure, validation_failure:  # pragma: no cover
 
-            print(e)
+            print(validation_failure)
             request.session.flash(
-                _(u"Please note: There were errors, "
-                  "please check the form below."),
+                _(u'Please note: There were errors, please check the form '
+                  u'below.'),
                 'message_above_form',
                 allow_duplicate=False)
-            return{
-                'form': e.render(),
+            return {
+                'form': validation_failure.render(),
                 'num_members': 0,
                 'num_shares': 0,
                 'new_members': [],
@@ -111,93 +110,89 @@ def annual_report(request):  # pragma: no cover
 
     # prepare: get information from the database
     # get memberships
-    _all_members = C3sMember.get_all()
+    all_members = C3sMember.get_all()
 
     # prepare filtering and counting
-    _members = []  # all the members matching the criteria
-    _num_members = 0
+    members = []  # all the members matching the criteria
+    members_count = 0
 
-    _num_afm_shares_paid_unapproved = 0
-    _afm_shares_paid_unapproved = []
+    afm_shares_paid_unapproved_cnt = 0
+    afm_shares_paid_unapproved = []
 
     # now filter and count the afms and members
-    for m in _all_members:
+    for member in all_members:
         if (
-                m.membership_accepted and  # unneccessary!?
-                (m.membership_date >= start_date) and
-                (m.membership_date <= end_date)
+                member.membership_accepted and  # unneccessary!?
+                (member.membership_date >= start_date) and
+                (member.membership_date <= end_date)
         ):
             # add this item to the list
-            _members.append(m)
-            _num_members += 1
-            # also count the shares
-            # for _s in item.shares:
-            #    if (_s.date_of_acquisition <= _date):
-            #        _count_shares += _s.number
+            members.append(member)
+            members_count += 1
         elif (  # member is not accepted yet
                 (
-                    (not m.membership_accepted) or
-                    (m.membership_accepted is None)
+                    (not member.membership_accepted) or
+                    (member.membership_accepted is None)
                 ) and
                 # but payment has been received during timespan
-                (m.payment_received) and
+                (member.payment_received) and
                 (datetime(
-                    m.payment_received_date.year,
-                    m.payment_received_date.month,
-                    m.payment_received_date.day,
+                    member.payment_received_date.year,
+                    member.payment_received_date.month,
+                    member.payment_received_date.day,
                 ) >= start_date) and
                 (datetime(
-                    m.payment_received_date.year,
-                    m.payment_received_date.month,
-                    m.payment_received_date.day,
+                    member.payment_received_date.year,
+                    member.payment_received_date.month,
+                    member.payment_received_date.day,
                 ) <= end_date)):
-            _num_afm_shares_paid_unapproved += m.num_shares
-            _afm_shares_paid_unapproved.append(m)
+            afm_shares_paid_unapproved_cnt += member.num_shares
+            afm_shares_paid_unapproved.append(member)
 
     # shares
-    _count_shares = 0
-    _new_shares = []
-    _num_shares_paid_unapproved = 0
-    _shares_paid_unapproved = []
+    shares_count = 0
+    new_shares = []
+    shares_paid_unapproved_count = 0
+    shares_paid_unapproved = []
 
-    _all_shares = Shares.get_all()
-    for s in _all_shares:
-        if s is not None:
+    all_shares = Shares.get_all()
+    for share in all_shares:
+        if share is not None:
 
             if (  # shares approved during span
                     (datetime(
-                        s.date_of_acquisition.year,
-                        s.date_of_acquisition.month,
-                        s.date_of_acquisition.day,
+                        share.date_of_acquisition.year,
+                        share.date_of_acquisition.month,
+                        share.date_of_acquisition.day,
                     ) >= start_date) and
                     (datetime(
-                        s.date_of_acquisition.year,
-                        s.date_of_acquisition.month,
-                        s.date_of_acquisition.day,
+                        share.date_of_acquisition.year,
+                        share.date_of_acquisition.month,
+                        share.date_of_acquisition.day,
                     ) <= end_date)
             ):
-                _count_shares += s.number
-                _new_shares.append(s)
+                shares_count += share.number
+                new_shares.append(share)
 
             elif (  # shares NOT approved before end of span
                     (datetime(
-                        s.date_of_acquisition.year,
-                        s.date_of_acquisition.month,
-                        s.date_of_acquisition.day,
+                        share.date_of_acquisition.year,
+                        share.date_of_acquisition.month,
+                        share.date_of_acquisition.day,
                     ) >= end_date) and
                     (datetime(  # payment received during ...
-                        s.payment_received_date.year,
-                        s.payment_received_date.month,
-                        s.payment_received_date.day,
+                        share.payment_received_date.year,
+                        share.payment_received_date.month,
+                        share.payment_received_date.day,
                     ) >= start_date) and
                     (datetime(  # payment received during ...
-                        s.payment_received_date.year,
-                        s.payment_received_date.month,
-                        s.payment_received_date.day,
+                        share.payment_received_date.year,
+                        share.payment_received_date.month,
+                        share.payment_received_date.day,
                     ) <= end_date)
             ):
-                _num_shares_paid_unapproved += s.number
-                _shares_paid_unapproved.append(s)
+                shares_paid_unapproved_count += share.number
+                shares_paid_unapproved.append(share)
 
     html = form.render()
 
@@ -208,16 +203,16 @@ def annual_report(request):  # pragma: no cover
         'end_date': end_date,
         'datetime': datetime,
         # members
-        'new_members': _members,
-        'num_members': _num_members,
+        'new_members': members,
+        'num_members': members_count,
         # shares
-        'num_shares': _count_shares,
-        'sum_shares': _count_shares * 50,
-        'new_shares': _new_shares,
+        'num_shares': shares_count,
+        'sum_shares': shares_count * 50,
+        'new_shares': new_shares,
         # afm shares paid but unapproved
-        'num_afm_shares_paid_unapproved': _num_afm_shares_paid_unapproved,
-        'afm_paid_unapproved_shares': _afm_shares_paid_unapproved,
+        'num_afm_shares_paid_unapproved': afm_shares_paid_unapproved_cnt,
+        'afm_paid_unapproved_shares': afm_shares_paid_unapproved,
         # other shares paid but unapproved
-        'num_shares_paid_unapproved': _num_shares_paid_unapproved,
-        'paid_unapproved_shares': _shares_paid_unapproved,
+        'num_shares_paid_unapproved': shares_paid_unapproved_count,
+        'paid_unapproved_shares': shares_paid_unapproved,
     }
