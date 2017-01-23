@@ -209,7 +209,8 @@ def member_list_date_pdf_view(request):
                 member.membership_loss_date.strftime('%d.%m.%Y') + \
                 '\\linebreak '
         if member.membership_loss_type is not None:
-            membership_loss += member.membership_loss_type
+            membership_loss += unicode(TexTools.escape(
+                member.membership_loss_type)).encode('utf-8')
         latex_file.write(
             ''' {0} & {1} & {2} & {3} & {4} & {5} & {6}  \\\\\\hline %
             '''.format(
