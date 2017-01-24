@@ -90,7 +90,7 @@ $(document).ready(function(){
     <p i18n:translate="join-form-disclaimer-paragraph">
       We will store and use the information you provide for administrative purposes
       and in order to protect your rights as an artist.
-      Responsible authority: C3S SCE, Heyestraße 194, 40625 Düsseldorf.
+      Responsible authority: C3S SCE, Rochusstraße 44, 40479 Düsseldorf.
     </p>
     <!-- p i18n:translate="" class="infoIndent" -->
       <!-- a href="/faq" target="_blank"
