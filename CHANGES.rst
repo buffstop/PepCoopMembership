@@ -1,5 +1,5 @@
-Next Release
-============
+1.18
+====
 
 
 - Fix template syntax issues.
@@ -14,8 +14,11 @@ Next Release
 - Membership certificate must not be generated once a member lost membership.
 
   - Prevent certificate email sending
+
   - Prevent PDF generation from email link and backend
+
   - Do not show certificate section in membership details
+
   - Do not show certificate links in backend membership list
 
 - Membership lists must not show entities which lost membership.
