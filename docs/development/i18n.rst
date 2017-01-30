@@ -27,13 +27,13 @@ update the translation files. This again consists of three steps:
 
    .. code-block:: shell
 
-      $ python setup.py extract_messages
+      $ env/bin/python setup.py extract_messages
 
 2. Refresh the language specific .po files
 
    .. code-block:: shell
 
-      $ python setup.py update_catalog
+      $ env/bin/python setup.py update_catalog
 
    Now you can modify the language specific files and enter the values
    for the newly created messages.
@@ -45,7 +45,7 @@ update the translation files. This again consists of three steps:
 
    .. code-block:: shell
 
-      $ python setup.py compile_catalog
+      $ env/bin/python setup.py compile_catalog
 
 The application needs to be restarted in order for the catalog changes to take
 effect.
