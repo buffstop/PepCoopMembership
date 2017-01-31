@@ -12,6 +12,8 @@ It was then reused for
 
 - BarCamp and General Assembly 2014
 - BarCamp and General Assembly 2015
+- BarCamp and General Assembly 2016
+- BarCamp and General Assembly 2017
 
 How it works
 ------------
@@ -44,7 +46,7 @@ from types import NoneType
 
 from c3smembership.membership_certificate import make_random_token
 from c3smembership.models import C3sMember
-from c3smembership.invite_members_texts import make_bcga16_invitation_email
+from c3smembership.invite_members_texts import make_bcga17_invitation_email
 
 
 DEBUG = False
@@ -83,7 +85,7 @@ def invite_member_BCGV(request):
         '/lu/' + _m.email_invite_token_bcgv16 +
         '/' + _m.email)
 
-    email_subject, email_body = make_bcga16_invitation_email(_m, _url)
+    email_subject, email_body = make_bcga17_invitation_email(_m, _url)
 
     log.info("mailing event invitation to to member id %s" % _m.id)
 
@@ -162,7 +164,7 @@ def batch_invite(request):
         log.info("mailing event invitation to to member id %s" % _m.id)
         print("mailing event invitation to member id %s" % _m.id)
 
-        email_subject, email_body = make_bcga16_invitation_email(_m, _url)
+        email_subject, email_body = make_bcga17_invitation_email(_m, _url)
 
         message = Message(
             subject=email_subject,
