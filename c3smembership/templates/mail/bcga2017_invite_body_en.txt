@@ -1,6 +1,8 @@
 
 Hello {salutation},
 
+## noch ändern für 2017 ##
+
 on the 15th of March 2016 you received an email inviting you to the BarCamp
 and General Assembly of C3S SCE on the 16th and 17th April of 2016
 in Düsseldorf.

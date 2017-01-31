@@ -1,8 +1,7 @@
 
 Hallo {salutation},
 
-am 15.03.2016 haben wir Dich zu BarCamp und Generalversammlung der C3S SCE
-eingeladen, welche am 16. und 17.04.2016 in Düsseldorf stattfinden.
+## ToDo: Einladungstext 2017 ##
 
 Wir benötigen im Vorfeld eine Rückmeldung, ob Du an BarCamp und/oder
 Generalversammlung teilnehmen möchtest, oder ob Du Dich vertreten lassen
@@ -14,12 +13,14 @@ Dies ist Dein individueller Link zur Anmeldung:
 
 Bitte teile uns dort mit, ob Du teilnimmst. Wir müssen rechtzeitig wissen, 
 ob die Location ausreichend groß ist.
-Bitte antworte uns daher - wenn möglich - bis zum 09.04.2016.
-Nach dem 09.04. ist keine Essensbestellung für das Barcamp mehr möglich.
+Bitte antworte uns daher - wenn möglich - bis zum 15.03.2017.
 
 Auf der verlinkten Seite kannst Du separat die Teilnahme für die
-Generalversammlung und das Barcamp bestätigen und ggfs. Essen vorbestellen
-oder einen Vertreter benennen.
+Generalversammlung und das Barcamp bestätigen und ggfs. einen 
+Vertreter benennen.
+
+## Auslagerung Info Bevollmäctigter auf Webseite oder in Ticketing? ##
+
 
 Stellvertretende Bevollmächtigte
 --------------------------------
@@ -56,7 +57,8 @@ Wir freuen uns auf Dich & Deine Ideen!
 
 Das Team der C3S
 
-[1] https://wiki.c3s.cc/index.php/Themenvorschläge_BarCamp2016 
+## andere link-location?
+[1] https://wiki.c3s.cc/index.php/Themenvorschläge_BarCamp2017 
 (Zugangsdaten: Name: schwarm, Passwort: letmein) 
 
 {footer}
