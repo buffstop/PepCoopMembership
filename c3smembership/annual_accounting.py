@@ -45,8 +45,8 @@ def annual_report(request):  # pragma: no cover
     XXX TODO write testcases for this
     """
     # defaults
-    start_date = datetime(date.today().year, 1, 1)  # first day of this year
-    end_date = end_date = datetime(date.today().year, 12, 31)  # and last
+    start_date = date(date.today().year, 1, 1)  # first day of this year
+    end_date = end_date = date(date.today().year, 12, 31)  # and last
     appstruct = {
         'startdate': start_date,
         'enddate': end_date,
@@ -81,12 +81,11 @@ def annual_report(request):  # pragma: no cover
 
             start = appstruct['startdate']
             end = appstruct['enddate']
-            start_date = datetime(start.year, start.month, start.day)
-            end_date = datetime(end.year, end.month, end.day)
+            start_date = date(start.year, start.month, start.day)
+            end_date = date(end.year, end.month, end.day)
 
         except ValidationFailure, validation_failure:  # pragma: no cover
 
-            print(validation_failure)
             request.session.flash(
                 _(u'Please note: There were errors, please check the form '
                   u'below.'),
@@ -121,31 +120,19 @@ def annual_report(request):  # pragma: no cover
 
     # now filter and count the afms and members
     for member in all_members:
-        if (
-                member.membership_accepted and  # unneccessary!?
-                (member.membership_date >= start_date) and
-                (member.membership_date <= end_date)
-        ):
-            # add this item to the list
+        payment_received_date = date(
+            member.payment_received_date.year,
+            member.payment_received_date.month,
+            member.payment_received_date.day)
+        # if membership granted during time period
+        if member.membership_date >= start_date \
+                and member.membership_date <= end_date:
             members.append(member)
             members_count += 1
-        elif (  # member is not accepted yet
-                (
-                    (not member.membership_accepted) or
-                    (member.membership_accepted is None)
-                ) and
-                # but payment has been received during timespan
-                (member.payment_received) and
-                (datetime(
-                    member.payment_received_date.year,
-                    member.payment_received_date.month,
-                    member.payment_received_date.day,
-                ) >= start_date) and
-                (datetime(
-                    member.payment_received_date.year,
-                    member.payment_received_date.month,
-                    member.payment_received_date.day,
-                ) <= end_date)):
+        # but payment has been received during timespan
+        elif member.payment_received \
+                and payment_received_date >= start_date \
+                and payment_received_date <= end_date:
             afm_shares_paid_unapproved_cnt += member.num_shares
             afm_shares_paid_unapproved.append(member)
 
@@ -158,39 +145,27 @@ def annual_report(request):  # pragma: no cover
     all_shares = Shares.get_all()
     for share in all_shares:
         if share is not None:
+            date_of_acquisition = date(
+                share.date_of_acquisition.year,
+                share.date_of_acquisition.month,
+                share.date_of_acquisition.day)
+            payment_received_date = date(
+                share.payment_received_date.year,
+                share.payment_received_date.month,
+                share.payment_received_date.day)
 
-            if (  # shares approved during span
-                    (datetime(
-                        share.date_of_acquisition.year,
-                        share.date_of_acquisition.month,
-                        share.date_of_acquisition.day,
-                    ) >= start_date) and
-                    (datetime(
-                        share.date_of_acquisition.year,
-                        share.date_of_acquisition.month,
-                        share.date_of_acquisition.day,
-                    ) <= end_date)
-            ):
+            # if shares approved during span
+            if start_date <= date_of_acquisition \
+                    and end_date >= date_of_acquisition:
                 shares_count += share.number
                 new_shares.append(share)
 
-            elif (  # shares NOT approved before end of span
-                    (datetime(
-                        share.date_of_acquisition.year,
-                        share.date_of_acquisition.month,
-                        share.date_of_acquisition.day,
-                    ) >= end_date) and
-                    (datetime(  # payment received during ...
-                        share.payment_received_date.year,
-                        share.payment_received_date.month,
-                        share.payment_received_date.day,
-                    ) >= start_date) and
-                    (datetime(  # payment received during ...
-                        share.payment_received_date.year,
-                        share.payment_received_date.month,
-                        share.payment_received_date.day,
-                    ) <= end_date)
-            ):
+            elif (  # shares not approved before end of time period
+                    date_of_acquisition >= end_date
+                    # payment received during time period
+                    and payment_received_date >= start_date
+                    # payment received during time period
+                    and payment_received_date <= end_date):
                 shares_paid_unapproved_count += share.number
                 shares_paid_unapproved.append(share)
 
@@ -202,6 +177,7 @@ def annual_report(request):  # pragma: no cover
         'start_date': start_date,
         'end_date': end_date,
         'datetime': datetime,
+        'date': date,
         # members
         'new_members': members,
         'num_members': members_count,
