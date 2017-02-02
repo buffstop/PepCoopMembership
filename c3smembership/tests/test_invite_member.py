@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
+"""
+Tests the invite_members package.
+"""
+
 from datetime import date
+import unittest
+from sqlalchemy import engine_from_config
 from pyramid import testing
 from pyramid_mailer import get_mailer
-from sqlalchemy import engine_from_config
 import transaction
-import unittest
 
 from c3smembership.data.model.base import (
     DBSession,
@@ -14,7 +18,11 @@ from c3smembership.data.model.base import (
 from c3smembership.models import C3sMember
 
 
-def _initTestingDB():
+def init_testing_db():
+    """
+    Initializes the memory database with test samples.
+    """
+
     my_settings = {
         'sqlalchemy.url': 'sqlite:///:memory:', }
     engine = engine_from_config(my_settings)
@@ -124,6 +132,10 @@ def _initTestingDB():
 
 class TestInvitation(unittest.TestCase):
 
+    """
+    Tests the invitations.
+    """
+
     def setUp(self):
         self.config = testing.setUp()
         self.config.include('pyramid_mailer.testing')
@@ -133,7 +145,7 @@ class TestInvitation(unittest.TestCase):
         self.config.registry.settings['c3smembership.url'] = 'http://foo.com'
         self.config.registry.settings['ticketing.url'] = 'http://bar.com'
         self.config.registry.settings['testing.mail_to_console'] = 'false'
-        self.session = _initTestingDB()
+        self.session = init_testing_db()
 
     def tearDown(self):
         DBSession.close()
@@ -149,11 +161,11 @@ class TestInvitation(unittest.TestCase):
         prepare cookies, invite this member,
         assure the email_invite_flag_bcgv16 and token are now set,
         """
-        from c3smembership.invite_members import invite_member_BCGV
+        from c3smembership.invite_members import invite_member_bcgv
 
-        m1 = C3sMember.get_by_id(1)
-        self.assertEqual(m1.email_invite_flag_bcgv16, False)
-        self.assertTrue(m1.email_invite_token_bcgv16 is None)
+        member1 = C3sMember.get_by_id(1)
+        self.assertEqual(member1.email_invite_flag_bcgv16, False)
+        self.assertTrue(member1.email_invite_token_bcgv16 is None)
 
         req = testing.DummyRequest()
         # have some cookies
@@ -163,44 +175,44 @@ class TestInvitation(unittest.TestCase):
 
         # try with nonexistant id
         req.matchdict = {'m_id': 10000}
-        res = invite_member_BCGV(req)
+        res = invite_member_bcgv(req)
         self.assertEquals(302, res.status_code)
 
-        req.matchdict = {'m_id': m1.id}
-        res = invite_member_BCGV(req)
+        req.matchdict = {'m_id': member1.id}
+        res = invite_member_bcgv(req)
 
-        self.assertEqual(m1.email_invite_flag_bcgv16, True)
-        self.assertTrue(m1.email_invite_token_bcgv16 is not None)
+        self.assertEqual(member1.email_invite_flag_bcgv16, True)
+        self.assertTrue(member1.email_invite_token_bcgv16 is not None)
 
         # now really send email
         self.config.registry.settings['testing.mail_to_console'] = 'false'
         mailer = get_mailer(req)
-        res = invite_member_BCGV(req)
+        res = invite_member_bcgv(req)
 
         self.assertEqual(len(mailer.outbox), 2)
         self.assertTrue(u'[C3S] Einladung zu Barcamp und Generalversammlung'
                         in mailer.outbox[0].subject)
         self.assertTrue(u'[C3S] Einladung zu Barcamp und Generalversammlung'
                         in mailer.outbox[1].subject)
-        self.assertTrue(m1.firstname
+        self.assertTrue(member1.firstname
                         in mailer.outbox[1].body)
-        self.assertTrue(m1.email_invite_token_bcgv16
+        self.assertTrue(member1.email_invite_token_bcgv16
                         in mailer.outbox[1].body)
 
         # now send invitation to english member
-        m2 = C3sMember.get_by_id(2)
-        self.assertEqual(m2.email_invite_flag_bcgv16, False)
-        self.assertTrue(m2.email_invite_token_bcgv16 is None)
-        req.matchdict = {'m_id': m2.id}
-        res = invite_member_BCGV(req)
-        self.assertEqual(m2.email_invite_flag_bcgv16, True)
-        self.assertTrue(m2.email_invite_token_bcgv16 is not None)
+        member2 = C3sMember.get_by_id(2)
+        self.assertEqual(member2.email_invite_flag_bcgv16, False)
+        self.assertTrue(member2.email_invite_token_bcgv16 is None)
+        req.matchdict = {'m_id': member2.id}
+        res = invite_member_bcgv(req)
+        self.assertEqual(member2.email_invite_flag_bcgv16, True)
+        self.assertTrue(member2.email_invite_token_bcgv16 is not None)
         self.assertEqual(len(mailer.outbox), 3)
         self.assertTrue(u'[C3S] Invitation to Barcamp and General Assembly'
                         in mailer.outbox[2].subject)
-        self.assertTrue(m2.firstname
+        self.assertTrue(member2.firstname
                         in mailer.outbox[2].body)
-        self.assertTrue(m2.email_invite_token_bcgv16
+        self.assertTrue(member2.email_invite_token_bcgv16
                         in mailer.outbox[2].body)
 
     def test_invitation_batch(self):
@@ -209,11 +221,11 @@ class TestInvitation(unittest.TestCase):
         """
         from c3smembership.invite_members import batch_invite
 
-        all = C3sMember.get_all()
-        for m in all:
-            self.assertEqual(m.email_invite_flag_bcgv16, False)
-            self.assertTrue(m.email_invite_token_bcgv16 is None)
-            self.assertTrue(m.membership_accepted is True)
+        members = C3sMember.get_all()
+        for member in members:
+            self.assertEqual(member.email_invite_flag_bcgv16, False)
+            self.assertTrue(member.email_invite_token_bcgv16 is None)
+            self.assertTrue(member.membership_accepted is True)
 
         req = testing.DummyRequest()
         # have some cookies
@@ -226,7 +238,6 @@ class TestInvitation(unittest.TestCase):
         res = batch_invite(req)
 
         _messages = req.session.peek_flash('message_to_staff')
-        # print("messages: {}".format(_messages))
         self.assertTrue(
             'sent out 1 mails (to members with ids [1]' in _messages)
 
@@ -235,7 +246,6 @@ class TestInvitation(unittest.TestCase):
         res = batch_invite(req)
         self.assertEqual(res.status_code, 302)
         _messages = req.session.peek_flash('message_to_staff')
-        # print("messages: {}".format(_messages))
 
         self.assertTrue(
             'sent out 3 mails (to members with ids [2, 3, 4]' in _messages)
@@ -255,7 +265,6 @@ class TestInvitation(unittest.TestCase):
         res = batch_invite(req)
 
         _messages = req.session.peek_flash('message_to_staff')
-        # print("messages: {}".format(_messages))
         self.assertTrue(
             'no invitees left. all done!' in _messages)
 
@@ -268,14 +277,14 @@ class TestInvitation(unittest.TestCase):
         self.assertTrue('[C3S] Einladung' in mailer.outbox[2].subject)  # de
         self.assertTrue('[C3S] Invitation' in mailer.outbox[3].subject)  # en
 
-        for m in all:
+        for member in members:
             # has been invited
-            self.assertEqual(m.email_invite_flag_bcgv16, True)
+            self.assertEqual(member.email_invite_flag_bcgv16, True)
             # has a token
-            self.assertTrue(m.email_invite_token_bcgv16 is not None)
+            self.assertTrue(member.email_invite_token_bcgv16 is not None)
             # firstname and token are in email body
             self.assertTrue(
-                all[m.id - 1].firstname in mailer.outbox[m.id - 1].body)
+                members[member.id - 1].firstname in mailer.outbox[member.id - 1].body)
             self.assertTrue(
-                all[m.id - 1].email_invite_token_bcgv16 in mailer.outbox[
-                    m.id - 1].body)
+                members[member.id - 1].email_invite_token_bcgv16 in mailer.outbox[
+                    member.id - 1].body)

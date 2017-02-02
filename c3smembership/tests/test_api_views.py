@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
+
+"""
+Tests the API for c3sPartyTicketing.
+"""
+
+
 from datetime import date
 import json
-from pyramid import testing
-from sqlalchemy import engine_from_config
-import transaction
 import unittest
+
+from sqlalchemy import engine_from_config
+from pyramid import testing
+import transaction
 from webtest import TestApp
 
 from c3smembership import main
@@ -16,6 +23,9 @@ from c3smembership.models import C3sMember
 
 
 class TestApiViews(unittest.TestCase):
+    """
+    Tests the ApiViews class.
+    """
 
     def setUp(self):
         my_settings = {
@@ -109,13 +119,13 @@ class TestApiViews(unittest.TestCase):
 
         self.testapp.reset()
 
-        m1 = C3sMember.get_by_id(1)  # load member from DB for crosscheck
+        member1 = C3sMember.get_by_id(1)  # load member from DB for crosscheck
 
         # now try a valid refcode (email_invite_token_bcgv16)
         res2 = self.testapp.put_json(
-            '/lm', dict(token=m1.email_invite_token_bcgv16),
+            '/lm', dict(token=member1.email_invite_token_bcgv16),
             headers=_auth_info, status=200)
-        self.assertTrue(json.loads(res2.body)['firstname'], m1.firstname)
-        self.assertTrue(json.loads(res2.body)['lastname'], m1.lastname)
-        self.assertTrue(json.loads(res2.body)['email'], m1.email)
-        self.assertTrue(json.loads(res2.body)['mtype'], m1.membership_type)
+        self.assertTrue(json.loads(res2.body)['firstname'], member1.firstname)
+        self.assertTrue(json.loads(res2.body)['lastname'], member1.lastname)
+        self.assertTrue(json.loads(res2.body)['email'], member1.email)
+        self.assertTrue(json.loads(res2.body)['mtype'], member1.membership_type)
