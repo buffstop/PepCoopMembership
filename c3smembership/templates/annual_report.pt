@@ -83,7 +83,7 @@
                     <table>
                         <tr tal:repeat="ms m.shares">
                             <td
-                                tal:condition="(ms.date_of_acquisition >= start_date) and (end_date >= datetime(ms.date_of_acquisition.year, ms.date_of_acquisition.month, ms.date_of_acquisition.day))"
+                                tal:condition="(date(ms.date_of_acquisition.year, ms.date_of_acquisition.month, ms.date_of_acquisition.day) >= start_date) and (end_date >= date(ms.date_of_acquisition.year, ms.date_of_acquisition.month, ms.date_of_acquisition.day))"
                                 tal:define="global m_num_shares python: m_num_shares + ms.number ">
                                 ${ms.number}:
                                 <a href="${request.route_url('shares_detail', id=ms.id)}">

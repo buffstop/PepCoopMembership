@@ -45,8 +45,8 @@ def annual_report(request):  # pragma: no cover
     XXX TODO write testcases for this
     """
     # defaults
-    start_date = datetime(date.today().year, 1, 1)  # first day of this year
-    end_date = end_date = datetime(date.today().year, 12, 31)  # and last
+    start_date = date(date.today().year, 1, 1)  # first day of this year
+    end_date = date(date.today().year, 12, 31)  # and last
     appstruct = {
         'startdate': start_date,
         'enddate': end_date,
@@ -81,8 +81,8 @@ def annual_report(request):  # pragma: no cover
 
             start = appstruct['startdate']
             end = appstruct['enddate']
-            start_date = datetime(start.year, start.month, start.day)
-            end_date = datetime(end.year, end.month, end.day)
+            start_date = date(start.year, start.month, start.day)
+            end_date = date(end.year, end.month, end.day)
 
         except ValidationFailure, validation_failure:  # pragma: no cover
 
@@ -136,12 +136,12 @@ def annual_report(request):  # pragma: no cover
                 ) and
                 # but payment has been received during timespan
                 (member.payment_received) and
-                (datetime(
+                (date(
                     member.payment_received_date.year,
                     member.payment_received_date.month,
                     member.payment_received_date.day,
                 ) >= start_date) and
-                (datetime(
+                (date(
                     member.payment_received_date.year,
                     member.payment_received_date.month,
                     member.payment_received_date.day,
@@ -160,12 +160,12 @@ def annual_report(request):  # pragma: no cover
         if share is not None:
 
             if (  # shares approved during span
-                    (datetime(
+                    (date(
                         share.date_of_acquisition.year,
                         share.date_of_acquisition.month,
                         share.date_of_acquisition.day,
                     ) >= start_date) and
-                    (datetime(
+                    (date(
                         share.date_of_acquisition.year,
                         share.date_of_acquisition.month,
                         share.date_of_acquisition.day,
@@ -175,17 +175,17 @@ def annual_report(request):  # pragma: no cover
                 new_shares.append(share)
 
             elif (  # shares NOT approved before end of span
-                    (datetime(
+                    (date(
                         share.date_of_acquisition.year,
                         share.date_of_acquisition.month,
                         share.date_of_acquisition.day,
                     ) >= end_date) and
-                    (datetime(  # payment received during ...
+                    (date(  # payment received during ...
                         share.payment_received_date.year,
                         share.payment_received_date.month,
                         share.payment_received_date.day,
                     ) >= start_date) and
-                    (datetime(  # payment received during ...
+                    (date(  # payment received during ...
                         share.payment_received_date.year,
                         share.payment_received_date.month,
                         share.payment_received_date.day,
@@ -202,6 +202,7 @@ def annual_report(request):  # pragma: no cover
         'start_date': start_date,
         'end_date': end_date,
         'datetime': datetime,
+        'date': date,
         # members
         'new_members': members,
         'num_members': members_count,
