@@ -1,3 +1,11 @@
+Next Release
+============
+
+
+Invitations for general assembly and bar camp 2017.
+
+
+
 1.18.1
 ======
 

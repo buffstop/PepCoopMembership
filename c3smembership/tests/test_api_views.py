@@ -60,7 +60,7 @@ class TestApiViews(unittest.TestCase):
                 num_shares=u'23',
             )
         DBSession.add(member1)
-        member1.email_invite_token_bcgv16 = u'MEMBERS_TOKEN'
+        member1.email_invite_token_bcgv17 = u'MEMBERS_TOKEN'
         DBSession.flush()
 
         self.testapp = TestApp(app)
@@ -109,7 +109,7 @@ class TestApiViews(unittest.TestCase):
         # now use the correct auth token
         _auth_info = {'X-messaging-token': 'SECRETAUTHTOKEN'}
 
-        # ..but a non-existing refcode (email_invite_token_bcgv16)
+        # ..but a non-existing refcode (email_invite_token_bcgv17)
         # returns no user (None)
         res = self.testapp.put_json(
             '/lm', dict(token='foo'), headers=_auth_info, status=200)
@@ -121,9 +121,9 @@ class TestApiViews(unittest.TestCase):
 
         member1 = C3sMember.get_by_id(1)  # load member from DB for crosscheck
 
-        # now try a valid refcode (email_invite_token_bcgv16)
+        # now try a valid refcode (email_invite_token_bcgv17)
         res2 = self.testapp.put_json(
-            '/lm', dict(token=member1.email_invite_token_bcgv16),
+            '/lm', dict(token=member1.email_invite_token_bcgv17),
             headers=_auth_info, status=200)
         self.assertTrue(json.loads(res2.body)['firstname'], member1.firstname)
         self.assertTrue(json.loads(res2.body)['lastname'], member1.lastname)

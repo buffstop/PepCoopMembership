@@ -614,6 +614,9 @@ class C3sMember(Base):
     email_invite_flag_bcgv16 = Column(Boolean, default=False)
     email_invite_date_bcgv16 = Column(DateTime(), default=datetime(1970, 1, 1))
     email_invite_token_bcgv16 = Column(Unicode(255))
+    email_invite_flag_bcgv17 = Column(Boolean, default=False)
+    email_invite_date_bcgv17 = Column(DateTime(), default=datetime(1970, 1, 1))
+    email_invite_token_bcgv17 = Column(Unicode(255))
     # legal entities
     is_legalentity = Column(Boolean, default=False)
     court_of_law = Column(Unicode(255))
@@ -810,7 +813,7 @@ class C3sMember(Base):
             object: C3sMember object
         """
         return DBSession.query(cls).filter(
-            cls.email_invite_token_bcgv16 == token).first()
+            cls.email_invite_token_bcgv17 == token).first()
 
     @classmethod
     def check_for_existing_confirm_code(cls, email_confirm_code):
@@ -871,14 +874,12 @@ class C3sMember(Base):
         """
         return DBSession.query(cls).filter(
             and_(
-                (cls.membership_accepted == 1),
-                # cls.email_invite_flag_bcgv16 != 1,
+                cls.is_member_filter(),
                 or_(
-                    (cls.email_invite_flag_bcgv16 == 0),
-                    (cls.email_invite_flag_bcgv16 == ''),
-                    # noqa
+                    (cls.email_invite_flag_bcgv17 == 0),
+                    (cls.email_invite_flag_bcgv17 == ''),
                     # pylint: disable=singleton-comparison
-                    (cls.email_invite_flag_bcgv16 == None),
+                    (cls.email_invite_flag_bcgv17 == None),
                 )
             )
         ).slice(0, num).all()
@@ -1552,6 +1553,37 @@ class C3sMember(Base):
             and
             self.membership_date <= effective_date)
         return membership_accepted and not membership_lost
+
+    @classmethod
+    def is_member_filter(cls, effective_date=None):
+        """
+        Provides an SqlAlchemy filter only matching entities which are members
+        at the specified effective date.
+
+        For being a member the membership must have been accepted and the
+        membership must not have been lost.
+
+        Args:
+            effective_date: Optional. The date for which the membership status
+                is checked. If not specified then the current date of is used.
+
+        Returns:
+            A filter matching all entities which are members as the specified
+            effective date.
+        """
+        if effective_date is None:
+            effective_date = date.today()
+        membership_lost = and_(
+            cls.membership_loss_date != None,
+            cls.membership_loss_date < effective_date)
+        membership_accepted = and_(
+            cls.membership_accepted,
+            cls.membership_date != None,
+            cls.membership_date <= effective_date)
+        return and_(
+            membership_accepted,
+            expression.not_(membership_lost))
+
 
 
 class Dues15Invoice(Base):
