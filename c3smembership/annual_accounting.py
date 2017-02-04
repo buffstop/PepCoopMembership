@@ -46,7 +46,7 @@ def annual_report(request):  # pragma: no cover
     """
     # defaults
     start_date = date(date.today().year, 1, 1)  # first day of this year
-    end_date = end_date = date(date.today().year, 12, 31)  # and last
+    end_date = date(date.today().year, 12, 31)  # and last
     appstruct = {
         'startdate': start_date,
         'enddate': end_date,

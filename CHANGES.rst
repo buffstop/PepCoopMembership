@@ -1,3 +1,11 @@
+1.18.1
+======
+
+
+Fix data type issues by treating date values as date and not datetime.
+
+
+
 1.18
 ====
 
