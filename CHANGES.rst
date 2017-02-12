@@ -2,7 +2,9 @@ Next Release
 ============
 
 
-Invitations for general assembly and bar camp 2017.
+- Invitations for general assembly and bar camp 2017.
+
+- Pin Python package SQLAlchemy to version 1.0.9 due to issues with 1.1.5.
 
 
 

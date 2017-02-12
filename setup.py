@@ -26,7 +26,7 @@ requires = [
     'python-gnupg',
     'repoze.sendmail==4.1',  # pin to 4.1 because of repoze/repoze.sendmail#31
     # see https://github.com/repoze/repoze.sendmail/issues/31
-    'SQLAlchemy',
+    'SQLAlchemy==1.0.9',
     'transaction',
     'unicodecsv',
     'waitress',
