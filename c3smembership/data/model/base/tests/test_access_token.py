@@ -3,7 +3,7 @@
 """
 
 from unittest import TestCase
-from c3smembership.data.model.access_token import AccessToken
+from c3smembership.data.model.base.access_token import AccessToken
 import datetime
 
 
