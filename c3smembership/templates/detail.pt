@@ -281,10 +281,10 @@
           <td># shares</td>
           <td>
             total: ${member.num_shares}<br />
-            ${len(member.shares)} package(s):
+            ${len(shares)} package(s):
           <div>
             <table>
-              <tr tal:repeat="s member.shares">
+              <tr tal:repeat="s shares">
                 <td>${s.number} shares</td>
                 <td style="white-space:nowrap;">
                   <a href="${request.route_url('shares_detail', id=s.id)}">
