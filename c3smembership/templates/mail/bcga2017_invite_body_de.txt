@@ -22,7 +22,7 @@ Dies ist Dein individueller Link zur Anmeldung:
 
   {invitation_url}
 
-Bitte teile uns dort frühzeitig mit, ob Du teilnimmst oder nicht oder 
+Bitte teile uns dort frühzeitig mit, ob Du teilnimmst oder nicht oder
 du dich vertreten lassen möchtest.
 Auch Absagen sind erwünscht. Auf der verlinkten Seite kannst Du separat
 die Teilnahme für die Generalversammlung und das Barcamp bestätigen.
@@ -31,7 +31,7 @@ die Teilnahme für die Generalversammlung und das Barcamp bestätigen.
 Die Generalversammlung
 ======================
 
-Die Generalversammlung 2017 der C3S SCE findet in Düsseldorf im 
+Die Generalversammlung 2017 der C3S SCE findet in Düsseldorf im
 selben Gebäude statt, in dem wir auch unser Büro haben:
 
 02.04.2017: 4. ordentliche Generalversammlung der C3S SCE
@@ -42,7 +42,7 @@ selben Gebäude statt, in dem wir auch unser Büro haben:
             Eintritt frei
 
 Bitte komme zeitig, um Verzögerungen zu vermeiden, da die Akkreditierung
-Zeit benötigt. Die Teilnahme an der GV ist selbstverständlich kostenlos. 
+Zeit benötigt. Die Teilnahme an der GV ist selbstverständlich kostenlos.
 
 Das Barcamp
 ===========
@@ -51,33 +51,33 @@ Das Barcamp
             Rochusstr. 44
             40479 Düsseldorf
             13 - 19 Uhr
-            Eintritt frei 
+            Eintritt frei
 
 Wir gehen davon aus, dass es zu einigen Themen mehr Informations-
 und Diskussionsbedarf gibt, als wir in der Generalversammlung selbst
 unterbringen können. Um die Generalversammlung vorzubereiten und
-Diskussionen vorzuverlagern, bieten wir am Vortag ein Barcamp [4] an, 
-das einen halben Tag lang in mehreren parallelen Slots Zeit für 
-Diskussion und Austausch bietet. 
+Diskussionen vorzuverlagern, bieten wir am Vortag ein Barcamp [4] an,
+das einen halben Tag lang in mehreren parallelen Slots Zeit für
+Diskussion und Austausch bietet.
 Ziel ist es am Ende des Barcamps kurze und verständliche Zusammenfassungen
-des Besprochenen zu erstellen. 
+des Besprochenen zu erstellen.
 
 Dies ist der Link zu unserer wiki-Seite, auf der Du die Themen für das
 Barcamp ergänzen und einsehen kannst:
-    
- https://wiki.c3s.cc/index.php/Themenvorschläge_BarCamp2017
+
+    https://wiki.c3s.cc/index.php/Themenvorschläge_BarCamp2017
 
 Zugangsdaten:
 Name: schwarm
 Kennwort: letmein
 
-Nach einem anstrengend-produktiven Barcamp braucht man auch wieder neue 
-Energiezufuhr. Das wollen wir gerne in der gemeinsamen Runde 
-bewerkstelligen. Deshalb würde es uns sehr freuen, wenn Du nach dem 
-Barcamp mit uns gemeinsam Essen gehst -- wahrscheinlich in einem 
-italienischen Restaurant. In jedem Fall wird es aber eine Auswahl 
-an vegetarischen Speisen geben. Bitte vermerke das in der Anmeldung, 
-damit wir entsprechend reservieren können. 
+Nach einem anstrengend-produktiven Barcamp braucht man auch wieder neue
+Energiezufuhr. Das wollen wir gerne in der gemeinsamen Runde
+bewerkstelligen. Deshalb würde es uns sehr freuen, wenn Du nach dem
+Barcamp mit uns gemeinsam Essen gehst -- wahrscheinlich in einem
+italienischen Restaurant. In jedem Fall wird es aber eine Auswahl
+an vegetarischen Speisen geben. Bitte vermerke das in der Anmeldung,
+damit wir entsprechend reservieren können.
 
 
 Agenda der Generalversammlung 2017 der C3S SCE
@@ -101,7 +101,7 @@ Begrüßung der Anwesenden
 
 # 4 Nachwahl von Mitgliedern des Verwaltungsrates
 
-# 5 Zulassung bei dem Deutschen Patent- und Markenamt (DPMA) - 
+# 5 Zulassung bei dem Deutschen Patent- und Markenamt (DPMA) -
     Strategiedebatte
     http://url.c3s.cc/ga4bv5de
 
@@ -114,7 +114,7 @@ Begrüßung der Anwesenden
 ## 7.4 Kommission Mitgliederausbau
 ## 7.5 Kommission Mitgliedsbeitragsordnung
 
-# 8 Diskussion zu und ggfs. Beschlussfassung über Festlegung einer 
+# 8 Diskussion zu und ggfs. Beschlussfassung über Festlegung einer
     vorläufigen Beitragsordnung
     http://url.c3s.cc/ga4bv8de
 
@@ -135,8 +135,8 @@ C3S SCE oder Bevollmächtigte nicht anwesender Mitglieder.
 
 Stellvertretende Bevollmächtigte
 --------------------------------
-Solltest Du nicht teilnehmen können und stimmberechtigt sein, 
-also nutzendes Mitglied, kannst Du eine Vollmacht erteilen. Weitere 
+Solltest Du nicht teilnehmen können und stimmberechtigt sein,
+also nutzendes Mitglied, kannst Du eine Vollmacht erteilen. Weitere
 Informationen hierzu findest du bei der Anmeldung.
 
 Audio-Protokoll
@@ -144,20 +144,20 @@ Audio-Protokoll
 Während der Generalversammlung wird ein Audio-Mitschnitt aufgezeichnet, um
 ein fehlerfreies Protokoll zu gewährleisten. Der Mitschnitt wird nicht
 veröffentlicht, aber intern als Anhang zum Protokoll archiviert.
-Wer nicht möchte, dass sein Redebeitrag aufgezeichnet wird, kann dem vor 
+Wer nicht möchte, dass sein Redebeitrag aufgezeichnet wird, kann dem vor
 Beginn seines/ihres Beitrags widersprechen.
 
 
 Warum ist Deine Teilnahme wichtig?
 ==================================
 
-Auf dem Barcamp kannst Du ausführlich zu den aktuellen Themen mitdiskutieren 
-und Dich mit dem Kernteam der C3S austauschen. Die Generalversammlung ist das 
-Organ, das die grundlegenden Entscheidungen der C3S SCE trifft. 
-(Gemeinsam mit den anderen Mitgliedern bist Du die Generalversammlung.) 
+Auf dem Barcamp kannst Du ausführlich zu den aktuellen Themen mitdiskutieren
+und Dich mit dem Kernteam der C3S austauschen. Die Generalversammlung ist das
+Organ, das die grundlegenden Entscheidungen der C3S SCE trifft.
+(Gemeinsam mit den anderen Mitgliedern bist Du die Generalversammlung.)
 
-Das war's! Versorge uns mit Themenvorschlägen, plane Deine Fahrt - dann sehen 
-wir uns Anfang April in Düsseldorf! Bei Fragen kannst Du Dich wie immer an 
+Das war's! Versorge uns mit Themenvorschlägen, plane Deine Fahrt - dann sehen
+wir uns Anfang April in Düsseldorf! Bei Fragen kannst Du Dich wie immer an
 info@c3s.cc wenden.
 
 Wir freuen uns auf Dich & Deine Ideen!
@@ -189,8 +189,8 @@ Weitere Mitglieder:
 Links:
 
 [1] Satzung der C3S SCE: http://url.c3s.cc/satzung
-[2] Veranstaltungsort 
-[3] Karte Veranstaltungsort 
+[2] Veranstaltungsort
+[3] Karte Veranstaltungsort
 [4] Was ist ein Barcamp? http://url.c3s.cc/bcerklaerung
 
 {footer}
