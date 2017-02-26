@@ -2,7 +2,9 @@ Next Release
 ============
 
 
-Invitations for general assembly and bar camp 2017.
+- Invitations for general assembly and bar camp 2017.
+
+- Deactivate invoice sending for 2016 in membership list and toolbox.
 
 
 
