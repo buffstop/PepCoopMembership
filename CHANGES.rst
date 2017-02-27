@@ -1,5 +1,5 @@
-Next Release
-============
+1.19
+====
 
 
 - Invitations for general assembly and bar camp 2017.
