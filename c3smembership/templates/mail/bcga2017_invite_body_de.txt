@@ -65,7 +65,7 @@ des Besprochenen zu erstellen.
 Dies ist der Link zu unserer wiki-Seite, auf der Du die Themen für das
 Barcamp ergänzen und einsehen kannst:
 
-    https://wiki.c3s.cc/index.php/Themenvorschläge_BarCamp2017
+    https://wiki.c3s.cc/index.php/Themenvorschl%C3%A4ge_BarCamp2017
 
 Zugangsdaten:
 Name: schwarm
