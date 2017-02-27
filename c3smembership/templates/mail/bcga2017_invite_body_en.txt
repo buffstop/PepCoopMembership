@@ -1,65 +1,197 @@
 
 Hello {salutation},
 
-## noch ändern für 2017 ##
+the administrative board of the
 
-on the 15th of March 2016 you received an email inviting you to the BarCamp
-and General Assembly of C3S SCE on the 16th and 17th April of 2016
-in Düsseldorf.
+CulturalCommons Collecting Society SCE
+mit beschränkter Haftung
+- C3S SCE -
+Rochusstr. 44
+40479 Düsseldorf
 
-If possible, please let us know via this form whether you will attend 
-or not or wether you want to designate a representative:
+invites you
 
-This is your personal registration link:
+* to the 4th statutory general assembly, according to § 13 of the
+  articles of association of the C3S SCE [1] on 2nd April 2017 and
+* to the C3S barcamp 2017 on the day preceding the general assembly.
+
+Please read the whole text of the invitation. It contains important
+information.
+
+*************************** Important ***************************
+This is your individual registration link:
 
   {invitation_url}
 
-Please let us know whether you will participate. We must know in advance
-whether the location will be large enough. Therefore please respond by 
-April 9th, 2016, if possible.
-After April 9th you can't order food for the barcamp any more.
+Please use it to inform us as early on about whether or not you would
+like to participateor if you want to be represented by somebody.
+Cancellations are requested as well. You can separately confirm your
+participation in the general assembly and the barcamp.
+***************************
 
-On the linked page you can confirm your participation in the General
-Assembly and the BarCamp separately. You can also book a meal for the
-day of the BarCamp or name a representative for the General Assembly.
+
+The general assembly
+====================
+
+The general assembly 2017 of the C3S SCE will be held in Düsseldorf
+in the building where we also have our office.
+
+April 2nd, 2017: 4th statutory general assembly of the C3S SCE
+                 Rochusstr. 44
+                 40479 Düsseldorf
+                 1.00 pm - 5.00 pm
+                 Accreditation from 12.00 pm
+                 Admission free
+
+Please be punctual in order to avoid delays, because the accreditation
+will take some time. Of course, participation is free.
+
+The Barcamp
+===========
+
+April 1st, 2017: Barcamp 2017 [4]
+                 Rochusstr. 44
+                 40479 Düsseldorf
+                 1.00 pm - 7.00 pm
+
+                Admission free
+
+
+Again, we are of the opinion that on some topics there will be more
+need for information and discussion than we can deal with in the general
+assembly. In order to prepare the general assembly and to move up
+debates, we are offering a barcamp [4], where half a day is devoted to
+discussions and idea exchange in parallel time slots.
+The goal is to produce short and comprehensible summaries of what
+has been discussed at the barcamp.
+
+On the following wiki page you can add to and view the topics for the
+barcamp: https://wiki.c3s.cc/index.php/Themenvorschl%C3%A4ge_BarCamp2017
+
+Login details:
+Name: schwarm
+Password: letmein
+
+At the end of an exhausting and productive barcamp, everyone needs new
+energy. Therefore we would be happy to have dinner with you after the
+barcamp – likely at an Italian restaurant. In any case there will be
+vegetarian dishes as well. Please note on registration wether you
+want to attend so that we can make reservations accordingly.
+
+
+Agenda of the general assembly 2017 of the C3S SCE
+==================================================
+
+Welcoming address
+
+# 1 Appointment of the chairperson of the assembly
+    and the minute taker
+
+# 2 Approval of the agenda
+
+# 3 Recurring items on the agenda
+
+## 3.1 Acceptance of the progress report of the executive directors and
+       the administrative board, followed by debate
+## 3.2 Approval of the annual financial statement
+## 3.3 Resolution on the appropriation
+       of the net income and the offsetting ofthe annual net loss
+## 3.4 Discharge of the executive directors and the members of the
+       adminstrative board
+
+# 4 By-election of members of the administrative board
+
+# 5 Application for approval by the German Patent and Trade Mark Office –
+    debate on strategy
+    http://url.c3s.cc/ga4bv5
+
+# 6 Report from the C3S barcamp 2017
+
+# 7 Reports from the consulting committees
+## 7.1 Tariffs commission
+## 7.2 Distribution commission
+## 7.3 Collection agreements commission
+## 7.4 Membership development commission
+## 7.5 Contribution rules commission
+
+# 8 Discussion and, if applicable, resolution on the determination of
+    temporary contribution rules
+    http://url.c3s.cc/ga4bv8en
+
+# 9 Discussion / Other issues
+
+You may contribute written proposals for resolutions and for alterations
+of the agenda until 24th March 2017 (midnight MESZ/CEST,i. e. UTC +2)
+to agenda@c3s.cc.
+
+
+Organizational issues
+=====================
+
+Participation
+-------------
+Participation in the general assembly is limited to members of the C3S
+SCE or authorized representatives of absent members.
 
 Authorized representatives
----------------------------
-If you are a regular member and therefore entitled to vote, but unable 
-to participate, you may grant a power of attorney:
+--------------------------------
+If you are an active member and therefore entitled to vote, but unable
+to participate, you may grant a power of attorney. Further information
+on that will be included in the registration e-mail.
 
-https://url.c3s.cc/auprivater
+Audio recording
+---------------
+During the general assembly, an audio recording will be made in order to
+ensure error-free minutes. The recording will not be published but
+archived internally as an appendix to the minutes.
 
-Please bear in mind that every authorized representative is able to represent 
-two members only via power of attorney. Therefore make sure to ask whether the 
-person you want to authorize already represents other members. For legal 
-reasons power of attorney must be granted in writing and in the original; 
-FAX or scanned documents are not sufficient!
-
-According to § 13 (6), sentence 3 of the articles of association, only members 
-of the cooperative society, or spouses, parents, children or siblings of a 
-member, are entitled to be representatives with voting rights. Registered 
-civil partners are treated as spouses. When you cancel your participation 
-using the above given link you may name your representative online.
-
-Please remember that your representative must bring the written power of 
-attorney, signed by you. 
-
-Investor members who are not entitled to vote may also be represented by 
-others. Here you can find a form:
-Individuals (investor members): https://url.c3s.cc/auprivatei
-Companies and organizations: https://url.c3s.cc/aucorporate
-
-That's all! Let us know your proposals for topics [1], plan your trip -- 
-and we shall meet in Düsseldorf! If you have questions, you can get
-in touch, as always, via info@c3s.cc.
-
-We are looking forward to seeing you and learning your ideas!
+Those who do not wish their speech contributions to be recorded, may
+veto before commencing to speak.
 
 
-Your C3S Team
+Why is it important that you participate?
+=========================================
 
-[1] https://wiki.c3s.cc/index.php/Themenvorschläge_BarCamp2016 
-(login details: name: schwarm, password: letmein) 
+At the barcamp, you will be able to make detailed contributions to the
+discussions of the current topics and talk to the core team of the C3S.
+The general assembly is the body that takes the fundamental decisions
+for the C3S. (You are the general assembly, together with the other
+members.)
+
+That's all! Please let us know your proposals for topics, plan your
+trip - and we'll meet in Düsseldorf in April! If you have questions,
+you can get in touch, as always, via info@c3s.cc.
+
+We look forward to you and your ideas!
+
+For and on behalf of the administrative board of the C3S SCE
+Meinhard Starostik - Chairperson
+
+===============
+The administrative board of the C3S SCE consists of:
+
+Chairpersons:
+Meinhard Starostik, chairperson of the administrative board
+Danny Bruder, deputy chairperson of the administrative board
+
+Other members:
+* Johanna Breuckmann
+* Max Gössler
+* Andrea Guse
+* m.eik michalke
+* Florian Posdziech
+* Christoph Scheid
+* Sven Scholz
+* Holger Schwetter
+* Veit Winkler
+
+======================
+
+Links:
+
+[1] Articles of association of the C3S SCE: http://url.c3s.cc/statutes
+[2] Location
+[3] Map of the location
+[4] What is a barcamp? http://url.c3s.cc/bcexplanation
 
 {footer}

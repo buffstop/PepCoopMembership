@@ -238,8 +238,9 @@ class TestInvitation(unittest.TestCase):
         res = batch_invite(req)
 
         _messages = req.session.peek_flash('message_to_staff')
+        print(_messages)
         self.assertTrue(
-            'sent out 1 mails (to members with ids [1]' in _messages)
+            'sent out 1 mails (to members with ids [1])' in _messages)
 
         # without matchdict
         req.matchdict = {'number': ''}  # this triggers remaining 3
@@ -248,7 +249,7 @@ class TestInvitation(unittest.TestCase):
         _messages = req.session.peek_flash('message_to_staff')
 
         self.assertTrue(
-            'sent out 3 mails (to members with ids [2, 3, 4]' in _messages)
+            'sent out 3 mails (to members with ids [2, 3, 4])' in _messages)
         # send more request with POST['number']
         req = testing.DummyRequest(
             POST={

@@ -2,9 +2,17 @@ Next Release
 ============
 
 
+- Pin Python package SQLAlchemy to version 1.0.9 due to issues with 1.1.5.
+
+
+
+1.19
+====
+
+
 - Invitations for general assembly and bar camp 2017.
 
-- Pin Python package SQLAlchemy to version 1.0.9 due to issues with 1.1.5.
+- Deactivate invoice sending for 2016 in membership list and toolbox.
 
 
 
