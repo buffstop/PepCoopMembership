@@ -102,7 +102,7 @@ Welcoming address
 
 # 5 Application for approval by the German Patent and Trade Mark Office –
     debate on strategy
-    http://url.c3s.cc/ga4bv5en
+    https://url.c3s.cc/ga4bv5en
 
 # 6 Report from the C3S barcamp 2017
 
@@ -115,7 +115,7 @@ Welcoming address
 
 # 8 Discussion and, if applicable, resolution on the determination of
     temporary contribution rules
-    http://url.c3s.cc/ga4bv8en
+    https://url.c3s.cc/ga4bv8en
 
 # 9 Discussion / Other issues
 
@@ -188,9 +188,9 @@ Other members:
 
 Links:
 
-[1] Articles of association of the C3S SCE: http://url.c3s.cc/statutes
+[1] Articles of association of the C3S SCE: https://url.c3s.cc/statutes
 [2] Map of location: 
 https://www.openstreetmap.org/node/2679106873#map=19/51.23274/6.78834
-[3] What is a barcamp? http://url.c3s.cc/bcexplanation
+[3] What is a barcamp? https://url.c3s.cc/bcexplanation
 
 {footer}

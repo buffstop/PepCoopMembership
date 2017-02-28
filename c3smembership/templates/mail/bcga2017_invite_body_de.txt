@@ -103,7 +103,7 @@ Begrüßung der Anwesenden
 
 # 5 Zulassung bei dem Deutschen Patent- und Markenamt (DPMA) -
     Strategiedebatte
-    http://url.c3s.cc/ga4bv5de
+    https://url.c3s.cc/ga4bv5de
 
 # 6 Bericht vom C3S-Barcamp 2017
 
@@ -116,7 +116,7 @@ Begrüßung der Anwesenden
 
 # 8 Diskussion zu und ggfs. Beschlussfassung über Festlegung einer
     vorläufigen Beitragsordnung
-    http://url.c3s.cc/ga4bv8de
+    https://url.c3s.cc/ga4bv8de
 
 # 9 Diskussionen / Sonstiges
 
@@ -188,9 +188,9 @@ Weitere Mitglieder:
 
 Links:
 
-[1] Satzung der C3S SCE: http://url.c3s.cc/satzung
+[1] Satzung der C3S SCE: https://url.c3s.cc/satzung
 [2] Karte Veranstaltungsort: 
 https://www.openstreetmap.org/node/2679106873#map=19/51.23274/6.78834
-[3] Was ist ein Barcamp? http://url.c3s.cc/bcerklaerung
+[3] Was ist ein Barcamp? https://url.c3s.cc/bcerklaerung
 
 {footer}
