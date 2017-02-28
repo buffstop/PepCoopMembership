@@ -6,6 +6,14 @@ Next Release
 
 
 
+1.19.1
+======
+
+
+Minor fixes in email templates for general assembly and bar camp 2017.
+
+
+
 1.19
 ====
 
