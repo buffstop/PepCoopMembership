@@ -38,7 +38,7 @@ in the building where we also have our office.
 
 April 2nd, 2017: 4th statutory general assembly of the C3S SCE
                  Rochusstr. 44
-                 40479 Düsseldorf
+                 40479 Düsseldorf [2]
                  1.00 pm - 5.00 pm
                  Accreditation from 12.00 pm
                  Admission free
@@ -49,18 +49,17 @@ will take some time. Of course, participation is free.
 The Barcamp
 ===========
 
-April 1st, 2017: Barcamp 2017 [4]
+April 1st, 2017: Barcamp 2017 [3]
                  Rochusstr. 44
-                 40479 Düsseldorf
+                 40479 Düsseldorf [2]
                  1.00 pm - 7.00 pm
-
-                Admission free
+                 Admission free
 
 
 Again, we are of the opinion that on some topics there will be more
 need for information and discussion than we can deal with in the general
 assembly. In order to prepare the general assembly and to move up
-debates, we are offering a barcamp [4], where half a day is devoted to
+debates, we are offering a barcamp [3], where half a day is devoted to
 discussions and idea exchange in parallel time slots.
 The goal is to produce short and comprehensible summaries of what
 has been discussed at the barcamp.
@@ -103,7 +102,7 @@ Welcoming address
 
 # 5 Application for approval by the German Patent and Trade Mark Office –
     debate on strategy
-    http://url.c3s.cc/ga4bv5
+    http://url.c3s.cc/ga4bv5en
 
 # 6 Report from the C3S barcamp 2017
 
@@ -190,8 +189,8 @@ Other members:
 Links:
 
 [1] Articles of association of the C3S SCE: http://url.c3s.cc/statutes
-[2] Location
-[3] Map of the location
-[4] What is a barcamp? http://url.c3s.cc/bcexplanation
+[2] Map of location: 
+https://www.openstreetmap.org/node/2679106873#map=19/51.23274/6.78834
+[3] What is a barcamp? http://url.c3s.cc/bcexplanation
 
 {footer}
