@@ -36,7 +36,7 @@ selben Gebäude statt, in dem wir auch unser Büro haben:
 
 02.04.2017: 4. ordentliche Generalversammlung der C3S SCE
             Rochusstr. 44
-            40479 Düsseldorf
+            40479 Düsseldorf [2]
             13 - 17 Uhr
             Akkreditierung ab 12 Uhr
             Eintritt frei
@@ -47,16 +47,16 @@ Zeit benötigt. Die Teilnahme an der GV ist selbstverständlich kostenlos.
 Das Barcamp
 ===========
 
-01.04.2017: Barcamp 2017 [4]
+01.04.2017: Barcamp 2017 [3]
             Rochusstr. 44
-            40479 Düsseldorf
+            40479 Düsseldorf [2]
             13 - 19 Uhr
             Eintritt frei
 
 Wir gehen davon aus, dass es zu einigen Themen mehr Informations-
 und Diskussionsbedarf gibt, als wir in der Generalversammlung selbst
 unterbringen können. Um die Generalversammlung vorzubereiten und
-Diskussionen vorzuverlagern, bieten wir am Vortag ein Barcamp [4] an,
+Diskussionen vorzuverlagern, bieten wir am Vortag ein Barcamp [3] an,
 das einen halben Tag lang in mehreren parallelen Slots Zeit für
 Diskussion und Austausch bietet.
 Ziel ist es am Ende des Barcamps kurze und verständliche Zusammenfassungen
@@ -188,9 +188,9 @@ Weitere Mitglieder:
 
 Links:
 
-[1] Satzung der C3S SCE: http://url.c3s.cc/satzung
-[2] Veranstaltungsort
-[3] Karte Veranstaltungsort
-[4] Was ist ein Barcamp? http://url.c3s.cc/bcerklaerung
+[1] Satzung der C3S SCE: https://url.c3s.cc/satzung
+[2] Karte Veranstaltungsort:
+https://www.openstreetmap.org/node/2679106873#map=19/51.23274/6.78834
+[3] Was ist ein Barcamp? http://url.c3s.cc/bcerklaerung
 
 {footer}
