@@ -1,8 +1,12 @@
 #!/bin/env/python
 # -*- coding: utf-8 -*-
 
+from datetime import (datetime, date)
+
 import unittest
 from pyramid import testing
+from sqlalchemy import engine_from_config
+import transaction
 
 from c3smembership.data.model.base import (
     DBSession,
@@ -14,10 +18,6 @@ from c3smembership.models import (
     Group,
     Shares,
 )
-from datetime import datetime
-from sqlalchemy import engine_from_config
-import transaction
-from datetime import date
 
 DEBUG = False
 
@@ -105,31 +105,31 @@ class SharesTests(unittest.TestCase):
             )
             shares1 = Shares(
                 number=2,
-                date_of_acquisition=datetime.today(),
+                date_of_acquisition=date.today(),
                 reference_code=u'ABCDEFGH',
                 signature_received=True,
-                signature_received_date=datetime(2014, 6, 7),
+                signature_received_date=date(2014, 6, 7),
                 payment_received=True,
-                payment_received_date=datetime(2014, 6, 8),
+                payment_received_date=date(2014, 6, 8),
                 signature_confirmed=True,
-                signature_confirmed_date=datetime(2014, 6, 8),
+                signature_confirmed_date=date(2014, 6, 8),
                 payment_confirmed=True,
-                payment_confirmed_date=datetime(2014, 6, 9),
+                payment_confirmed_date=date(2014, 6, 9),
                 accountant_comment=u'no comment',
             )
             member1.shares = [shares1]
             shares2 = Shares(
                 number=23,
-                date_of_acquisition=datetime.today(),
+                date_of_acquisition=date.today(),
                 reference_code=u'IJKLMNO',
                 signature_received=True,
-                signature_received_date=datetime(2014, 1, 7),
+                signature_received_date=date(2014, 1, 7),
                 payment_received=True,
-                payment_received_date=datetime(2014, 1, 8),
+                payment_received_date=date(2014, 1, 8),
                 signature_confirmed=True,
-                signature_confirmed_date=datetime(2014, 1, 8),
+                signature_confirmed_date=date(2014, 1, 8),
                 payment_confirmed=True,
-                payment_confirmed_date=datetime(2014, 1, 9),
+                payment_confirmed_date=date(2014, 1, 9),
                 accountant_comment=u'not connected',
             )
 
@@ -161,16 +161,16 @@ class SharesTests(unittest.TestCase):
             )
             shares1 = Shares(
                 number=2,
-                date_of_acquisition=datetime.today(),
+                date_of_acquisition=date.today(),
                 reference_code=u'ABCDEFGH',
                 signature_received=True,
-                signature_received_date=datetime(2014, 6, 7),
+                signature_received_date=date(2014, 6, 7),
                 payment_received=True,
-                payment_received_date=datetime(2014, 6, 8),
+                payment_received_date=date(2014, 6, 8),
                 signature_confirmed=True,
-                signature_confirmed_date=datetime(2014, 6, 8),
+                signature_confirmed_date=date(2014, 6, 8),
                 payment_confirmed=True,
-                payment_confirmed_date=datetime(2014, 6, 9),
+                payment_confirmed_date=date(2014, 6, 9),
                 accountant_comment=u'no comment',
             )
             member1.shares = [shares1]
@@ -181,16 +181,16 @@ class SharesTests(unittest.TestCase):
         with transaction.manager:
             shares2 = Shares(
                 number=23,
-                date_of_acquisition=datetime.today(),
+                date_of_acquisition=date.today(),
                 reference_code=u'IJKLMNO',
                 signature_received=True,
-                signature_received_date=datetime(2014, 1, 7),
+                signature_received_date=date(2014, 1, 7),
                 payment_received=True,
-                payment_received_date=datetime(2014, 1, 8),
+                payment_received_date=date(2014, 1, 8),
                 signature_confirmed=True,
-                signature_confirmed_date=datetime(2014, 1, 8),
+                signature_confirmed_date=date(2014, 1, 8),
                 payment_confirmed=True,
-                payment_confirmed_date=datetime(2014, 1, 9),
+                payment_confirmed_date=date(2014, 1, 9),
                 accountant_comment=u'not connected',
             )
         DBSession.add(shares2)

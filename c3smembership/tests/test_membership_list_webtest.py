@@ -88,31 +88,31 @@ class MemberTestsBase(unittest.TestCase):
             )
             shares1_m1 = Shares(
                 number=2,
-                date_of_acquisition=datetime.today(),
+                date_of_acquisition=date.today(),
                 reference_code=u'ABCDEFGH',
                 signature_received=True,
-                signature_received_date=datetime(2014, 6, 7),
+                signature_received_date=date(2014, 6, 7),
                 payment_received=True,
-                payment_received_date=datetime(2014, 6, 8),
+                payment_received_date=date(2014, 6, 8),
                 signature_confirmed=True,
-                signature_confirmed_date=datetime(2014, 6, 8),
+                signature_confirmed_date=date(2014, 6, 8),
                 payment_confirmed=True,
-                payment_confirmed_date=datetime(2014, 6, 9),
+                payment_confirmed_date=date(2014, 6, 9),
                 accountant_comment=u'no comment',
             )
             member1.shares = [shares1_m1]
             shares2_m1 = Shares(
                 number=23,
-                date_of_acquisition=datetime.today(),
+                date_of_acquisition=date.today(),
                 reference_code=u'IJKLMNO',
                 signature_received=True,
-                signature_received_date=datetime(2014, 1, 7),
+                signature_received_date=date(2014, 1, 7),
                 payment_received=True,
-                payment_received_date=datetime(2014, 1, 8),
+                payment_received_date=date(2014, 1, 8),
                 signature_confirmed=True,
-                signature_confirmed_date=datetime(2014, 1, 8),
+                signature_confirmed_date=date(2014, 1, 8),
                 payment_confirmed=True,
-                payment_confirmed_date=datetime(2014, 1, 9),
+                payment_confirmed_date=date(2014, 1, 9),
                 accountant_comment=u'not connected',
             )
             member1.shares.append(shares2_m1)
@@ -397,8 +397,8 @@ class MembershipListTests(MemberTestsBase):
         m1 = C3sMember.get_by_id(1)
         m1.membership_date = date(2015, 01, 01)
         m1.membership_number = 42
-        m1.shares[0].date_of_acquisition = datetime(2015, 01, 01)
-        m1.shares[1].date_of_acquisition = datetime(2015, 01, 02)
+        m1.shares[0].date_of_acquisition = date(2015, 01, 01)
+        m1.shares[1].date_of_acquisition = date(2015, 01, 02)
 
         # try with valid date in URL
         res = self.testapp.get('/aml-' + _date + '.pdf', status=200)
