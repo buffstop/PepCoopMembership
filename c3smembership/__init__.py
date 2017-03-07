@@ -19,11 +19,16 @@ from c3smembership.security import (
     Root,
     groupfinder
 )
-from c3smembership.presentation.views.dashboard import dashboard_content_size_provider
-from c3smembership.presentation.views.membership_listing import membership_content_size_provider
+from c3smembership.presentation.views.dashboard import (
+    dashboard_content_size_provider
+)
+from c3smembership.presentation.views.membership_listing import (
+    membership_content_size_provider
+)
 
 
-__version__ = open(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../VERSION')).read()
+__version__ = open(os.path.join(os.path.abspath(
+    os.path.dirname(__file__)), '../VERSION')).read()
 
 
 def main(global_config, **settings):
@@ -101,7 +106,8 @@ def main(global_config, **settings):
         'dashboard',
         dashboard_content_size_provider,
         sort_property_default='id',
-        page_size_default=int(settings.get('c3smembership.dashboard_number', 30)))
+        page_size_default=int(
+            settings.get('c3smembership.dashboard_number', 30)))
 
     config.add_route('dash', '/dash/{number}/{orderby}/{order}')
     config.add_route('toolbox', '/toolbox')
@@ -113,7 +119,9 @@ def main(global_config, **settings):
 
     # TODO: move application layer setup to separate module
     from c3smembership.models import C3sMember
-    from c3smembership.business.membership_application import MembershipApplication
+    from c3smembership.business.membership_application import (
+        MembershipApplication
+    )
     membership_application = MembershipApplication(C3sMember)
     config.registry.membership_application = membership_application
     config.add_route('switch_sig', '/switch_sig/{memberid}')
@@ -153,7 +161,8 @@ def main(global_config, **settings):
         'membership_listing_backend',
         membership_content_size_provider,
         sort_property_default='id',
-        page_size_default=int(settings.get('c3smembership.membership_number', 30)))
+        page_size_default=int(
+            settings.get('c3smembership.membership_number', 30)))
 
     config.add_route('membership_listing_alphabetical',
                      '/aml')
@@ -189,7 +198,9 @@ def main(global_config, **settings):
     # TODO: move application layer setup to separate module
     from c3smembership.models import Dues15Invoice
     from c3smembership.data.model.base import DBSession
-    from c3smembership.business.dues_invoice_archiving import DuesInvoiceArchiving
+    from c3smembership.business.dues_invoice_archiving import (
+        DuesInvoiceArchiving
+    )
     from c3smembership.views.membership_dues import (
         make_invoice_pdf_pdflatex,
         make_reversal_pdf_pdflatex,
@@ -205,7 +216,9 @@ def main(global_config, **settings):
         make_invoice_pdf_pdflatex,
         make_reversal_pdf_pdflatex,
         invoices_archive_path)
-    config.add_route('batch_archive_pdf_invoices', '/batch_archive_pdf_invoices')
+    config.add_route(
+        'batch_archive_pdf_invoices',
+        '/batch_archive_pdf_invoices')
 
     # utilities & wizardry
     config.add_route('plz_dist', '/plz_dist')
