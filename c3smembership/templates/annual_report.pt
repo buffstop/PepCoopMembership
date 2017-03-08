@@ -41,20 +41,11 @@
             <tr>
                 <td>
                     <a href="#afms_paid_unfinished">
-                        bezahlte, aber nicht aufgenommene Anteile I (AfMs)
+                        Bezahlte, aber nicht aufgenommene Anteile
                     </a>
                 </td>
                 <td>${num_afm_shares_paid_unapproved}</td>
                 <td>${num_afm_shares_paid_unapproved * 50}</td>
-            </tr>
-            <tr>
-                <td>
-                    <a href="#shares_paid_unfinished">
-                        bezahlte, aber nicht aufgenommene Anteile II (Shares)
-                    </a>
-                </td>
-                <td>${num_shares_paid_unapproved}</td>
-                <td>${num_shares_paid_unapproved * 50}</td>
             </tr>
         </table>
 
