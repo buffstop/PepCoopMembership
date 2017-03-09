@@ -41,11 +41,11 @@
             <tr>
                 <td>
                     <a href="#afms_paid_unfinished">
-                        Bezahlte, aber nicht aufgenommene Anteile
+                        Bezahlte, nicht aufgenommene Anteile
                     </a>
                 </td>
-                <td>${num_afm_shares_paid_unapproved}</td>
-                <td>${num_afm_shares_paid_unapproved * 50}</td>
+                <td>${shares_paid_unapproved_count}</td>
+                <td>${shares_paid_unapproved_count * 50}</td>
             </tr>
         </table>
 
@@ -129,27 +129,25 @@
             </tr>
         </table>
         <a name="afms_paid_unfinished"></a>
-        <h3>Bezahlte, unfertige Anteile I (AfMs)</h3>
+        <h3>Bezahlte, nicht aufgenommene Anteile</h3>
         <p>
             Anteile, die im Zeitraum bezahlt wurden, die aber noch nicht aufgenommen wurden:
-            ${num_afm_shares_paid_unapproved} (im Wert von ${num_afm_shares_paid_unapproved * 50} Euro):
+            ${shares_paid_unapproved_count} (im Wert von ${shares_paid_unapproved_count * 50} Euro):
         </p>
 
         <table class="table table-striped">
             <tr>
-                <th>lfd. Nr.</th>
-                <th>AfM id</th>
+                <th>Lfd. Nr.</th>
+                <th>AfM-ID</th>
                 <th>Nachname, Vorname</th>
                 <th>Anteile</th>
                 <th>Datum Geldeingang (ca.)</th>
             </tr>
-            <tr tal:define="global ua_num python: 0"  tal:repeat="p afm_paid_unapproved_shares">
-                <span tal:define="global ua_num python: ua_num + 1">
-                    <td tal:content="python: ua_num">${ua_num}</td>
-                </span>
+            <tr tal:define="global ua_num python: 0" tal:repeat="p shares_paid_unapproved">
+                <td tal:define="global ua_num python: ua_num + 1">${ua_num}</td>
                 <td><a href="${request.route_url('detail', memberid=p.id)}">${p.id}</a></td>
                 <td>${p.lastname}, ${p.firstname}</td>
-                <td>${p.num_shares}</td>
+                <td>${p.shares_count}</td>
                 <td>${p.payment_received_date}</td>
             </tr>
         </table>

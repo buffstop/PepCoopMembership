@@ -260,6 +260,9 @@ def main(global_config, **settings):
     config.add_route('certificate_pdf_staff', '/cert/{id}/C3S_{name}.pdf')
 
     # annual reports
+    from c3smembership.data.repository.share_repository import ShareRepository
+    from c3smembership.business.share_information import ShareInformation
+    config.registry.share_information = ShareInformation(ShareRepository)
     config.add_route('annual_reporting', '/annual_reporting')
 
     # invite people

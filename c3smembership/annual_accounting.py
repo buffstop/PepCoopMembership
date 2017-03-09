@@ -26,9 +26,9 @@ import deform
 from deform import ValidationFailure
 from pyramid.view import view_config
 
+from c3smembership.data.repository.share_repository import ShareRepository
 from c3smembership.models import (
     C3sMember,
-    Shares,
 )
 from c3smembership.presentation.i18n import _
 
@@ -93,15 +93,17 @@ def annual_report(request):  # pragma: no cover
                 allow_duplicate=False)
             return {
                 'form': validation_failure.render(),
-                'num_members': 0,
-                'num_shares': 0,
-                'new_members': [],
-                'paid_unapproved_shares': [],
-                'num_shares_paid_unapproved': 0,
-                'sum_shares': 0,
-                'new_shares': [],
                 'start_date': start_date,
                 'end_date': end_date,
+                'datetime': datetime,
+                'date': date,
+                'new_members': [],
+                'num_members': 0,
+                'num_shares': 0,
+                'sum_shares': 0,
+                'new_shares': [],
+                'shares_paid_unapproved_count': 0,
+                'shares_paid_unapproved': [],
             }
 
     else:  # if form not submitted, preload values
@@ -115,62 +117,20 @@ def annual_report(request):  # pragma: no cover
     members = []  # all the members matching the criteria
     members_count = 0
 
-    afm_shares_paid_unapproved_cnt = 0
-    afm_shares_paid_unapproved = []
-
     # now filter and count the afms and members
     for member in all_members:
-        payment_received_date = date(
-            member.payment_received_date.year,
-            member.payment_received_date.month,
-            member.payment_received_date.day)
         # if membership granted during time period
         if member.membership_date >= start_date \
                 and member.membership_date <= end_date:
             members.append(member)
             members_count += 1
-        # but payment has been received during timespan
-        elif member.payment_received \
-                and payment_received_date >= start_date \
-                and payment_received_date <= end_date:
-            afm_shares_paid_unapproved_cnt += member.num_shares
-            afm_shares_paid_unapproved.append(member)
 
-    # shares
-    shares_count = 0
-    new_shares = []
-    shares_paid_unapproved_count = 0
-    shares_paid_unapproved = []
-
-    all_shares = Shares.get_all()
-    for share in all_shares:
-        if share is not None:
-            date_of_acquisition = date(
-                share.date_of_acquisition.year,
-                share.date_of_acquisition.month,
-                share.date_of_acquisition.day)
-            payment_received_date = date(
-                share.payment_received_date.year,
-                share.payment_received_date.month,
-                share.payment_received_date.day)
-
-            # if shares approved during span
-            if start_date <= date_of_acquisition \
-                    and end_date >= date_of_acquisition:
-                shares_count += share.number
-                new_shares.append(share)
-
-            elif (  # shares not approved before end of time period
-                    date_of_acquisition >= end_date
-                    # payment received during time period
-                    and payment_received_date >= start_date
-                    # payment received during time period
-                    and payment_received_date <= end_date):
-                shares_paid_unapproved_count += share.number
-                shares_paid_unapproved.append(share)
+    share_statistics = request.registry.share_information.get_statistics(
+        start_date, end_date)
 
     html = form.render()
 
+    # TODO: Provide statistics as a whole without the need to iterate shares
     return {
         'form': html,
         # dates
@@ -182,13 +142,11 @@ def annual_report(request):  # pragma: no cover
         'new_members': members,
         'num_members': members_count,
         # shares
-        'num_shares': shares_count,
-        'sum_shares': shares_count * 50,
-        'new_shares': new_shares,
-        # afm shares paid but unapproved
-        'num_afm_shares_paid_unapproved': afm_shares_paid_unapproved_cnt,
-        'afm_paid_unapproved_shares': afm_shares_paid_unapproved,
+        'num_shares': share_statistics['approved_shares_count'],
+        'sum_shares': share_statistics['approved_shares_count'] * 50,
+        'new_shares': share_statistics['approved_shares'],
         # other shares paid but unapproved
-        'num_shares_paid_unapproved': shares_paid_unapproved_count,
-        'paid_unapproved_shares': shares_paid_unapproved,
+        'shares_paid_unapproved_count': \
+            share_statistics['paid_not_approved_shares_count'],
+        'shares_paid_unapproved': share_statistics['paid_not_approved_shares'],
     }
