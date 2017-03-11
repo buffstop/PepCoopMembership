@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 This module holds the main method: config and route declarations
 """

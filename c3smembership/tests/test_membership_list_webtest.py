@@ -306,7 +306,7 @@ class MakeMergeMemberTests(MemberTestsBase):
         self.assertTrue(m1.membership_accepted is True)
         self.assertTrue(m1.membership_number is 1)
         self.assertTrue(m1.membership_date is not None)
-        self.assertTrue(m1.shares is not [])
+        self.assertEqual(len(m1.shares), 1)
         # we are redirected to members details page
         res3 = res2.follow()
         # this now is a member!

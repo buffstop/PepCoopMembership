@@ -23,7 +23,6 @@ from datetime import (
     date,
     datetime,
 )
-
 import os
 import shutil
 import subprocess
@@ -55,14 +54,16 @@ def member_list_date_pdf_view(request):
 
     If the date is not parseable, an error message is shown.
     """
+    effective_date_string = ''
     try:
-        _date_m = request.matchdict['date']
-        _date = datetime.strptime(_date_m, '%Y-%m-%d').date()
+        effective_date_string = request.matchdict['date']
+        effective_date = datetime.strptime(effective_date_string, '%Y-%m-%d') \
+            .date()
     except (KeyError, ValueError):
         request.session.flash(
             "Invalid date! '{}' does not compute! "
             "try again, please! (YYYY-MM-DD)".format(
-                _date_m),
+                effective_date_string),
             'message_to_user'
         )
         return HTTPFound(request.route_url('error_page'))
@@ -71,16 +72,14 @@ def member_list_date_pdf_view(request):
     All member entries are loaded.
     """
     # query the database
-    _order_by = 'lastname'
-    _num = C3sMember.get_number()
-    _all_members = C3sMember.member_listing(
-        _order_by, how_many=_num, offset=0, order=u'asc')
+    all_members = C3sMember.member_listing(
+        'lastname', how_many=C3sMember.get_number(), offset=0, order=u'asc')
 
     # prepare variables
-    _members = []  # the members, filtered
-    _count_members = 0  # count those members
-    _count_shares = 0  # count their shares
-    _count_shares_printed = 0  # cross-check...
+    members = []  # the members, filtered
+    members_count = 0  # count those members
+    shares_count = 0  # count their shares
+    shares_count_printed = 0  # cross-check...
 
     """
     ...and filtered for
@@ -93,21 +92,21 @@ def member_list_date_pdf_view(request):
     Their shares (those acquired before the date) are counted as well.
     """
     # filter and count memberships and shares
-    for item in _all_members:
+    for item in all_members:
         if (
                 (item.membership_number is not None) and
-                item.is_member(_date)):
+                item.is_member(effective_date)):
             # add this item to the filtered list of members
-            _members.append(item)
-            _count_members += 1
+            members.append(item)
+            members_count += 1
             # also count their shares iff acquired in the timespan
             for share in item.shares:
                 if (date(
                         share.date_of_acquisition.year,
                         share.date_of_acquisition.month,
                         share.date_of_acquisition.day,
-                ) <= _date):
-                    _count_shares += share.number
+                ) <= effective_date):
+                    shares_count += share.number
 
     """
     The list of members is then sorted by
@@ -123,9 +122,9 @@ def member_list_date_pdf_view(request):
     import locale
     locale.setlocale(locale.LC_ALL, "de_DE.UTF-8")
     # ...by fist name
-    _members.sort(key=lambda x: x.firstname, cmp=locale.strcoll)
+    members.sort(key=lambda x: x.firstname, cmp=locale.strcoll)
     # ...and then by their last name
-    _members.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
+    members.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
 
     """
     Then a LaTeX file is constructed...
@@ -137,16 +136,16 @@ def member_list_date_pdf_view(request):
         os.path.join(here, '../membership_list_pdflatex/footer'))
 
     # a temporary directory for the latex run
-    _tempdir = tempfile.mkdtemp()
+    tempdir = tempfile.mkdtemp()
     # now we prepare a .tex file to be pdflatex'ed
     latex_file = tempfile.NamedTemporaryFile(
         suffix='.tex',
-        dir=_tempdir,
+        dir=tempdir,
         delete=False,  # directory will be deleted anyways
     )
     # and where to store the output
     pdf_file = tempfile.NamedTemporaryFile(
-        dir=_tempdir,
+        dir=tempdir,
         delete=False,  # directory will be deleted anyways
     )
     pdf_file.name = latex_file.name.replace('.tex', '.pdf')
@@ -160,10 +159,10 @@ def member_list_date_pdf_view(request):
 \\def\\today{%s}
     ''' % (
         latex_header_tex,
-        _count_members,
-        _count_shares,
-        _count_shares * 50,
-        _date.strftime('%d.%m.%Y'),
+        members_count,
+        shares_count,
+        shares_count * 50,
+        effective_date.strftime('%d.%m.%Y'),
     )
 
     # add to the latex document
@@ -176,32 +175,32 @@ def member_list_date_pdf_view(request):
     latex_file.write(latex_data.encode('utf-8'))
 
     # make table rows per member
-    for member in _members:
-        _address = '''\\scriptsize{}'''
-        _address += '''{}'''.format(
+    for member in members:
+        address = '''\\scriptsize{}'''
+        address += '''{}'''.format(
             unicode(TexTools.escape(member.address1)).encode('utf-8'))
 
         # check for contents of address2:
         if len(member.address2) > 0:
-            _address += '''\\linebreak {}'''.format(
+            address += '''\\linebreak {}'''.format(
                 unicode(TexTools.escape(member.address2)).encode('utf-8'))
         # add more...
-        _address += ''' \\linebreak {} '''.format(
+        address += ''' \\linebreak {} '''.format(
             unicode(TexTools.escape(member.postcode)).encode('utf-8'))
-        _address += '''{}'''.format(
+        address += '''{}'''.format(
             unicode(TexTools.escape(member.city)).encode('utf-8'))
-        _address += ''' ({})'''.format(
+        address += ''' ({})'''.format(
             unicode(TexTools.escape(member.country)).encode('utf-8'))
 
         # check shares acquired until $date
-        _acquired_shares_until_date = 0
+        member_share_count = 0
         for share in member.shares:
             if date(
                     share.date_of_acquisition.year,
                     share.date_of_acquisition.month,
-                    share.date_of_acquisition.day) <= _date:
-                _acquired_shares_until_date += share.number
-                _count_shares_printed += share.number
+                    share.date_of_acquisition.day) <= effective_date:
+                member_share_count += share.number
+                shares_count_printed += share.number
 
         membership_loss = u''
         if member.membership_loss_date is not None:
@@ -219,11 +218,11 @@ def member_list_date_pdf_view(request):
                     member.firstname).encode('utf-8'),  # 1
                 ' \\footnotesize ' + TexTools.escape(
                     str(member.membership_number)),  # 2
-                _address,  # 3
+                address,  # 3
                 ' \\footnotesize ' + member.membership_date.strftime(
                     '%d.%m.%Y'),  # 4
                 ' \\footnotesize ' + membership_loss + ' ',  # 5
-                ' \\footnotesize ' + str(_acquired_shares_until_date)  # 6
+                ' \\footnotesize ' + str(member_share_count)  # 6
             ))
 
     latex_file.write('''
@@ -239,7 +238,7 @@ def member_list_date_pdf_view(request):
     pdflatex_output = subprocess.call(
         [
             'pdflatex',
-            '-output-directory=%s' % _tempdir,
+            '-output-directory=%s' % tempdir,
             latex_file.name
         ],
         stdout=fnull, stderr=subprocess.STDOUT  # hide output
@@ -253,7 +252,7 @@ def member_list_date_pdf_view(request):
             pdflatex_output = subprocess.call(
                 [
                     'pdflatex',
-                    '-output-directory=%s' % _tempdir,
+                    '-output-directory=%s' % tempdir,
                     latex_file.name
                 ],
                 stdout=fnull, stderr=subprocess.STDOUT  # hide output
@@ -262,12 +261,12 @@ def member_list_date_pdf_view(request):
                 print("run #{} finished.".format(i+1))
 
     # sanity check: did we print exactly as many shares as calculated?
-    assert(_count_shares == _count_shares_printed)
+    assert(shares_count == shares_count_printed)
 
     # return a pdf file
     response = Response(content_type='application/pdf')
     response.app_iter = open(pdf_file.name, "r")
-    shutil.rmtree(_tempdir, ignore_errors=True)  # delete temporary directory
+    shutil.rmtree(tempdir, ignore_errors=True)  # delete temporary directory
     return response
 
 
@@ -327,39 +326,39 @@ def merge_member_view(request):
     The second entry in the C3sMember table is given the 'is_duplicate' flag
     and also the 'duplicate_of' is given the *id* of the original entry.
     """
-    _id = request.matchdict['afm_id']
-    _mid = request.matchdict['mid']
+    afm_id = request.matchdict['afm_id']
+    member_id = request.matchdict['mid']
     if DEBUG:  # pragma: no cover
-        print "shall merge {} to {}".format(_id, _mid)
+        print "shall merge {} to {}".format(afm_id, member_id)
 
-    orig = C3sMember.get_by_id(_mid)
-    merg = C3sMember.get_by_id(_id)
+    orig = C3sMember.get_by_id(member_id)
+    merg = C3sMember.get_by_id(afm_id)
 
     if not orig.membership_accepted:
         request.session.flash(
             'you can only merge to accepted members!',
             'merge_message')
-        HTTPFound(request.route_url('make_member', afm_id=_id))
+        HTTPFound(request.route_url('make_member', afm_id=afm_id))
     exceeds_60 = int(orig.num_shares) + int(merg.num_shares) > 60
     if exceeds_60:
         request.session.flash(
             'merger would exceed 60 shares!',
             'merge_message')
-        return HTTPFound(request.route_url('make_member', afm_id=_id))
+        return HTTPFound(request.route_url('make_member', afm_id=afm_id))
 
     # TODO: this needs fixing!!!
     # date must be set manually according to date of approval of the board
-    _date_for_shares = merg.signature_received_date if (
+    shares_date_of_acquisition = merg.signature_received_date if (
         merg.signature_received_date > merg.payment_received_date
     ) else merg.payment_received_date
     # print "the date for the shares: {} (s: {}; p: {})".format(
-    #    _date_for_shares,
+    #    shares_date_of_acquisition,
     #    merg.signature_received_date,
     #    merg.payment_received_date
     # )
     shares = Shares(
         number=merg.num_shares,
-        date_of_acquisition=_date_for_shares,
+        date_of_acquisition=shares_date_of_acquisition,
         reference_code=merg.email_confirm_code,
         signature_received=merg.signature_received,
         signature_received_date=merg.signature_received_date,
@@ -371,7 +370,7 @@ def merge_member_view(request):
     orig.num_shares += merg.num_shares
     DBSession.delete(merg)
 
-    return HTTPFound(request.route_url('detail', memberid=_mid))
+    return HTTPFound(request.route_url('detail', memberid=member_id))
 
 
 @view_config(renderer='templates/make_member.pt',
@@ -402,9 +401,9 @@ def make_member_view(request):
     when combining both entries would exceed 60,
     the maximum number of shares a member can hold.
     """
-    _id = request.matchdict['afm_id']
+    afm_id = request.matchdict['afm_id']
     try:  # does that id make sense? member exists?
-        member = C3sMember.get_by_id(_id)
+        member = C3sMember.get_by_id(afm_id)
         assert(isinstance(member, C3sMember))  # is an application
         # assert(isinstance(member.membership_number, NoneType)
         # not has number
