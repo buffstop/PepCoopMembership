@@ -4,6 +4,8 @@ Next Release
 
 - Pin Python package SQLAlchemy to version 1.0.9 due to issues with 1.1.5.
 
+- Fix statistics to correctly count and show lost memberships.
+
 
 
 1.19.1

@@ -50,6 +50,8 @@
       ${num_ms_features}+${num_ms_inves}+${num_ms_norm}=
       ${num_ms_features+num_ms_inves+num_ms_norm}<br />
       <hr />
+      Anzahl ausgetretener Mitglieder: ${num_membership_lost}<br />
+      <hr />
       Anzahl Anteile: ${num_shares_members}<br />
     </p>
     <h4>Mitgliedschaftsnummern</h4>

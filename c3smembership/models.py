@@ -36,6 +36,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     or_,
+    not_,
     Table,
     Unicode,
 )
@@ -1039,7 +1040,7 @@ class C3sMember(Base):
             Integer: number
         """
         return DBSession.query(
-            cls).filter(cls.membership_accepted == 1).count()
+            cls).filter(cls.is_member_filter()).count()
 
     @classmethod
     def get_num_non_accepted(cls):
@@ -1051,12 +1052,8 @@ class C3sMember(Base):
         Returns:
             Integer: number of C3sMember entries.
         """
-        return DBSession.query(cls).filter(or_(
-            cls.membership_accepted != 1,
-            cls.membership_accepted == 0,
-            # pylint: disable=singleton-comparison
-            cls.membership_accepted == None,
-        )).count()
+        return DBSession.query(cls).filter(
+            not_(cls.membership_accepted_filter())).count()
 
     @classmethod
     def get_num_mem_nat_acc(cls):
@@ -1071,7 +1068,7 @@ class C3sMember(Base):
         """
         return DBSession.query(cls).filter(
             cls.is_legalentity == 0,
-            cls.membership_accepted == 1,
+            cls.is_member_filter(),
         ).count()
 
     @classmethod
@@ -1087,7 +1084,7 @@ class C3sMember(Base):
         """
         return DBSession.query(cls).filter(
             cls.is_legalentity == 1,
-            cls.membership_accepted == 1
+            cls.is_member_filter(),
         ).count()
 
     @classmethod
@@ -1102,7 +1099,7 @@ class C3sMember(Base):
             Integer: number
         """
         return DBSession.query(cls).filter(
-            cls.membership_accepted == 1,
+            cls.is_member_filter(),
             cls.membership_type == u'normal'
         ).count()
 
@@ -1118,7 +1115,7 @@ class C3sMember(Base):
             Integer: number
         """
         return DBSession.query(cls).filter(
-            cls.membership_accepted == 1,
+            cls.is_member_filter(),
             cls.membership_type == u'investing'
         ).count()
 
@@ -1134,10 +1131,20 @@ class C3sMember(Base):
             Integer: number
         """
         return DBSession.query(cls).filter(
-            cls.membership_accepted == 1,
+            cls.is_member_filter(),
             cls.membership_type != u'normal',
             cls.membership_type != u'investing'
         ).count()
+
+    @classmethod
+    def get_num_membership_lost(cls):
+        """
+        Gets the number of members which lost membership before today.
+
+        Returns:
+            Integer: number
+        """
+        return DBSession.query(cls).filter(cls.membership_lost_filter()).count()
 
     # listings
     @classmethod
@@ -1555,10 +1562,51 @@ class C3sMember(Base):
         return membership_accepted and not membership_lost
 
     @classmethod
+    def membership_lost_filter(cls, effective_date=None):
+        """
+        Provides a SqlAlchemy filter only matching entities which lost
+        membership before the specified effective date.
+
+        Args:
+            effective_date: Optional. The date before which the membership was
+                lost. If not specified then the current date of is used.
+
+        Returns:
+            A filter only matching entities which lost membership before the
+            specified effective date.
+        """
+        if effective_date is None:
+            effective_date = date.today()
+        return and_(
+            cls.membership_loss_date != None,
+            cls.membership_loss_date < effective_date)
+
+    @classmethod
+    def membership_accepted_filter(cls, effective_date=None):
+        """
+        Provides a SqlAlchemy filter only matching entities which had their
+        membership accepted before or on the specified effective date.
+
+        Args:
+            effective_date: Optional. The date before or on which the membership
+                was accepted. If not specified then the current date of is used.
+
+        Returns:
+            A filter only matching entities which had their membership accepted
+            before or on the specified effective date.
+        """
+        if effective_date is None:
+            effective_date = date.today()
+        return and_(
+            cls.membership_accepted,
+            cls.membership_date != None,
+            cls.membership_date <= effective_date)
+
+    @classmethod
     def is_member_filter(cls, effective_date=None):
         """
-        Provides an SqlAlchemy filter only matching entities which are members
-        at the specified effective date.
+        Provides a SqlAlchemy filter only matching entities which are members at
+        the specified effective date.
 
         For being a member the membership must have been accepted and the
         membership must not have been lost.
@@ -1573,16 +1621,9 @@ class C3sMember(Base):
         """
         if effective_date is None:
             effective_date = date.today()
-        membership_lost = and_(
-            cls.membership_loss_date != None,
-            cls.membership_loss_date < effective_date)
-        membership_accepted = and_(
-            cls.membership_accepted,
-            cls.membership_date != None,
-            cls.membership_date <= effective_date)
         return and_(
-            membership_accepted,
-            expression.not_(membership_lost))
+            cls.membership_accepted_filter(effective_date),
+            not_(cls.membership_lost_filter(effective_date)))
 
 
 

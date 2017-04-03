@@ -47,6 +47,7 @@ def stats_view(request):
         'num_ms_norm': C3sMember.get_num_mem_norm(),
         'num_ms_inves': C3sMember.get_num_mem_invest(),
         'num_ms_features': C3sMember.get_num_mem_other_features(),
+        'num_membership_lost': C3sMember.get_num_membership_lost(),
         # membership_numbers
         'num_memnums': C3sMember.get_num_membership_numbers(),
         'max_memnum': C3sMember.get_highest_membership_number(),
