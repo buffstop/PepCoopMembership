@@ -281,85 +281,103 @@ class C3sStaff(Base):
 
 class Shares(Base):
     """
-    The database of shares.
+    A package of shares which a member acquires.
 
-    Each entry is a number of shares varying from 1 to 60.
-    Each member may have several packages of shares,
-    e.g. from different events or processes
-    (crowdfunding, founding ceremony, web form).
+    Each shares package consists of one to sixty shares. One member may own
+    several packages, e.g. from membership application, crowdfunding and
+    requesting the acquisition of additional shares.
 
-    Once AFM submissions are complete,
-    the relevant information about the shares is moved here.
-    Each member then has a list of these objects.
-
+    Shares packages only come to existence once the business process is finished
+    and the transaction is completed. Information about ongoing processes cannot
+    here.
     """
     __tablename__ = 'shares'
     # pylint: disable=invalid-name
     id = Column(Integer, primary_key=True)
-    """technical id. / number in table (integer, primary key)"""
+    """Technical primary key of the shares package."""
     number = Column(Integer())
-    """number of shares in this package(integer)"""
-    date_of_acquisition = Column(DateTime(), nullable=False)
-    """acquired when (datetime)"""
+    """Number of shares of the shares package."""
+    date_of_acquisition = Column(Date(), nullable=False)
+    """Date of acquisition of the shares package, i.e. the date of approval of
+    the administrative board."""
     reference_code = Column(Unicode(255), unique=True)
-    """ex email_confirm_code (Unicode)"""
+    """A reference code used for email confirmation and as bank transfer
+    purpose."""
     signature_received = Column(Boolean, default=False)
-    """flag of acknowledgement for signature to arrive at headquarters."""
+    """Flag indicating whether the signed application for becoming a member or
+    acquiring additional shares was received."""
     signature_received_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    """timestamp of acknowledgement for signature to arrive at headquarters."""
+        Date(), default=date(1970, 1, 1))
+    """Date on which the signed application for becoming a member or acquiring
+    additional sharess was received."""
     signature_confirmed = Column(Boolean, default=False)
-    """flag to remember sending signature receipt email to oncoming member"""
+    """Flag indicating whether the confirmation email about the arrival of the
+    signed application was sent."""
     signature_confirmed_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    """timestamp of sending signature receipt email to oncoming member."""
+        Date(), default=date(1970, 1, 1))
+    """Date on which the confirmation email about the arrival of the signed
+    application was sent."""
     payment_received = Column(Boolean, default=False)
-    """flag of acknowledgement for payment to arrive at headquarters."""
+    """Flag indicating whether the payment for the shares package was
+    received."""
     payment_received_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    """timestamp of acknowledgement for payment to arrive at headquarters."""
+        Date(), default=date(1970, 1, 1))
+    """Date on which the payment for the shares package was received."""
     payment_confirmed = Column(Boolean, default=False)
-    """flag to remember sending payment receipt email to oncoming member."""
+    """Flag indicating whether the confirmation email about the arrival of the
+    payment was sent."""
     payment_confirmed_date = Column(
-        DateTime(), default=datetime(1970, 1, 1))
-    """timestamp of sending signature receipt email to oncoming member"""
+        Date(), default=date(1970, 1, 1))
+    """Date on which the confirmation email about the arrival of the payment was
+    sent."""
     accountant_comment = Column(Unicode(255))
-    """freestyle comment. unicode"""
+    """A free text comment for accounting purposes."""
 
     @classmethod
     def get_number(cls):
-        """return number of entries (by counting rows in table)"""
+        """Returns the number of shares packages."""
         return DBSession.query(cls).count()
 
     @classmethod
     def get_max_id(cls):
-        """return number of entries (by counting rows in table)"""
+        """Returns the maximum technical primary key used."""
         res, = DBSession.query(func.max(cls.id)).first()
         return res
 
     @classmethod
-    def get_by_id(cls, _id):
-        """return one package of shares by id"""
-        return DBSession.query(cls).filter(cls.id == _id).first()
+    def get_by_id(cls, shares_id):
+        """
+        Returns the package specified by the technical primary key.
+
+        Args:
+            shares_id: The technical primary key of the shares package to be
+                returned.
+
+        Returns:
+            The package specified by the technical primary key.
+        """
+        return DBSession.query(cls).filter(cls.id == shares_id).first()
 
     @classmethod
     def get_all(cls):
-        """return all packages of shares"""
+        """Returns all shares packages."""
         return DBSession.query(cls).all()
 
     @classmethod
     def get_total_shares(cls):
-        """return number of shares of accepted members"""
-        all_shares = DBSession.query(cls).all()
-        total = 0
-        for share in all_shares:
-            total += share.number
-        return total
+        """Returns the number of shares of all packages."""
+        return DBSession.query(func.sum(cls.number)).scalar()
 
     @classmethod
-    def delete_by_id(cls, _id):
-        """delete one package of shares by id"""
-        return DBSession.query(cls).filter(cls.id == _id).delete()
+    def delete_by_id(cls, shares_id):
+        """
+        Deletes the shares package specified by the technical primary key.
+
+        Args:
+            shares_id: The technical primary key of the shares package to be
+                deleted.
+        """
+        return DBSession.query(cls).filter(cls.id == shares_id).delete()
 
 # table for relation between membership and shares
 members_shares = Table(
