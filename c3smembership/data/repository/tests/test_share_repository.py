@@ -1,10 +1,13 @@
 # -*- coding: utf-8  -*-
+"""
+Tests the c3smembership.data.repository.share_repository package.
+"""
 
 from datetime import date
+import unittest
 
 from sqlalchemy import engine_from_config
 import transaction
-import unittest
 
 from c3smembership.data.model.base import (
     DBSession,
@@ -18,6 +21,9 @@ from c3smembership.data.repository.share_repository import ShareRepository
 
 
 class TestShareRepository(unittest.TestCase):
+    """
+    Tests the ShareRepository class.
+    """
 
     def setUp(self):
         my_settings = {'sqlalchemy.url': 'sqlite:///:memory:', }
@@ -43,7 +49,7 @@ class TestShareRepository(unittest.TestCase):
                 membership_type=u'normal',
                 member_of_colsoc=True,
                 name_of_colsoc=u"GEMA",
-                num_shares=u'23',
+                num_shares=35,
             )
             member2 = C3sMember(  # german
                 firstname=u'AAASomeFirstnäme',
@@ -63,7 +69,7 @@ class TestShareRepository(unittest.TestCase):
                 membership_type=u'normal',
                 member_of_colsoc=True,
                 name_of_colsoc=u"GEMA",
-                num_shares=u'23',
+                num_shares=45,
             )
             member3 = C3sMember(
                 firstname=u'Not Approved',
@@ -83,14 +89,21 @@ class TestShareRepository(unittest.TestCase):
                 membership_type=u'normal',
                 member_of_colsoc=True,
                 name_of_colsoc=u'',
-                num_shares=u'7',
+                num_shares=7,
             )
+            # pylint: disable=no-member
             DBSession.add(member1)
+            # pylint: disable=no-member
             DBSession.add(member2)
+            # pylint: disable=no-member
             DBSession.add(member3)
 
             member1.membership_number = u'member1'
+            member1.membership_date = date(2013, 1, 1)
+            member1.membership_accepted = True
             member2.membership_number = u'member2'
+            member2.membership_date = date(2013, 1, 1)
+            member2.membership_accepted = True
             member3.payment_received_date = date(2016, 10, 11)
 
             share = Shares()
@@ -122,7 +135,9 @@ class TestShareRepository(unittest.TestCase):
             member2.shares.append(share)
 
     def tearDown(self):
+        # pylint: disable=no-member
         DBSession.close()
+        # pylint: disable=no-member
         DBSession.remove()
 
     def test_create(self):
@@ -154,6 +169,9 @@ class TestShareRepository(unittest.TestCase):
         self.assertEqual(shares.accountant_comment, None)
 
     def test_get_member_shares(self):
+        """
+        Tests the ShareRepository.get_member_shares method.
+        """
         shares = ShareRepository.get_member_shares('member1')
         self.assertEqual(len(shares), 2)
         reference_codes = []
@@ -170,6 +188,9 @@ class TestShareRepository(unittest.TestCase):
         self.assertTrue('share4' in reference_codes)
 
     def test_get_approved(self):
+        """
+        Tests the ShareRepository.get_approved method.
+        """
         share_processes = ShareRepository.get_approved(
             date(2013, 1, 1),
             date(2013, 12, 31))
@@ -238,6 +259,9 @@ class TestShareRepository(unittest.TestCase):
         self.assertTrue('share4' in reference_codes)
 
     def test_get_approved_count(self):
+        """
+        Tests the ShareRepository.get_approved_count method.
+        """
         count = ShareRepository.get_approved_count(
             date(2013, 1, 1),
             date(2013, 12, 31))
@@ -279,6 +303,9 @@ class TestShareRepository(unittest.TestCase):
         self.assertEqual(count, 23+34+45)
 
     def test_get_paid_not_approved(self):
+        """
+        Tests the ShareRepository.get_paid_not_approved method.
+        """
         share_processes = ShareRepository.get_paid_not_approved(
             date(2012, 1, 1),
             date(2012, 11, 10))
@@ -330,7 +357,11 @@ class TestShareRepository(unittest.TestCase):
         self.assertEqual(len(share_processes), 1)
         self.assertEqual(share_processes[0].shares_count, 7)
 
+    # pylint: disable=invalid-name
     def test_get_paid_not_approved_count(self):
+        """
+        Tests the get_paid_not_approved_count method.
+        """
         count = ShareRepository.get_paid_not_approved_count(
             date(2012, 1, 1),
             date(2012, 11, 10))
@@ -370,3 +401,136 @@ class TestShareRepository(unittest.TestCase):
             date(2016, 1, 1),
             date(2016, 12, 31))
         self.assertEqual(count, 7)
+
+    def test_set_signature_reception(self):
+        """
+        Tests the ShareRepository.set_signature_reception method.
+        """
+        # pylint: disable=no-member
+        member1 = DBSession.query(C3sMember).filter(
+            C3sMember.membership_number == 'member1').first()
+        shares = member1.shares[0]
+
+        ShareRepository.set_signature_reception(shares.id, date(2017, 4, 23))
+        self.assertEqual(shares.signature_received_date, date(2017, 4, 23))
+        self.assertEqual(shares.signature_received, True)
+
+        ShareRepository.set_signature_reception(shares.id)
+        self.assertEqual(shares.signature_received_date, None)
+        self.assertEqual(shares.signature_received, False)
+
+        ShareRepository.set_signature_reception(shares.id, date(2017, 4, 22))
+        self.assertEqual(shares.signature_received_date, date(2017, 4, 22))
+        self.assertEqual(shares.signature_received, True)
+
+    def test_set_signature_confirmation(self):
+        """
+        Tests the ShareRepository.set_signature_confirmation method.
+        """
+        # pylint: disable=no-member
+        member1 = DBSession.query(C3sMember).filter(
+            C3sMember.membership_number == 'member1').first()
+        shares = member1.shares[0]
+
+        ShareRepository.set_signature_confirmation(shares.id, date(2017, 4, 23))
+        self.assertEqual(shares.signature_confirmed_date, date(2017, 4, 23))
+        self.assertEqual(shares.signature_confirmed, True)
+
+        ShareRepository.set_signature_confirmation(shares.id)
+        self.assertEqual(shares.signature_confirmed_date, None)
+        self.assertEqual(shares.signature_confirmed, False)
+
+        ShareRepository.set_signature_confirmation(shares.id, date(2017, 4, 22))
+        self.assertEqual(shares.signature_confirmed_date, date(2017, 4, 22))
+        self.assertEqual(shares.signature_confirmed, True)
+
+    def test_set_payment_reception(self):
+        """
+        Tests the ShareRepository.set_payment_reception method.
+        """
+        # pylint: disable=no-member
+        member1 = DBSession.query(C3sMember).filter(
+            C3sMember.membership_number == 'member1').first()
+        shares = member1.shares[0]
+
+        ShareRepository.set_payment_reception(shares.id, date(2017, 4, 23))
+        self.assertEqual(shares.payment_received_date, date(2017, 4, 23))
+        self.assertEqual(shares.payment_received, True)
+
+        ShareRepository.set_payment_reception(shares.id)
+        self.assertEqual(shares.payment_received_date, None)
+        self.assertEqual(shares.payment_received, False)
+
+        ShareRepository.set_payment_reception(shares.id, date(2017, 4, 22))
+        self.assertEqual(shares.payment_received_date, date(2017, 4, 22))
+        self.assertEqual(shares.payment_received, True)
+
+    def test_set_payment_confirmation(self):
+        """
+        Tests the ShareRepository.set_payment_confirmation method.
+        """
+        # pylint: disable=no-member
+        member1 = DBSession.query(C3sMember).filter(
+            C3sMember.membership_number == 'member1').first()
+        shares = member1.shares[0]
+
+        ShareRepository.set_payment_confirmation(shares.id, date(2017, 4, 23))
+        self.assertEqual(shares.payment_confirmed_date, date(2017, 4, 23))
+        self.assertEqual(shares.payment_confirmed, True)
+
+        ShareRepository.set_payment_confirmation(shares.id)
+        self.assertEqual(shares.payment_confirmed_date, None)
+        self.assertEqual(shares.payment_confirmed, False)
+
+        ShareRepository.set_payment_confirmation(shares.id, date(2017, 4, 22))
+        self.assertEqual(shares.payment_confirmed_date, date(2017, 4, 22))
+        self.assertEqual(shares.payment_confirmed, True)
+
+    def test_set_reference_code(self):
+        """
+        Tests the ShareRepository.set_reference_code method.
+        """
+        # pylint: disable=no-member
+        member1 = DBSession.query(C3sMember).filter(
+            C3sMember.membership_number == 'member1').first()
+        shares = member1.shares[0]
+
+        ShareRepository.set_reference_code(shares.id, u'test_reference_code')
+        self.assertEqual(shares.reference_code, u'test_reference_code')
+
+        ShareRepository.set_reference_code(shares.id, None)
+        self.assertEqual(shares.reference_code, None)
+
+    def test_get_share_count(self):
+        """
+        Tests the ShareRepository.get_share_count method.
+        """
+        share_count = ShareRepository.get_share_count()
+        self.assertEqual(share_count, 114)
+
+    def test_get_member_share_count(self):
+        """
+        Tests the ShareRepository.get_member_share_count method.
+        """
+        share_count = ShareRepository.get_member_share_count('member1')
+        self.assertEqual(share_count, 12 + 23)
+
+        share_count = ShareRepository.get_member_share_count(
+            'member1',
+            date(2013, 1, 1))
+        self.assertEqual(share_count, 0)
+
+        share_count = ShareRepository.get_member_share_count(
+            'member1',
+            date(2013, 1, 2))
+        self.assertEqual(share_count, 12)
+
+        share_count = ShareRepository.get_member_share_count(
+            'member1',
+            date(2014, 2, 2))
+        self.assertEqual(share_count, 12)
+
+        share_count = ShareRepository.get_member_share_count(
+            'member1',
+            date(2014, 2, 3))
+        self.assertEqual(share_count, 12 + 23)

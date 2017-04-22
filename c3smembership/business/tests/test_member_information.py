@@ -1,0 +1,47 @@
+# -*- coding: utf-8 -*-
+
+import mock
+from datetime import date
+
+from unittest import TestCase
+
+from c3smembership.business.member_information import (
+    MemberInformation,
+)
+
+
+class MemberInformationTest(TestCase):
+
+    def test_get_accepted_members_count(self):
+        member_repository_mock = mock.Mock()
+        member_repository_mock.get_accepted_members_count.side_effect = [
+            'get_accepted_members_count result']
+
+        member_information = MemberInformation(member_repository_mock)
+        effective_date = date(2017, 8, 24)
+
+        accepted_members_count = member_information.get_accepted_members_count(
+            effective_date)
+
+        member_repository_mock.get_accepted_members_count.assert_called_with(
+            effective_date)
+        self.assertEqual(
+            accepted_members_count,
+            'get_accepted_members_count result')
+
+    def test_get_accepted_members_sorted(self):
+        member_repository_mock = mock.Mock()
+        member_repository_mock.get_accepted_members_sorted.side_effect = [
+            'get_accepted_members_sorted result']
+
+        member_information = MemberInformation(member_repository_mock)
+        effective_date = date(2017, 8, 24)
+
+        accepted_members_sorted = member_information.get_accepted_members_sorted(
+            effective_date)
+
+        member_repository_mock.get_accepted_members_sorted.assert_called_with(
+            effective_date)
+        self.assertEqual(
+            accepted_members_sorted,
+            'get_accepted_members_sorted result')

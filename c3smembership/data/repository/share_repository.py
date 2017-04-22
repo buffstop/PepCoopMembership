@@ -4,7 +4,7 @@ Repository to initiate and operate shares as well as retrieving share
 information.
 """
 
-from datetime import date
+from datetime import date, datetime
 
 from sqlalchemy import Date
 from sqlalchemy.sql import (
@@ -13,6 +13,7 @@ from sqlalchemy.sql import (
 )
 
 from c3smembership.data.model.base import DBSession
+from c3smembership.data.repository.member_repository import MemberRepository
 from c3smembership.models import (
     C3sMember,
     Shares,
@@ -26,6 +27,36 @@ class ShareRepository(object):
     """
 
     @classmethod
+    def create(cls, membership_number, shares_quantity,
+               board_confirmation=None):
+        """
+        Create a shares package.
+
+        Args:
+            membership_number: The membership number of the member for which the
+                shares package is created.
+            shares_quantity: The number of shares of the package to be created.
+            board_confirmation: Optional. The date on which the board of
+                directors confirmed the acquisition of the shares package.
+
+        Returns:
+            The technical ID of the created shares package.
+        """
+        shares = Shares(
+            number=shares_quantity,
+            date_of_acquisition=board_confirmation,
+        )
+        # pylint: disable=no-member
+        member = DBSession.query(C3sMember).filter(
+            C3sMember.membership_number == membership_number).first()
+        # pylint: disable=no-member
+        DBSession.add(shares)
+        member.shares.append(shares)
+        member.num_shares += shares_quantity
+        DBSession.flush()
+        return shares.id
+
+    @classmethod
     def get_member_shares(cls, membership_number):
         """
         Gets the share of a members.
@@ -37,6 +68,7 @@ class ShareRepository(object):
         Returns:
             The shares of the member.
         """
+        # pylint: disable=no-member
         return DBSession.query(Shares) \
             .join(members_shares) \
             .join(C3sMember) \
@@ -57,6 +89,7 @@ class ShareRepository(object):
             All shares approved between and including both start date and end
             date.
         """
+        # pylint: disable=no-member
         return DBSession.query(Shares).filter(
             expression.and_(
                 Shares.date_of_acquisition >= start_date,
@@ -76,6 +109,7 @@ class ShareRepository(object):
             The number of all shares approved between and including both start
             date and end date.
         """
+        # pylint: disable=no-member
         count = DBSession.query(func.sum(Shares.number)).filter(
             expression.and_(
                 Shares.date_of_acquisition >= start_date,
@@ -163,11 +197,13 @@ class ShareRepository(object):
         # Shares which of the day of the request have not been approved are not
         # yet stored in Shares but only available on the C3sMember.
         shares_count = expression.case(
+            # pylint: disable=singleton-comparison
             [(Shares.id == None, C3sMember.num_shares)],
             else_=Shares.number
         )
         payment_received_date = expression.case(
             [(
+                # pylint: disable=singleton-comparison
                 Shares.id == None,
                 # C3sMember.payment_received_date has the data type DateTime but
                 # Date is required as it is used in
@@ -181,11 +217,13 @@ class ShareRepository(object):
             else_=Shares.payment_received_date
         )
         date_of_acquisition = expression.case(
+            # pylint: disable=singleton-comparison
             [(Shares.id == None, C3sMember.membership_date)],
             else_=Shares.date_of_acquisition
         )
 
         if query_type == 'data':
+            # pylint: disable=no-member
             query = DBSession.query(
                 C3sMember.id,
                 C3sMember.lastname,
@@ -194,6 +232,7 @@ class ShareRepository(object):
                 payment_received_date.label('payment_received_date'),
             )
         if query_type == 'shares_count':
+            # pylint: disable=no-member
             query = DBSession.query(
                 func.sum(shares_count)
             )
@@ -215,3 +254,154 @@ class ShareRepository(object):
                     payment_received_date <= end_date,
                 )
             )
+
+    @classmethod
+    def set_signature_reception(cls, shares_id, reception_date=None):
+        """
+        Sets the signature reception date.
+
+        Args:
+            shares_id: The technical ID of the shares package for which the
+                signature reception date is set.
+            reception_date: Optional. The signature reception date to be set to
+                the share process. If not specified the signature reception date
+                is unset.
+        """
+        # pylint: disable=no-member
+        shares = DBSession.query(Shares).filter(Shares.id == shares_id).first()
+        shares.signature_received_date = reception_date
+        shares.signature_received = (
+            reception_date is not None
+            and
+            reception_date > date(1970, 1, 1)
+        )
+
+    @classmethod
+    def set_signature_confirmation(cls, shares_id, confirmation_date=None):
+        """
+        Sets the signature reception date.
+
+        Args:
+            shares_id: The technical ID of the shares package for which the
+                signature reception date is set.
+            confirmation_date: Optional. The signature confirmation date to be
+                set to the share process. If not specified the signature
+                confirmation date is unset.
+        """
+        # pylint: disable=no-member
+        shares = DBSession.query(Shares).filter(Shares.id == shares_id).first()
+        shares.signature_confirmed_date = confirmation_date
+        shares.signature_confirmed = (
+            confirmation_date is not None
+            and
+            confirmation_date > date(1970, 1, 1)
+        )
+
+    @classmethod
+    def set_payment_reception(cls, shares_id, reception_date=None):
+        """
+        Sets the payment confirmation of the shares package.
+
+        Args:
+            shares_id: The technical ID of the shares package for which the
+                payment confirmation is set.
+            reception_date: Optional. The payment reception date which is set.
+                If not specified the payment reception date is unset.
+
+        """
+        # pylint: disable=no-member
+        shares = DBSession.query(Shares).filter(Shares.id == shares_id).first()
+        shares.payment_received_date = reception_date
+        shares.payment_received = \
+            reception_date is not None \
+            and \
+            reception_date > date(1970, 1, 1)
+
+    @classmethod
+    def set_payment_confirmation(cls, shares_id, confirmation_date=None):
+        """
+        Sets the payment confirmation of the shares package.
+
+        Args:
+            shares_id: The technical ID of the shares package for which the
+                payment confirmation is set.
+            confirmation_date: Optional. The payment confirmation date which is
+                set. If not specified the payment confirmation date is unset.
+
+        """
+        # pylint: disable=no-member
+        shares = DBSession.query(Shares).filter(Shares.id == shares_id).first()
+        shares.payment_confirmed_date = confirmation_date
+        shares.payment_confirmed = \
+            confirmation_date is not None \
+            and \
+            confirmation_date > date(1970, 1, 1)
+
+    @classmethod
+    def set_reference_code(cls, shares_id, reference_code):
+        """
+        Sets the reference code of the shares package.
+
+        Args:
+            shares_id: The technical ID of the shares package for which the
+                payment confirmation is set.
+            reference_code: The reference code which is set.
+        """
+        # pylint: disable=no-member
+        shares = DBSession.query(Shares).filter(Shares.id == shares_id).first()
+        shares.reference_code = reference_code
+
+    @classmethod
+    def get_share_count(cls, effective_date=None):
+        """
+        Gets the number of shares valid on effective date.
+
+        Args:
+            effective_date: Optional. The date for which the number of shares
+                is counted. If not specified the date is set to the system date.
+        """
+        # TODO: use single optimized query
+
+        share_count = 0
+        if effective_date is None:
+            effective_date = date.today()
+
+        member_repository = MemberRepository()
+        members = member_repository.get_accepted_members(effective_date)
+
+        for member in members:
+            for share in member.shares:
+                if share.date_of_acquisition <= effective_date:
+                    share_count += share.number
+        return share_count
+
+    @classmethod
+    def get_member_share_count(cls, membership_number, effective_date=None):
+        """
+        Gets the number of shares of the member as of the effective_date.
+
+        Args:
+            membership_number: The business key of the member, i.e. the member's
+                official membership number.
+            effective_date: Optional. The effective date for which the number of
+                shares is calculated.
+
+        Returns:
+            The number of shares of the member as of the effective_date.
+        """
+        if effective_date is None:
+            effective_date = date.today()
+        # pylint: disable=no-member
+        share_count = DBSession \
+            .query(func.sum(Shares.number)) \
+            .join(members_shares) \
+            .join(C3sMember) \
+            .filter(
+                expression.and_(
+                    C3sMember.membership_number == membership_number,
+                    Shares.date_of_acquisition <= effective_date
+                )
+            ).scalar()
+        if share_count is None:
+            share_count = 0
+        return share_count

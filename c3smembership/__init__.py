@@ -84,6 +84,11 @@ def main(global_config, **settings):
     config.add_renderer(name='csv',
                         factory='c3smembership.renderers.CSVRenderer')
 
+    from c3smembership.data.repository.share_repository import ShareRepository
+    from c3smembership.business.share_acquisition import ShareAcquisition
+    share_acquisition = ShareAcquisition(ShareRepository)
+    config.registry.share_acquisition = share_acquisition
+
     ## Membership application process
     # Step 1 (join.pt): home is /, the membership application form
     config.add_route('join', '/')
@@ -167,8 +172,16 @@ def main(global_config, **settings):
 
     config.add_route('membership_listing_alphabetical',
                      '/aml')
+
+
+    # membership list
+    from c3smembership.data.repository.member_repository import MemberRepository
+    from c3smembership.business.member_information import MemberInformation
+    config.registry.member_information = MemberInformation(MemberRepository)
+
     config.add_route('membership_listing_date_pdf',
                      '/aml-{date}.pdf')
+
     config.add_route('membership_listing_aufstockers',
                      '/aml_aufstockers')
 

@@ -23,6 +23,7 @@ from datetime import (
     date,
     datetime,
 )
+
 import os
 import shutil
 import subprocess
@@ -35,11 +36,14 @@ from pyramid.view import view_config
 from c3smembership.data.model.base import DBSession
 from c3smembership.models import (
     C3sMember,
-    Shares,
 )
 from c3smembership.tex_tools import TexTools
 
 DEBUG = False
+
+
+# How is the membership list reconstructed? By the processes only? This can
+# involve changes of the firstname, lastname, address, membership status etc.
 
 
 @view_config(permission='manage',
@@ -68,63 +72,19 @@ def member_list_date_pdf_view(request):
         )
         return HTTPFound(request.route_url('error_page'))
 
-    """
-    All member entries are loaded.
-    """
-    # query the database
-    all_members = C3sMember.member_listing(
-        'lastname', how_many=C3sMember.get_number(), offset=0, order=u'asc')
+    shares_count_printed = 0
 
-    # prepare variables
-    members = []  # the members, filtered
-    members_count = 0  # count those members
-    shares_count = 0  # count their shares
-    shares_count_printed = 0  # cross-check...
+    # TODO: repositories are data layer and must only be used by the business
+    # layer. Introduce business layer logic which uses the repositories and can
+    # be accessed by this view via the request.
+    shares_count = request.registry.share_information.get_share_count(
+        effective_date)
 
-    """
-    ...and filtered for
-
-    * active members (membership_accepted)
-    * with membership numbers (cross-check)
-    * who have become members before the given date.
-
-    They are added to a list and counted.
-    Their shares (those acquired before the date) are counted as well.
-    """
-    # filter and count memberships and shares
-    for item in all_members:
-        if (
-                (item.membership_number is not None) and
-                item.is_member(effective_date)):
-            # add this item to the filtered list of members
-            members.append(item)
-            members_count += 1
-            # also count their shares iff acquired in the timespan
-            for share in item.shares:
-                if (date(
-                        share.date_of_acquisition.year,
-                        share.date_of_acquisition.month,
-                        share.date_of_acquisition.day,
-                ) <= effective_date):
-                    shares_count += share.number
-
-    """
-    The list of members is then sorted by
-
-    * their given name
-    * their last name,
-
-    using locale.strcoll with german locale.
-    This achieves a sort order like in phone books.
-    """
-
-    # sort members alphabetically
-    import locale
-    locale.setlocale(locale.LC_ALL, "de_DE.UTF-8")
-    # ...by fist name
-    members.sort(key=lambda x: x.firstname, cmp=locale.strcoll)
-    # ...and then by their last name
-    members.sort(key=lambda x: x.lastname, cmp=locale.strcoll)
+    member_information = request.registry.member_information
+    members_count = member_information.get_accepted_members_count(
+        effective_date)
+    members = member_information.get_accepted_members_sorted(
+        effective_date)
 
     """
     Then a LaTeX file is constructed...
@@ -192,15 +152,11 @@ def member_list_date_pdf_view(request):
         address += ''' ({})'''.format(
             unicode(TexTools.escape(member.country)).encode('utf-8'))
 
-        # check shares acquired until $date
-        member_share_count = 0
-        for share in member.shares:
-            if date(
-                    share.date_of_acquisition.year,
-                    share.date_of_acquisition.month,
-                    share.date_of_acquisition.day) <= effective_date:
-                member_share_count += share.number
-                shares_count_printed += share.number
+        member_share_count = \
+            request.registry.share_information.get_member_share_count(
+                member.membership_number,
+                effective_date)
+        shares_count_printed += member_share_count
 
         membership_loss = u''
         if member.membership_loss_date is not None:
@@ -351,25 +307,41 @@ def merge_member_view(request):
     shares_date_of_acquisition = merg.signature_received_date if (
         merg.signature_received_date > merg.payment_received_date
     ) else merg.payment_received_date
-    # print "the date for the shares: {} (s: {}; p: {})".format(
-    #    shares_date_of_acquisition,
-    #    merg.signature_received_date,
-    #    merg.payment_received_date
-    # )
-    shares = Shares(
-        number=merg.num_shares,
-        date_of_acquisition=shares_date_of_acquisition,
-        reference_code=merg.email_confirm_code,
-        signature_received=merg.signature_received,
-        signature_received_date=merg.signature_received_date,
-        payment_received=merg.payment_received,
-        payment_received_date=merg.payment_received_date,
-    )
-    DBSession.add(shares)  # persist
-    orig.shares.append(shares)
-    orig.num_shares += merg.num_shares
-    DBSession.delete(merg)
 
+    share_acquisition = request.registry.share_acquisition
+    share_id = share_acquisition.create(
+        orig.membership_number,
+        merg.num_shares,
+        shares_date_of_acquisition)
+    share_acquisition.set_signature_reception(
+        share_id,
+        date(
+            merg.signature_received_date.year,
+            merg.signature_received_date.month,
+            merg.signature_received_date.day))
+    share_acquisition.set_signature_confirmation(
+        share_id,
+        date(
+            merg.signature_confirmed_date.year,
+            merg.signature_confirmed_date.month,
+            merg.signature_confirmed_date.day))
+    share_acquisition.set_payment_reception(
+        share_id,
+        date(
+            merg.payment_received_date.year,
+            merg.payment_received_date.month,
+            merg.payment_received_date.day))
+    share_acquisition.set_payment_confirmation(
+        share_id,
+        date(
+            merg.payment_confirmed_date.year,
+            merg.payment_confirmed_date.month,
+            merg.payment_confirmed_date.day))
+    share_acquisition.set_reference_code(
+        share_id,
+        merg.email_confirm_code)
+
+    DBSession.delete(merg)
     return HTTPFound(request.route_url('detail', memberid=member_id))
 
 
@@ -434,17 +406,28 @@ def make_member_view(request):
         else:
             member.is_legalentity = False
         member.membership_number = C3sMember.get_next_free_membership_number()
-        shares = Shares(
-            number=member.num_shares,
-            date_of_acquisition=member.membership_date,
-            reference_code=member.email_confirm_code,
-            signature_received=member.signature_received,
-            signature_received_date=member.signature_received_date,
-            payment_received=member.payment_received,
-            payment_received_date=member.payment_received_date
-        )
-        DBSession.add(shares)
-        member.shares = [shares]
+
+        share_id = request.registry.share_acquisition.create(
+            member.membership_number,
+            member.num_shares,
+            member.membership_date)
+        share_acquisition = request.registry.share_acquisition
+        share_acquisition.set_signature_reception(
+            share_id,
+            date(
+                member.signature_received_date.year,
+                member.signature_received_date.month,
+                member.signature_received_date.day))
+        share_acquisition.set_payment_confirmation(
+            share_id,
+            date(
+                member.payment_received_date.year,
+                member.payment_received_date.month,
+                member.payment_received_date.day))
+        share_acquisition.set_reference_code(
+            share_id,
+            member.email_confirm_code)
+
         # return the user to the page she came from
         if 'referrer' in request.POST:
             if request.POST['referrer'] == 'dashboard':
