@@ -52,7 +52,7 @@
       <hr />
       Anzahl ausgetretener Mitglieder: ${num_membership_lost}<br />
       <hr />
-      Anzahl Anteile: ${num_shares_members}<br />
+      Anzahl aller Anteile der Mitglieder (Anteile ausgetretener Mitglieder nicht enthalten): ${num_shares_members}<br />
     </p>
     <h4>Mitgliedschaftsnummern</h4>
     Anzahl vergebener Mitgliedschaftsnummern: ${num_memnums}

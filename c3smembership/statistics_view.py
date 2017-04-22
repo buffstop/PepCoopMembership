@@ -1,8 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+Prepares statistics.
+"""
+
 from pyramid.view import view_config
+
+from c3smembership.data.repository.share_repository import ShareRepository
 from c3smembership.models import (
     C3sMember,
     C3sStaff,
-    Shares,
     Dues15Invoice,
     Dues16Invoice,
     Dues17Invoice,
@@ -31,7 +37,7 @@ def stats_view(request):
         'afm_shares_paid': C3sMember.afm_num_shares_paid(),
         # shares
         # 'num_shares': C3sMember.get_total_shares(),
-        'num_shares_members': Shares.get_total_shares(),
+        'num_shares_members': ShareRepository.get_share_count(),
         # 'num_shares_mem_norm': Shares.get_sum_norm(),
         # 'num_shares_mem_inv': Shares.get_sum_inv(),
 
