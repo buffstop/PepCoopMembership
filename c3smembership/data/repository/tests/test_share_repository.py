@@ -534,3 +534,107 @@ class TestShareRepository(unittest.TestCase):
             'member1',
             date(2014, 2, 3))
         self.assertEqual(share_count, 12 + 23)
+
+    def test_get(self):
+        """
+        Tests the ShareRepository.get method.
+        """
+        # pylint: disable=no-member
+        share = DBSession.query(Shares).filter(
+            Shares.reference_code == u'share1').first()
+        get_share = ShareRepository.get(share.id)
+        self.assertEqual(get_share.id, share.id)
+
+        # pylint: disable=no-member
+        share = DBSession.query(Shares).filter(
+            Shares.reference_code == u'share2').first()
+        get_share = ShareRepository.get(share.id)
+        self.assertEqual(get_share.id, share.id)
+
+        # pylint: disable=no-member
+        share = DBSession.query(Shares).filter(
+            Shares.reference_code == u'share3').first()
+        get_share = ShareRepository.get(share.id)
+        self.assertEqual(get_share.id, share.id)
+
+        # pylint: disable=no-member
+        share = DBSession.query(Shares).filter(
+            Shares.reference_code == u'share4').first()
+        get_share = ShareRepository.get(share.id)
+        self.assertEqual(get_share.id, share.id)
+
+    def test_delete(self):
+        """
+        Tests the ShareRepository.delete method.
+        """
+        # pylint: disable=no-member
+        count = DBSession.query(Shares).count()
+        self.assertEqual(count, 4)
+
+        shares = DBSession.query(Shares).all()
+        reference_codes = []
+        for share in shares:
+            reference_codes.append(share.reference_code)
+        self.assertTrue('share1' in reference_codes)
+        self.assertTrue('share2' in reference_codes)
+        self.assertTrue('share3' in reference_codes)
+        self.assertTrue('share4' in reference_codes)
+
+        # pylint: disable=no-member
+        share = DBSession.query(Shares).filter(
+            Shares.reference_code == u'share1').first()
+        ShareRepository.delete(share.id)
+
+        count = DBSession.query(Shares).count()
+        self.assertEqual(count, 3)
+
+        shares = DBSession.query(Shares).all()
+        reference_codes = []
+        for share in shares:
+            reference_codes.append(share.reference_code)
+        self.assertTrue('share1' not in reference_codes)
+        self.assertTrue('share2' in reference_codes)
+        self.assertTrue('share3' in reference_codes)
+        self.assertTrue('share4' in reference_codes)
+
+        # pylint: disable=no-member
+        share = DBSession.query(Shares).filter(
+            Shares.reference_code == u'share2').first()
+        ShareRepository.delete(share.id)
+
+        count = DBSession.query(Shares).count()
+        self.assertEqual(count, 2)
+
+        shares = DBSession.query(Shares).all()
+        reference_codes = []
+        for share in shares:
+            reference_codes.append(share.reference_code)
+        self.assertTrue('share1' not in reference_codes)
+        self.assertTrue('share2' not in reference_codes)
+        self.assertTrue('share3' in reference_codes)
+        self.assertTrue('share4' in reference_codes)
+
+        # pylint: disable=no-member
+        share = DBSession.query(Shares).filter(
+            Shares.reference_code == u'share3').first()
+        ShareRepository.delete(share.id)
+
+        count = DBSession.query(Shares).count()
+        self.assertEqual(count, 1)
+
+        shares = DBSession.query(Shares).all()
+        reference_codes = []
+        for share in shares:
+            reference_codes.append(share.reference_code)
+        self.assertTrue('share1' not in reference_codes)
+        self.assertTrue('share2' not in reference_codes)
+        self.assertTrue('share3' not in reference_codes)
+        self.assertTrue('share4' in reference_codes)
+
+        # pylint: disable=no-member
+        share = DBSession.query(Shares).filter(
+            Shares.reference_code == u'share4').first()
+        ShareRepository.delete(share.id)
+
+        count = DBSession.query(Shares).count()
+        self.assertEqual(count, 0)

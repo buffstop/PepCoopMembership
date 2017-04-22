@@ -11,7 +11,7 @@ from deform import ValidationFailure
 from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 
-from c3smembership.models import Shares
+from c3smembership.data.repository.share_repository import ShareRepository
 from c3smembership.presentation.i18n import _
 from c3smembership.presentation.views.membership_listing import (
     get_memberhip_listing_redirect
@@ -27,7 +27,7 @@ def shares_detail(request):
     '''
     Show details about a package of shares.
     '''
-    share = Shares.get_by_id(request.matchdict['id'])
+    share = ShareRepository.get(request.matchdict['id'])
     if isinstance(share, NoneType):
         # entry was not found in database
         request.session.flash(
@@ -63,7 +63,7 @@ def shares_edit(request):
     Edit details of a package of shares.
     '''
     # load info from DB -- if possible
-    share = Shares.get_by_id(request.matchdict['id'])
+    share = ShareRepository.get(request.matchdict['id'])
 
     if isinstance(share, NoneType):
         # entry was not found in database
@@ -152,7 +152,7 @@ def shares_delete(request):
     '''
     shares_id = request.matchdict['id']
     # load info from DB -- if possible
-    share = Shares.get_by_id(shares_id)
+    share = ShareRepository.get(shares_id)
 
     if isinstance(share, NoneType):
         # entry was not found in database
@@ -172,7 +172,7 @@ def shares_delete(request):
         )
         return HTTPFound(request.route_url('toolbox'))
     else:
-        Shares.delete_by_id(shares_id)
+        ShareRepository.delete(shares_id)
         request.session.flash(
             'the shares package {} was deleted.'.format(shares_id),
             'message_to_staff'

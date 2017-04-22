@@ -40,7 +40,7 @@ class ShareRepository(object):
                 directors confirmed the acquisition of the shares package.
 
         Returns:
-            The technical ID of the created shares package.
+            The technical primary key of the created shares package.
         """
         shares = Shares(
             number=shares_quantity,
@@ -261,8 +261,8 @@ class ShareRepository(object):
         Sets the signature reception date.
 
         Args:
-            shares_id: The technical ID of the shares package for which the
-                signature reception date is set.
+            shares_id: The technical primary key of the shares package for which
+                the signature reception date is set.
             reception_date: Optional. The signature reception date to be set to
                 the share process. If not specified the signature reception date
                 is unset.
@@ -343,8 +343,8 @@ class ShareRepository(object):
         Sets the reference code of the shares package.
 
         Args:
-            shares_id: The technical ID of the shares package for which the
-                payment confirmation is set.
+            shares_id: The technical primary key of the shares package for which
+                the payment confirmation is set.
             reference_code: The reference code which is set.
         """
         # pylint: disable=no-member
@@ -405,3 +405,28 @@ class ShareRepository(object):
         if share_count is None:
             share_count = 0
         return share_count
+
+    @classmethod
+    def get(cls, shares_id):
+        """
+        Gets the shares package for the specified shares id.
+
+        Args:
+            shares_id: The technical primary key of the shares package for which
+                the payment confirmation is set.
+
+        Returns:
+            The shares package for the specified shares id.
+        """
+        return DBSession.query(Shares).filter(Shares.id == shares_id).first()
+
+    @classmethod
+    def delete(cls, shares_id):
+        """
+        Deletes the shares package of the specified shares id.
+
+        Args:
+            shares_id: The technical primary key of the shares package to be
+                deleted.
+        """
+        DBSession.query(Shares).filter(Shares.id == shares_id).delete()
