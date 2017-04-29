@@ -1,6 +1,8 @@
-Next Release
-============
+1.19.2
+======
 
+
+- Changed name of chairperson of the board of directors in email footer.
 
 - Pin Python package SQLAlchemy to version 1.0.9 due to issues with 1.1.5.
 
