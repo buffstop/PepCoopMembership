@@ -36,7 +36,6 @@ def stats_view(request):
         'afm_shares_unpaid': C3sMember.afm_num_shares_unpaid(),
         'afm_shares_paid': C3sMember.afm_num_shares_paid(),
         # shares
-        # 'num_shares': C3sMember.get_total_shares(),
         'num_shares_members': ShareRepository.get_share_count(),
         # 'num_shares_mem_norm': Shares.get_sum_norm(),
         # 'num_shares_mem_inv': Shares.get_sum_inv(),

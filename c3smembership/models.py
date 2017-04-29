@@ -333,51 +333,6 @@ class Shares(Base):
     accountant_comment = Column(Unicode(255))
     """A free text comment for accounting purposes."""
 
-    @classmethod
-    def get_number(cls):
-        """Returns the number of shares packages."""
-        return DBSession.query(cls).count()
-
-    @classmethod
-    def get_max_id(cls):
-        """Returns the maximum technical primary key used."""
-        res, = DBSession.query(func.max(cls.id)).first()
-        return res
-
-    @classmethod
-    def get_by_id(cls, shares_id):
-        """
-        Returns the package specified by the technical primary key.
-
-        Args:
-            shares_id: The technical primary key of the shares package to be
-                returned.
-
-        Returns:
-            The package specified by the technical primary key.
-        """
-        return DBSession.query(cls).filter(cls.id == shares_id).first()
-
-    @classmethod
-    def get_all(cls):
-        """Returns all shares packages."""
-        return DBSession.query(cls).all()
-
-    @classmethod
-    def get_total_shares(cls):
-        """Returns the number of shares of all packages."""
-        return DBSession.query(func.sum(cls.number)).scalar()
-
-    @classmethod
-    def delete_by_id(cls, shares_id):
-        """
-        Deletes the shares package specified by the technical primary key.
-
-        Args:
-            shares_id: The technical primary key of the shares package to be
-                deleted.
-        """
-        return DBSession.query(cls).filter(cls.id == shares_id).delete()
 
 # table for relation between membership and shares
 members_shares = Table(

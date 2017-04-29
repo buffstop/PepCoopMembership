@@ -341,18 +341,3 @@ class SharesTests(unittest.TestCase):
         self.assertTrue('<h1>Details for Shares #1</h1>' in res.body)
         # self.assertTrue('1: Not Found' in res.body)
         self.assertTrue('ABCDEFGH' in res.body)
-        # I guess I found a bug...
-        #         # bug_looks_like_this = """
-        # (Pdb) m1 = C3sMember.get_by_id(1)
-        # (Pdb) m1
-        # (Pdb) m1 is None
-        # True
-        # (Pdb) s1 = Shares.get_by_id(1)
-        # (Pdb) s1.members
-        # [<c3smembership.models.C3sMember object at 0x7f208e952ed0>]
-        # (Pdb) s1.members[0].firstname
-        # u'SomeFirstn\xe4me'
-        # (Pdb) s1.members[0].id
-        # 1
-        # """
-        # # XXX TODO: fix this
