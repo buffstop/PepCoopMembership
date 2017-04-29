@@ -485,8 +485,6 @@ Invitation to General Assembly
 ------------------------------
 
 
-All members must be invited to the annual general assembly.
-
 Legal requirements:
 
 - The SCE shall hold a general meeting at least once each calendar year within
@@ -508,7 +506,7 @@ Legal requirements:
   [EU_CR_1435_2003_SCE]_, § 13 II 1 [C3S_Statute]_).
 - Each full member has the right to attend the general assembly and take part in
   its decision-making process (§ 7 I c [C3S_Statute]_).
-- Each non-user member has  the right to attend the general assembly as an
+- Each non-user member has the right to attend the general assembly as an
   observer (§ 7 II a [C3S_Statute]_).
 - The notice must contains (Art. 56(2) [EU_CR_1435_2003_SCE]_):
 
@@ -517,6 +515,22 @@ Legal requirements:
   - where appropriate, the type of the general meeting,
   - the agenda, indicating the subjects to be discussed and the proposals for
     decisions.
+
+Business requirements:
+
+- All members must be invited to the annual general assembly.
+- An individual invitation email containing details about the general assembly
+  is sent to all members.
+- All full and non-user members maintaining membership at the date on which the
+  invitation is sent shall receive it. Even entities which lose membership after
+  the date on which the invitations are sent but before the general assembly is
+  held shall be invited because the loss of membership could be revised.
+- The application must keep track about which email is sent to which member.
+- There can be more than one general assembly per year.
+- The application must handle email bounces and report them.
+
+**TODO:** *Are members informed about the general assembly which gain membership
+after the invitations are sent out but before the assembly is held? How?*
 
 
 
