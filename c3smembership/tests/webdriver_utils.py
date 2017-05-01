@@ -23,33 +23,28 @@ class Server(object):
             cls._instance = super(Server, cls).__new__(cls, *args, **kwargs)
             return cls._instance
 
-    def connect(self, cfg, customAppSettings={}, wrapper='StopableWSGIServer'):
+    def connect(self, cfg, customAppSettings=None,
+                wrapper='StopableWSGIServer'):
+        if customAppSettings is None:
+            customAppSettings = {}
         self.cfg = cfg
-        # clear old connections
-        # try:
-        # DBSession.close()
-        # DBSession.remove()
-        # os.remove(self.cfg['app']['db'])
-        # except:
-        # pass
-        # create appConfig from ini
-        self.appSettings = appconfig(
+        self.app_settings = appconfig(
             'config:' + os.path.join(
                 os.path.dirname(__file__), '../../', self.cfg['app']['ini']
             )
         )
         # store some derived variables
-        self.appSettings['sqlalchemy.url'] = 'sqlite:///'+self.cfg['app']['db']
+        self.app_settings['sqlalchemy.url'] = 'sqlite:///'+self.cfg['app']['db']
         # merge/override appConfig with custom settings in cfg
-        self.appSettings.update(self.cfg['app']['appSettings'])
+        self.app_settings.update(self.cfg['app']['appSettings'])
         # merge/override appConfig with individual custom settings
-        self.appSettings.update(customAppSettings)
+        self.app_settings.update(customAppSettings)
         # app
-        engine = engine_from_config(self.appSettings)
+        engine = engine_from_config(self.app_settings)
         DBSession.configure(bind=engine)
         Base.metadata.create_all(engine)
         from c3smembership import main
-        app = main({}, **self.appSettings)
+        app = main({}, **self.app_settings)
         # create srv
         if wrapper == 'StopableWSGIServer':
             self.srv = StopableWSGIServer.create(
@@ -68,8 +63,6 @@ class Server(object):
         self.srv.db = DBSession
         self.srv.url = 'http://' + self.cfg['app']['host'] + ':' \
                        + self.cfg['app']['port'] + '/'
-        # self.srv.lu = 'lu/' + self.cfg['member']['token'] + '/' \
-        #              + self.cfg['member']['email']
         return self.srv
 
     def disconnect(self):
@@ -77,14 +70,13 @@ class Server(object):
         self.srv.db.remove()
         os.remove(self.cfg['app']['db'])
         if isinstance(self.srv, StopableWSGIServer):
-                self.srv.shutdown()
+            self.srv.shutdown()
 
     def shutdown(self):
-        # self.srv.db.close()
-        # self.srv.db.remove()
-        # os.remove(self.cfg['app']['db'])
         if isinstance(self.srv, StopableWSGIServer):
-                self.srv.shutdown()
+            self.srv.shutdown()
+        DBSession.close()
+        DBSession.remove()
 
 
 class Client(object):
@@ -99,10 +91,8 @@ class Client(object):
 
     def connect(self, cfg):
         self.cfg = cfg
-        # self.cli = webdriver.PhantomJS()
-        # self.cli = webdriver.Firefox()
         self.cli = webdriver.Chromium()
         return self.cli
 
     def disconnect(self):
-            self.cli.quit()
+        self.cli.quit()

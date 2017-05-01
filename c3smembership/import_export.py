@@ -41,7 +41,7 @@ def import_db(request):
     Import the contents of import.csv to the database.
 
     This can be useful after returning from an event where
-    another instance of *c3sMembership* was used to aquire new members.
+    another instance of *c3sMembership* was used to acquire new members.
     New members are merged into the master instance of the database.
     """
     try:  # check if the file exists

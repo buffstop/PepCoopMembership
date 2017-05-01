@@ -1,57 +1,31 @@
+# -*- coding: utf-8 -*-
+
 import os
 import unittest
-# import subprocess
 
-# from c3smembership import scripts  # just to trigger coverage
-# from c3smembership.scripts.initialize_db import init_50
-
-DEBUG = False
+from c3smembership.data.model.base import DBSession
 
 
 class TestDBInitialization(unittest.TestCase):
     """
-    tests for the database initialization scripts
+    Tests for the database initialization scripts.
     """
-    if DEBUG:  # pragma: no cover
-        print("--------------------------------------------------------------")
-        print("-- tests for the initialize_db script (output unsuppressed)")
-
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
 
     def test_usage(self):
         from c3smembership.scripts.initialize_db import usage
         argv = ['initialize_c3sMembership_db']
-        try:  # we will hit SystemExit: 1
-            result = usage(argv)
-            if DEBUG:  # pragma: no cover
-                print("the result: %s" % result)
+        try:
+            usage(argv)
         except:
-            # print ("caught exception!")
             pass
-        if DEBUG:  # pragma: no cover
-            print("----------------------------------------------------------")
-
-    # def test_usage_process(self):
-    #     try:
-    #         res = subprocess.check_output(
-    #             ['env/bin/initialize_c3sMembership_db'])
-    #         #print res
-    #     except subprocess.CalledProcessError, cpe:
-    #         #print("return code: %s" % cpe.returncode)
-    #         #print("output: %s" % cpe.output)
-    #         self.assertTrue(cpe.returncode is 1)
-    #         self.assertTrue(
-    #           'usage: initialize_c3sMembership_db <config_uri>' in cpe.output
-    #         )
+        DBSession.close()
+        DBSession.remove()
 
     def test_init(self):
         from c3smembership.scripts.initialize_db import init
-        result = init()
-        print(result)
+        init()
+        DBSession.close()
+        DBSession.remove()
 
     def test_main_false(self):
         """
@@ -66,14 +40,13 @@ class TestDBInitialization(unittest.TestCase):
         from c3smembership.scripts.initialize_db import main
         argv = []
         with self.assertRaises(IndexError):
-            result = main(argv)
+            main(argv)
         argv = ['notExisting.ini', ]
-        with self.assertRaises(SystemExit) as cm:
-            result = main(argv)
-            result  # apease flake8
-        self.assertEqual(cm.exception.code, 1)
-        if DEBUG:  # pragma: no cover
-            print("----------------------------------------------------------")
+        with self.assertRaises(SystemExit) as context:
+            main(argv)
+        self.assertEqual(context.exception.code, 1)
+        DBSession.close()
+        DBSession.remove()
 
     def test_main_correct(self):
         """
@@ -82,9 +55,8 @@ class TestDBInitialization(unittest.TestCase):
         from c3smembership.scripts.initialize_db import main
         filename = 'webdrivertest.db'
         if os.path.isfile(filename):
-            os.unlink(filename)  # delete file if present
+            os.unlink(filename)
         argv = ['initialize_c3sMembership_db', 'webdrivertest.ini']
-        result = main(argv)
-        result  # apease flake8
-        if DEBUG:  # pragma: no cover
-            print("----------------------------------------------------------")
+        main(argv)
+        DBSession.close()
+        DBSession.remove()

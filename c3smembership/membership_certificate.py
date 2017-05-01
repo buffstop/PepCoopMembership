@@ -249,7 +249,7 @@ def gen_cert(member):
         and_block = u' and has subscribed to'
         if is_founder:
             confirm_date = (
-                u'Membership was aquired as a founding member '
+                u'Membership was acquired as a founding member '
                 'on the 25th of September 2013')
         else:
             confirm_date = u'Registered on the {}'.format(
