@@ -51,6 +51,10 @@ Bibliography
 .. [Pyramid] Pyramid web framework,
    https://docs.pylonsproject.org/projects/pyramid/en/latest/
 
+.. [SCEAG] Gesetz zur Ausführung der Verordnung (EG) Nr. 1435/2003 des Rates vom
+   22. Juli 2003 über das Statut der Europäischen Genossenschaft (SCE),
+   https://www.gesetze-im-internet.de/sceag/
+
 .. [Sphinx] Sphinx documentation generator, https://sphinx-doc.org/
 
 .. [Sphinx-Graphviz] https://build-me-the-docs-please.readthedocs.org/en/latest/Using_Sphinx/UsingGraphicsAndDiagramsInSphinx.html
