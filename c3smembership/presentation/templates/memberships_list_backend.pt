@@ -97,12 +97,10 @@
                 bc &amp; ga<br />
                 invitation
             </th>
-            <!--!
             <th>
-                dues16<br />
+                dues17<br />
                 invoice
             </th>
-            -->
             <th>
                 certificate
             </th>
@@ -167,18 +165,16 @@
                       class="btn btn-success"></a>
                 </div>
             </td>
-            <!--!
             <td>
-                <a tal:condition="member.dues16_invoice is False"
-                    href="${request.route_url('send_dues16_invoice_email', member_id=member.id)}"
+                <a tal:condition="member.dues17_invoice is False"
+                    href="${request.route_url('send_dues17_invoice_email', member_id=member.id)}"
                     title="Dues invoice not sent yet. Click to send!"
                     class="btn btn-danger"></a>
-                <a tal:condition="member.dues16_invoice is True"
-                    href="${request.route_url('send_dues16_invoice_email', member_id=member.id)}"
-                    title="Invoice sent at ${member.dues16_invoice_date.strftime('%d.%m.%Y %H:%M')}"
+                <a tal:condition="member.dues17_invoice is True"
+                    href="${request.route_url('send_dues17_invoice_email', member_id=member.id)}"
+                    title="Invoice sent at ${member.dues17_invoice_date.strftime('%d.%m.%Y %H:%M')}"
                     class="btn btn-success"></a>
             </td>
-            -->
             <td>
                 <div tal:condition="member.is_member()" tal:omit-tag="">
                   <a tal:condition="not member.certificate_email"

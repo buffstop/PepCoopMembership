@@ -45,6 +45,7 @@ from c3smembership.models import (
     C3sStaff,
     Dues15Invoice,
     Dues16Invoice,
+    Dues17Invoice,
 )
 from c3smembership.presentation.i18n import _
 from c3smembership.presentation.schemas.accountant_login import (
@@ -294,6 +295,7 @@ def member_detail(request):
     # get the members invoices from the DB
     invoices15 = Dues15Invoice.get_by_membership_no(member.membership_number)
     invoices16 = Dues16Invoice.get_by_membership_no(member.membership_number)
+    invoices17 = Dues17Invoice.get_by_membership_no(member.membership_number)
 
     return {
         'today': date.today().strftime('%Y-%m-%d'),
@@ -301,6 +303,7 @@ def member_detail(request):
         'member': member,
         'invoices15': invoices15,
         'invoices16': invoices16,
+        'invoices17': invoices17,
         # 'form': html
     }
 

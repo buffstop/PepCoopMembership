@@ -1,3 +1,13 @@
+Next Release
+============
+
+
+- Copy the logic for the 2016 dues invoices for 2017 as a dirty quick fix. The
+  whole dues and invoicing logic still needs a complete redesign to make it
+  reusable for any year, any type of invoice and any type of accounting.
+
+
+
 1.19.2
 ======
 

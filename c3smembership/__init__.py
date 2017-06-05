@@ -195,6 +195,18 @@ def main(global_config, **settings):
     config.add_route('dues16_notice', '/dues16_notice/{member_id}')
     config.add_route('dues16_listing', '/dues16_listing')
 
+    # membership dues 2017
+    config.add_route('send_dues17_invoice_email', '/dues17_invoice/{member_id}')
+    config.add_route('send_dues17_invoice_batch', '/dues17_invoice_batch')
+    config.add_route('make_dues17_invoice_no_pdf',
+                     '/dues17_invoice_no/{email}/{code}/C3S-dues17-{i}.pdf')
+    config.add_route('dues17_reduction',
+                     '/dues17_reduction/{member_id}')
+    config.add_route('make_dues17_reversal_invoice_pdf',
+                     '/dues17_reversal/{email}/{code}/C3S-dues17-{no}-S.pdf')
+    config.add_route('dues17_notice', '/dues17_notice/{member_id}')
+    config.add_route('dues17_listing', '/dues17_listing')
+
     # TODO: move application layer setup to separate module
     from c3smembership.models import Dues15Invoice
     from c3smembership.data.model.base import DBSession
