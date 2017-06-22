@@ -3,8 +3,9 @@ Hello {salutation},
 we appreciate that you want to join C3S as a member and thereby support
 us.
 
-You have submitted your declaration to join C3S on {submission_date}. But the form did not
-reach us. Please sign the form and send it by postal service to:
+You have submitted your declaration to join C3S on {submission_date}. 
+But the form did not reach us. 
+Please sign the form and send it by postal service to:
 
 C3S SCE
 Rochusstrasse 44
@@ -21,5 +22,9 @@ We are looking forward to welcome you at C3S!
 
 All the best
 The team of C3S
+
+P.S.:
+Should you neither send in your declaration to join nor pay for your 
+share(s) until 3 month after this reminder, we will delete your data.
 
 {footer}
