@@ -93,10 +93,12 @@
                  title="Sort by id: descending"
                  class="glyphicon glyphicon-chevron-down"></a>
             </th>
+            <!--!
             <th>
                 bc &amp; ga<br />
                 invitation
             </th>
+            -->
             <th>
                 dues17<br />
                 invoice
@@ -153,6 +155,7 @@
                     </a>
                 </div>
             </td>
+            <!--!
             <td>
                 <div tal:condition="member.is_member()" tal:omit-tag="">
                   <a tal:condition="member.email_invite_flag_bcgv17 is not True"
@@ -165,6 +168,7 @@
                       class="btn btn-success"></a>
                 </div>
             </td>
+            -->
             <td>
                 <a tal:condition="member.dues17_invoice is False"
                     href="${request.route_url('send_dues17_invoice_email', member_id=member.id)}"
