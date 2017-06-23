@@ -176,7 +176,11 @@ def send_dues17_invoice_email(request, m_id=None):
             'to be able to send an invoice email.'.format(member.id),
             'message_to_staff')
         return get_memberhip_listing_redirect(request)
-    if member.membership_date >= date(2017,1,1):
+    if member.membership_date >= date(2018,1,1) or ( \
+                member.membership_loss_date is not None
+                and
+                member.membership_loss_date < date(2017,1,1)
+            ):
         request.session.flash(
             'Member {0} was not a member in 2017. Therefore, you cannot send '
             'an invoice for 2017.'.format(member.id),

@@ -41,6 +41,9 @@
       </script>
   </tal:block>
   <tal:block metal:fill-slot="middle">
+    <?python
+          from datetime import date
+    ?>
       <p>
         Please <a href="${request.route_url('logout')}">log out</a>
         when you are done.
@@ -339,6 +342,7 @@
 
       <!--! membership dues -->
       <div tal:condition="member.membership_accepted">
+        <div tal:omit-tag="" tal:condition="member.membership_date <= date(2015,12,31) and (member.membership_loss_date is None or member.membership_loss_date >= date(2015,1,1))">
         <a name="dues15"></a>
         <h3 id="certificate">Membership Dues 2015</h3>
         <table class="table table-striped">
@@ -585,8 +589,10 @@
             </td>
           </tr>
         </table>
+        </div>
 
 
+        <div tal:omit-tag="" tal:condition="member.membership_date <= date(2016,12,31) and (member.membership_loss_date is None or member.membership_loss_date >= date(2016,1,1))">
         <a name="dues16"></a>
         <h3 id="certificate">Membership Dues 2016</h3>
         <table class="table table-striped">
@@ -837,8 +843,10 @@
             </td>
           </tr>
         </table>
+        </div>
 
 
+        <div tal:omit-tag="" tal:condition="member.membership_date <= date(2017,12,31) and (member.membership_loss_date is None or member.membership_loss_date >= date(2017,1,1))">
         <a name="dues17"></a>
         <h3 id="certificate">Membership Dues 2017</h3>
         <table class="table table-striped">
@@ -1085,6 +1093,7 @@
             </td>
           </tr>
         </table>
+        </div>
 
 
         <a name="account_balance"></a>
