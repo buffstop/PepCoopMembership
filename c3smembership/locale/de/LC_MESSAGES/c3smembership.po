@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: markus.lorenz@c3s.cc\n"
-"POT-Creation-Date: 2017-01-29 10:06+0100\n"
+"POT-Creation-Date: 2017-06-23 17:46+0200\n"
 "PO-Revision-Date: 2016-01-18 19:57+0100\n"
 "Last-Translator: Markus Lorenz <mrks@lrnz.name>\n"
 "Language: de\n"
@@ -19,20 +19,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.1.1\n"
 
-#: c3smembership/accountants_views.py:79 c3smembership/administration.py:542
+#: c3smembership/accountants_views.py:80 c3smembership/administration.py:542
 #: c3smembership/annual_accounting.py:72 c3smembership/edit_member.py:526
 #: c3smembership/new_member.py:219 c3smembership/shares_views.py:96
 msgid "Submit"
 msgstr "Absenden"
 
-#: c3smembership/accountants_views.py:80 c3smembership/administration.py:543
+#: c3smembership/accountants_views.py:81 c3smembership/administration.py:543
 #: c3smembership/edit_member.py:527 c3smembership/new_member.py:220
 #: c3smembership/views/afm.py:323
 msgid "Reset"
 msgstr "Löschen"
 
-#: c3smembership/accountants_views.py:91 c3smembership/administration.py:566
-#: c3smembership/annual_accounting.py:91 c3smembership/edit_member.py:557
+#: c3smembership/accountants_views.py:92 c3smembership/administration.py:566
+#: c3smembership/annual_accounting.py:90 c3smembership/edit_member.py:557
 #: c3smembership/new_member.py:258 c3smembership/shares_views.py:113
 #: c3smembership/views/afm.py:346
 msgid "Please note: There were errors, please check the form below."
@@ -564,7 +564,7 @@ msgid "check-email-title"
 msgstr "C3S Mitgliedsantrag: Bitte E-Mails abrufen."
 
 #. Default: 1. Enter data
-#: c3smembership/templates/check-mail.pt:24 c3smembership/templates/join.pt:69
+#: c3smembership/templates/check-mail.pt:24 c3smembership/templates/join.pt:72
 #: c3smembership/templates/success.pt:22
 #: c3smembership/templates/verify_password.pt:24
 #: c3smembership/templates/verify_password.pt:67
@@ -572,7 +572,7 @@ msgid "reg-process-enter-data"
 msgstr "1. Daten eingeben"
 
 #. Default: 2. Check data
-#: c3smembership/templates/check-mail.pt:31 c3smembership/templates/join.pt:76
+#: c3smembership/templates/check-mail.pt:31 c3smembership/templates/join.pt:79
 #: c3smembership/templates/success.pt:29
 #: c3smembership/templates/verify_password.pt:31
 #: c3smembership/templates/verify_password.pt:74
@@ -580,7 +580,7 @@ msgid "reg-process-check-data"
 msgstr "2. Daten prüfen"
 
 #. Default: 3. Verify email address
-#: c3smembership/templates/check-mail.pt:38 c3smembership/templates/join.pt:83
+#: c3smembership/templates/check-mail.pt:38 c3smembership/templates/join.pt:86
 #: c3smembership/templates/success.pt:36
 #: c3smembership/templates/verify_password.pt:38
 #: c3smembership/templates/verify_password.pt:81
@@ -588,7 +588,7 @@ msgid "reg-process-verify-email-address"
 msgstr "3. E-Mail-Adresse bestätigen"
 
 #. Default: 4. Mail application form
-#: c3smembership/templates/check-mail.pt:45 c3smembership/templates/join.pt:90
+#: c3smembership/templates/check-mail.pt:45 c3smembership/templates/join.pt:93
 #: c3smembership/templates/success.pt:43
 #: c3smembership/templates/verify_password.pt:45
 #: c3smembership/templates/verify_password.pt:88
@@ -658,54 +658,63 @@ msgid "join-form-nonhumans-linktext"
 msgstr "Mitgliedschaftsantrag für Unternehmen und Vereine"
 
 #. Default: (german)
-#: c3smembership/templates/join.pt:59 c3smembership/templates/join.pt:132
+#: c3smembership/templates/join.pt:59 c3smembership/templates/join.pt:135
 #: c3smembership/templates/mtype-form.pt:81
 msgid "join-form-statute-linktitle-de"
 msgstr "(deutsch)"
 
 #. Default: (english)
-#: c3smembership/templates/join.pt:62 c3smembership/templates/join.pt:137
+#: c3smembership/templates/join.pt:62 c3smembership/templates/join.pt:140
 #: c3smembership/templates/mtype-form.pt:83
 msgid "join-form-statute-linktitle-en"
 msgstr "(englisch)"
 
+#. Default: Should you not follow through with the application process and
+#. neither
+#. send us the form via postal service nor pay for the share(s), we will delete
+#. your data after 6 month at the latest.
+#: c3smembership/templates/join.pt:66
+msgid "join-form-delete"
+msgstr "Solltest du den Antragsprozess nicht abschließen, werden deine Daten "
+"spätestens nach sechs Monaten gelöscht."
+
 #. Default: The Fine Print
-#: c3smembership/templates/join.pt:118 c3smembership/templates/mtype-form.pt:67
+#: c3smembership/templates/join.pt:121 c3smembership/templates/mtype-form.pt:67
 msgid "join-form-headline-fine-print"
 msgstr "Das Kleingedruckte"
 
 #. Default: https://www.c3s.cc/en/about-us/manifesto/
-#: c3smembership/templates/join.pt:122 c3smembership/templates/mtype-form.pt:69
+#: c3smembership/templates/join.pt:125 c3smembership/templates/mtype-form.pt:69
 msgid "manifesto-link"
 msgstr "https://www.c3s.cc/ueber-c3s/manifest/"
 
 #. Default: The Cultural Commons Manifesto
-#: c3smembership/templates/join.pt:122 c3smembership/templates/mtype-form.pt:69
+#: c3smembership/templates/join.pt:125 c3smembership/templates/mtype-form.pt:69
 msgid "join-form-manifesto-title"
 msgstr "Das Cultural-Commons-Manifest"
 
 #. Default: The C3S SCE Statute
-#: c3smembership/templates/join.pt:131 c3smembership/templates/mtype-form.pt:80
+#: c3smembership/templates/join.pt:134 c3smembership/templates/mtype-form.pt:80
 msgid "join-form-statute"
 msgstr "Die Satzung der C3S SCE"
 
 #. Default: The Temporary Membership Dues Regulations
-#: c3smembership/templates/join.pt:144
+#: c3smembership/templates/join.pt:147
 msgid "join-form-dues-regulations"
 msgstr "Vorläufige Beitragsordnung"
 
 #. Default: (german)
-#: c3smembership/templates/join.pt:147
+#: c3smembership/templates/join.pt:150
 msgid "join-form-dues-regulations-linktitle-de"
 msgstr "(deutsch)"
 
 #. Default: (english)
-#: c3smembership/templates/join.pt:152
+#: c3smembership/templates/join.pt:155
 msgid "join-form-dues-regulations-linktitle-en"
 msgstr "(englisch)"
 
 #. Default: Disclaimer (Data Protection)
-#: c3smembership/templates/join.pt:159 c3smembership/templates/mtype-form.pt:87
+#: c3smembership/templates/join.pt:162 c3smembership/templates/mtype-form.pt:87
 msgid "join-form-disclaimer-title"
 msgstr "Hinweis gem. § 4 BDSG:"
 
@@ -713,7 +722,7 @@ msgstr "Hinweis gem. § 4 BDSG:"
 #. administrative
 #. purposes and in order to protect your rights as an artist. Responsible
 #. authority: C3S SCE, Rochusstraße 44, 40479 Düsseldorf.
-#: c3smembership/templates/join.pt:162 c3smembership/templates/mtype-form.pt:90
+#: c3smembership/templates/join.pt:165 c3smembership/templates/mtype-form.pt:90
 msgid "join-form-disclaimer-paragraph"
 msgstr ""
 "Wir verarbeiten und nutzen Ihre personenbezogenen Daten für Zwecke der "
@@ -779,59 +788,73 @@ msgid "Support fair remuneration for artists"
 msgstr "Dein Beitrag zu fairer Bezahlung für Musiker"
 
 #. Default: Dues 2015
-#: c3smembership/templates/stats.pt:77
+#: c3smembership/templates/stats.pt:79
 msgid "stats-dues-2015"
 msgstr "Mitgliedsbeiträge 2015"
 
 #. Default: Month
-#: c3smembership/templates/stats.pt:81 c3smembership/templates/stats.pt:139
+#: c3smembership/templates/stats.pt:83 c3smembership/templates/stats.pt:141
+#: c3smembership/templates/stats.pt:199
 msgid "stats-dues-month"
 msgstr "Monat"
 
 #. Default: Normal amount invoiced
-#: c3smembership/templates/stats.pt:82 c3smembership/templates/stats.pt:140
+#: c3smembership/templates/stats.pt:84 c3smembership/templates/stats.pt:142
+#: c3smembership/templates/stats.pt:200
 msgid "stats-dues-amount-invoiced-normal"
 msgstr "Rechnungsbetrag Normal"
 
 #. Default: Reversal amount invoiced
-#: c3smembership/templates/stats.pt:83 c3smembership/templates/stats.pt:141
+#: c3smembership/templates/stats.pt:85 c3smembership/templates/stats.pt:143
+#: c3smembership/templates/stats.pt:201
 msgid "stats-dues-amount-invoiced-reversal"
 msgstr "Rechnungsbetrag Reversal"
 
 #. Default: Amount invoiced
-#: c3smembership/templates/stats.pt:84 c3smembership/templates/stats.pt:142
+#: c3smembership/templates/stats.pt:86 c3smembership/templates/stats.pt:144
+#: c3smembership/templates/stats.pt:202
 msgid "stats-dues-amount-invoiced"
 msgstr "Rechnungsbetrag"
 
 #. Default: Amount paid
-#: c3smembership/templates/stats.pt:85 c3smembership/templates/stats.pt:143
+#: c3smembership/templates/stats.pt:87 c3smembership/templates/stats.pt:145
+#: c3smembership/templates/stats.pt:203
 msgid "stats-dues-amount-paid"
 msgstr "Zahlungseingänge"
 
 #. Default: Current amount invoiced
-#: c3smembership/templates/stats.pt:86 c3smembership/templates/stats.pt:144
+#: c3smembership/templates/stats.pt:88 c3smembership/templates/stats.pt:146
+#: c3smembership/templates/stats.pt:204
 msgid "stats-dues-amount-invoiced-current"
 msgstr "Fortlaufender Rechnungsbetrag"
 
 #. Default: Current amount paid
-#: c3smembership/templates/stats.pt:87 c3smembership/templates/stats.pt:145
+#: c3smembership/templates/stats.pt:89 c3smembership/templates/stats.pt:147
+#: c3smembership/templates/stats.pt:205
 msgid "stats-dues-amount-paid-current"
 msgstr "Fortlaufende Zahlungseingänge"
 
 #. Default: Current balance
-#: c3smembership/templates/stats.pt:88 c3smembership/templates/stats.pt:146
+#: c3smembership/templates/stats.pt:90 c3smembership/templates/stats.pt:148
+#: c3smembership/templates/stats.pt:206
 msgid "stats-dues-amount-current"
 msgstr "Fortlaufendes Saldo"
 
 #. Default: Total
-#: c3smembership/templates/stats.pt:123 c3smembership/templates/stats.pt:181
+#: c3smembership/templates/stats.pt:125 c3smembership/templates/stats.pt:183
+#: c3smembership/templates/stats.pt:241
 msgid "stats-dues-sum"
 msgstr "Summe"
 
 #. Default: Dues 2016
-#: c3smembership/templates/stats.pt:135
+#: c3smembership/templates/stats.pt:137
 msgid "stats-dues-2016"
 msgstr "Mitgliedsbeiträge 2016"
+
+#. Default: Dues 2017
+#: c3smembership/templates/stats.pt:195
+msgid "stats-dues-2017"
+msgstr "Mitgliedsbeiträge 2017"
 
 #. Default: C3S Membership Application
 #: c3smembership/templates/success.pt:16
