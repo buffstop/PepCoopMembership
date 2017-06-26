@@ -533,7 +533,8 @@ def make_invoice_pdf_pdflatex(member, invoice=None):
         'personalMShipNo': unicode(member.membership_number),
         'invoiceNo': str(invoice_no).zfill(4),  # leading zeroes!
         'invoiceDate': invoice_date,
-        'account': unicode(-member.dues15_balance -member.dues17_balance),
+        'account': unicode(-member.dues15_balance - member.dues16_balance \
+            - member.dues17_balance),
         'duesStart':  is_altered_str if (
             invoice.is_altered) else string_start_quarter_dues17(member),
         'duesAmount': unicode(invoice.invoice_amount),
