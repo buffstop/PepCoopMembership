@@ -356,16 +356,74 @@ class C3sMembershipModelTests(C3sMembershipModelTestBase):
         """
         instance = self._makeOne()
         instance2 = self._makeAnotherOne()
-        self.session.add(instance, instance2)
+        self.session.add(instance)
+        self.session.add(instance2)
         self.session.flush()
         myMembershipSigneeClass = self._getTargetClass()
+
+        instance.membership_accepted = False
+        instance.membership_date = None
+        instance2.membership_accepted = False
+        instance2.membership_date = None
         invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
         self.assertEquals(len(invoicees), 0)
+
         # change details so they be found
         instance.membership_accepted = True
-        instance2.membership_accepted = True
+        instance.membership_date = date(2016, 12, 1)
+        instance2.membership_accepted = False
+        instance2.membership_date = None
         invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
         self.assertEquals(len(invoicees), 1)
+
+        instance.membership_accepted = True
+        instance.membership_date = date(2016, 12, 1)
+        instance2.membership_accepted = True
+        instance2.membership_date = date(2016, 12, 2)
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 2)
+
+        # test boundary cases for membership date with one instance
+        self.session.delete(instance2)
+        self.session.flush()
+        instance.membership_date = date(2017, 1, 1)
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 1)
+
+        instance.membership_date = date(2017, 12, 31)
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 1)
+
+        instance.membership_date = date(2016, 12, 31)
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 1)
+
+        instance.membership_date = date(2018, 1, 1)
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 0)
+
+        # test membership loss
+        instance.membership_date = date(2016, 2, 3)
+
+        instance.membership_loss_date = None
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 1)
+
+        instance.membership_loss_date = date(2018, 1, 1)
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 1)
+
+        instance.membership_loss_date = date(2017, 12, 31)
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 1)
+
+        instance.membership_loss_date = date(2017, 1, 1)
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 1)
+
+        instance.membership_loss_date = date(2016, 12, 31)
+        invoicees = myMembershipSigneeClass.get_dues17_invoicees(27)
+        self.assertEquals(len(invoicees), 0)
 
     def test_delete_by_id(self):
         """

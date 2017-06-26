@@ -1033,10 +1033,14 @@ class C3sMember(Base):
         """
         return DBSession.query(cls).filter(
             and_(
-                cls.membership_accepted == 1,
-                cls.dues17_invoice == 0,
-                cls.membership_date < date(2017, 1, 1),
-                cls.membership_type.in_([u'normal', u'investing'])
+                cls.membership_accepted == True,
+                cls.dues17_invoice == False,
+                cls.membership_date < date(2018, 1, 1),
+                cls.membership_type.in_([u'normal', u'investing']),
+                or_(
+                    cls.membership_loss_date == None,
+                    cls.membership_loss_date >= date(2017, 1, 1),
+                ),
             )).slice(0, num).all()
 
     @classmethod
