@@ -77,6 +77,9 @@
     </p>
   </tal:block>
   <tal:block metal:fill-slot="middle">
+      <?python
+            from datetime import date
+      ?>
       <p metal:use-macro="load: paging_bar_top.pt"></p>
         <table class="table table-striped"><!--! the actual table  -->
         <tr class="table-striped">
@@ -170,14 +173,16 @@
             </td>
             -->
             <td>
-                <a tal:condition="member.dues17_invoice is False"
-                    href="${request.route_url('send_dues17_invoice_email', member_id=member.id)}"
-                    title="Dues invoice not sent yet. Click to send!"
-                    class="btn btn-danger"></a>
-                <a tal:condition="member.dues17_invoice is True"
-                    href="${request.route_url('send_dues17_invoice_email', member_id=member.id)}"
-                    title="Invoice sent at ${member.dues17_invoice_date.strftime('%d.%m.%Y %H:%M')}"
-                    class="btn btn-success"></a>
+                <div tal:omit-tag="" tal:condition="not member.membership_date > date(2017,12,31) and (member.membership_loss_date is None or member.membership_loss_date >= date(2017,1,1))">
+                    <a tal:condition="member.dues17_invoice is False"
+                        href="${request.route_url('send_dues17_invoice_email', member_id=member.id)}"
+                        title="Dues invoice not sent yet. Click to send!"
+                        class="btn btn-danger"></a>
+                    <a tal:condition="member.dues17_invoice is True"
+                        href="${request.route_url('send_dues17_invoice_email', member_id=member.id)}"
+                        title="Invoice sent at ${member.dues17_invoice_date.strftime('%d.%m.%Y %H:%M')}"
+                        class="btn btn-success"></a>
+                </div>
             </td>
             <td>
                 <div tal:condition="member.is_member()" tal:omit-tag="">
