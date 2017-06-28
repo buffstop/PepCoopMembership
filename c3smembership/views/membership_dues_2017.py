@@ -368,7 +368,6 @@ def make_dues17_invoice_no_pdf(request):
     === ===========================================================
 
     """
-    email_address = request.matchdict['email']
     token = request.matchdict['code']
     invoice_number = request.matchdict['i']
 
@@ -376,7 +375,6 @@ def make_dues17_invoice_no_pdf(request):
         member = C3sMember.get_by_dues17_token(token)
         assert member is not None
         assert member.dues17_token == token
-        assert member.email == email_address
     except AssertionError:
         request.session.flash(
             u"This member and token did not match!",
@@ -826,7 +824,6 @@ def make_dues17_reversal_invoice_pdf(request):
     - a PDF
     """
 
-    email_address = request.matchdict['email']
     token = request.matchdict['code']
     invoice_number = request.matchdict['no']
 
@@ -834,7 +831,6 @@ def make_dues17_reversal_invoice_pdf(request):
         member = C3sMember.get_by_dues17_token(token)
         assert member is not None
         assert member.dues17_token == token
-        assert member.email == email_address
 
     except AssertionError:
         request.session.flash(

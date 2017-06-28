@@ -199,11 +199,11 @@ def main(global_config, **settings):
     config.add_route('send_dues17_invoice_email', '/dues17_invoice/{member_id}')
     config.add_route('send_dues17_invoice_batch', '/dues17_invoice_batch')
     config.add_route('make_dues17_invoice_no_pdf',
-                     '/dues17_invoice_no/{email}/{code}/C3S-dues17-{i}.pdf')
+                     '/dues17_invoice_no/{code}/C3S-dues17-{i}.pdf')
     config.add_route('dues17_reduction',
                      '/dues17_reduction/{member_id}')
     config.add_route('make_dues17_reversal_invoice_pdf',
-                     '/dues17_reversal/{email}/{code}/C3S-dues17-{no}-S.pdf')
+                     '/dues17_reversal/{code}/C3S-dues17-{no}-S.pdf')
     config.add_route('dues17_notice', '/dues17_notice/{member_id}')
     config.add_route('dues17_listing', '/dues17_listing')
 
