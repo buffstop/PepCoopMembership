@@ -107,7 +107,7 @@ def string_start_quarter_dues17(member):
     loc = member.locale
     result = u''
     if 'q1_2017' in member.dues17_start:  # first quarter of 2017 or earlier
-        result = u"ab Quartal 1" if 'de' in loc else "from 1st quarter"
+        result = u"für das ganze Jahr" if 'de' in loc else "for the whole year"
     elif 'q2_2017' in member.dues17_start:  # second quarter of 2017
         result = u"ab Quartal 2" if 'de' in loc else u"from 2nd quarter"
     elif 'q3_2017' in member.dues17_start:  # third quarter of 2017
