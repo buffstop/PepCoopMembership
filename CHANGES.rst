@@ -2,6 +2,21 @@ Next Release
 ============
 
 
+- Make the invoice URL independent of the email address as it can change but
+  keep backward compatibility for 2015 and 2016.
+
+- Don't send invoices from batch if membership was lost.
+
+- Don't show invoice button in membership list when invoice cannot be sent.
+
+- Fix invoice note for owing balance from previous years.
+
+- Only display invoice information and send invoices if entity hold membership
+  during the respective year.
+
+- Disable membership list button for 2017 general assembly and barcamp
+  invitations.
+
 - Copy the logic for the 2016 dues invoices for 2017 as a dirty quick fix. The
   whole dues and invoicing logic still needs a complete redesign to make it
   reusable for any year, any type of invoice and any type of accounting.
