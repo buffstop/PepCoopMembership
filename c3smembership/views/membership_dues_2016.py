@@ -349,6 +349,7 @@ def send_dues16_invoice_batch(request):
     return HTTPFound(request.route_url('toolbox'))
 
 
+@view_config(route_name='make_dues16_invoice_no_pdf_email')
 @view_config(route_name='make_dues16_invoice_no_pdf')
 def make_dues16_invoice_no_pdf(request):
     """
@@ -364,7 +365,6 @@ def make_dues16_invoice_no_pdf(request):
     === ===========================================================
 
     """
-    email_address = request.matchdict['email']
     token = request.matchdict['code']
     invoice_number = request.matchdict['i']
 
@@ -372,7 +372,6 @@ def make_dues16_invoice_no_pdf(request):
         member = C3sMember.get_by_dues16_token(token)
         assert member is not None
         assert member.dues16_token == token
-        assert member.email == email_address
     except AssertionError:
         request.session.flash(
             u"This member and token did not match!",
@@ -811,6 +810,7 @@ def dues16_reduction(request):
         '#dues16')
 
 
+@view_config(route_name='make_dues16_reversal_invoice_pdf_email')
 @view_config(route_name='make_dues16_reversal_invoice_pdf')
 def make_dues16_reversal_invoice_pdf(request):
     """
@@ -821,7 +821,6 @@ def make_dues16_reversal_invoice_pdf(request):
     - a PDF
     """
 
-    email_address = request.matchdict['email']
     token = request.matchdict['code']
     invoice_number = request.matchdict['no']
 
@@ -829,7 +828,6 @@ def make_dues16_reversal_invoice_pdf(request):
         member = C3sMember.get_by_dues16_token(token)
         assert member is not None
         assert member.dues16_token == token
-        assert member.email == email_address
 
     except AssertionError:
         request.session.flash(

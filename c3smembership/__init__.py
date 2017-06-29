@@ -175,10 +175,16 @@ def main(global_config, **settings):
     config.add_route('send_dues15_invoice_email', '/dues15_invoice/{member_id}')
     config.add_route('send_dues15_invoice_batch', '/dues15_invoice_batch')
     config.add_route('make_dues15_invoice_no_pdf',
+                     '/dues15_invoice_no/{code}/C3S-dues15-{i}.pdf')
+    # for backward compatibility
+    config.add_route('make_dues15_invoice_no_pdf_email',
                      '/dues15_invoice_no/{email}/{code}/C3S-dues15-{i}.pdf')
     config.add_route('dues15_reduction',
                      '/dues15_reduction/{member_id}')
     config.add_route('make_dues15_reversal_invoice_pdf',
+                     '/dues15_reversal/{code}/C3S-dues15-{no}-S.pdf')
+    # for backward compatibility
+    config.add_route('make_dues15_reversal_invoice_pdf_email',
                      '/dues15_reversal/{email}/{code}/C3S-dues15-{no}-S.pdf')
     config.add_route('dues15_notice', '/dues15_notice/{member_id}')
     config.add_route('dues15_listing', '/dues15_listing')
@@ -187,10 +193,16 @@ def main(global_config, **settings):
     config.add_route('send_dues16_invoice_email', '/dues16_invoice/{member_id}')
     config.add_route('send_dues16_invoice_batch', '/dues16_invoice_batch')
     config.add_route('make_dues16_invoice_no_pdf',
+                     '/dues16_invoice_no/{code}/C3S-dues16-{i}.pdf')
+    # for backward compatibility
+    config.add_route('make_dues16_invoice_no_pdf_email',
                      '/dues16_invoice_no/{email}/{code}/C3S-dues16-{i}.pdf')
     config.add_route('dues16_reduction',
                      '/dues16_reduction/{member_id}')
     config.add_route('make_dues16_reversal_invoice_pdf',
+                     '/dues16_reversal/{code}/C3S-dues16-{no}-S.pdf')
+    # for backward compatibility
+    config.add_route('make_dues16_reversal_invoice_pdf_email',
                      '/dues16_reversal/{email}/{code}/C3S-dues16-{no}-S.pdf')
     config.add_route('dues16_notice', '/dues16_notice/{member_id}')
     config.add_route('dues16_listing', '/dues16_listing')
