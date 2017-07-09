@@ -1,5 +1,5 @@
-Next Release
-============
+1.20
+====
 
 
 - Make the invoice URL independent of the email address as it can change but
