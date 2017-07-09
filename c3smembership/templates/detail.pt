@@ -384,11 +384,12 @@
           </tr>
           -->
           <!--! reduction / exemption -->
+          <!--!
           <tr tal:condition="'investing' not in member.membership_type and member.dues15_invoice">
             <td>Ermäßigung/Erlass<br/>
               <small>
                 Hier siehst Du den errechneten Mitgliedsbeitrag.<br/>
-                Du kannst im Falle eines Antrags auf Ermäßigung einen neuen Betrag festsetzen -- auch 0 Euro.<br/>
+                Du kannst im Falle eines Antrags auf Ermäßigung einen neuen Betrag festsetzen &ndash; auch 0 Euro.<br/>
                 Daraufhin wird die alte Rechnung storniert.
                 Das Mitglied erhält eine E-Mail.<br/>
                 Diese enthält Links auf die Storno-Rechnung
@@ -450,6 +451,7 @@
               </p>
             </td>
           </tr>
+          -->
           <!--! payments for dues -->
           <!--! case one: not paid yet -->
           <tr tal:condition="'investing' not in member.membership_type
@@ -634,11 +636,12 @@
           </tr>
           -->
           <!--! reduction / exemption -->
+          <!--!
           <tr tal:condition="'investing' not in member.membership_type and member.dues16_invoice">
             <td>Ermäßigung/Erlass<br/>
               <small>
                 Hier siehst Du den errechneten Mitgliedsbeitrag.<br/>
-                Du kannst im Falle eines Antrags auf Ermäßigung einen neuen Betrag festsetzen -- auch 0 Euro.<br/>
+                Du kannst im Falle eines Antrags auf Ermäßigung einen neuen Betrag festsetzen &ndash; auch 0 Euro.<br/>
                 Daraufhin wird die alte Rechnung storniert.
                 Das Mitglied erhält eine E-Mail.<br/>
                 Diese enthält Links auf die Storno-Rechnung
@@ -699,6 +702,7 @@
               </p>
             </td>
           </tr>
+          -->
           <!--! payments for dues -->
           <!--! case one: not paid yet -->
           <tr tal:condition="'investing' not in member.membership_type
