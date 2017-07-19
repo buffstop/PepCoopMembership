@@ -247,7 +247,7 @@ class TestDues17Views(unittest.TestCase):
         member.dues17_start = 'q1_2017'
         res = string_start_quarter_dues17(member)
         # print res
-        assert('Quartal 1' in res)
+        assert(u'für das ganze Jahr' in res)
         member.dues17_start = 'q2_2017'
         res = string_start_quarter_dues17(member)
         # print res
@@ -265,7 +265,7 @@ class TestDues17Views(unittest.TestCase):
         member.dues17_start = 'q1_2017'
         res = string_start_quarter_dues17(member)
         # print res
-        assert('1st quarter' in res)
+        assert('for the whole year' in res)
         member.dues17_start = 'q2_2017'
         res = string_start_quarter_dues17(member)
         # print res
@@ -376,11 +376,11 @@ class TestDues17Views(unittest.TestCase):
         """
         self.assertEqual(len(mailer.outbox), 2)
         self.assertTrue(
-            (u'Dein Mitgliedsbeitrag ab Quartal 1 beträgt also 50 Euro.')
+            (u'Dein Mitgliedsbeitrag für das ganze Jahr beträgt also 50 Euro.')
             in mailer.outbox[0].body)
         # print(mailer.outbox[0].body)
         self.assertTrue(
-            (u'Dein Mitgliedsbeitrag ab Quartal 1 beträgt also 50 Euro.')
+            (u'Dein Mitgliedsbeitrag für das ganze Jahr beträgt also 50 Euro.')
             in mailer.outbox[1].body)
         # print(mailer.outbox[1].body)
 
