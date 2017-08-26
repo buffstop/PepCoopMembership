@@ -31,7 +31,6 @@ from pyramid.security import (
 from pyramid.url import route_url
 from pyramid.view import view_config
 
-from c3smembership.data.repository.share_repository import ShareRepository
 from c3smembership.mail_utils import (
     make_payment_confirmation_email,
     send_message,
@@ -296,7 +295,7 @@ def member_detail(request):
     invoices15 = Dues15Invoice.get_by_membership_no(member.membership_number)
     invoices16 = Dues16Invoice.get_by_membership_no(member.membership_number)
     invoices17 = Dues17Invoice.get_by_membership_no(member.membership_number)
-    shares = ShareRepository.get_member_shares(
+    shares = request.registry.share_information.get_member_shares(
         member.membership_number)
 
     return {

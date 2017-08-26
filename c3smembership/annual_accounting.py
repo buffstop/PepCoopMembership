@@ -26,7 +26,6 @@ import deform
 from deform import ValidationFailure
 from pyramid.view import view_config
 
-from c3smembership.data.repository.share_repository import ShareRepository
 from c3smembership.models import (
     C3sMember,
 )

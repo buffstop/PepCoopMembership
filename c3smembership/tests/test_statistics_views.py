@@ -124,8 +124,19 @@ class TestViews(unittest.TestCase):
         from c3smembership.statistics_view import stats_view
         self.config.add_route('join', '/')
         request = testing.DummyRequest()
+
+        class ShareInformationDummy(object):
+
+            def __init__(self, share_count):
+                self.share_count = share_count
+
+            def get_share_count(self):
+                return self.share_count
+
+        request.registry.share_information = ShareInformationDummy(123)
         result = stats_view(request)
         # print result
+        self.assertTrue(result['num_shares_members'] == 123)
         self.assertTrue(result['num_staff'] == 1)
         self.assertTrue(result['_number_of_datasets'] == 3)
         self.assertTrue(result['num_members_accepted'] == 0)

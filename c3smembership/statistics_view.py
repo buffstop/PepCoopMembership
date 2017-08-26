@@ -30,13 +30,14 @@ def stats_view(request):
     import operator
     _cl_sorted.sort(key=operator.itemgetter(1), reverse=True)
     # print "sortiert: {}".format(_cl_sorted)
+    share_information = request.registry.share_information
     return {
         # form submissions
         '_number_of_datasets': C3sMember.get_number(),
         'afm_shares_unpaid': C3sMember.afm_num_shares_unpaid(),
         'afm_shares_paid': C3sMember.afm_num_shares_paid(),
         # shares
-        'num_shares_members': ShareRepository.get_share_count(),
+        'num_shares_members': share_information.get_share_count(),
         # 'num_shares_mem_norm': Shares.get_sum_norm(),
         # 'num_shares_mem_inv': Shares.get_sum_inv(),
 

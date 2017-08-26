@@ -21,6 +21,31 @@ class ShareInformation(object):
         """
         self.share_repository = share_repository
 
+    def get(self, share_id):
+        """
+        Gets the shares package for the specified shares id.
+
+        Args:
+            shares_id: The technical primary key of the shares package for which
+                the payment confirmation is set.
+
+        Returns:
+            The shares package for the specified shares id.
+        """
+        return self.share_repository.get(share_id)
+
+    def delete(self, share_id):
+        """
+        Deletes the shares package of the specified shares id.
+
+        Args:
+            shares_id: The technical primary key of the shares package to be
+                deleted.
+        """
+        # TODO: Deleting shares must not be possible once the process is cleaned
+        # up.
+        return self.share_repository.delete(share_id)
+
     def get_statistics(self, start_date, end_date):
         """
         Gets share statistics.
@@ -77,3 +102,16 @@ class ShareInformation(object):
         return self.share_repository.get_member_share_count(
             membership_number,
             effective_date)
+
+    def get_member_shares(self, membership_number):
+        """
+        Gets the share of a members.
+
+        Args:
+            membership_number: The membership number of the member of which the
+                shares are returned.
+
+        Returns:
+            The shares of the member.
+        """
+        return self.share_repository.get_member_shares(membership_number)

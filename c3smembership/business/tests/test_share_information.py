@@ -88,3 +88,33 @@ class ShareInformationTest(TestCase):
             'get_member_share_count result 2')
         share_repository_mock.get_member_share_count.assert_called_with(
             'WXYZ6789', date(2017, 7, 20))
+
+    def test_get(self):
+        share_repository_mock = mock.Mock()
+        share_repository_mock.get.side_effect = ['get result']
+
+        share_information = ShareInformation(share_repository_mock)
+
+        self.assertEqual(share_information.get(1), 'get result')
+        share_repository_mock.get.assert_called_with(1)
+
+    def test_delete(self):
+        share_repository_mock = mock.Mock()
+        share_repository_mock.delete.side_effect = ['delete result']
+
+        share_information = ShareInformation(share_repository_mock)
+
+        self.assertEqual(share_information.delete(2), 'delete result')
+        share_repository_mock.delete.assert_called_with(2)
+
+    def test_get_member_shares(self):
+        share_repository_mock = mock.Mock()
+        share_repository_mock.get_member_shares.side_effect = [
+            'get_member_shares result']
+
+        share_information = ShareInformation(share_repository_mock)
+
+        self.assertEqual(
+            share_information.get_member_shares('ABCD1234'),
+            'get_member_shares result')
+        share_repository_mock.get_member_shares.assert_called_with('ABCD1234')
