@@ -1,3 +1,12 @@
+1.21
+====
+
+
+Add sentence in membership application form to clarify notice period and
+membership fee (possibly required due to legal change).
+
+
+
 1.20
 ====
 
