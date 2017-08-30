@@ -82,7 +82,7 @@ Creating an initial database:
 
    $ env/bin/initialize_c3sMembership_db development.ini
 
-
+   
 
 Run (in development mode)
 -------------------------
@@ -93,6 +93,14 @@ Run (in development mode)
 
 The app will rebuild templates and reload code whenever there are changes by
 using --reload.
+
+
+Migrate database if database model changed (changed models.py?)
+::
+$ cp c3sMembership.db c3sMembership.db.$(date "+%Y-%m-%d_%H-%M-%S")
+$ env/bin/alembic upgrade head
+
+see https://yes.c3s.cc/docs/development/changes_branches_releases.html#the-production-branch
 
 
 
