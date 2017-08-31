@@ -294,9 +294,6 @@ ShareTransaction:
 Attribute name    Data type Description
 ================= ========= ==================================================
 id                Integer   (Primary key) Technical id of the data record.
-requested         Timestamp The time when the share transfer was requested,
-                            e.g. for issuing share the time of the
-                            membership application.
 valued            Timestamp The time when the share transfer was valued, i.e.
                             when it became effective.
 booked            Timestamp The time when the share transfer was booked into
