@@ -67,3 +67,19 @@ class MemberInformation(object):
             The membership of the specified membership number.
         """
         return self._member_repository.get_member(membership_number)
+
+    def get_member_by_id(self, member_id):
+        """
+        Gets the member of the specified member ID.
+
+        TODO: The member ID is a database internal ID and must not be exposed
+        from the data layer. Therefore, the implementation must be adjusted to
+        use the get_member method using the membership number.
+
+        Args:
+            member_id: The technical ID of the member which is returned.
+
+        Returns:
+            The membership of the specified member id.
+        """
+        return self._member_repository.get_member_by_id(member_id)

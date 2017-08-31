@@ -122,6 +122,13 @@ class TestReminderViews(unittest.TestCase):
         self.config.add_route('join', '/')
         from pyramid_mailer import get_mailer
         request = testing.DummyRequest()
+
+        class MemberInformationDummy(object):
+
+            def get_member_by_id(self, member_id):
+                return C3sMember.get_by_id(member_id)
+
+        request.registry.member_information = MemberInformationDummy()
         request.matchdict = {'memberid': '1'}
         request.referrer = ''
 

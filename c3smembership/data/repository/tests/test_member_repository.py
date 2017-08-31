@@ -119,6 +119,16 @@ class TestMemberRepository(unittest.TestCase):
         member2 = MemberRepository.get_member('member2')
         self.assertEqual(member2.membership_number, 'member2')
 
+    def test_get_member_by_id(self):
+        """
+        Tests the MemberRepository.get_member method.
+        """
+        member1 = MemberRepository.get_member_by_id(1)
+        self.assertEqual(member1.id, 1)
+
+        member2 = MemberRepository.get_member_by_id(2)
+        self.assertEqual(member2.id, 2)
+
     def test_get_accepted_members(self):
         """
         Tests the MemberRepository.get_accepted_members method.

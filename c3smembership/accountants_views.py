@@ -469,7 +469,8 @@ def mail_payment_reminder(request):
     * **Transfer money** for the shares to acquire (at least one share).
     * Send the signed form back to headquarters.
     """
-    member = C3sMember.get_by_id(request.matchdict['memberid'])
+    member = request.registry.member_information.get_member_by_id(
+        request.matchdict['memberid'])
 
     email_subject, email_body = make_payment_reminder_email(member)
     message = Message(
@@ -492,4 +493,3 @@ def mail_payment_reminder(request):
             memberid=request.matchdict['memberid']))
     else:
         return get_dashboard_redirect(request, member.id)
-

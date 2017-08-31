@@ -32,6 +32,25 @@ class MemberRepository(object):
             C3sMember.membership_number == membership_number).first()
 
     @classmethod
+    def get_member_by_id(cls, member_id):
+        """
+        Gets the member of the specified member ID.
+
+        TODO: The member ID is a database internal ID and must not be exposed
+        from the data layer. Therefore, the implementation must be adjusted to
+        use the get_member method using the membership number.
+
+        Args:
+            member_id: The technical ID of the member which is returned.
+
+        Returns:
+            The membership of the specified member id.
+        """
+        # pylint: disable=no-member
+        return DBSession.query(C3sMember).filter(
+            C3sMember.id == member_id).first()
+
+    @classmethod
     def get_accepted_members(cls, effective_date=None):
         """
         Gets all members which have been accepted until and including the
