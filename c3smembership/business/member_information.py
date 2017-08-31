@@ -54,3 +54,16 @@ class MemberInformation(object):
         """
         return self._member_repository.get_accepted_members_sorted(
             effective_date)
+
+    def get_member(self, membership_number):
+        """
+        Gets the member of the specified membership number.
+
+        Args:
+            membership_number: The membership number of the member which is
+                returned.
+
+        Returns:
+            The membership of the specified membership number.
+        """
+        return self._member_repository.get_member(membership_number)

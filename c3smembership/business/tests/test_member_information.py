@@ -45,3 +45,17 @@ class MemberInformationTest(TestCase):
         self.assertEqual(
             accepted_members_sorted,
             'get_accepted_members_sorted result')
+
+    def test_get_member(self):
+        member_repository_mock = mock.Mock()
+        member_repository_mock.get_member.side_effect = [
+            'get_member result']
+
+        member_information = MemberInformation(member_repository_mock)
+
+        member = member_information.get_member('1234')
+
+        member_repository_mock.get_member.assert_called_with('1234')
+        self.assertEqual(
+            member,
+            'get_member result')
