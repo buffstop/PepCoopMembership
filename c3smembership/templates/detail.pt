@@ -256,11 +256,11 @@
                  class="btn btn-success"
                  title="${member.payment_received_date} (anklicken zum verneinen)">
                 Ja</a>
-              <a href="${request.route_url('mail_pay_confirmation', memberid=member.id)}"
+              <a href="${request.route_url('mail_pay_confirmation', member_id=member.id)}"
                  class="btn btn-success"
                  tal:condition="not member.payment_confirmed">
                 Bestätigungs-E-Mail verschicken</a>
-              <a href="${request.route_url('mail_pay_confirmation', memberid=member.id)}"
+              <a href="${request.route_url('mail_pay_confirmation', member_id=member.id)}"
                  class="btn btn-success"
                  tal:condition="member.payment_confirmed">
                 Bestätigungs-E-Mail erneut verschicken</a>

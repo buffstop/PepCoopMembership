@@ -270,13 +270,13 @@
           <div tal:condition="member.payment_received"><!--! send mail to confirm signature reception -->
             <div tal:condition="not member.payment_confirmed">
               <a href="${request.route_url('mail_pay_confirmation',
-                       memberid=member.id)}"
+                       member_id=member.id)}"
                  class="btn btn-primary">Mail!</a>
             </div>
           </div>
           <div tal:condition="member.payment_confirmed"><!--! mail to confirm signature reception was sent-->
             <a href="${request.route_url('mail_pay_confirmation',
-                     memberid=member.id)}"
+                     member_id=member.id)}"
                title="sent: ${member.payment_confirmed_date} (click to send again)"
                class="btn btn-default">ok</a>
           </div>

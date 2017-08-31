@@ -364,7 +364,8 @@ def mail_payment_confirmation(request):
     Send a mail to a membership applicant
     informing her about reception of payment.
     """
-    member = C3sMember.get_by_id(request.matchdict['memberid'])
+    member = request.registry.member_information.get_member_by_id(
+        request.matchdict['member_id'])
 
     email_subject, email_body = make_payment_confirmation_email(member)
     message = Message(
