@@ -19,7 +19,7 @@
             $(".delete-link").click(function(event) {
                 event.preventDefault();
                 member_id = $(this).attr('id').split('-')[2];
-                ajaxUrl = '${request.route_url('get_member', memberid=0)}'
+                ajaxUrl = '${request.route_url('get_member', member_id=0)}'
                 ajaxUrl = ajaxUrl.substring(0, ajaxUrl.length - 1) + member_id;
                 member_data = $.get(
                   ajaxUrl,

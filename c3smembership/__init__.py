@@ -260,7 +260,7 @@ def main(global_config, **settings):
 
     # utilities & wizardry
     config.add_route('plz_dist', '/plz_dist')
-    config.add_route('get_member', '/members/{memberid}')
+    config.add_route('get_member', '/members/{member_id}')
     config.add_route('error_page', '/error')  # generic error view
 
     # shares

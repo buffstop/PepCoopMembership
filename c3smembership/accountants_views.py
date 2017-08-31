@@ -239,28 +239,6 @@ def switch_pay(request):
         )
 
 
-@view_config(renderer='json',
-             permission='manage',
-             route_name='get_member')
-def get_member(request):
-    """
-    This function serves an AJAX-call from the dashboard.
-
-    There will be one call per application for membership listed!
-    """
-    memberid = request.matchdict['memberid']
-    member = C3sMember.get_by_id(memberid)
-    if member is None:
-        return {}
-    else:
-        return {
-            'id': member.id,
-            'firstname': member.firstname,
-            'lastname': member.lastname
-        }
-    return None
-
-
 @view_config(renderer='templates/detail.pt',
              permission='manage',
              route_name='detail')
