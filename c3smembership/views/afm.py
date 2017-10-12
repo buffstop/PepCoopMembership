@@ -226,51 +226,6 @@ def join_c3s(request):
             # )
         )
 
-        def statute_validator(node, value):
-            """
-            Validator for statute confirmation.
-            """
-            if not value:
-                # raise without additional error message as the description
-                # already explains the necessity of the checkbox
-                raise Invalid(node, u'')
-
-        got_statute = colander.SchemaNode(
-            colander.Bool(true_val=u'yes'),
-            title=_(
-                u'An electronic copy of the statute of the '
-                u'C3S SCE has been made available to me (see link below).'),
-            description=_(
-                u'You must confirm to have access to the statute.'),
-            widget=deform.widget.CheckboxWidget(),
-            validator=statute_validator,
-            required=True,
-            label=_('Yes'),
-        )
-
-        def dues_regulations_validator(node, value):
-            """
-            Validator for dues regulations confirmation.
-            """
-            if not value:
-                # raise without additional error message as the description
-                # already explains the necessity of the checkbox
-                raise Invalid(node, u'')
-
-        got_dues_regulations = colander.SchemaNode(
-            colander.Bool(true_val=u'yes'),
-            title=_(
-                u'An electronic copy of the temporary membership dues '
-                u'regulations of the C3S SCE has been made available to me '
-                u'(see link below).'),
-            description=_(
-                u'You must confirm to have access to the temporary '
-                u'membership dues regulations.'),
-            widget=deform.widget.CheckboxWidget(),
-            validator=dues_regulations_validator,
-            required=True,
-            label=_('Yes'),
-        )
 
     class Shares(colander.Schema):
         """
@@ -297,6 +252,63 @@ def join_c3s(request):
             ),
             oid="num_shares")
 
+    class TermsInfo(colander.Schema):
+        """
+        some legal requirements
+        """
+
+        def statute_validator(node, value):
+            """
+            Validator for statute confirmation.
+            """
+            if not value:
+                # raise without additional error message as the description
+                # already explains the necessity of the checkbox
+                raise Invalid(node, u'')
+
+        got_statute = colander.SchemaNode(
+            colander.Bool(true_val=u'yes'),
+            #title=(u''),
+            title=_(
+                u'I acknowledge that the statutes and membership dues '
+                u'regulations determine periodic contributions '
+                u'for full members.'),
+            label=_(
+                u'An electronic copy of the statute of the '
+                u'C3S SCE has been made available to me (see link below).'),
+            description=_(
+                u'You must confirm to have access to the statute.'),
+            widget=deform.widget.CheckboxWidget(),
+            validator=statute_validator,
+            required=True,
+            #label=_('Yes, really'),
+        )
+        def dues_regulations_validator(node, value):
+            """
+            Validator for dues regulations confirmation.
+            """
+            if not value:
+                # raise without additional error message as the description
+                # already explains the necessity of the checkbox
+                raise Invalid(node, u'')
+
+        got_dues_regulations = colander.SchemaNode(
+            colander.Bool(true_val=u'yes'),
+            title=(u''),
+            label=_(
+                u'An electronic copy of the temporary membership dues '
+                u'regulations of the C3S SCE has been made available to me '
+                u'(see link below).'),
+            description=_(
+                u'You must confirm to have access to the temporary '
+                u'membership dues regulations.'),
+            widget=deform.widget.CheckboxWidget(),
+            validator=dues_regulations_validator,
+            required=True,
+            #label=_('Yes'),
+        )
+
+
     class MembershipForm(colander.Schema):
         """
         The Form consists of
@@ -308,11 +320,15 @@ def join_c3s(request):
             title=_(u'Personal Data'),
         )
         membership_info = MembershipInfo(
-            title=_(u'Membership Requirements')
+            title=_(u'Membership Data')
         )
         shares = Shares(
             title=_(u'Shares')
         )
+        acknowledge_terms = TermsInfo(
+            title=_(u'Acknowledgement')
+        )
+
 
     schema = MembershipForm()
 
