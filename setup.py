@@ -21,7 +21,7 @@ requires = [
     'pyramid_beaker',
     'pyramid_chameleon',  # 'pyramid 1.5 extension'
     'pyramid_debugtoolbar',
-    'pyramid_mailer',
+    'pyramid_mailer==0.13.', # maybe not the last version to work
     'pyramid_tm',
     'python-gnupg',
     'repoze.sendmail==4.1',  # pin to 4.1 because of repoze/repoze.sendmail#31

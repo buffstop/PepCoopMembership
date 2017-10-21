@@ -1,5 +1,14 @@
-1.21
-====
+1.20.2
+======
+
+
+Add an explicit section to the membership form describing that the C3S statute
+and membership dues regulations determine periodic payments.
+
+
+
+1.20.1
+======
 
 
 Add sentence in membership application form to clarify notice period and
