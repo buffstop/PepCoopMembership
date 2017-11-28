@@ -1,7 +1,9 @@
 1.20.4
 ======
 
+
 Update signatures of the managing directors.
+
 
 
 1.20.3
