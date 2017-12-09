@@ -35,9 +35,9 @@ from types import NoneType
 country_default = 'Germany'
 
 
-@view_config(route_name="new_member",
-             permission="manage",
-             renderer="templates/new_member.pt")
+@view_config(route_name='new_member',
+             permission='manage',
+             renderer='templates/new_member.pt')
 def new_member(request):
     '''
     let staff create a new member entry, when receiving input via dead wood
