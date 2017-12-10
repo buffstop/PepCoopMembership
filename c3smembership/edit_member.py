@@ -118,9 +118,6 @@ def edit_member(request):
         'member_of_colsoc': 'yes' if member.member_of_colsoc else 'no',
         'name_of_colsoc': member.name_of_colsoc,
     }
-    appstruct['shares'] = {
-        'num_shares': member.num_shares
-    }
     membership_loss_types = (
         ('', _(u'(Select)')),
         ('resignation', _(u'Resignation')),
@@ -377,22 +374,6 @@ def edit_member(request):
             oid='colsoc_name',
         )
 
-    class Shares(colander.Schema):
-        """
-        the number of shares a member wants to hold
-        """
-        num_shares = colander.SchemaNode(
-            colander.Integer(),
-            title=_('Number of Shares (1-60)'),
-            default='1',
-            validator=colander.Range(
-                min=1,
-                max=60,
-                min_err=_(u'At least one share must be acquired.'),
-                max_err=_(u'At most 60 shares can be acquired.'),
-            ),
-            oid='num_shares')
-
     def loss_type_and_date_set_validator(form, value):
         """
         Validates whether the membership loss type is set.
@@ -463,9 +444,6 @@ def edit_member(request):
         )
         membership_info = MembershipInfo(
             title=_(u'Membership Requirements')
-        )
-        shares = Shares(
-            title=_(u'Shares')
         )
 
     def membership_loss_type_entity_type_validator(form, value):
@@ -604,7 +582,6 @@ def edit_member(request):
                 'name_of_colsoc',
                 appstruct['membership_info']['name_of_colsoc']
             ),
-            ('num_shares', appstruct['shares']['num_shares']),
             (
                 'signature_received',
                 appstruct['membership_meta']['signature_received']

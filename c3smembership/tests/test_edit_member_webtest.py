@@ -181,7 +181,6 @@ class EditMemberTests(unittest.TestCase):
                 'entity_type': u'legalentity',
                 'other_colsoc': u'no',
                 'name_of_colsoc': u'',
-                'num_shares': 42,
                 'date_of_birth': date.today(),
             },
             [u'is later than latest date 2000-01-01'])
@@ -202,7 +201,6 @@ class EditMemberTests(unittest.TestCase):
                 'entity_type': u'legalentity',
                 'other_colsoc': u'no',
                 'name_of_colsoc': u'',
-                'num_shares': 42,
                 'date_of_birth': '1999-12-30',
                 'membership_date': '2013-09-24',
                 'signature_received_date': '2013-09-24',
@@ -217,7 +215,6 @@ class EditMemberTests(unittest.TestCase):
                 u'die city',
                 u'FI',
                 u'investing',
-                u'42',
             ])
 
         # edit again ... changing membership acceptance status

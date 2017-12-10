@@ -1,3 +1,11 @@
+Next Release
+============
+
+
+Remove editing of number of shares hold by a member.
+
+
+
 1.20.4
 ======
 
