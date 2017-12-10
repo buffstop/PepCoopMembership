@@ -162,25 +162,6 @@
       </form>
     </p>
 
-    <h3>Export &amp; Import</h3>
-    <p>
-      <a href="${request.route_url('export_all')}"
-         class="btn btn-primary">Export All (.csv)</a>
-      <a href="${request.route_url('export_members')}"
-         class="btn btn-primary">Export Members (.csv)</a>
-      <a href="${request.route_url('export_yes_emails')}"
-         class="btn btn-primary">Export AfM Emails (sig. &amp; paym. confirmed) (.csv)</a>
-    </p>
-    <p>
-      <a href="${request.route_url('import_all')}"
-         class="btn btn-warning">Import from csv (don't care for ids)(./import.csv)</a>
-      <br />
-      <a href="${request.route_url('import_with_ids')}"
-         class="btn btn-warning">Import from csv (try to preserve ids)(./import.csv)</a>
-      <br />
-      <a href="${request.route_url('import_all')}"
-         class="btn btn-warning">Import (./import.csv)</a>
-    </p>
     <h3>Applications for Membership</h3>
     <p>
       <a href="${request.route_url('dashboard', page_number=0, sort_property='id', sort_direction='asc')}"

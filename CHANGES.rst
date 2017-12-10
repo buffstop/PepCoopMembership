@@ -2,7 +2,9 @@ Next Release
 ============
 
 
-Remove editing of number of shares hold by a member.
+- Remove editing of number of shares hold by a member.
+
+- Remove old import and export functionality.
 
 
 

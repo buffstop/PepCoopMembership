@@ -142,11 +142,6 @@ def main(global_config, **settings):
     config.add_route('delete_entry', '/delete/{memberid}')
     config.add_route('delete_afms', '/delete_afms')
     config.add_route('login', '/login')
-    config.add_route('export_all', '/export_all')
-    config.add_route('export_members', '/export_members')
-    config.add_route('export_yes_emails', '/export_yes_emails')
-    config.add_route('import_all', '/import_all')
-    config.add_route('import_with_ids', '/import_with_ids')
     config.add_route('logout', '/logout')
 
     # gather missing information
