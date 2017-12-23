@@ -198,8 +198,8 @@
               <div class="btn btn-danger"
                    title="immer noch nicht">Nein</div>
               <!--! re-create hte Application for Membership PDF -->
-              <a href="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf"
-                 download="/re_C3S_SCE_AFM_${member.email_confirm_code}.pdf"
+              <a href="${request.route_url('regenerate_pdf', code=member.email_confirm_code)}"
+                 download="${request.route_url('regenerate_pdf', code=member.email_confirm_code)}"
                  class="btn btn-success">
                 PDF generieren
               </a>
