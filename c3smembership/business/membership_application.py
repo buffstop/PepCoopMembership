@@ -11,79 +11,7 @@ from c3smembership.mail_utils import (
 from pyramid_mailer.message import Message
 
 
-class IMembershipApplication(object):
-
-    def set_signature_status(self, member_id, signature_status):
-        """
-        Sets the signature status of the member indicating whether a signed
-        contract was received.
-
-        Args:
-            member_id (int): The ID of the member of which the signature status
-                must be set.
-            signature_status (boolean): Boolean value indicating the signature
-                status to be set to.
-        """
-        raise NotImplementedError()
-
-    def get_signature_status(self, member_id):
-        """
-        Gets the signature status of the member's application indicating whether
-        a signed contract was received.
-
-        Args:
-            member_id (int): The ID of the member of which the signature status
-                is requested.
-
-        Returns:
-            A boolean value indicating the signature status of the member's
-            membership application. True, if a signed contract was received,
-            otherwise False.
-        """
-        raise NotImplementedError()
-
-    def set_payment_status(self, member_id, payment_status):
-        """
-        Sets the payment status of the member indicating whether a signed
-        contract was received.
-
-        Args:
-            member_id (int): The ID of the member of which the payment status
-                must be set.
-            signature_status (boolean): Boolean value indicating the payment
-                status to be set to.
-        """
-        raise NotImplementedError()
-
-    def get_payment_status(self, member_id):
-        """
-        Gets the payment status of the member's application indicating whether
-        a signed contract was received.
-
-        Args:
-            member_id (int): The ID of the member of which the payment status
-                is requested.
-
-        Returns:
-            A boolean value indicating the payment status of the member's
-            membership application. True, if a signed contract was received,
-            otherwise False.
-        """
-        raise NotImplementedError()
-
-    def mail_signature_confirmation(self, member_id):
-        """
-        Sends an email to the member in order to confirm that the signed
-        contract was received by the C3S.
-
-        Args:
-            member_id (int): The ID of the member to which the confirmation
-                email is sent.
-        """
-        raise NotImplementedError()
-
-
-class MembershipApplication(IMembershipApplication):
+class MembershipApplication(object):
 
     # TODO:
     #
@@ -102,7 +30,30 @@ class MembershipApplication(IMembershipApplication):
         """
         self.c3s_member = c3s_member
 
+    def get(self, member_id):
+        """
+        Gets membership application information.
+        """
+        member = self.c3s_member.get_by_id(member_id)
+        return {
+            'membership_type': member.membership_type,
+            'shares_quantity': member.num_shares,
+            'date_of_submission': member.date_of_submission,
+            'payment_token': member.email_confirm_code,
+        }
+
+
     def set_signature_status(self, member_id, signature_status):
+        """
+        Sets the signature status of the member indicating whether a signed
+        contract was received.
+
+        Args:
+            member_id (int): The ID of the member of which the signature status
+                must be set.
+            signature_status (boolean): Boolean value indicating the signature
+                status to be set to.
+        """
         member = self.c3s_member.get_by_id(member_id)
         member.signature_received = signature_status
         if signature_status:
@@ -112,10 +63,33 @@ class MembershipApplication(IMembershipApplication):
         member.signature_received_date = signature_received_date
 
     def get_signature_status(self, member_id):
+        """
+        Gets the signature status of the member's application indicating whether
+        a signed contract was received.
+
+        Args:
+            member_id (int): The ID of the member of which the signature status
+                is requested.
+
+        Returns:
+            A boolean value indicating the signature status of the member's
+            membership application. True, if a signed contract was received,
+            otherwise False.
+        """
         member = self.c3s_member.get_by_id(member_id)
         return (member.signature_received == True)
 
     def set_payment_status(self, member_id, payment_status):
+        """
+        Sets the payment status of the member indicating whether a signed
+        contract was received.
+
+        Args:
+            member_id (int): The ID of the member of which the payment status
+                must be set.
+            signature_status (boolean): Boolean value indicating the payment
+                status to be set to.
+        """
         member = self.c3s_member.get_by_id(member_id)
         member.payment_received = payment_status
         if payment_status:
@@ -125,10 +99,31 @@ class MembershipApplication(IMembershipApplication):
         member.payment_received_date = payment_received_date
 
     def get_payment_status(self, member_id):
+        """
+        Gets the payment status of the member's application indicating whether
+        a signed contract was received.
+
+        Args:
+            member_id (int): The ID of the member of which the payment status
+                is requested.
+
+        Returns:
+            A boolean value indicating the payment status of the member's
+            membership application. True, if a signed contract was received,
+            otherwise False.
+        """
         member = self.c3s_member.get_by_id(member_id)
         return (member.payment_received == True)
 
     def mail_signature_confirmation(self, member_id, request):
+        """
+        Sends an email to the member in order to confirm that the signed
+        contract was received by the C3S.
+
+        Args:
+            member_id (int): The ID of the member to which the confirmation
+                email is sent.
+        """
         # TODO:
         # - Email functionality should be injected to be testable!
         # - Email functionality is an external service which belongs to

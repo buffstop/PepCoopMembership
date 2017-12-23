@@ -128,7 +128,6 @@ def switch_sig(request):
 
     Note:
         Expects the object request.registry.membership_application to implement
-        c3smembership.business.membership_application.IMembershipApplication.
     """
     member_id = request.matchdict['memberid']
 
@@ -314,6 +313,9 @@ def regenerate_pdf(request):
 
     if member is None:
         return get_dashboard_redirect(request)
+    membership_application = request.registry.membership_application.get(
+        member.id)
+
     appstruct = {
         'firstname': member.firstname,
         'lastname': member.lastname,
@@ -322,13 +324,13 @@ def regenerate_pdf(request):
         'postcode': member.postcode,
         'city': member.city,
         'email': member.email,
-        'email_confirm_code': member.email_confirm_code,
+        'email_confirm_code': membership_application['payment_token'],
         'country': member.country,
         '_LOCALE_': member.locale,
-        'membership_type': member.membership_type,
-        'num_shares': member.num_shares,
+        'membership_type': membership_application['membership_type'],
+        'num_shares': membership_application['shares_quantity'],
         'date_of_birth': member.date_of_birth,
-        'date_of_submission': member.date_of_submission,
+        'date_of_submission': membership_application['date_of_submission'],
     }
     LOG.info(
         "%s regenerated the PDF for code %s",
