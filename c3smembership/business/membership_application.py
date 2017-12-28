@@ -1,40 +1,44 @@
 # -*- coding: utf-8 -*-
+"""
+Provides functionality for the membership application process.
+"""
 
 from datetime import (
     datetime,
 )
 from c3smembership.mail_utils import (
     make_signature_confirmation_email,
-    make_payment_confirmation_email,
     send_message,
 )
 from pyramid_mailer.message import Message
 
 
 class MembershipApplication(object):
+    """
+    Provides functionality for the membership application process.
+    """
 
-    # TODO:
-    #
-    # - http://code.activestate.com/recipes/576862/
-    # - http://stackoverflow.com/questions/8100166/inheriting-methods-
-    #   docstrings-in-python
+    datetime = datetime
+    # pylint: disable=invalid-name
+    make_signature_confirmation_email = make_signature_confirmation_email
+    send_message = send_message
 
-    def __init__(self, c3s_member):
+    def __init__(self, member_repository):
         """
         Initialises the MembershipApplication object.
 
         Args:
-            c3s_member: Object implementing a get_by_id(member_id) method
-                returning a member objects with properties
+            member_repository: Object implementing a get_member_by_id(member_id)
+                method returning a member objects with properties
                 signature_received_date and signature_received.
         """
-        self.c3s_member = c3s_member
+        self.member_repository = member_repository
 
     def get(self, member_id):
         """
         Gets membership application information.
         """
-        member = self.c3s_member.get_by_id(member_id)
+        member = self.member_repository.get_member_by_id(member_id)
         return {
             'membership_type': member.membership_type,
             'shares_quantity': member.num_shares,
@@ -54,10 +58,10 @@ class MembershipApplication(object):
             signature_status (boolean): Boolean value indicating the signature
                 status to be set to.
         """
-        member = self.c3s_member.get_by_id(member_id)
+        member = self.member_repository.get_member_by_id(member_id)
         member.signature_received = signature_status
         if signature_status:
-            signature_received_date = datetime.now()
+            signature_received_date = self.datetime.now()
         else:
             signature_received_date = datetime(1970, 1, 1)
         member.signature_received_date = signature_received_date
@@ -76,8 +80,8 @@ class MembershipApplication(object):
             membership application. True, if a signed contract was received,
             otherwise False.
         """
-        member = self.c3s_member.get_by_id(member_id)
-        return (member.signature_received == True)
+        member = self.member_repository.get_member_by_id(member_id)
+        return member.signature_received
 
     def set_payment_status(self, member_id, payment_status):
         """
@@ -90,10 +94,10 @@ class MembershipApplication(object):
             signature_status (boolean): Boolean value indicating the payment
                 status to be set to.
         """
-        member = self.c3s_member.get_by_id(member_id)
+        member = self.member_repository.get_member_by_id(member_id)
         member.payment_received = payment_status
         if payment_status:
-            payment_received_date = datetime.now()
+            payment_received_date = self.datetime.now()
         else:
             payment_received_date = datetime(1970, 1, 1)
         member.payment_received_date = payment_received_date
@@ -112,8 +116,8 @@ class MembershipApplication(object):
             membership application. True, if a signed contract was received,
             otherwise False.
         """
-        member = self.c3s_member.get_by_id(member_id)
-        return (member.payment_received == True)
+        member = self.member_repository.get_member_by_id(member_id)
+        return member.payment_received
 
     def mail_signature_confirmation(self, member_id, request):
         """
@@ -131,16 +135,19 @@ class MembershipApplication(object):
         # - Emailing service should be independent of the presentation layer,
         #   i.e. independent from pyramid which makes it hard to use
         #   pyramid_mailer.
-        member = self.c3s_member.get_by_id(member_id)
-        email_subject, email_body = make_signature_confirmation_email(member)
-        # TODO: Remove dependency to pyramid_mail.
+        # - Resolve request dependency.
+        # - Remove dependency to pyramid_mail and move to separate service.
+        member = self.member_repository.get_member_by_id(member_id)
+        # pylint: disable=too-many-function-args
+        email_subject, email_body = self.make_signature_confirmation_email(
+            member)
         message = Message(
             subject=email_subject,
             sender='yes@c3s.cc',
             recipients=[member.email],
             body=email_body
         )
-        # TODO: Resolve request dependency.
-        send_message(request, message)
+        # pylint: disable=too-many-function-args
+        self.send_message(request, message)
         member.signature_confirmed = True
-        member.signature_confirmed_date = datetime.now()
+        member.signature_confirmed_date = self.datetime.now()

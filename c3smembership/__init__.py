@@ -124,11 +124,11 @@ def main(global_config, **settings):
     config.add_route('edit', '/edit/{_id}')
 
     # TODO: move application layer setup to separate module
-    from c3smembership.models import C3sMember
+    from c3smembership.data.repository.member_repository import MemberRepository
     from c3smembership.business.membership_application import (
         MembershipApplication
     )
-    membership_application = MembershipApplication(C3sMember)
+    membership_application = MembershipApplication(MemberRepository)
     config.registry.membership_application = membership_application
     config.add_route('switch_sig', '/switch_sig/{memberid}')
     config.add_route('switch_pay', '/switch_pay/{memberid}')
@@ -229,6 +229,7 @@ def main(global_config, **settings):
     config.add_route('dues17_listing', '/dues17_listing')
 
     # TODO: move application layer setup to separate module
+    from c3smembership.models import C3sMember
     from c3smembership.models import Dues15Invoice
     from c3smembership.data.model.base import DBSession
     from c3smembership.business.dues_invoice_archiving import (
