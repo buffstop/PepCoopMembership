@@ -69,18 +69,20 @@ class AccessToken(Base):
         Initialises the AccessToken instance.
 
         Args:
-            available_characters (unicode): A string of characters from which the
-                random token is generated. The minimum length is one.
+            available_characters (unicode): A string of characters from which
+                the random token is generated. The minimum length is one.
             length (int): The length of the random token to be generated.
-            expiration_timespan (datetime.timedelta): The timespan for which the
-                token is valid.
+            expiration_timespan (datetime.timedelta): The timespan for which
+                the token is valid.
 
         Raises:
             TypeError:
                 If available_characters is not of type unicode.
-                If available_characters does not contain at least one character.
+                If available_characters does not contain at least one
+                character.
                 If length is not of type int.
-                If length is smaller than one or larger than AccessToken.LENGTH.
+                If length is smaller than one or larger than
+                AccessToken.LENGTH.
                 If expiration_timespan is not of type timedelta.
         """
         if not isinstance(available_characters, unicode):
@@ -94,7 +96,7 @@ class AccessToken(Base):
             raise TypeError('Parameter length must be of type int.')
         if length < 1 or length > self.LENGTH:
             raise TypeError(
-                'Parameter length must be at least one and at most ' + \
+                'Parameter length must be at least one and at most ' +
                 str(self.LENGTH))
         if not isinstance(expiration_timespan, self.timedelta):
             raise TypeError(
@@ -112,13 +114,13 @@ class AccessToken(Base):
         length.
 
         Args:
-            available_characters (string): A string of characters from which the
-                random token is generated.
+            available_characters (string): A string of characters from which
+                the random token is generated.
             length (int): The length of the random token to be generated.
 
         Returns:
-            A random string token with the specified length chosen from the list
-            of available characters.
+            A random string token with the specified length chosen from the
+            list of available characters.
         """
         return u''.join(
             random.choice(
@@ -128,6 +130,7 @@ class AccessToken(Base):
     @property
     def is_expired(self):
         """
-        Indicates whether the token is expired according to its expiration date.
+        Indicates whether the token is expired according to its expiration
+        date.
         """
         return self.datetime.now() >= self.expiration

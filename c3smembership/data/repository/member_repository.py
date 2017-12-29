@@ -149,6 +149,8 @@ class MemberRepository(object):
         """
         if effective_date is None:
             effective_date = date.today()
+        # SqlAlchemy not equal condition must be "!= None" although it usually
+        # it "is not None" in Python.
         return query \
             .filter(C3sMember.membership_number != None) \
             .filter(C3sMember.membership_accepted) \

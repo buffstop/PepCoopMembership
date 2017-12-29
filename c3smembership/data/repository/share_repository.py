@@ -4,7 +4,7 @@ Repository to initiate and operate shares as well as retrieving share
 information.
 """
 
-from datetime import date, datetime
+from datetime import date
 
 from sqlalchemy import Date
 from sqlalchemy.sql import (
@@ -33,8 +33,8 @@ class ShareRepository(object):
         Create a shares package.
 
         Args:
-            membership_number: The membership number of the member for which the
-                shares package is created.
+            membership_number: The membership number of the member for which
+                the shares package is created.
             shares_quantity: The number of shares of the package to be created.
             board_confirmation: Optional. The date on which the board of
                 directors confirmed the acquisition of the shares package.
@@ -121,8 +121,8 @@ class ShareRepository(object):
     @classmethod
     def get_paid_not_approved(cls, start_date, end_date):
         """
-        Gets all shares which are paid between and including both start date and
-        end date but not paid until after the end date.
+        Gets all shares which are paid between and including both start date
+        and end date but not paid until after the end date.
 
         Args:
             start_date: The first date for which shares are returned.
@@ -148,8 +148,8 @@ class ShareRepository(object):
     @classmethod
     def get_paid_not_approved_count(cls, start_date, end_date):
         """
-        Gets the number of all shares paid between and including both start date
-        and end date but not paid after end date.
+        Gets the number of all shares paid between and including both start
+        date and end date but not paid after end date.
 
         Args:
             start_date: The first date for which shares are counted.
@@ -175,10 +175,11 @@ class ShareRepository(object):
         start and end date.
 
         Args:
-            query_type: The type of the query to be build. 'data' for retrieving
-                rows and 'shares_count' for an aggregate count query.
-            start_date: The first date of which paid and not approved shares are
-                considered.
+            query_type: The type of the query to be build. 'data' for
+                retrieving rows and 'shares_count' for an aggregate count
+                query.
+            start_date: The first date of which paid and not approved shares
+                are considered.
             end_date: The last date of which paid and not approved shares are
                 considered.
 
@@ -186,9 +187,9 @@ class ShareRepository(object):
             A query according to the specified query_type.
 
             For 'data' the query is build to retrieve rows with attributes 'id'
-            for member id, 'lastname' for the member's lastname, 'firstname' for
-            the member's firstname, 'shares_count' for the number of shares and
-            'payment_received_date' for the date on which the payment was
+            for member id, 'lastname' for the member's lastname, 'firstname'
+            for the member's firstname, 'shares_count' for the number of shares
+            and 'payment_received_date' for the date on which the payment was
             received
 
             For 'shares_count' an aggregate count query is returned to retrieve
@@ -196,27 +197,33 @@ class ShareRepository(object):
         """
         # Shares which of the day of the request have not been approved are not
         # yet stored in Shares but only available on the C3sMember.
+
         shares_count = expression.case(
+            # "== None" for SqlAlchemy instead of Python "is None"
             # pylint: disable=singleton-comparison
             [(Shares.id == None, C3sMember.num_shares)],
             else_=Shares.number
         )
         payment_received_date = expression.case(
             [(
+                # "== None" for SqlAlchemy instead of Python "is None"
                 # pylint: disable=singleton-comparison
                 Shares.id == None,
-                # C3sMember.payment_received_date has the data type DateTime but
-                # Date is required as it is used in
+                # C3sMember.payment_received_date has the data type DateTime
+                # but Date is required as it is used in
                 # Shares.payment_received_date. As CAST on DateTime '2017-01-02
-                # 12:23:34.456789' returns '2017' in SQLite and therefore cannot
-                # be used substring is used instead and then SQLAlchemy is
-                # forced by type_coerce to parse it as a Date column.
+                # 12:23:34.456789' returns '2017' in SQLite and therefore
+                # cannot be used substring is used instead and then SQLAlchemy
+                # is forced by type_coerce to parse it as a Date column.
                 expression.type_coerce(
                     func.substr(C3sMember.payment_received_date, 1, 10), Date)
             )],
             else_=Shares.payment_received_date
         )
+        # SqlAlchemy equality to None must be used as "== None" instead of
+        # Python "is not None".
         date_of_acquisition = expression.case(
+            # "== None" for SqlAlchemy instead of Python "is None"
             # pylint: disable=singleton-comparison
             [(Shares.id == None, C3sMember.membership_date)],
             else_=Shares.date_of_acquisition
@@ -246,7 +253,8 @@ class ShareRepository(object):
                     expression.or_(
                         # membership or share approved later than end date
                         date_of_acquisition > end_date,
-                        # or membership or share not approved yet (default date)
+                        # or membership or share not approved yet (default
+                        # date)
                         date_of_acquisition == date(1970, 1, 1),
                     ),
                     # payment received in time period
@@ -343,8 +351,8 @@ class ShareRepository(object):
         Sets the reference code of the shares package.
 
         Args:
-            shares_id: The technical primary key of the shares package for which
-                the payment confirmation is set.
+            shares_id: The technical primary key of the shares package for
+                which the payment confirmation is set.
             reference_code: The reference code which is set.
         """
         # pylint: disable=no-member
@@ -358,10 +366,10 @@ class ShareRepository(object):
 
         Args:
             effective_date: Optional. The date for which the number of shares
-                is counted. If not specified the date is set to the system date.
+                is counted. If not specified the date is set to the system
+                date.
         """
         # TODO: use single optimized query
-
         share_count = 0
         if effective_date is None:
             effective_date = date.today()
@@ -381,10 +389,10 @@ class ShareRepository(object):
         Gets the number of shares of the member as of the effective_date.
 
         Args:
-            membership_number: The business key of the member, i.e. the member's
-                official membership number.
-            effective_date: Optional. The effective date for which the number of
-                shares is calculated.
+            membership_number: The business key of the member, i.e. the
+                member's official membership number.
+            effective_date: Optional. The effective date for which the number
+                of shares is calculated.
 
         Returns:
             The number of shares of the member as of the effective_date.
@@ -412,12 +420,13 @@ class ShareRepository(object):
         Gets the shares package for the specified shares id.
 
         Args:
-            shares_id: The technical primary key of the shares package for which
-                the payment confirmation is set.
+            shares_id: The technical primary key of the shares package for
+                which the payment confirmation is set.
 
         Returns:
             The shares package for the specified shares id.
         """
+        # pylint: disable=no-member
         return DBSession.query(Shares).filter(Shares.id == shares_id).first()
 
     @classmethod
@@ -429,4 +438,5 @@ class ShareRepository(object):
             shares_id: The technical primary key of the shares package to be
                 deleted.
         """
+        # pylint: disable=no-member
         DBSession.query(Shares).filter(Shares.id == shares_id).delete()

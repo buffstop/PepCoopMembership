@@ -28,9 +28,9 @@ class MembershipApplication(object):
         Initialises the MembershipApplication object.
 
         Args:
-            member_repository: Object implementing a get_member_by_id(member_id)
-                method returning a member objects with properties
-                signature_received_date and signature_received.
+            member_repository: Object implementing a
+                get_member_by_id(member_id) method returning a member objects
+                with properties signature_received_date and signature_received.
         """
         self.member_repository = member_repository
 
@@ -45,7 +45,6 @@ class MembershipApplication(object):
             'date_of_submission': member.date_of_submission,
             'payment_token': member.email_confirm_code,
         }
-
 
     def set_signature_status(self, member_id, signature_status):
         """
@@ -68,8 +67,8 @@ class MembershipApplication(object):
 
     def get_signature_status(self, member_id):
         """
-        Gets the signature status of the member's application indicating whether
-        a signed contract was received.
+        Gets the signature status of the member's application indicating
+        whether a signed contract was received.
 
         Args:
             member_id (int): The ID of the member of which the signature status

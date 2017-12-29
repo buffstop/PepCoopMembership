@@ -26,8 +26,10 @@ class AccessTokenTest(TestCase):
         AccessToken.datetime = datetime_mock
         token = AccessToken()
         self.assertEquals(len(token.token), AccessToken.LENGTH)
-        self.assertEqual(token.creation, datetime.datetime(2000, 1, 1, 0, 0, 0))
-        self.assertEqual(token.expiration, datetime.datetime(2000, 1, 15, 0, 0, 0))
+        self.assertEqual(
+            token.creation, datetime.datetime(2000, 1, 1, 0, 0, 0))
+        self.assertEqual(token.expiration,
+                         datetime.datetime(2000, 1, 15, 0, 0, 0))
         self.assertFalse(token.is_expired)
         datetime_mock.set(datetime.datetime(2000, 1, 14, 23, 59, 59))
         self.assertFalse(token.is_expired)
@@ -44,8 +46,10 @@ class AccessTokenTest(TestCase):
             length=10,
             expiration_timespan=datetime.timedelta(days=1))
         self.assertEquals(token.token, u'aaaaaaaaaa')
-        self.assertEqual(token.creation, datetime.datetime(2000, 1, 1, 0, 0, 0))
-        self.assertEqual(token.expiration, datetime.datetime(2000, 1, 2, 0, 0, 0))
+        self.assertEqual(
+            token.creation, datetime.datetime(2000, 1, 1, 0, 0, 0))
+        self.assertEqual(token.expiration,
+                         datetime.datetime(2000, 1, 2, 0, 0, 0))
 
     def test_exceptions(self):
         with self.assertRaises(TypeError):
@@ -57,6 +61,6 @@ class AccessTokenTest(TestCase):
         with self.assertRaises(TypeError):
             AccessToken(length=0)
         with self.assertRaises(TypeError):
-            AccessToken(length=AccessToken.LENGTH+1)
+            AccessToken(length=AccessToken.LENGTH + 1)
         with self.assertRaises(TypeError):
             AccessToken(expiration_timespan=3)

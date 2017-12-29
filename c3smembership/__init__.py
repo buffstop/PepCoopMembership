@@ -11,9 +11,6 @@ from pyramid.config import Configurator
 from pyramid_beaker import session_factory_from_settings
 from sqlalchemy import engine_from_config
 
-from c3smembership.presentation.parameter_validation import (
-    ParameterValidationException
-)
 from c3smembership.data.model.base import Base
 from c3smembership.security.request import RequestWithUserAttribute
 from c3smembership.security import (
@@ -89,7 +86,7 @@ def main(global_config, **settings):
     share_acquisition = ShareAcquisition(ShareRepository)
     config.registry.share_acquisition = share_acquisition
 
-    ## Membership application process
+    # Membership application process
     # Step 1 (join.pt): home is /, the membership application form
     config.add_route('join', '/')
     # Step 2 (success.pt): check and edit data
@@ -124,7 +121,9 @@ def main(global_config, **settings):
     config.add_route('edit', '/edit/{_id}')
 
     # TODO: move application layer setup to separate module
-    from c3smembership.data.repository.member_repository import MemberRepository
+    from c3smembership.data.repository.member_repository import (
+        MemberRepository
+    )
     from c3smembership.business.membership_application import (
         MembershipApplication
     )
@@ -168,9 +167,10 @@ def main(global_config, **settings):
     config.add_route('membership_listing_alphabetical',
                      '/aml')
 
-
     # membership list
-    from c3smembership.data.repository.member_repository import MemberRepository
+    from c3smembership.data.repository.member_repository import (
+        MemberRepository
+    )
     from c3smembership.business.member_information import MemberInformation
     config.registry.member_information = MemberInformation(MemberRepository)
 
@@ -181,7 +181,8 @@ def main(global_config, **settings):
                      '/aml_aufstockers')
 
     # membership dues 2015
-    config.add_route('send_dues15_invoice_email', '/dues15_invoice/{member_id}')
+    config.add_route('send_dues15_invoice_email',
+                     '/dues15_invoice/{member_id}')
     config.add_route('send_dues15_invoice_batch', '/dues15_invoice_batch')
     config.add_route('make_dues15_invoice_no_pdf',
                      '/dues15_invoice_no/{code}/C3S-dues15-{i}.pdf')
@@ -199,7 +200,8 @@ def main(global_config, **settings):
     config.add_route('dues15_listing', '/dues15_listing')
 
     # membership dues 2016
-    config.add_route('send_dues16_invoice_email', '/dues16_invoice/{member_id}')
+    config.add_route('send_dues16_invoice_email',
+                     '/dues16_invoice/{member_id}')
     config.add_route('send_dues16_invoice_batch', '/dues16_invoice_batch')
     config.add_route('make_dues16_invoice_no_pdf',
                      '/dues16_invoice_no/{code}/C3S-dues16-{i}.pdf')
@@ -217,7 +219,8 @@ def main(global_config, **settings):
     config.add_route('dues16_listing', '/dues16_listing')
 
     # membership dues 2017
-    config.add_route('send_dues17_invoice_email', '/dues17_invoice/{member_id}')
+    config.add_route('send_dues17_invoice_email',
+                     '/dues17_invoice/{member_id}')
     config.add_route('send_dues17_invoice_batch', '/dues17_invoice_batch')
     config.add_route('make_dues17_invoice_no_pdf',
                      '/dues17_invoice_no/{code}/C3S-dues17-{i}.pdf')

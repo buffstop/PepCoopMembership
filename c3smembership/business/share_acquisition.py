@@ -51,10 +51,12 @@ class ShareAcquisition(object):
             shares_id: The technical ID of the shares package for which the
                 signature reception date is set.
             reception_date: Optional. The signature reception date to be set to
-                the share process. If not specified the signature reception date
-                is unset.
+                the share process. If not specified the signature reception
+                date is unset.
         """
-        self.share_repository.set_signature_reception(shares_id, reception_date)
+        self.share_repository.set_signature_reception(
+            shares_id,
+            reception_date)
 
     def set_signature_confirmation(self, shares_id, confirmation_date=None):
         """

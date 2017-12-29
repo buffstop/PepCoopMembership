@@ -26,8 +26,8 @@ class ShareInformation(object):
         Gets the shares package for the specified shares id.
 
         Args:
-            shares_id: The technical primary key of the shares package for which
-                the payment confirmation is set.
+            shares_id: The technical primary key of the shares package for
+                which the payment confirmation is set.
 
         Returns:
             The shares package for the specified shares id.
@@ -42,8 +42,8 @@ class ShareInformation(object):
             shares_id: The technical primary key of the shares package to be
                 deleted.
         """
-        # TODO: Deleting shares must not be possible once the process is cleaned
-        # up.
+        # TODO: Deleting shares must not be possible once the process is
+        # cleaned up.
         return self.share_repository.delete(share_id)
 
     def get_statistics(self, start_date, end_date):
@@ -81,8 +81,8 @@ class ShareInformation(object):
         Gets the total number of shares at the effective date.
 
         Args:
-            effective_date: Optional. The date for which the number of shares is
-                calculated.
+            effective_date: Optional. The date for which the number of shares
+                is calculated.
 
         Returns:
             The total number of shares at the effective date.
@@ -94,8 +94,8 @@ class ShareInformation(object):
         Gets the number of shares of the member on the effective date.
 
         Args:
-            membership_number: The membership number of the member for which the
-                number of shares is calculated.
+            membership_number: The membership number of the member for which
+                the number of shares is calculated.
             effective_date: Optional. The date for which the number of shares
                 for the member is calculated.
         """
