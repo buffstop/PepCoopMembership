@@ -5,6 +5,8 @@
 *.log
 *.pyc
 *.py~
+*.sublime-project
+*.sublime-workspace
 *.wsgi
 *~
 .coverage
@@ -26,4 +28,3 @@ nosetests.xml
 
 # certificate files are in a separate private repository
 certificate/
-
