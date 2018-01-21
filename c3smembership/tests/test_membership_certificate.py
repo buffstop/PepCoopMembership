@@ -21,8 +21,8 @@ from c3smembership.models import (
 # DEBUG = True
 DEBUG = False
 
-_min_PDF_size = 60000
-_max_PDF_size = 100000
+_min_PDF_size = 40000
+_max_PDF_size = 120000
 
 
 def _initTestingDB():
