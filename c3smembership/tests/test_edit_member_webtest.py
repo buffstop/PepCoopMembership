@@ -164,27 +164,6 @@ class EditMemberTests(unittest.TestCase):
         # now try valid id
         res = self.__get_edit_member(member.id)
 
-        # try to submit now. this must fail, because the date of birth is
-        # wrong ... and other dates are missing
-        self.__validate_abortive_edit(
-            member.id,
-            {
-                'firstname': u'EinVörname',
-                'lastname': u'EinNachname',
-                'email': u'info@c3s.cc',
-                'address1': u'adressteil 1',
-                'address2': u'adressteil 2',
-                'postcode': u'12346',
-                'city': u'die city',
-                'country': u'FI',
-                'membership_type': u'investing',
-                'entity_type': u'legalentity',
-                'other_colsoc': u'no',
-                'name_of_colsoc': u'',
-                'date_of_birth': date.today(),
-            },
-            [u'is later than latest date 2000-01-01'])
-
         # set the date correctly
         self.__validate_successful_edit(
             member.id,

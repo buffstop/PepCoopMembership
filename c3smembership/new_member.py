@@ -104,12 +104,6 @@ def new_member(request):
             # widget=deform.widget.DatePartsWidget(
             #    inline=True),
             default=date(1970, 1, 1),
-            validator=Range(
-                min=date(1913, 1, 1),
-                max=date(2000, 1, 1),
-                min_err=_(u'${val} is earlier than earliest date ${min}'),
-                max_err=_(u'${val} is later than latest date ${max}')
-            ),
             oid="date_of_birth",
         )
         locale = colander.SchemaNode(

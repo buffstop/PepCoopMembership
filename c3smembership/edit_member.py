@@ -196,12 +196,6 @@ def edit_member(request):
             colander.Date(),
             title=_(u'Date of Birth'),
             default=date(2013, 1, 1),
-            validator=Range(
-                min=date(1913, 1, 1),
-                max=date(2000, 1, 1),
-                min_err=_(u'${val} is earlier than earliest date ${min}.'),
-                max_err=_(u'${val} is later than latest date ${max}.')
-            ),
             oid='date_of_birth',
         )
         locale = colander.SchemaNode(
