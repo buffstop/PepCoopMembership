@@ -76,8 +76,8 @@ def join_c3s(request):
 
         _query = request._REDIRECT_
         # set language cookie
-        request.response.set_cookie('_LOCALE_', _query)
-        request._LOCALE_ = _query
+        request.response.set_cookie('locale', _query)
+        request.locale = _query
         locale_name = _query
         return HTTPFound(location=request.route_url('join'),
                          headers=request.response.headers)
@@ -168,7 +168,7 @@ def join_c3s(request):
             ),
             oid="date_of_birth",
         )
-        _LOCALE_ = colander.SchemaNode(colander.String(),
+        locale = colander.SchemaNode(colander.String(),
                                        widget=deform.widget.HiddenWidget(),
                                        default=locale_name)
 
@@ -199,7 +199,8 @@ def join_c3s(request):
                           u'that do not register works with C3S. They do '
                           u'not get a vote, but may counsel.'))
                 ),
-            )
+            ),
+            oid='membership_type'
         )
         member_of_colsoc = colander.SchemaNode(
             colander.String(),
@@ -281,6 +282,7 @@ def join_c3s(request):
             widget=deform.widget.CheckboxWidget(),
             validator=statute_validator,
             required=True,
+            oid='got_statute',
             #label=_('Yes, really'),
         )
         def dues_regulations_validator(node, value):
@@ -305,6 +307,7 @@ def join_c3s(request):
             widget=deform.widget.CheckboxWidget(),
             validator=dues_regulations_validator,
             required=True,
+            oid='got_dues_regulations',
             #label=_('Yes'),
         )
 
@@ -405,7 +408,7 @@ def join_c3s(request):
             postcode=appstruct['person']['postcode'],
             city=appstruct['person']['city'],
             country=appstruct['person']['country'],
-            locale=appstruct['person']['_LOCALE_'],
+            locale=appstruct['person']['locale'],
             date_of_birth=appstruct['person']['date_of_birth'],
             email_is_confirmed=False,
             email_confirm_code=randomstring,
@@ -428,8 +431,8 @@ def join_c3s(request):
         # redirect to success page, then return the PDF
         # first, store appstruct in session
         request.session['appstruct'] = appstruct
-        request.session['appstruct']['_LOCALE_'] = \
-            appstruct['person']['_LOCALE_']
+        request.session['appstruct']['locale'] = \
+            appstruct['person']['locale']
         # empty the messages queue (as validation worked anyways)
         deleted_msg = request.session.pop_flash()
         del deleted_msg
@@ -471,7 +474,7 @@ def show_success(request):
         appstruct = request.session['appstruct']
         # delete old messages from the session (from invalid form input)
         request.session.pop_flash('message_above_form')
-        # print("show_success: locale: %s") % appstruct['_LOCALE_']
+        # print("show_success: locale: %s") % appstruct['locale']
         return {
             'firstname': appstruct['person']['firstname'],
             'lastname': appstruct['person']['lastname'],
@@ -501,7 +504,7 @@ def success_check_email(request):
         except:
             return HTTPFound(location=request.route_url('join'))
 
-        if 'de' in appstruct['person']['_LOCALE_']:
+        if 'de' in appstruct['person']['locale']:
             the_mail_body = u'''
 Hallo {} {}!
 
@@ -661,7 +664,7 @@ def success_verify_email(request):
                 'postcode': member.postcode,
                 'city': member.city,
                 'country': member.country,
-                '_LOCALE_': member.locale,
+                'locale': member.locale,
                 'date_of_birth': member.date_of_birth,
                 'date_of_submission': member.date_of_submission,
                 # 'activity': set(activities),

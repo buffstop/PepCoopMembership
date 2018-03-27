@@ -79,11 +79,9 @@ def generate_pdf(appstruct):
     declaration_pdf_en = os.path.join(
         here, "../pdftk/C3S-SCE-AFM-v12-20170822-en.pdf")
 
-    # check for _LOCALE_, decide which language to use
-    # print(appstruct['_LOCALE_'])
-    if appstruct['_LOCALE_'] == "de":
+    if appstruct['locale'] == "de":
         pdf_to_be_used = declaration_pdf_de
-    elif appstruct['_LOCALE_'] == "en":
+    elif appstruct['locale'] == "en":
         pdf_to_be_used = declaration_pdf_en
     else:  # pragma: no cover
         # default fallback: english

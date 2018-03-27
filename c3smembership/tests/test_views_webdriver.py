@@ -175,7 +175,7 @@ class JoinFormTests(SeleniumTestBase):
         self.driver.find_element_by_name('day').send_keys(Keys.CONTROL, "a")
         self.driver.find_element_by_name('day').send_keys('12')
         time.sleep(0.1)
-        self.driver.find_element_by_name('deformField14').click()
+        self.driver.find_element_by_name('membership_type').click()
         time.sleep(0.1)
         self.driver.find_element_by_name('other_colsoc').click()  # Yes
         # self.driver.find_element_by_id('other_colsoc-1').click()  # No
@@ -235,7 +235,7 @@ class JoinFormTests(SeleniumTestBase):
         self.assertEqual(self.driver.find_element_by_name(
             'day').get_attribute('value'), '12')
         self.assertEqual(self.driver.find_element_by_name(
-            'deformField14').get_attribute('value'), 'normal')
+            'membership_type').get_attribute('value'), 'normal')
         self.assertEqual(self.driver.find_element_by_name(
             'other_colsoc').get_attribute('value'), 'yes')
         self.assertEqual(self.driver.find_element_by_id(
@@ -336,7 +336,7 @@ class JoinFormTests(SeleniumTestBase):
         self.driver.find_element_by_name('day').send_keys(Keys.CONTROL, "a")
         self.driver.find_element_by_name('day').send_keys('12')
         time.sleep(0.1)
-        self.driver.find_element_by_name('deformField14').click()
+        self.driver.find_element_by_name('membership_type').click()
         time.sleep(0.1)
         self.driver.find_element_by_name('other_colsoc').click()  # Yes
         # self.driver.find_element_by_id('other_colsoc-1').click()  # No
@@ -396,7 +396,7 @@ class JoinFormTests(SeleniumTestBase):
         self.assertEqual(self.driver.find_element_by_name(
             'day').get_attribute('value'), '12')
         self.assertEqual(self.driver.find_element_by_name(
-            'deformField14').get_attribute('value'), 'normal')
+            'membership_type').get_attribute('value'), 'normal')
         self.assertEqual(self.driver.find_element_by_name(
             'other_colsoc').get_attribute('value'), 'yes')
         self.assertEqual(self.driver.find_element_by_id(

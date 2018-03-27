@@ -91,7 +91,7 @@ class TestUtilities(unittest.TestCase):
             'name_of_colsoc': 'Foo Colsoc',
             'membership_type': u'investing',
             'num_shares': '42',
-            '_LOCALE_': 'en',
+            'locale': 'en',
             'date_of_submission': '2013-09-09 08:44:47.251588',
         }
 
@@ -137,7 +137,7 @@ class TestUtilities(unittest.TestCase):
             'country': u'my country',
             'membership_type': u'investing',
             'num_shares': u'23',
-            '_LOCALE_': 'de',
+            'locale': 'de',
             'date_of_submission': '2013-09-09 08:44:47.251588',
         }
 

@@ -733,7 +733,7 @@ class FunctionalTests(unittest.TestCase):
         self.failUnless(
             'Mitgliedschaftsantrag für die' in res.body)
         self.failUnless(
-            '<input type="hidden" name="_LOCALE_" value="de"' in res.body)
+            '<input type="hidden" name="locale" value="de"' in res.body)
 
     def test_accept_language_header_en(self):
         """check the http 'Accept-Language' header obedience: english

@@ -79,7 +79,7 @@ class TestViews(unittest.TestCase):
                 'firstname': 'foo',
                 'lastname': 'bar',
                 'email': 'bar@shri.de',
-                '_LOCALE_': 'de',
+                'locale': 'de',
             },
             'email_confirm_code': '12345678',
         }
@@ -202,7 +202,7 @@ class TestViews(unittest.TestCase):
     #         }
     #     )
     #     print(str(dir(request)))
-    #     print("request.params: " + str(request.params.get('_LOCALE_')))
+    #     print("request.params: " + str(request.params.get('locale')))
     #     result = accountants_desk(request)
     #     self.assertTrue('form' in result)
         # import pdb
@@ -212,11 +212,11 @@ class TestViews(unittest.TestCase):
 #         from c3sintent.views import join_membership
 #         request = testing.DummyRequest(
 #             params={
-#                 '_LOCALE_': 'en',  # this stopped working with the newly
+#                 'locale': 'en',  # this stopped working with the newly
 #                 }  # #              # introduced #  zpt_renderer :-/
 #             )
 #         print(str(dir(request)))
-#         print("request.params: " + str(request.params.get('_LOCALE_')))
+#         print("request.params: " + str(request.params.get('locale')))
 #         result = join_membership(request)
 #         self.assertTrue('form' in result)
 
@@ -225,7 +225,7 @@ class TestViews(unittest.TestCase):
 #         request = testing.DummyRequest(
 #             post={
 #                 'submit': True,
-#                 '_LOCALE_': 'de'
+#                 'locale': 'de'
 #                 # lots of values missing
 #                 },
 #             )
@@ -253,7 +253,7 @@ class TestViews(unittest.TestCase):
 #                 'date_of_birth': '1987-06-05',
 #                 'city': 'Devilstown',
 #                 'email': 'email@example.com',
-#                 '_LOCALE_': 'en',
+#                 'locale': 'en',
 #                 'activity': set([u'composer', u'dj']),
 #                 'country': 'AF',
 #                 'invest_member': 'yes',

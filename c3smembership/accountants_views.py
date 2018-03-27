@@ -326,7 +326,7 @@ def regenerate_pdf(request):
         'email': member.email,
         'email_confirm_code': membership_application['payment_token'],
         'country': member.country,
-        '_LOCALE_': member.locale,
+        'locale': member.locale,
         'membership_type': membership_application['membership_type'],
         'num_shares': membership_application['shares_quantity'],
         'date_of_birth': member.date_of_birth,

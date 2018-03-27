@@ -112,7 +112,7 @@ def new_member(request):
             ),
             oid="date_of_birth",
         )
-        _LOCALE_ = colander.SchemaNode(
+        locale = colander.SchemaNode(
             colander.String(),
             widget=deform.widget.HiddenWidget(),
             default='de',
@@ -290,7 +290,7 @@ def new_member(request):
             postcode=appstruct['person']['postcode'],
             city=appstruct['person']['city'],
             country=appstruct['person']['country'],
-            locale=appstruct['person']['_LOCALE_'],
+            locale=appstruct['person']['locale'],
             date_of_birth=appstruct['person']['date_of_birth'],
             email_is_confirmed=False,
             email_confirm_code=randomstring,
@@ -356,7 +356,7 @@ def new_member(request):
         # first, store appstruct in session
         request.session['appstruct'] = appstruct
         request.session[
-            'appstruct']['_LOCALE_'] = appstruct['person']['_LOCALE_']
+            'appstruct']['locale'] = appstruct['person']['locale']
         # from pyramid.httpexceptions import HTTPFound
         #
         # empty the messages queue (as validation worked anyways)
