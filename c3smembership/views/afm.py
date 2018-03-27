@@ -162,9 +162,16 @@ def join_c3s(request):
             default=date(2013, 1, 1),
             validator=Range(
                 min=date(1913, 1, 1),
-                max=date(2000, 1, 1),
-                min_err=_(u'${val} is earlier than earliest date ${min}'),
-                max_err=_(u'${val} is later than latest date ${max}')
+                # max 18th birthday, no minors through web formular
+                max=date(
+                    date.today().year-18,
+                    date.today().month,
+                    date.today().day),
+                min_err=_(u'Sorry, we do not believe that you are that old'),
+                max_err=_(
+                    u'Unfortunately, the membership application of an '
+                    u'underaged person is not possible via our web formular. '
+                    u'Please send an email to info@c3s.cc.')
             ),
             oid="date_of_birth",
         )

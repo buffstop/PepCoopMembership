@@ -1,10 +1,24 @@
 # -*- coding: utf-8 -*-
+from datetime import date
 
 import unittest
 # from pyramid.config import Configurator
 from pyramid import testing
+from sqlalchemy import engine_from_config
+from c3smembership.data.model.base import (
+    DBSession,
+    Base,
+)
+import transaction
+from webtest import TestApp
 
+from c3smembership.models import (
+    C3sMember,
+    C3sStaff,
+    Group,
+)
 from c3smembership.data.model.base import DBSession
+from c3smembership import main
 
 
 def _initTestingDB():
@@ -110,6 +124,104 @@ class TestViews(unittest.TestCase):
 
         self.assertEqual('302 Found', result._status)
         self.assertEqual('http://example.com/', result.location)
+
+    def _fill_form_valid_natural(self, form):
+        # print form.fields
+        form['firstname'] = u'SomeFirstname'
+        form['lastname'] = u'SomeLastname'
+        form['email'] = u'some@shri.de'
+        form['password'] = u'jG2NVfOn0BroGrAXR7wy'
+        form['password-confirm'] = u'jG2NVfOn0BroGrAXR7wy'
+        form['address1'] = u"addr one"
+        form['address2'] = u"addr two"
+        form['postcode'] = u"12345"
+        form['city'] = u"Footown Meeh"
+        form['country'].value__set(u"DE")
+        form['year'] = unicode(date.today().year-40)
+        form['month'] = '1'
+        form['day'] = '1'
+        form['locale'] = u"DE"
+        form['membership_type'].value__set(u'normal')
+        form['other_colsoc'].value__set(u'no')
+        form['name_of_colsoc'] = u"GEMA"
+        form['num_shares'] = u'23'
+        form['got_statute'].value__set(True)
+        form['got_dues_regulations'].value__set(True)
+        return form
+
+    def test_join_c3s(self):
+        # setup
+        self.config = testing.setUp()
+        self.config.include('pyramid_mailer.testing')
+        DBSession.close()
+        DBSession.remove()
+        my_settings = {
+            'sqlalchemy.url': 'sqlite:///:memory:',
+            'available_languages': 'da de en es fr',
+            'c3smembership.dashboard_number': '30'}
+        engine = engine_from_config(my_settings)
+        DBSession.configure(bind=engine)
+        Base.metadata.create_all(engine)
+        with transaction.manager:
+                # a group for accountants/staff
+            accountants_group = Group(name=u"staff")
+            DBSession.add(accountants_group)
+            DBSession.flush()
+            # staff personnel
+            staffer1 = C3sStaff(
+                login=u"rut",
+                password=u"berries",
+                email=u"noreply@c3s.cc",
+            )
+            staffer1.groups = [accountants_group]
+            DBSession.add(accountants_group)
+            DBSession.add(staffer1)
+            DBSession.flush()
+        app = main({}, **my_settings)
+        self.testapp = TestApp(app)
+
+        # sucess for valid entry
+        res = self.testapp.get('/', status=200)
+        form = self._fill_form_valid_natural(res.form)
+        res = form.submit(u'submit', status=302)
+        res = res.follow()
+        self.assertTrue('information below to be correct' in res.body)
+
+        # success for 18th birthday
+        res = self.testapp.get('/', status=200)
+        form = self._fill_form_valid_natural(res.form)
+        form['year'] = unicode(date.today().year-18)
+        form['month'] = unicode(date.today().month)
+        form['day'] = unicode(date.today().day)
+        res = form.submit(u'submit', status=302)
+        res = res.follow()
+        self.assertTrue('information below to be correct' in res.body)
+
+        # failure on test one day before 18th birthday
+        res = self.testapp.get('/', status=200)
+        form = self._fill_form_valid_natural(res.form)
+        form['year'] = unicode(date.today().year-18)
+        form['month'] = unicode(date.today().month)
+        form['day'] = unicode(date.today().day+1)
+        res = form.submit(u'submit', status=200)
+        self.assertTrue('underaged person is not possible' in res.body)
+
+        # failure for statute not checked
+        res = self.testapp.get('/', status=200)
+        form = self._fill_form_valid_natural(res.form)
+        form['got_dues_regulations'].value__set(False)
+        res = form.submit(u'submit', status=200)
+
+        # failure for dues regulations not checked
+        res = self.testapp.get('/', status=200)
+        form = self._fill_form_valid_natural(res.form)
+        form['got_dues_regulations'].value__set(False)
+        res = form.submit(u'submit', status=200)
+
+        # teardown
+        DBSession.close()
+        DBSession.remove()
+        testing.tearDown()
 
     def test_success_verify_email(self):
         """
