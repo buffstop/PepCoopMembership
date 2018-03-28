@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 0.1\n"
 "Report-Msgid-Bugs-To: markus.lorenz@c3s.cc\n"
-"POT-Creation-Date: 2018-03-27 22:51+0200\n"
+"POT-Creation-Date: 2018-04-01 14:50+0200\n"
 "PO-Revision-Date: 2017-10-12 17:42+0100\n"
 "Last-Translator: Markus Lorenz <mrks@lrnz.name>\n"
 "Language: de\n"
@@ -1036,11 +1036,13 @@ msgstr ""
 
 #: c3smembership/views/afm.py:171
 msgid ""
-"Unfortunately, the membership application of an underaged person is not "
-"possible via our web formular. Please send an email to info@c3s.cc."
+"Unfortunately, the membership application of an underaged person is "
+"currently not possible via our web form. Please send an email to "
+"office@c3s.cc."
 msgstr ""
 "Der Mitgliedschaftsantrag Minderjähriger ist über unser Web-Formular "
-"leider nicht möglich. Bitte wende Dich per E-Mail an info@c3s.cc."
+"derzeit leider nicht möglich. Bitte wende Dich per E-Mail an "
+"office@c3s.cc."
 
 #: c3smembership/views/afm.py:197
 msgid ""
@@ -1164,3 +1166,4 @@ msgstr "Bitte das Passwort eingeben."
 #: c3smembership/views/afm.py:748
 msgid "[yes][ALERT] check the logs!"
 msgstr "[yes][ALERT] Prüfe die Log-Dateien."
+

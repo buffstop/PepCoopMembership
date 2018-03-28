@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: c3smembership 1.20.4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-03-27 22:51+0200\n"
+"POT-Creation-Date: 2018-04-01 14:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -943,8 +943,8 @@ msgstr ""
 
 #: c3smembership/views/afm.py:171
 msgid ""
-"Unfortunately, the membership application of an underaged person is not "
-"possible via our web formular. Please send an email to info@c3s.cc."
+"Unfortunately, the membership application of an underaged person is currently"
+" not possible via our web form. Please send an email to office@c3s.cc."
 msgstr ""
 
 #: c3smembership/views/afm.py:197
