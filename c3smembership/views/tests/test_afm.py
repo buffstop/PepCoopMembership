@@ -204,7 +204,7 @@ class TestViews(unittest.TestCase):
         form['month'] = unicode(date.today().month)
         form['day'] = unicode(date.today().day+1)
         res = form.submit(u'submit', status=200)
-        self.assertTrue('underaged person is not possible' in res.body)
+        self.assertTrue('underaged person is currently not' in res.body)
 
         # failure for statute not checked
         res = self.testapp.get('/', status=200)

@@ -170,8 +170,8 @@ def join_c3s(request):
                 min_err=_(u'Sorry, we do not believe that you are that old'),
                 max_err=_(
                     u'Unfortunately, the membership application of an '
-                    u'underaged person is not possible via our web formular. '
-                    u'Please send an email to info@c3s.cc.')
+                    u'underaged person is currently not possible via our web '
+                    u'form. Please send an email to office@c3s.cc.')
             ),
             oid="date_of_birth",
         )
