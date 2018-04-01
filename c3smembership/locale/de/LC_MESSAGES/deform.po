@@ -78,7 +78,7 @@ msgstr "Tag"
 
 #: deform/templates/form.pt:19
 msgid "There was a problem with your submission"
-msgstr "Es gab ein Problem mit Ihren Angaben"
+msgstr "Es gab ein Problem mit Deinen Angaben"
 
 #: deform/templates/form.pt:21
 msgid "Errors have been highlighted below"
