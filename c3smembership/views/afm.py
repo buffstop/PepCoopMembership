@@ -118,15 +118,6 @@ def join_c3s(request):
             validator=colander.Email(),
             oid="email",
         )
-        password = colander.SchemaNode(
-            colander.String(),
-            validator=colander.Length(min=5, max=100),
-            widget=deform.widget.CheckedPasswordWidget(size=20),
-            title=_(u'Password (to protect access to your data)'),
-            description=_(u'We need a password to protect your data. After '
-                          u'verifying your email you will have to enter it.'),
-            oid='password',
-        )
         address1 = colander.SchemaNode(
             colander.String(),
             title=_(u'Address Line 1')
@@ -167,13 +158,24 @@ def join_c3s(request):
                     date.today().year-18,
                     date.today().month,
                     date.today().day),
-                min_err=_(u'Sorry, we do not believe that you are that old'),
+                min_err=_(
+                    u'Sorry, but we do not believe that the birthday you '
+                    u'entered is correct.'),
                 max_err=_(
                     u'Unfortunately, the membership application of an '
                     u'underaged person is currently not possible via our web '
                     u'form. Please send an email to office@c3s.cc.')
             ),
             oid="date_of_birth",
+        )
+        password = colander.SchemaNode(
+            colander.String(),
+            validator=colander.Length(min=5, max=100),
+            widget=deform.widget.CheckedPasswordWidget(size=20),
+            title=_(u'Password (to protect access to your data)'),
+            description=_(u'We need a password to protect your data. After '
+                          u'verifying your email you will have to enter it.'),
+            oid='password',
         )
         locale = colander.SchemaNode(colander.String(),
                                        widget=deform.widget.HiddenWidget(),
@@ -381,7 +383,12 @@ def join_c3s(request):
             if form['person']['password'].error is None:
                 form['person']['password'].error = Invalid(
                     None,
-                    _(u'Please re-enter your password.'))
+                    _(
+                        u'Please re-enter your password. For security '
+                        u'reasons your password is not cached and therefore '
+                        u'needs to be re-entered in case of validation '
+                        u'issues.'
+                    ))
                 validation_failure = ValidationFailure(form, None, form.error)
 
             return {'form': validation_failure.render()}
