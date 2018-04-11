@@ -20,8 +20,6 @@ class MembershipApplication(object):
 
     datetime = datetime
     # pylint: disable=invalid-name
-    make_signature_confirmation_email = make_signature_confirmation_email
-    send_message = send_message
 
     def __init__(self, member_repository):
         """
@@ -138,8 +136,7 @@ class MembershipApplication(object):
         # - Remove dependency to pyramid_mail and move to separate service.
         member = self.member_repository.get_member_by_id(member_id)
         # pylint: disable=too-many-function-args
-        email_subject, email_body = self.make_signature_confirmation_email(
-            member)
+        email_subject, email_body = make_signature_confirmation_email(member)
         message = Message(
             subject=email_subject,
             sender='yes@c3s.cc',
@@ -147,6 +144,6 @@ class MembershipApplication(object):
             body=email_body
         )
         # pylint: disable=too-many-function-args
-        self.send_message(request, message)
+        send_message(request, message)
         member.signature_confirmed = True
         member.signature_confirmed_date = self.datetime.now()
