@@ -152,9 +152,14 @@ iRxv2JwkwRYtQFg5bFO3NqulcEBAgSmz/TViRvGS3xBZtu08jUW55k9EIuAKzJ3K
         # print "encrypted: " + str(encrypted)
         # print "len(encrypted): " + str(len(str(encrypted)))
         print ("========================================== GNUPG END")
-    shutil.rmtree(keyfolder)
-
+    shutil.rmtree(keyfolder, ignore_errors=True, onerror=rmtreeDebug)
     return encrypted.data
+
+#
+
+def rmtreeDebug(function, path, excinfo):
+    if DEBUG:
+        print('function: %s, path: %s, excinfo: %s'%(function,path,excinfo) )
 
 
 if __name__ == '__main__':  # pragma: no coverage
