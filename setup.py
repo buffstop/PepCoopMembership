@@ -24,7 +24,7 @@ requires = [
     'pyramid_debugtoolbar==2.2.2',
     'pyramid_mailer==0.13.', # maybe not the last version to work
     'pyramid_tm==0.8',
-    'python-gnupg==0.3.6',
+    'python-gnupg==0.4.2',
     'repoze.sendmail==4.1',  # pin to 4.1 because of repoze/repoze.sendmail#31
     # see https://github.com/repoze/repoze.sendmail/issues/31
     'SQLAlchemy==1.0.9',
