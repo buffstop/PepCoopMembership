@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 #
 # continuous integration shell script to set up the project and run tests
-#
-#
+
+set -euo pipefail
+
 # apt-get install python-virtualenv
 # sudo apt-get install libxml2-dev libxslt1-dev (needed for pyquery)
 # create a virtualenv, preferrably with the python 2.7 variant:

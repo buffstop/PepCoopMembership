@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 echo "extracting message strings..."
 env/bin/python setup.py extract_messages
