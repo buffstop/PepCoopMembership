@@ -1,6 +1,7 @@
 # -*- coding: utf-8  -*-
 from c3smembership.gnupg_encrypt import encrypt_with_gnupg
 from c3smembership.presentation.i18n import _
+import customization
 from fdfgen import forge_fdf
 from pyramid_mailer.message import (
     Message,
@@ -74,18 +75,17 @@ def generate_pdf(appstruct):
 
     import os
     here = os.path.dirname(__file__)
-    declaration_pdf_de = os.path.join(
-        here, "../pdftk/C3S-SCE-AFM-v12-20170822-de.pdf")
-    declaration_pdf_en = os.path.join(
-        here, "../pdftk/C3S-SCE-AFM-v12-20170822-en.pdf")
+    registration_form_template = os.path.join(here,
+                                    "../customization/registrationForm/current-{}.pdf")
 
-    if appstruct['locale'] == "de":
-        pdf_to_be_used = declaration_pdf_de
-    elif appstruct['locale'] == "en":
-        pdf_to_be_used = declaration_pdf_en
-    else:  # pragma: no cover
-        # default fallback: english
-        pdf_to_be_used = declaration_pdf_en
+    try:
+        pdf_to_be_used =registration_form_template.format(appstruct['locale'])
+        open(pdf_to_be_used)
+    except IOError:
+        # deliberatly error out if fallback does not exist
+        pdf_to_be_used = registration_form_template.format(customization.default_language)
+        open(pdf_to_be_used)
+
 
     # convert the date in date_of_birth
     # print(
