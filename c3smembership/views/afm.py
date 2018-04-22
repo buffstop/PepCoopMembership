@@ -50,11 +50,13 @@ from c3smembership.models import C3sMember
 from c3smembership.utils import (
     generate_pdf,
     accountant_mail,
+    country_codes
 )
 from c3smembership.presentation.i18n import (
     _,
     ZPT_RENDERER,
 )
+import customization
 
 DEBUG = False
 LOGGING = True
@@ -76,6 +78,7 @@ def join_c3s(request):
 
         _query = request._REDIRECT_
         # set language cookie
+        # ToDo: the proper cookie name is _LOCALE_ (pyramid)
         request.response.set_cookie('locale', _query)
         request.locale = _query
         locale_name = _query
@@ -87,13 +90,12 @@ def join_c3s(request):
     if DEBUG:
         print "-- locale_name: " + str(locale_name)
 
-    from c3smembership.utils import country_codes
     # set default of Country select widget according to locale
-    locale_country_mapping = {
-        'de': 'DE',
-        'en': 'GB',
-    }
-    country_default = locale_country_mapping.get(locale_name)
+    try:
+        country_default = customization.locale_country_mapping.get(locale_name)
+    except AttributeError:
+        print(dir(customization))
+        country_default = 'GB'
     if DEBUG:
         print("== locale is :" + str(locale_name))
         print("== choosing :" + str(country_default))
@@ -185,29 +187,18 @@ def join_c3s(request):
         """
         yes_no = ((u'yes', _(u'Yes')),
                   (u'no', _(u'No')))
-        membership_type = colander.SchemaNode(
-            colander.String(),
-            title=_(u'I want to become a ... '
-                    u'(choose membership type, see C3S SCE statute sec. 4)'),
-            description=_(u'choose the type of membership.'),
-            widget=deform.widget.RadioChoiceWidget(
-                values=(
-                    (
-                        u'normal',
-                        _(u'FULL member. Full members have to be natural '
-                          u'persons who register at least three works they '
-                          u'created themselves with C3S. This applies to '
-                          u'composers, lyricists and remixers. They get a '
-                          u'vote.')),
-                    (
-                        u'investing',
-                        _(u'INVESTING member. Investing members can be '
-                          u'natural or legal entities or private companies '
-                          u'that do not register works with C3S. They do '
-                          u'not get a vote, but may counsel.'))
+        if len(customization.membership_types) > 1:
+            membership_type = colander.SchemaNode(
+                colander.String(),
+                title=_(u'I want to become a ... '
+                        u'(choose membership type, see C3S SCE statute sec. 4)'),
+                description=_(u'choose the type of membership.'),
+                widget=deform.widget.RadioChoiceWidget(
+                    values=( (i['name'],i['description']) for i in
+                        customization.membership_types ),
                 ),
-            ),
-            oid='membership_type'
+                oid='membership_type'
+            )
         if customization.enable_colsoc_association:
             member_of_colsoc = colander.SchemaNode(
                 colander.String(),
@@ -244,7 +235,7 @@ def join_c3s(request):
         num_shares = colander.SchemaNode(
             colander.Integer(),
             title=_(u"I want to buy the following number "
-                    u"of Shares (50€ each, up to 3000€, see "
+                    u"of Shares (50 € each, up to 3000 €, see "
                     u"C3S statute sec. 5)"),
             description=_(
                 u'You can choose any amount of shares between 1 and 60.'),
@@ -335,6 +326,14 @@ def join_c3s(request):
         shares = Shares(
             title=_(u'Shares')
         )
+        try:
+            customization.membership_fees
+        except NameError:
+            pass
+        else:
+            fees = Fees(
+                title=_(u'Membership Fees')
+            )
         acknowledge_terms = TermsInfo(
             title=_(u'Acknowledgement')
         )
@@ -364,7 +363,7 @@ def join_c3s(request):
 
             # data sanity: if not in collecting society, don't save
             #  collsoc name even if it was supplied through form
-            if customization.membership_types and 'no' in appstruct['membership_info']['member_of_colsoc']:
+            if customization.membership_types and len(customization.membership_types) > 1 and 'no' in appstruct['membership_info']['member_of_colsoc']:
                 appstruct['membership_info']['name_of_colsoc'] = ''
 
         except ValidationFailure as validation_failure:
@@ -405,7 +404,7 @@ def join_c3s(request):
             randomstring = make_random_string()  # pragma: no cover
 
         # to store the data in the DB, an objet is created
-        member = C3sMember(
+        coopMemberArgs = dict(
             firstname=appstruct['person']['firstname'],
             lastname=appstruct['person']['lastname'],
             email=appstruct['person']['email'],
@@ -420,16 +419,27 @@ def join_c3s(request):
             email_is_confirmed=False,
             email_confirm_code=randomstring,
             date_of_submission=datetime.now(),
-            membership_type=appstruct['membership_info']['membership_type'],
-            member_of_colsoc=(
-                appstruct['membership_info']['member_of_colsoc'] == u'yes'),
-            name_of_colsoc=appstruct['membership_info']['name_of_colsoc'],
             num_shares=appstruct['shares']['num_shares'],
         )
+        
+        if customization.enable_colsoc_association:
+            coopMemberArgs['member_of_colsoc']=(
+                appstruct['membership_info']['member_of_colsoc'] == u'yes'),
+            coopMemberArgs['name_of_colsoc']=appstruct['membership_info']['name_of_colsoc']
+            
+        if customization.membership_types and len(customization.membership_types) > 1:
+            coopMemberArgs['membership_type']=appstruct['membership_info']['membership_type']
+            
+        member = C3sMember(**coopMemberArgs)
         dbsession = DBSession()
         try:
             dbsession.add(member)
             appstruct['email_confirm_code'] = randomstring
+            if appstruct['fees']['member_type'] == 'sustaining':
+                appstruct['fees']['fee'] = appstruct['fees']['member_custom_fee']
+            else:
+                appstruct['fees']['fee'] = [ v for v,t,d in customization.membership_fees if t == appstruct['fees']['member_type'] ][0]
+            
         except InvalidRequestError as ire:  # pragma: no cover
             print("InvalidRequestError! %s") % ire
         except IntegrityError as integrity_error:  # pragma: no cover
@@ -615,6 +625,9 @@ def success_verify_email(request):
     # we need to have a url to send the form to
     post_url = '/verify/' + user_email + '/' + confirm_code
 
+    # ToDo unify errors for not_found email, wrong password and wrong confirm code to avoid leaking
+    error_message=_(u'Your email, password, or confirmation code could not be found')
+
     if 'submit' in request.POST:
         # print("the form was submitted")
         request.session.pop_flash('message_above_form')
@@ -760,11 +773,11 @@ go fix it!
                     """.format(request.registry.settings['c3smembership.url']))
                 mailer.send(staff_mail)
 
-                request.session.flash(
+                request.session.flash(_(
                     u"Oops. we hit a bug. Staff will be "
                     u"informed. We will come back to you "
                     u"once we fixed it!",
-                    'message_to_user'  # msg queue f. user
+                    'message_to_user')  # msg queue f. user
                 )
                 return HTTPFound(request.route_url('error_page'))
 
