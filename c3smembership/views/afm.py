@@ -541,32 +541,8 @@ def success_check_email(request):
         except:
             return HTTPFound(location=request.route_url('join'))
 
-        if 'de' in appstruct['person']['locale']:
-            the_mail_body = u'''
-Hallo {} {}!
 
-bitte benutze diesen Link um deine E-Mail-Adresse zu bestätigen
-und dein PDF herunterzuladen:
-
-   {}/verify/{}/{}
-
-Danke!
-
-Dein C3S Team
-            '''
-        else:
-            the_mail_body = u'''
-Hello {} {}!
-
-please use this link to verify your email address
-and download your personalised PDF:
-
-   {}/verify/{}/{}
-
-thanks!
-
-Your C3S team
-            '''
+        the_mail_body = customization.address_confirmation_mail.get(appstruct['person']['locale'],'en')
         the_mail = Message(
             subject=request.localizer.translate(_(
                 'check-email-paragraph-check-email-subject',
