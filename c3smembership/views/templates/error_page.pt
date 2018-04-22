@@ -1,6 +1,6 @@
 <html metal:use-macro="base">
   <tal:block metal:fill-slot="middle">
-    <h2>Ooops, es ist ein Fehler aufgetreten!</h2>
+    <h2>An error occured</h2>
   </tal:block>
   <tal:block metal:fill-slot="bottom">
     <p class="lead alert alert-danger">
