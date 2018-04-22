@@ -221,7 +221,27 @@ def join_c3s(request):
                 missing=unicode(''),
                 oid="colsoc_name",
         )
+
+
+    class Fees(colander.Schema):
+        member_type = colander.SchemaNode( colander.String(),
+            title=_(u'Please tell us wether you\'re an individual, '
+                    u'freelancer or company or want to support us '
+                    u'generously as a sustaining member'),
+            widget=deform.widget.RadioChoiceWidget(values=[ (member_type, t_description) for fee, member_type, t_description in customization.membership_fees]),
+            oid='member_type'
         )
+
+        # not validating here: depends on ^
+        # http://deformdemo.repoze.org/require_one_or_another/
+        member_custom_fee = colander.SchemaNode(colander.Decimal('1.00'),
+            title=_(u'custom membership fee'),
+            widget=deform.widget.MoneyInputWidget(symbol=customization.currency,showSymbol=True, defaultZero=True),
+            description=_(u'Sustaining members: You can set your fees (minimum 100 €)'),
+            oid='membership_custom_fee',
+            default=customization.membership_fee_custom_min,
+            validator=Range(min=customization.membership_fee_custom_min,max=None,min_err=_(u'please enter at least the minimum fee for sustaining members'))
+
         )
 
 
