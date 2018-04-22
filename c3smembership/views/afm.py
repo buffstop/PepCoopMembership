@@ -208,30 +208,29 @@ def join_c3s(request):
                 ),
             ),
             oid='membership_type'
+        if customization.enable_colsoc_association:
+            member_of_colsoc = colander.SchemaNode(
+                colander.String(),
+                title=_(
+                    u'Currently, I am a member of (at least) one other '
+                    u'collecting society.'),
+                validator=colander.OneOf([x[0] for x in yes_no]),
+                widget=deform.widget.RadioChoiceWidget(values=yes_no),
+                oid="other_colsoc",
+                # validator=colsoc_validator
+            )
+            name_of_colsoc = colander.SchemaNode(
+                colander.String(),
+                title=_(u'If so, which one(s)? Please separate multiple '
+                        u'collecting societies by comma.'),
+                description=_(
+                    u'Please tell us which collecting societies '
+                    u'you are a member of. '
+                    u'If more than one, please separate them by comma.'),
+                missing=unicode(''),
+                oid="colsoc_name",
         )
-        member_of_colsoc = colander.SchemaNode(
-            colander.String(),
-            title=_(
-                u'Currently, I am a member of (at least) one other '
-                u'collecting society.'),
-            validator=colander.OneOf([x[0] for x in yes_no]),
-            widget=deform.widget.RadioChoiceWidget(values=yes_no),
-            oid="other_colsoc",
-            # validator=colsoc_validator
         )
-        name_of_colsoc = colander.SchemaNode(
-            colander.String(),
-            title=_(u'If so, which one(s)? Please separate multiple '
-                    u'collecting societies by comma.'),
-            description=_(
-                u'Please tell us which collecting societies '
-                u'you are a member of. '
-                u'If more than one, please separate them by comma.'),
-            missing=unicode(''),
-            oid="colsoc_name",
-            # validator=colander.All(
-            #    colsoc_validator,
-            # )
         )
 
 
@@ -329,9 +328,10 @@ def join_c3s(request):
         person = PersonalData(
             title=_(u'Personal Data'),
         )
-        membership_info = MembershipInfo(
-            title=_(u'Membership Data')
-        )
+        if len(customization.membership_types) > 1 or customization.enable_colsoc_association :
+            membership_info = MembershipInfo(
+                title=_(u'Membership Data')
+            )
         shares = Shares(
             title=_(u'Shares')
         )
@@ -364,7 +364,7 @@ def join_c3s(request):
 
             # data sanity: if not in collecting society, don't save
             #  collsoc name even if it was supplied through form
-            if 'no' in appstruct['membership_info']['member_of_colsoc']:
+            if customization.membership_types and 'no' in appstruct['membership_info']['member_of_colsoc']:
                 appstruct['membership_info']['name_of_colsoc'] = ''
 
         except ValidationFailure as validation_failure:
