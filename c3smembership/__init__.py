@@ -23,6 +23,7 @@ from c3smembership.presentation.views.dashboard import (
 from c3smembership.presentation.views.membership_listing import (
     membership_content_size_provider
 )
+from c3smembership.i18n import enforcing_locale_negotiator
 
 
 __version__ = open(os.path.join(os.path.abspath(
@@ -50,6 +51,7 @@ def main(global_config, **settings):
 
     # using a custom request with user information
     config.set_request_factory(RequestWithUserAttribute)
+    config.set_locale_negotiator(enforcing_locale_negotiator)
 
     config.include('pyramid_mailer')
     config.include('pyramid_chameleon')
@@ -59,7 +61,7 @@ def main(global_config, **settings):
     config.add_translation_dirs(
         'colander:locale/',
         'deform:locale/',
-        'c3smembership:locale/')
+        'c3smembership:../customization/locale/')
 
     config.add_static_view('static_deform', 'deform:static')
     config.add_static_view(
